@@ -6,3 +6,4 @@ pgvector
 openai
 aiogram
 pydantic-settings
+psycopg2-binary
