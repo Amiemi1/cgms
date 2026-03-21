@@ -6,4 +6,3 @@ pgvector
 openai
 aiogram
 pydantic-settings
-sentence-transformers
