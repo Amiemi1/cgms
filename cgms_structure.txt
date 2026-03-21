@@ -1,0 +1,167 @@
+Folder PATH listing for volume OS
+Volume serial number is FECE-ACB9
+C:\USERS\MURPHYPERSONAL\ONEDRIVE\DESKTOP\CONTEXTUAL_GROUP_MEMORY_SYSTEM\05_PROTOTYPE_AND_TESTING\CGMS\CGMS
+|   .env
+|   .env.example
+|   .gitattributes
+|   .gitignore
+|   all_files.txt
+|   cgms_structure.txt
+|   docker-compose.yml
+|   poetry.lock
+|   pyproject.toml
+|   README.md
+|   
++---app
+|   |   main.py
+|   |   
+|   +---api
+|   |   +---dependencies
+|   |   \---routers
+|   +---bot
+|   |   |   main.py
+|   |   |   __init__.py
+|   |   |   
+|   |   +---handlers
+|   |   +---keyboards
+|   |   |   |   candidate_actions.py
+|   |   |   |   
+|   |   |   \---__pycache__
+|   |   |           candidate_actions.cpython-311.pyc
+|   |   |           
+|   |   +---middleware
+|   |   \---__pycache__
+|   |           main.cpython-311.pyc
+|   |           __init__.cpython-311.pyc
+|   |           
+|   +---core
+|   |   |   config.py
+|   |   |   logging.py
+|   |   |   __init__.py
+|   |   |   
+|   |   \---__pycache__
+|   |           config.cpython-311.pyc
+|   |           __init__.cpython-311.pyc
+|   |           
+|   +---db
+|   |   |   base.py
+|   |   |   session.py
+|   |   |   __init__.py
+|   |   |   
+|   |   +---models
+|   |   |   |   candidate_memory.py
+|   |   |   |   memory.py
+|   |   |   |   message.py
+|   |   |   |   __init__.py
+|   |   |   |   
+|   |   |   \---__pycache__
+|   |   |           candidate_memory.cpython-311.pyc
+|   |   |           memory.cpython-311.pyc
+|   |   |           message.cpython-311.pyc
+|   |   |           __init__.cpython-311.pyc
+|   |   |           
+|   |   +---repositories
+|   |   \---__pycache__
+|   |           base.cpython-311.pyc
+|   |           session.cpython-311.pyc
+|   |           __init__.cpython-311.pyc
+|   |           
+|   +---schemas
+|   +---services
+|   |   |   __init__.py
+|   |   |   
+|   |   +---detection
+|   |   |   |   decision_detector.py
+|   |   |   |   event_detector.py
+|   |   |   |   orchestrator.py
+|   |   |   |   task_detector.py
+|   |   |   |   __init__.py
+|   |   |   |   
+|   |   |   \---__pycache__
+|   |   |           decision_detector.cpython-311.pyc
+|   |   |           event_detector.cpython-311.pyc
+|   |   |           task_detector.cpython-311.pyc
+|   |   |           
+|   |   +---governance
+|   |   +---memory
+|   |   |   |   deduplicator.py
+|   |   |   |   priority.py
+|   |   |   |   save_candidate.py
+|   |   |   |   save_message.py
+|   |   |   |   __init__.py
+|   |   |   |   
+|   |   |   \---__pycache__
+|   |   |           deduplicator.cpython-311.pyc
+|   |   |           priority.cpython-311.pyc
+|   |   |           save_candidate.cpython-311.pyc
+|   |   |           save_message.cpython-311.pyc
+|   |   |           __init__.cpython-311.pyc
+|   |   |           
+|   |   +---retrieval
+|   |   |   |   get_memories.py
+|   |   |   |   query_engine.py
+|   |   |   |   search_memory.py
+|   |   |   |   
+|   |   |   \---__pycache__
+|   |   |           get_memories.cpython-311.pyc
+|   |   |           query_engine.cpython-311.pyc
+|   |   |           search_memory.cpython-311.pyc
+|   |   |           
+|   |   +---scheduler
+|   |   |   |   reminder_scheduler.py
+|   |   |   |   smart_scheduler.py
+|   |   |   |   __init__.py
+|   |   |   |   
+|   |   |   \---__pycache__
+|   |   |           reminder_scheduler.cpython-311.pyc
+|   |   |           smart_scheduler.cpython-311.pyc
+|   |   |           __init__.cpython-311.pyc
+|   |   |           
+|   |   +---time
+|   |   |   |   parse_time.py
+|   |   |   |   __init__.py
+|   |   |   |   
+|   |   |   \---__pycache__
+|   |   |           parse_time.cpython-311.pyc
+|   |   |           __init__.cpython-311.pyc
+|   |   |           
+|   |   +---time_parser
+|   |   |   |   absolute.py
+|   |   |   |   defaults.py
+|   |   |   |   natural_language.py
+|   |   |   |   parser.py
+|   |   |   |   relative.py
+|   |   |   |   time_of_day.py
+|   |   |   |   validator.py
+|   |   |   |   weekday.py
+|   |   |   |   __init__.py
+|   |   |   |   
+|   |   |   \---__pycache__
+|   |   |           absolute.cpython-311.pyc
+|   |   |           defaults.cpython-311.pyc
+|   |   |           natural_language.cpython-311.pyc
+|   |   |           parser.cpython-311.pyc
+|   |   |           relative.cpython-311.pyc
+|   |   |           time_of_day.cpython-311.pyc
+|   |   |           validator.cpython-311.pyc
+|   |   |           weekday.cpython-311.pyc
+|   |   |           __init__.cpython-311.pyc
+|   |   |           
+|   |   \---__pycache__
+|   |           __init__.cpython-311.pyc
+|   |           
+|   +---utils
+|   \---__pycache__
+|           main.cpython-311.pyc
+|           __init__.cpython-311.pyc
+|           
++---docs
++---scripts
+|   |   create_tables.py
+|   |   __init__.py
+|   |   
+|   \---__pycache__
+|           create_tables.cpython-311.pyc
+|           __init__.cpython-311.pyc
+|           
+\---tests
