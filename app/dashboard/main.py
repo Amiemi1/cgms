@@ -8,6 +8,9 @@ from app.db.session import SessionLocal, engine
 # 🔥 IMPORTANT: ensures models are registered
 from app.db.models import User, Memory
 
+# 🔥 AUTH ROUTES
+from app.dashboard.auth import router as auth_router
+
 
 # -----------------------------
 # LOGGER
@@ -17,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 
 # -----------------------------
-# LIFESPAN (FIXES SHUTDOWN ISSUE)
+# LIFESPAN (STABLE STARTUP)
 # -----------------------------
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -32,14 +35,19 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.error(f"❌ Startup DB error: {e}")
 
-    # 🔥 Keeps app alive
-    yield
+    yield  # keeps app alive
 
 
 # -----------------------------
 # APP INIT
 # -----------------------------
 app = FastAPI(lifespan=lifespan)
+
+
+# -----------------------------
+# REGISTER ROUTES
+# -----------------------------
+app.include_router(auth_router)
 
 
 # -----------------------------
@@ -51,7 +59,7 @@ def root():
 
 
 # -----------------------------
-# DEBUG: LIST TABLES (FIXED)
+# DEBUG: LIST TABLES
 # -----------------------------
 @app.get("/debug/tables")
 def debug_tables():
