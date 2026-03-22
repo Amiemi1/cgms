@@ -51,16 +51,21 @@ def root():
 
 
 # -----------------------------
-# DEBUG: LIST TABLES
+# DEBUG: LIST TABLES (FIXED)
 # -----------------------------
 @app.get("/debug/tables")
 def debug_tables():
     session = SessionLocal()
     try:
-        result = session.exec(
+        result = session.execute(
             text("SELECT tablename FROM pg_tables WHERE schemaname='public'")
-        ).all()
-        return result
+        ).fetchall()
+
+        return [row[0] for row in result]
+
+    except Exception as e:
+        return {"error": str(e)}
+
     finally:
         session.close()
 
@@ -90,6 +95,9 @@ def get_memories(user_id: int):
             }
             for m in memories
         ]
+
+    except Exception as e:
+        return {"error": str(e)}
 
     finally:
         session.close()
