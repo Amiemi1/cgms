@@ -1,14 +1,17 @@
 from fastapi import FastAPI
-from sqlmodel import Session, select, text
-from sqlmodel import SQLModel
-from app.db.session import engine
+from sqlmodel import Session, select, text, SQLModel
 
-from app.db.session import SessionLocal
-from app.db.models.memory import Memory
-from app.db.models.user import User
+from app.db.session import SessionLocal, engine
+
+# 🔥 IMPORTANT: only import once from package
 from app.db.models import User, Memory
 
 app = FastAPI()
+
+
+# -----------------------------
+# STARTUP: CREATE TABLES
+# -----------------------------
 @app.on_event("startup")
 def on_startup():
     SQLModel.metadata.create_all(engine)
