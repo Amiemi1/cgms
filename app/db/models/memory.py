@@ -47,10 +47,7 @@ class Memory(SQLModel, table=True):
     # =========================
     # VECTOR
     # =========================
-    embedding: Optional[List[float]] = Field(
-        default=None,
-        sa_column=Column(Vector(384))
-    )
+    # embedding: list[float] | None = Field(default=None, sa_column=Column(Vector(384)))
 
     # =========================
     # META
