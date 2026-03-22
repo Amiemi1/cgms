@@ -183,3 +183,7 @@ cython_debug/
 *.sqlite3
 *.db
 logs/
+# CGMS specific
+*.db
+*.sqlite3
+logs/
