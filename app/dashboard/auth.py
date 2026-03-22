@@ -4,6 +4,7 @@ from sqlmodel import select
 from app.db.session import SessionLocal
 from app.db.models.user import User
 from app.services.auth.security import hash_password, verify_password
+from app.dashboard.schemas import UserCreate, UserLogin
 
 router = APIRouter()
 
@@ -12,20 +13,20 @@ router = APIRouter()
 # SIGNUP
 # -----------------------------
 @router.post("/signup")
-def signup(email: str, password: str):
+def signup(data: UserCreate):
     session = SessionLocal()
 
     try:
         existing = session.exec(
-            select(User).where(User.email == email)
+            select(User).where(User.email == data.email)
         ).first()
 
         if existing:
             return {"error": "User already exists"}
 
         user = User(
-            email=email,
-            password=hash_password(password)
+            email=data.email,
+            password=hash_password(data.password)
         )
 
         session.add(user)
@@ -42,15 +43,15 @@ def signup(email: str, password: str):
 # LOGIN
 # -----------------------------
 @router.post("/login")
-def login(email: str, password: str):
+def login(data: UserLogin):
     session = SessionLocal()
 
     try:
         user = session.exec(
-            select(User).where(User.email == email)
+            select(User).where(User.email == data.email)
         ).first()
 
-        if not user or not verify_password(password, user.password):
+        if not user or not verify_password(data.password, user.password):
             return {"error": "Invalid credentials"}
 
         return {
