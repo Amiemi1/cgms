@@ -7,3 +7,4 @@ openai
 aiogram
 pydantic-settings
 psycopg2-binary
+passlib[bcrypt]
