@@ -1,20 +1,39 @@
 from fastapi import FastAPI
-from sqlmodel import Session, select, text, SQLModel
+from sqlmodel import select, text, SQLModel
+import logging
 
 from app.db.session import SessionLocal, engine
 
-# 🔥 IMPORTANT: only import once from package
+# 🔥 IMPORTANT: ensures models are registered
 from app.db.models import User, Memory
 
+# -----------------------------
+# APP INIT
+# -----------------------------
 app = FastAPI()
+
+# -----------------------------
+# LOGGER
+# -----------------------------
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 # -----------------------------
-# STARTUP: CREATE TABLES
+# STARTUP: CREATE TABLES SAFELY
 # -----------------------------
 @app.on_event("startup")
 def on_startup():
-    SQLModel.metadata.create_all(engine)
+    try:
+        logger.info("🚀 Starting up application...")
+        logger.info("📦 Creating database tables...")
+
+        SQLModel.metadata.create_all(engine)
+
+        logger.info("✅ Tables created successfully")
+
+    except Exception as e:
+        logger.error(f"❌ Startup DB error: {e}")
 
 
 # -----------------------------
