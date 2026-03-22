@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from sqlmodel import select, text, SQLModel
+from contextlib import asynccontextmanager
 import logging
 
 from app.db.session import SessionLocal, engine
@@ -7,10 +8,6 @@ from app.db.session import SessionLocal, engine
 # 🔥 IMPORTANT: ensures models are registered
 from app.db.models import User, Memory
 
-# -----------------------------
-# APP INIT
-# -----------------------------
-app = FastAPI()
 
 # -----------------------------
 # LOGGER
@@ -20,10 +17,10 @@ logger = logging.getLogger(__name__)
 
 
 # -----------------------------
-# STARTUP: CREATE TABLES SAFELY
+# LIFESPAN (FIXES SHUTDOWN ISSUE)
 # -----------------------------
-@app.on_event("startup")
-def on_startup():
+@asynccontextmanager
+async def lifespan(app: FastAPI):
     try:
         logger.info("🚀 Starting up application...")
         logger.info("📦 Creating database tables...")
@@ -34,6 +31,15 @@ def on_startup():
 
     except Exception as e:
         logger.error(f"❌ Startup DB error: {e}")
+
+    # 🔥 Keeps app alive
+    yield
+
+
+# -----------------------------
+# APP INIT
+# -----------------------------
+app = FastAPI(lifespan=lifespan)
 
 
 # -----------------------------
