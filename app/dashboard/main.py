@@ -1,7 +1,7 @@
-from fastapi import FastAPI
-from sqlmodel import SQLModel, select
-from sqlalchemy import text
 import logging
+
+from fastapi import FastAPI
+from sqlmodel import SQLModel, select, text
 
 from app.db.session import engine, SessionLocal
 from app.db.models.memory import Memory
@@ -10,66 +10,82 @@ from app.db.models.user import User
 from app.dashboard.auth import router as auth_router
 
 
-# -----------------------------
-# LOGGING
-# -----------------------------
+# --------------------------------------------------
+# Logging
+# --------------------------------------------------
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-# -----------------------------
-# FASTAPI APP
-# -----------------------------
+# --------------------------------------------------
+# FastAPI App
+# --------------------------------------------------
 
-app = FastAPI(
-    title="CGMS Dashboard API",
-    description="Contextual Group Memory System",
-    version="1.0"
-)
+app = FastAPI(title="CGMS Dashboard")
 
 
-# -----------------------------
-# STARTUP EVENT
-# -----------------------------
+# --------------------------------------------------
+# Database Startup
+# --------------------------------------------------
 
 @app.on_event("startup")
 def on_startup():
 
     try:
 
-        logger.info("Creating database tables...")
+        logger.info("Initializing database...")
 
         SQLModel.metadata.create_all(engine)
 
-        # TEMP FIX: ensure password_hash column exists
         session = SessionLocal()
 
         try:
+
+            # --------------------------------
+            # Fix USER table schema mismatch
+            # --------------------------------
+
             session.exec(
-                text('ALTER TABLE "user" ADD COLUMN IF NOT EXISTS password_hash TEXT')
+                text(
+                    """
+                    ALTER TABLE "user"
+                    ADD COLUMN IF NOT EXISTS password_hash TEXT
+                    """
+                )
             )
+
+            session.exec(
+                text(
+                    """
+                    ALTER TABLE "user"
+                    DROP COLUMN IF EXISTS password
+                    """
+                )
+            )
+
             session.commit()
+
+            logger.info("Database schema validated")
+
         finally:
             session.close()
-
-        logger.info("Database tables ready.")
 
     except Exception as e:
 
         logger.error(f"Startup DB error: {e}")
 
 
-# -----------------------------
-# INCLUDE AUTH ROUTES
-# -----------------------------
+# --------------------------------------------------
+# Routers
+# --------------------------------------------------
 
 app.include_router(auth_router)
 
 
-# -----------------------------
-# ROOT CHECK
-# -----------------------------
+# --------------------------------------------------
+# Root Check
+# --------------------------------------------------
 
 @app.get("/")
 def root():
@@ -79,9 +95,9 @@ def root():
     }
 
 
-# -----------------------------
-# DEBUG: LIST DATABASE TABLES
-# -----------------------------
+# --------------------------------------------------
+# Debug: List Tables
+# --------------------------------------------------
 
 @app.get("/debug/tables")
 def debug_tables():
@@ -97,13 +113,12 @@ def debug_tables():
         return result
 
     finally:
-
         session.close()
 
 
-# -----------------------------
-# GET USER MEMORIES
-# -----------------------------
+# --------------------------------------------------
+# Get Memories for User
+# --------------------------------------------------
 
 @app.get("/memories/{user_id}")
 def get_memories(user_id: int):
@@ -114,10 +129,7 @@ def get_memories(user_id: int):
 
         user = session.get(User, user_id)
 
-        if not user:
-            return {"error": "User not found"}
-
-        if not user.chat_id:
+        if not user or not user.chat_id:
             return []
 
         memories = session.exec(
@@ -128,62 +140,10 @@ def get_memories(user_id: int):
             {
                 "summary": m.summary,
                 "priority": m.priority,
-                "type": m.memory_type,
-                "status": m.status,
+                "type": m.memory_type
             }
             for m in memories
         ]
 
     finally:
-
         session.close()
-
-@app.get("/debug/users")
-def debug_users():
-
-    session = SessionLocal()
-
-    try:
-        users = session.exec(select(User)).all()
-
-        return [
-            {
-                "id": u.id,
-                "email": u.email,
-                "password_hash": u.password_hash
-            }
-            for u in users
-        ]
-
-    finally:
-        session.close()
-
-@app.get("/debug/delete-users")
-def delete_users():
-
-    session = SessionLocal()
-
-    try:
-
-        users = session.exec(select(User)).all()
-
-        for u in users:
-            session.delete(u)
-
-        session.commit()
-
-        return {"message": "all users deleted"}
-
-    finally:
-        session.close()
-
-# -----------------------------
-# HEALTH CHECK
-# -----------------------------
-
-@app.get("/health")
-def health():
-
-    return {
-        "status": "healthy"
-    }
