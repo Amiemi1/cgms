@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from sqlmodel import select, text, SQLModel
 from contextlib import asynccontextmanager
 import logging
