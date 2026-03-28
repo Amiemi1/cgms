@@ -10,6 +10,7 @@ from app.db.models import User, Memory
 
 # 🔥 AUTH ROUTES
 from app.dashboard.auth import router as auth_router
+from app.services.auth.auth_dependency import get_current_user
 
 
 # -----------------------------
@@ -81,7 +82,7 @@ def debug_tables():
 # -----------------------------
 # GET MEMORIES BY USER
 # -----------------------------
-@app.get("/memories/{user_id}")
+@app.get("/memories")
 def get_memories(user_id: int):
     session = SessionLocal()
 
@@ -106,6 +107,34 @@ def get_memories(user_id: int):
 
     except Exception as e:
         return {"error": str(e)}
+
+    finally:
+        session.close()
+
+@app.get("/memories")
+def get_memories(user_id: int = Depends(get_current_user)):
+
+    session = SessionLocal()
+
+    try:
+
+        user = session.get(User, user_id)
+
+        if not user:
+            return []
+
+        memories = session.exec(
+            select(Memory).where(Memory.chat_id == user.chat_id)
+        ).all()
+
+        return [
+            {
+                "summary": m.summary,
+                "priority": m.priority,
+                "type": m.memory_type,
+            }
+            for m in memories
+        ]
 
     finally:
         session.close()

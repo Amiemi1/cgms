@@ -5,6 +5,7 @@ from app.db.session import SessionLocal
 from app.db.models.user import User
 from app.services.auth.security import hash_password, verify_password
 from app.dashboard.schemas import UserCreate, UserLogin
+from app.services.auth.jwt_handler import create_access_token
 
 router = APIRouter()
 
@@ -54,29 +55,30 @@ def signup(data: UserCreate):
 # LOGIN
 # -----------------------------
 @router.post("/login")
-def login(data: UserLogin):
+def login(email: str, password: str):
+
     session = SessionLocal()
 
     try:
-        # 🔍 Find user
+
         user = session.exec(
-            select(User).where(User.email == data.email)
+            select(User).where(User.email == email)
         ).first()
 
         if not user:
             return {"error": "User not found"}
 
-        # 🔐 Verify password
-        if not verify_password(data.password, user.password):
-            return {"error": "Invalid credentials"}
+        if not verify_password(password, user.password_hash):
+            return {"error": "Invalid password"}
+
+        token = create_access_token(
+            {"user_id": user.id}
+        )
 
         return {
-            "message": "Login successful",
-            "user_id": user.id
+            "access_token": token,
+            "token_type": "bearer"
         }
-
-    except Exception as e:
-        return {"error": str(e)}  # 🔥 shows real error
 
     finally:
         session.close()
