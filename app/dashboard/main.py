@@ -1,118 +1,101 @@
-from fastapi import FastAPI, Depends
-from sqlmodel import select, text, SQLModel
-from contextlib import asynccontextmanager
+from fastapi import FastAPI
+from sqlmodel import SQLModel, select
+from sqlalchemy import text
 import logging
 
-from app.db.session import SessionLocal, engine
+from app.db.session import engine, SessionLocal
+from app.db.models.memory import Memory
+from app.db.models.user import User
 
-# 🔥 IMPORTANT: ensures models are registered
-from app.db.models import User, Memory
-
-# 🔥 AUTH ROUTES
 from app.dashboard.auth import router as auth_router
-from app.services.auth.auth_dependency import get_current_user
 
 
 # -----------------------------
-# LOGGER
+# LOGGING
 # -----------------------------
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
 # -----------------------------
-# LIFESPAN (STABLE STARTUP)
+# FASTAPI APP
 # -----------------------------
-@asynccontextmanager
-async def lifespan(app: FastAPI):
+
+app = FastAPI(
+    title="CGMS Dashboard API",
+    description="Contextual Group Memory System",
+    version="1.0"
+)
+
+
+# -----------------------------
+# STARTUP EVENT
+# -----------------------------
+
+@app.on_event("startup")
+def on_startup():
+
     try:
-        logger.info("🚀 Starting up application...")
-        logger.info("📦 Creating database tables...")
+
+        logger.info("Creating database tables...")
 
         SQLModel.metadata.create_all(engine)
 
-        logger.info("✅ Tables created successfully")
+        logger.info("Database tables ready.")
 
     except Exception as e:
-        logger.error(f"❌ Startup DB error: {e}")
 
-    yield  # keeps app alive
-
-
-# -----------------------------
-# APP INIT
-# -----------------------------
-app = FastAPI(lifespan=lifespan)
+        logger.error(f"Startup DB error: {e}")
 
 
 # -----------------------------
-# REGISTER ROUTES
+# INCLUDE AUTH ROUTES
 # -----------------------------
+
 app.include_router(auth_router)
 
 
 # -----------------------------
 # ROOT CHECK
 # -----------------------------
+
 @app.get("/")
 def root():
-    return {"status": "CGMS Dashboard running"}
+
+    return {
+        "status": "CGMS Dashboard running"
+    }
 
 
 # -----------------------------
-# DEBUG: LIST TABLES
+# DEBUG: LIST DATABASE TABLES
 # -----------------------------
+
 @app.get("/debug/tables")
 def debug_tables():
+
     session = SessionLocal()
+
     try:
-        result = session.execute(
+
+        result = session.exec(
             text("SELECT tablename FROM pg_tables WHERE schemaname='public'")
-        ).fetchall()
-
-        return [row[0] for row in result]
-
-    except Exception as e:
-        return {"error": str(e)}
-
-    finally:
-        session.close()
-
-
-# -----------------------------
-# GET MEMORIES BY USER
-# -----------------------------
-@app.get("/memories")
-def get_memories(user_id: int):
-    session = SessionLocal()
-
-    try:
-        user = session.get(User, user_id)
-
-        if not user or not user.chat_id:
-            return []
-
-        memories = session.exec(
-            select(Memory).where(Memory.chat_id == user.chat_id)
         ).all()
 
-        return [
-            {
-                "summary": m.summary,
-                "priority": m.priority,
-                "type": m.memory_type,
-            }
-            for m in memories
-        ]
-
-    except Exception as e:
-        return {"error": str(e)}
+        return result
 
     finally:
+
         session.close()
 
-@app.get("/memories")
-def get_memories(user_id: int = Depends(get_current_user)):
+
+# -----------------------------
+# GET USER MEMORIES
+# -----------------------------
+
+@app.get("/memories/{user_id}")
+def get_memories(user_id: int):
 
     session = SessionLocal()
 
@@ -121,6 +104,9 @@ def get_memories(user_id: int = Depends(get_current_user)):
         user = session.get(User, user_id)
 
         if not user:
+            return {"error": "User not found"}
+
+        if not user.chat_id:
             return []
 
         memories = session.exec(
@@ -132,9 +118,23 @@ def get_memories(user_id: int = Depends(get_current_user)):
                 "summary": m.summary,
                 "priority": m.priority,
                 "type": m.memory_type,
+                "status": m.status,
             }
             for m in memories
         ]
 
     finally:
+
         session.close()
+
+
+# -----------------------------
+# HEALTH CHECK
+# -----------------------------
+
+@app.get("/health")
+def health():
+
+    return {
+        "status": "healthy"
+    }

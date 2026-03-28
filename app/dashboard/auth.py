@@ -12,10 +12,6 @@ from app.services.auth.jwt_handler import create_access_token
 router = APIRouter()
 
 
-# -----------------------------
-# REQUEST SCHEMAS
-# -----------------------------
-
 class SignupRequest(BaseModel):
     email: str
     password: str
@@ -26,10 +22,6 @@ class LoginRequest(BaseModel):
     password: str
 
 
-# -----------------------------
-# SIGNUP
-# -----------------------------
-
 @router.post("/signup")
 def signup(data: SignupRequest):
 
@@ -37,7 +29,6 @@ def signup(data: SignupRequest):
 
     try:
 
-        # Check if user already exists
         existing_user = session.exec(
             select(User).where(User.email == data.email)
         ).first()
@@ -45,7 +36,6 @@ def signup(data: SignupRequest):
         if existing_user:
             return {"error": "user already exists"}
 
-        # Create new user
         new_user = User(
             email=data.email,
             password_hash=hash_password(data.password)
@@ -64,10 +54,6 @@ def signup(data: SignupRequest):
         session.close()
 
 
-# -----------------------------
-# LOGIN
-# -----------------------------
-
 @router.post("/login")
 def login(data: LoginRequest):
 
@@ -85,10 +71,7 @@ def login(data: LoginRequest):
         if not verify_password(data.password, user.password_hash):
             return {"error": "Invalid password"}
 
-        # Create JWT token
-        token = create_access_token(
-            {"user_id": user.id}
-        )
+        token = create_access_token({"user_id": user.id})
 
         return {
             "access_token": token,

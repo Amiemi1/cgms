@@ -1,26 +1,19 @@
 from datetime import datetime, timedelta
-from jose import jwt
+import jwt
 
-SECRET_KEY = "CHANGE_THIS_TO_LONG_RANDOM_SECRET"
+SECRET_KEY = "cgms_secret_key"
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24
+TOKEN_EXPIRE_MINUTES = 60 * 24
 
 
 def create_access_token(data: dict):
-    to_encode = data.copy()
 
-    expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    payload = data.copy()
 
-    to_encode.update({"exp": expire})
+    expire = datetime.utcnow() + timedelta(minutes=TOKEN_EXPIRE_MINUTES)
 
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    payload.update({"exp": expire})
 
-    return encoded_jwt
+    token = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
 
-
-def decode_access_token(token: str):
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        return payload
-    except Exception:
-        return None
+    return token
