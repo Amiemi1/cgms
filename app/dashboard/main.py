@@ -42,6 +42,17 @@ def on_startup():
 
         SQLModel.metadata.create_all(engine)
 
+        # TEMP FIX: ensure password_hash column exists
+        session = SessionLocal()
+
+        try:
+            session.exec(
+                text('ALTER TABLE "user" ADD COLUMN IF NOT EXISTS password_hash TEXT')
+            )
+            session.commit()
+        finally:
+            session.close()
+
         logger.info("Database tables ready.")
 
     except Exception as e:
