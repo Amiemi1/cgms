@@ -158,6 +158,25 @@ def debug_users():
     finally:
         session.close()
 
+@app.get("/debug/delete-users")
+def delete_users():
+
+    session = SessionLocal()
+
+    try:
+
+        users = session.exec(select(User)).all()
+
+        for u in users:
+            session.delete(u)
+
+        session.commit()
+
+        return {"message": "all users deleted"}
+
+    finally:
+        session.close()
+
 # -----------------------------
 # HEALTH CHECK
 # -----------------------------
