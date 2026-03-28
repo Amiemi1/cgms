@@ -138,6 +138,25 @@ def get_memories(user_id: int):
 
         session.close()
 
+@app.get("/debug/users")
+def debug_users():
+
+    session = SessionLocal()
+
+    try:
+        users = session.exec(select(User)).all()
+
+        return [
+            {
+                "id": u.id,
+                "email": u.email,
+                "password_hash": u.password_hash
+            }
+            for u in users
+        ]
+
+    finally:
+        session.close()
 
 # -----------------------------
 # HEALTH CHECK
