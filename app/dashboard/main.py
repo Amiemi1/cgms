@@ -9,6 +9,12 @@ from app.db.models.user import User
 
 from app.dashboard.auth import router as auth_router
 
+from app.dashboard.routes.memory_panels import router as dashboard_router
+
+from app.dashboard.routes.memory_actions import router as memory_actions_router
+
+from app.dashboard.routes.memory_graph import router as memory_graph_router
+
 
 # --------------------------------------------------
 # Logging
@@ -81,7 +87,9 @@ def on_startup():
 # --------------------------------------------------
 
 app.include_router(auth_router)
-
+app.include_router(dashboard_router)
+app.include_router(memory_actions_router)
+app.include_router(memory_graph_router)
 
 # --------------------------------------------------
 # Root Check

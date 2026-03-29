@@ -1,5 +1,6 @@
 from sqlmodel import SQLModel, Field
 from typing import Optional
+from sqlalchemy import Column, BigInteger
 
 
 class User(SQLModel, table=True):
@@ -10,4 +11,8 @@ class User(SQLModel, table=True):
 
     password_hash: str
 
-    chat_id: Optional[int] = None
+    # Telegram chat id must be BIGINT
+    chat_id: Optional[int] = Field(
+        default=None,
+        sa_column=Column(BigInteger)
+    )

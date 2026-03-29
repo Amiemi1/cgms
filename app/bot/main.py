@@ -17,6 +17,8 @@ from app.services.retrieval.query_engine import run_query
 from app.services.retrieval.daily_briefing import generate_executive_briefing
 from app.services.retrieval.embedding_service import generate_embedding
 
+from app.services.memory.memory_graph import link_memories
+
 from app.services.product.product_commands import (
     generate_summary,
     generate_list,
@@ -36,22 +38,27 @@ bot = Bot(token=settings.TELEGRAM_BOT_TOKEN)
 dp = Dispatcher()
 
 
-# =========================
-# START
-# =========================
+# ------------------------------------------------
+# START COMMAND
+# ------------------------------------------------
+
 @dp.message(F.text == "/start")
 async def start(message: Message):
     await message.answer("🤖 CGMS Bot is running.")
     logger.info("Bot started")
 
 
-# =========================
-# ASK (LLM)
-# =========================
+# ------------------------------------------------
+# ASK COMMAND
+# ------------------------------------------------
+
 @dp.message(F.text.startswith("/ask"))
 async def ask_handler(message: Message):
+
     session = SessionLocal()
+
     try:
+
         query = message.text.replace("/ask", "").strip()
 
         if not query:
@@ -59,6 +66,7 @@ async def ask_handler(message: Message):
             return
 
         response = run_query(session, message.chat.id, query)
+
         await message.answer(response)
 
     except Exception:
@@ -69,18 +77,23 @@ async def ask_handler(message: Message):
         session.close()
 
 
-# =========================
-# BRIEF
-# =========================
+# ------------------------------------------------
+# DAILY BRIEFING
+# ------------------------------------------------
+
 @dp.message(F.text == "/brief")
 async def brief_handler(message: Message):
+
     session = SessionLocal()
+
     try:
+
         memories = session.exec(
             select(Memory).where(Memory.chat_id == message.chat.id)
         ).all()
 
         result = generate_executive_briefing(memories)
+
         await message.answer(result)
 
     except Exception:
@@ -91,14 +104,19 @@ async def brief_handler(message: Message):
         session.close()
 
 
-# =========================
+# ------------------------------------------------
 # SUMMARY
-# =========================
+# ------------------------------------------------
+
 @dp.message(F.text == "/summary")
 async def summary_handler(message: Message):
+
     session = SessionLocal()
+
     try:
+
         result = generate_summary(session, message.chat.id)
+
         await message.answer(result)
 
     except Exception:
@@ -109,14 +127,19 @@ async def summary_handler(message: Message):
         session.close()
 
 
-# =========================
+# ------------------------------------------------
 # LIST
-# =========================
+# ------------------------------------------------
+
 @dp.message(F.text == "/list")
 async def list_handler(message: Message):
+
     session = SessionLocal()
+
     try:
+
         result = generate_list(session, message.chat.id)
+
         await message.answer(result)
 
     except Exception:
@@ -127,13 +150,17 @@ async def list_handler(message: Message):
         session.close()
 
 
-# =========================
+# ------------------------------------------------
 # SEARCH
-# =========================
+# ------------------------------------------------
+
 @dp.message(F.text.startswith("/search"))
 async def search_handler(message: Message):
+
     session = SessionLocal()
+
     try:
+
         query = message.text.replace("/search", "").strip()
 
         if not query:
@@ -141,6 +168,7 @@ async def search_handler(message: Message):
             return
 
         result = generate_search(session, message.chat.id, query)
+
         await message.answer(result)
 
     except Exception:
@@ -151,13 +179,17 @@ async def search_handler(message: Message):
         session.close()
 
 
-# =========================
-# DETECTION (IMPORTANT FIX)
-# =========================
-@dp.message(~F.text.startswith("/"))   # 🔥 DO NOT TOUCH
+# ------------------------------------------------
+# MEMORY DETECTION
+# ------------------------------------------------
+
+@dp.message(~F.text.startswith("/"))
 async def message_handler(message: Message):
+
     session = SessionLocal()
+
     try:
+
         result = detect(message.text)
 
         if not result:
@@ -188,18 +220,23 @@ async def message_handler(message: Message):
         session.close()
 
 
-# =========================
+# ------------------------------------------------
 # BUTTON HANDLER
-# =========================
+# ------------------------------------------------
+
 @dp.callback_query()
 async def handle_buttons(callback: CallbackQuery):
+
     session = SessionLocal()
+
     try:
+
         data = callback.data
         action, target_id = data.split(":")
         target_id = int(target_id)
 
         if action == "save":
+
             candidate = session.get(CandidateMemory, target_id)
 
             if not candidate:
@@ -232,18 +269,71 @@ async def handle_buttons(callback: CallbackQuery):
 
             session.add(memory)
             session.commit()
+            session.refresh(memory)
 
-            await callback.message.answer(f"✅ Memory saved:\n\n{memory.summary}")
+            # -----------------------------
+            # MEMORY GRAPH LINKING
+            # -----------------------------
+
+            recent_memories = session.exec(
+                select(Memory)
+                .where(Memory.chat_id == memory.chat_id)
+                .order_by(Memory.created_at.desc())
+                .limit(10)
+            ).all()
+
+            task_memory = None
+            event_memory = None
+
+            for m in recent_memories:
+
+                if m.id == memory.id:
+                    continue
+
+                if m.memory_type == "task" and not task_memory:
+                    task_memory = m
+
+                if m.memory_type == "event" and not event_memory:
+                    event_memory = m
+
+
+            # task triggered by event
+            if memory.memory_type == "task" and event_memory:
+                link_memories(session, memory.id, event_memory.id, "triggered_by")
+
+
+            # decision resolves task
+            if memory.memory_type == "decision" and task_memory:
+                link_memories(session, memory.id, task_memory.id, "resolves")
+
+            await callback.message.answer(
+                f"✅ Memory saved:\n\n{memory.summary}"
+            )
 
         elif action == "ignore":
+
             await callback.message.answer("Ignored")
 
         elif action == "done_memory":
-            record_action(session, callback.message.chat.id, target_id, "completed")
+
+            record_action(
+                session,
+                callback.message.chat.id,
+                target_id,
+                "completed"
+            )
+
             await callback.message.answer("✅ Marked as completed")
 
         elif action == "delay_memory":
-            record_action(session, callback.message.chat.id, target_id, "delayed")
+
+            record_action(
+                session,
+                callback.message.chat.id,
+                target_id,
+                "delayed"
+            )
+
             await callback.message.answer("⏳ Marked as delayed")
 
     except Exception:
@@ -254,10 +344,12 @@ async def handle_buttons(callback: CallbackQuery):
         session.close()
 
 
-# =========================
-# MAIN
-# =========================
+# ------------------------------------------------
+# MAIN BOT LOOP
+# ------------------------------------------------
+
 async def main():
+
     logger.info("🤖 Bot + Scheduler + Daily Briefing running...")
 
     asyncio.create_task(run_reminder_scheduler(bot))
