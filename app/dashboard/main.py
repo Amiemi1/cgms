@@ -1,157 +1,113 @@
-import logging
-
 from fastapi import FastAPI
-from sqlmodel import SQLModel, select, text
 
-from app.db.session import engine, SessionLocal
-from app.db.models.memory import Memory
-from app.db.models.user import User
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
+from fastapi import Request
 
-from app.dashboard.auth import router as auth_router
+from app.dashboard.routes.memory_panels import router as memory_router
+from fastapi.middleware.cors import CORSMiddleware
 
-from app.dashboard.routes.memory_panels import router as dashboard_router
+from sqlmodel import SQLModel
 
-from app.dashboard.routes.memory_actions import router as memory_actions_router
+from app.db.session import engine
 
+# ROUTERS
+from app.dashboard.routes.memory_panels import router as memory_panels_router
 from app.dashboard.routes.memory_graph import router as memory_graph_router
+from app.dashboard.routes.memory_actions import router as memory_actions_router
+from app.dashboard.routes.insights import router as insights_router
+
+from app.dashboard.routes.intelligence_api import router as intelligence_router
+
+from app.dashboard.routes.goal_api import router as goal_router
+
+from fastapi import HTTPException
+from app.db.session import SessionLocal
+from app.db.models.memory import Memory
+
+app = FastAPI(
+    title="CGMS Dashboard",
+    version="1.0"
+)
+
+templates = Jinja2Templates(directory="app/dashboard/templates")
 
 
-# --------------------------------------------------
-# Logging
-# --------------------------------------------------
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+@app.get("/dashboard", response_class=HTMLResponse)
+def dashboard(request: Request):
+    return templates.TemplateResponse("dashboard.html", {"request": request})
 
 
-# --------------------------------------------------
-# FastAPI App
-# --------------------------------------------------
+# ---------- MARK TASK COMPLETE ----------
+@app.post("/dashboard/tasks/{task_id}/complete")
+def mark_task_complete(task_id: int):
 
-app = FastAPI(title="CGMS Dashboard")
+    db = SessionLocal()
+
+    try:
+        task = db.query(Memory).filter(
+            Memory.id == task_id,
+            Memory.memory_type == "task"
+        ).first()
+
+        if not task:
+            raise HTTPException(status_code=404, detail="Task not found")
+
+        task.status = "completed"
+        db.commit()
+
+        return {"success": True}
+
+    finally:
+        db.close()
+
+# -----------------------------
+# CORS
+# -----------------------------
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
-# --------------------------------------------------
-# Database Startup
-# --------------------------------------------------
+
+
+# -----------------------------
+# DATABASE INIT
+# -----------------------------
 
 @app.on_event("startup")
 def on_startup():
 
-    try:
+    SQLModel.metadata.create_all(engine)
 
-        logger.info("Initializing database...")
-
-        SQLModel.metadata.create_all(engine)
-
-        session = SessionLocal()
-
-        try:
-
-            # --------------------------------
-            # Fix USER table schema mismatch
-            # --------------------------------
-
-            session.exec(
-                text(
-                    """
-                    ALTER TABLE "user"
-                    ADD COLUMN IF NOT EXISTS password_hash TEXT
-                    """
-                )
-            )
-
-            session.exec(
-                text(
-                    """
-                    ALTER TABLE "user"
-                    DROP COLUMN IF EXISTS password
-                    """
-                )
-            )
-
-            session.commit()
-
-            logger.info("Database schema validated")
-
-        finally:
-            session.close()
-
-    except Exception as e:
-
-        logger.error(f"Startup DB error: {e}")
+    print("Database schema validated")
 
 
-# --------------------------------------------------
-# Routers
-# --------------------------------------------------
+# -----------------------------
+# ROUTERS
+# -----------------------------
 
-app.include_router(auth_router)
-app.include_router(dashboard_router)
-app.include_router(memory_actions_router)
-app.include_router(memory_graph_router)
+app.include_router(memory_panels_router, prefix="/dashboard")
+app.include_router(memory_graph_router, prefix="/dashboard")
+app.include_router(memory_actions_router, prefix="/dashboard")
+app.include_router(insights_router, prefix="/dashboard")
+app.include_router(intelligence_router)
+app.include_router(goal_router)
+app.include_router(memory_router)
 
-# --------------------------------------------------
-# Root Check
-# --------------------------------------------------
+# -----------------------------
+# ROOT
+# -----------------------------
 
 @app.get("/")
 def root():
 
     return {
-        "status": "CGMS Dashboard running"
+        "system": "CGMS",
+        "status": "running"
     }
-
-
-# --------------------------------------------------
-# Debug: List Tables
-# --------------------------------------------------
-
-@app.get("/debug/tables")
-def debug_tables():
-
-    session = SessionLocal()
-
-    try:
-
-        result = session.exec(
-            text("SELECT tablename FROM pg_tables WHERE schemaname='public'")
-        ).all()
-
-        return result
-
-    finally:
-        session.close()
-
-
-# --------------------------------------------------
-# Get Memories for User
-# --------------------------------------------------
-
-@app.get("/memories/{user_id}")
-def get_memories(user_id: int):
-
-    session = SessionLocal()
-
-    try:
-
-        user = session.get(User, user_id)
-
-        if not user or not user.chat_id:
-            return []
-
-        memories = session.exec(
-            select(Memory).where(Memory.chat_id == user.chat_id)
-        ).all()
-
-        return [
-            {
-                "summary": m.summary,
-                "priority": m.priority,
-                "type": m.memory_type
-            }
-            for m in memories
-        ]
-
-    finally:
-        session.close()

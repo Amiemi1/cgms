@@ -1,17 +1,22 @@
 from sentence_transformers import SentenceTransformer
-from typing import List, Optional
+from typing import List
 
-# Load model once (important)
-_model = SentenceTransformer("all-MiniLM-L6-v2")
+# ------------------------------------------------
+# LOAD EMBEDDING MODEL
+# ------------------------------------------------
+
+model = SentenceTransformer("all-MiniLM-L6-v2")
 
 
-def generate_embedding(text: str) -> Optional[List[float]]:
-    """
-    Generate embedding vector for text.
-    Returns None if text is empty.
-    """
-    if not text or not text.strip():
-        return None
+# ------------------------------------------------
+# GENERATE EMBEDDING
+# ------------------------------------------------
 
-    vector = _model.encode(text)
+def generate_embedding(text: str) -> List[float]:
+
+    if not text:
+        return []
+
+    vector = model.encode(text)
+
     return vector.tolist()

@@ -1,30 +1,32 @@
-from typing import List
-
-from sqlmodel import Session, select
-
-from app.db.models.memory import Memory
-from app.services.retrieval.embedding_service import generate_embedding
+from sqlalchemy import text
 
 
-def vector_search(
-    session: Session,
-    query: str,
-    chat_id: int,
-    limit: int = 10
-) -> List[Memory]:
+def vector_search(session, embedding, chat_id, limit=5):
 
-    embedding = generate_embedding(query)
-
-    if not embedding:
+    if embedding is None:
+        print("VECTOR SEARCH SKIPPED: no embedding")
         return []
 
-    statement = (
-        select(Memory)
-        .where(Memory.chat_id == chat_id)
-        .order_by(Memory.embedding.cosine_distance(embedding))
-        .limit(limit)
-    )
+    embedding_param = embedding.tolist() if hasattr(embedding, "tolist") else embedding
 
-    results = session.exec(statement).all()
+    statement = text("""
+        SELECT
+            id,
+            summary,
+            memory_type,
+            1 - (embedding <=> CAST(:embedding AS vector)) AS score
+        FROM memory
+        WHERE chat_id = :chat_id
+        ORDER BY embedding <=> CAST(:embedding AS vector)
+        LIMIT :limit
+    """)
 
-    return results
+    params = {
+        "embedding": embedding_param,
+        "chat_id": chat_id,
+        "limit": limit
+    }
+
+    results = session.execute(statement, params)
+
+    return results.fetchall()

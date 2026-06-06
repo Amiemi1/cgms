@@ -1,79 +1,56 @@
-from typing import List
-
-from sqlmodel import Session
-
-from app.db.models.memory import Memory
 from app.services.retrieval.vector_search import vector_search
-from app.services.llm.llm_service import generate_response
+from app.services.retrieval.embedding_service import generate_embedding
 
 
-def _build_context(memories: List[Memory]) -> str:
-    """
-    Build structured memory context for LLM
-    """
-    if not memories:
-        return ""
+def run_query(session, chat_id: int, query: str, limit: int = 5):
 
-    return "\n".join([
-        f"- {m.summary} (priority: {m.priority}, type: {m.memory_type})"
-        for m in memories
-    ])
+    try:
 
+        print("\nRETRIEVAL QUERY:", query)
 
-def _fallback_response(memories: List[Memory]) -> str:
-    """
-    Fallback if LLM fails
-    """
-    if not memories:
-        return "No relevant memories found."
+        # --------------------------------
+        # Generate embedding for question
+        # --------------------------------
 
-    lines = ["Here are your relevant items:\n"]
+        embedding = generate_embedding(query)
 
-    for m in memories[:5]:
-        lines.append(f"- {m.summary} (priority: {m.priority})")
+        if embedding is None:
+            print("Embedding generation failed")
+            return []
 
-    return "\n".join(lines)
+        # --------------------------------
+        # Perform vector search
+        # --------------------------------
 
+        results = vector_search(
+            session=session,
+            embedding=embedding,
+            chat_id=chat_id,
+            limit=limit
+        )
 
-def run_query(session: Session, chat_id: int, query: str) -> str:
-    """
-    Main query execution:
-    - semantic retrieval
-    - LLM reasoning
-    - fallback if needed
-    """
+        memories = []
 
-    # 🔥 Step 1 — retrieve relevant memories
-    memories = vector_search(session, query, chat_id, limit=10)
+        for row in results:
 
-    if not memories:
-        return "No relevant memories found."
+            # row format:
+            # (id, summary, memory_type, score)
 
-    # 🔥 Step 2 — build context
-    context = _build_context(memories)
+            memories.append({
+                "id": row[0],
+                "summary": row[1],
+                "type": row[2],
+                "score": float(row[3])
+            })
 
-    prompt = f"""
-You are an executive assistant helping a user manage tasks and decisions.
+        print("RETRIEVAL RESULTS:", memories)
 
-User Query:
-{query}
+        return memories
 
-Relevant Memories:
-{context}
+    except Exception as e:
 
-Instructions:
-- Identify the most important items
-- Prioritize them clearly
-- Highlight urgency or risks
-- Provide actionable recommendations
-- Keep response concise and structured
-"""
+        import traceback
+        print("\nRETRIEVAL ERROR")
+        traceback.print_exc()
 
-    # 🔥 Step 3 — call LLM
-    response = generate_response(prompt)
-
-    # 🔥 Step 4 — safety fallback
-    if not response or response.startswith("LLM Error"):
-        return _fallback_response(memories)
-
-    return response
+        return []

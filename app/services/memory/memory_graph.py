@@ -1,33 +1,102 @@
-from sqlmodel import Session, select
+from sqlmodel import select
 
+from app.db.models.memory import Memory
 from app.db.models.memory_relationship import MemoryRelationship
+from app.services.retrieval.vector_search import vector_search
 
 
-def link_memories(
-    session: Session,
-    source_id: int,
-    target_id: int,
-    relationship_type: str
-):
+def link_memories(session, new_memory):
 
-    relation = MemoryRelationship(
-        source_memory_id=source_id,
-        target_memory_id=target_id,
-        relationship_type=relationship_type
-    )
+    # ------------------------------------------------
+    # RULE RELATIONSHIPS
+    # ------------------------------------------------
 
-    session.add(relation)
-    session.commit()
-
-    return relation
-
-
-def get_related_memories(session: Session, memory_id: int):
-
-    relations = session.exec(
-        select(MemoryRelationship).where(
-            MemoryRelationship.source_memory_id == memory_id
-        )
+    recent_memories = session.exec(
+        select(Memory)
+        .where(Memory.chat_id == new_memory.chat_id)
+        .order_by(Memory.created_at.desc())
+        .limit(10)
     ).all()
 
-    return relations
+    for memory in recent_memories:
+
+        if memory.id == new_memory.id:
+            continue
+
+        relationship_type = None
+
+        if new_memory.memory_type == "task" and memory.memory_type == "event":
+            relationship_type = "triggered_by"
+
+        elif new_memory.memory_type == "decision" and memory.memory_type == "task":
+            relationship_type = "resolves"
+
+        if not relationship_type:
+            continue
+
+        existing = session.exec(
+            select(MemoryRelationship).where(
+                MemoryRelationship.source_memory_id == new_memory.id,
+                MemoryRelationship.target_memory_id == memory.id,
+                MemoryRelationship.relationship_type == relationship_type
+            )
+        ).first()
+
+        if existing:
+            continue
+
+        relationship = MemoryRelationship(
+            source_memory_id=new_memory.id,
+            target_memory_id=memory.id,
+            relationship_type=relationship_type
+        )
+
+        session.add(relationship)
+
+    session.commit()
+
+    # ------------------------------------------------
+    # SEMANTIC RELATIONSHIPS
+    # ------------------------------------------------
+
+    if new_memory.embedding is None:
+        return
+
+    results = vector_search(
+        session=session,
+        embedding=new_memory.embedding,
+        chat_id=new_memory.chat_id,
+        limit=5
+    )
+
+    for row in results:
+
+        memory_id = row[0]
+        score = row[3]
+
+        if memory_id == new_memory.id:
+            continue
+
+        if score < 0.80:
+            continue
+
+        existing = session.exec(
+            select(MemoryRelationship).where(
+                MemoryRelationship.source_memory_id == new_memory.id,
+                MemoryRelationship.target_memory_id == memory_id,
+                MemoryRelationship.relationship_type == "semantic_related"
+            )
+        ).first()
+
+        if existing:
+            continue
+
+        relationship = MemoryRelationship(
+            source_memory_id=new_memory.id,
+            target_memory_id=memory_id,
+            relationship_type="semantic_related"
+        )
+
+        session.add(relationship)
+
+    session.commit()

@@ -1,71 +1,59 @@
-from typing import Optional, Dict
-
-from app.services.detection.task_detector import detect_task
-from app.services.detection.event_detector import detect_event
-from app.services.detection.decision_detector import detect_decision
+import re
 
 
-# =========================
-# MAIN ORCHESTRATOR
-# =========================
+# ------------------------------------------------
+# KEYWORD DEFINITIONS
+# ------------------------------------------------
 
-def orchestrate(text: str) -> Optional[Dict]:
-    """
-    Central detection pipeline.
+TASK_VERBS = [
+    "prepare",
+    "create",
+    "build",
+    "write",
+    "send",
+    "review",
+    "update",
+    "finish",
+    "complete",
+    "plan",
+    "organize"
+]
 
-    Returns:
-    {
-        "type": "task" | "event" | "decision",
-        "summary": str
-    }
-    """
+DECISION_VERBS = [
+    "approve",
+    "decide",
+    "confirm",
+    "select",
+    "authorize"
+]
 
-    if not text:
-        return None
+EVENT_KEYWORDS = [
+    "meeting",
+    "call",
+    "presentation",
+    "conference",
+    "appointment"
+]
 
-    text = text.strip()
+DAYS = [
+    "monday","tuesday","wednesday","thursday","friday","saturday","sunday"
+]
 
-    # 🔹 1. Decision detection (highest confidence)
-    decision = detect_decision(text)
-    if decision:
-        return {
-            "type": "decision",
-            "summary": decision
-        }
 
-    # 🔹 2. Event detection
-    event = detect_event(text)
-    if event:
-        return {
-            "type": "event",
-            "summary": event
-        }
+def detect(text):
 
-    # 🔹 3. Task detection
-    task = detect_task(text)
-    if task:
-        return {
-            "type": "task",
-            "summary": task
-        }
+    lower = text.lower()
 
-    # 🔹 4. Nothing detected
+    # DECISION
+    if any(word in lower for word in DECISION_VERBS):
+        return {"type": "decision", "summary": text}
+
+    # TASK
+    if any(word in lower for word in TASK_VERBS):
+        return {"type": "task", "summary": text}
+
+    # EVENT
+    if any(word in lower for word in EVENT_KEYWORDS) or any(day in lower for day in DAYS):
+        return {"type": "event", "summary": text}
+
     return None
-
-
-# =========================
-# PUBLIC INTERFACE (USED BY BOT)
-# =========================
-
-def detect(text: str) -> Optional[Dict]:
-    """
-    Public wrapper used by main.py
-    Ensures safe execution.
-    """
-
-    try:
-        return orchestrate(text)
-
-    except Exception as e:
-        print("❌ DETECTION ERROR:", e)
-        return None
