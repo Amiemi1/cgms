@@ -363,46 +363,167 @@ h1,h2,h3,h4 {
 }
 
 /* =========================================
+   MEMORY MODULE
+========================================= */
+
+/* MEMORY TOOLBAR */
+.memory-toolbar{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+    margin-bottom:22px;
+}
+
+.memory-toolbar-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+
+/* =========================================
+   MEMORY GOVERNANCE METRICS
+========================================= */
+
+.memory-governance-metrics{
+    display:grid;
+    grid-template-columns:
+        repeat(4, minmax(0,1fr));
+    gap:12px;
+    margin:14px 0 24px;
+}
+
+.memory-metric-card{
+    background:#ffffff;
+    border:1px solid #e2e8f0;
+    border-radius:14px;
+    padding:12px 16px;
+    box-shadow:
+        0 1px 2px rgba(0,0,0,.04),
+        0 4px 12px rgba(0,0,0,.03);
+    transition:
+        transform .15s ease,
+        box-shadow .15s ease;
+}
+
+.memory-metric-card:hover{
+    transform:translateY(-1px);
+    box-shadow:
+        0 8px 18px rgba(15,23,42,.06);
+}
+
+.memory-metric-value{
+    font-size:24px;
+    line-height:1;
+    font-weight:800;
+    color:#0f172a;
+}
+
+.memory-metric-label{
+    margin-top:6px;
+    font-size:11px;
+    font-weight:700;
+    color:#64748b;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+}
+
+
+/* =========================================
    MEMORY CARDS
 ========================================= */
 
 .memory-item,
 .task-item,
-.panel .item {
-
+.panel .item{
     background:#ffffff;
-
-    border-left:4px solid #64748b;
-
-    border-radius:10px;
-
+    border:1px solid #e2e8f0;
+    border-left:4px solid #94a3b8;
+    border-radius:14px;
+    padding:10px 14px;
+    margin-bottom:8px;
+    min-height:auto;
+    line-height:1.35;
     box-shadow:
-        0 1px 3px rgba(0,0,0,.08);
-
-    margin-bottom:10px;
-
-    transition:all 0.2s ease;
-}
-
-.memory-item,
-.task-item {
-
-    padding:8px 10px;
-
-    margin-bottom:6px;
-
-    border-radius:8px;
-
-    line-height:1.25;
+        0 1px 2px rgba(0,0,0,.04),
+        0 4px 12px rgba(0,0,0,.03);
+    transition:
+        transform .15s ease,
+        box-shadow .15s ease,
+        border-color .15s ease;
 }
 
 .memory-item:hover,
-.task-item:hover {
-
+.task-item:hover,
+.panel .item:hover{
     transform:translateY(-1px);
-
     box-shadow:
-        0 4px 10px rgba(0,0,0,.08);
+        0 8px 18px rgba(15,23,42,.06);
+}
+
+
+/* ACTIVE / COMPLETED STATE SUPPORT */
+.memory-item.active,
+.task-item.active,
+.panel .item.active{
+    border-left-color:#2563eb;
+}
+
+.memory-item.completed,
+.task-item.completed,
+.panel .item.completed{
+    border-left-color:#22c55e;
+    background:#f0fdf4;
+}
+
+.memory-item.deleted,
+.task-item.deleted,
+.panel .item.deleted{
+    border-left-color:#ef4444;
+    opacity:.75;
+}
+
+
+/* =========================================
+   MEMORY HIERARCHY / CHILD TASKS
+========================================= */
+
+.memory-children,
+.task-children{
+    border-left:2px solid #dbeafe;
+    margin-left:18px;
+    padding-left:14px;
+    margin-top:6px;
+}
+
+.memory-children .memory-item,
+.task-children .task-item{
+    background:#f8fafc;
+    border-left-color:#94a3b8;
+    padding:8px 12px;
+}
+
+
+/* =========================================
+   RESPONSIVE MEMORY METRICS
+========================================= */
+
+@media (max-width:900px){
+    .memory-governance-metrics{
+        grid-template-columns:
+            repeat(2, minmax(0,1fr));
+    }
+}
+
+@media (max-width:520px){
+    .memory-governance-metrics{
+        grid-template-columns:1fr;
+    }
+
+    .memory-toolbar-row{
+        align-items:flex-start;
+    }
 }
 
 /* =========================================
@@ -1520,8 +1641,26 @@ button.small {
 
 <!-- MEMORY -->
 <div class="panel">
+
     <h2>📋 Memory</h2>
-    <div id="tasks">Loading...</div>
+
+    <div class="memory-toolbar">
+
+        <!-- Type -->
+
+        <!-- Status -->
+
+        <!-- Remove duplicates -->
+
+    </div>
+
+    <div
+        id="memoryGovernanceMetrics"
+        class="memory-governance-metrics"
+    ></div>
+
+    <div id="tasks"></div>
+
 </div>
 
 <!-- INSIGHTS -->
@@ -13000,6 +13139,14 @@ function renderTask(task, level = 0){
 
     if (!task) return "";
 
+    if (
+        /^[0-9]+$/.test(
+            String(task.summary || "").trim()
+        )
+    ){
+        return "";
+    }
+
     // normalize
     const status = String(task.status || "active")
         .toLowerCase()
@@ -13146,18 +13293,29 @@ function renderTask(task, level = 0){
 
     html += `</div>`;
 
-    // reasons
-    if (level === 0 && p){
+    // reasons / score explanation
+    const reasons =
+        p && Array.isArray(p.reasons)
+            ? p.reasons
+            : (
+                Array.isArray(task.reasons)
+                    ? task.reasons
+                    : []
+            );
+
+    if (level === 0 && reasons.length){
 
         html += `
             <div style="
                 font-size:11px;
-                color:#888;
+                color:#64748b;
                 margin-top:4px;
+                line-height:1.35;
             ">
-                🧠 ${escapeHtml((p.reasons || []).join(", "))}
+                🧠 ${escapeHtml(reasons.join(", "))}
             </div>
         `;
+
     }
 
     // buttons
@@ -13308,6 +13466,53 @@ async function loadMemory(){
         // global source of truth
         window.latestTasks = tasks;
 
+        // =====================================
+        // MEMORY GOVERNANCE METRICS
+        // =====================================
+
+        const validTasks =
+            tasks.filter(m =>
+                m &&
+                typeof m === "object" &&
+                m.summary &&
+                !/^[0-9]+$/.test(String(m.summary).trim())
+            );
+
+        window.memoryMetrics = {
+            total: validTasks.length,
+
+            active:
+                tasks.filter(
+                    x =>
+                    String(
+                        x.status || ""
+                    )
+                    .toLowerCase()
+                    === "active"
+                ).length,
+
+            completed:
+                tasks.filter(
+                    x =>
+                    String(
+                        x.status || ""
+                    )
+                    .toLowerCase()
+                    === "completed"
+                ).length,
+
+            duplicateCandidates:
+                detectDuplicateCandidates(tasks).length
+
+        };
+
+        console.log(
+            "🧠 MEMORY METRICS",
+            window.memoryMetrics
+        );
+
+        renderMemoryGovernanceMetrics();
+
         //console.log(
             //"ACTIVE TASK COUNT:",
             //tasks.filter(t =>
@@ -13320,6 +13525,15 @@ async function loadMemory(){
         let html = "";
 
         for (let m of tasks){
+
+            if (
+                !m ||
+                typeof m !== "object" ||
+                !m.summary ||
+                /^[0-9]+$/.test(String(m.summary).trim())
+            ){
+                continue;
+            }
 
             const type = String(
                 m.memory_type || m.type || "task"
@@ -13376,6 +13590,125 @@ async function loadMemory(){
         document.getElementById("tasks").innerHTML =
             "Error loading memory";
     }
+}
+
+function detectDuplicateCandidates(tasks){
+
+    const seen =
+        new Map();
+
+    const duplicates =
+        [];
+
+    tasks.forEach(task=>{
+
+        const key =
+            String(
+                task.summary || ""
+            )
+            .trim()
+            .toLowerCase();
+
+        if(!key){
+            return;
+        }
+
+        if(
+            seen.has(key)
+        ){
+
+            duplicates.push({
+                original:
+                    seen.get(key),
+
+                duplicate:
+                    task
+            });
+
+        }
+
+        else{
+
+            seen.set(
+                key,
+                task
+            );
+
+        }
+
+    });
+
+    return duplicates;
+
+}
+
+function renderMemoryGovernanceMetrics(){
+
+    const container =
+        document.getElementById(
+            "memoryGovernanceMetrics"
+        );
+
+    if(
+        !container ||
+        !window.memoryMetrics
+    ){
+        return;
+    }
+
+    const m =
+        window.memoryMetrics;
+
+    container.innerHTML = `
+
+        <div class="memory-metric-card">
+            <div class="memory-metric-value">
+                ${m.total}
+            </div>
+            <div class="memory-metric-label">
+                Total
+            </div>
+        </div>
+
+        <div class="memory-metric-card">
+            <div class="memory-metric-value">
+                ${m.active}
+            </div>
+            <div class="memory-metric-label">
+                Active
+            </div>
+        </div>
+
+        <div class="memory-metric-card">
+            <div class="memory-metric-value">
+                ${m.completed}
+            </div>
+            <div class="memory-metric-label">
+                Completed
+            </div>
+        </div>
+
+        <div class="memory-metric-card">
+            <div class="memory-metric-value">
+                ${m.duplicateCandidates}
+            </div>
+            <div class="memory-metric-label">
+                Duplicates
+            </div>
+        </div>
+
+    `;
+
+}
+
+function setMemoryTypeFilter(type){
+
+    currentFilter = type || "all";
+
+    lastMemoryRender = null;
+
+    loadMemory();
+
 }
 
 // ---------- SEARCH ----------
@@ -17708,3 +18041,7 @@ init();
 
 [ ] Snapshot diff viewer
 */
+
+// [ ] Backend cleanup endpoint for invalid numeric-only memories
+//     Example records: id 139 summary "5", id 140 summary "1"
+//     Current status: hidden by frontend governance filter
