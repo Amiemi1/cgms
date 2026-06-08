@@ -1,19 +1,24 @@
-# =====================================================
-# EMBEDDING SERVICE
-# =====================================================
-
-from sentence_transformers import SentenceTransformer
-
-# Load once globally (fast reuse)
-model = SentenceTransformer("all-MiniLM-L6-v2")
+from functools import lru_cache
+from typing import List
 
 
-def generate_embedding(text: str):
-    """
-    Generate a 384-dimension embedding vector
-    for semantic search.
-    """
+@lru_cache(maxsize=1)
+def get_embedding_model():
+    from sentence_transformers import SentenceTransformer
 
-    vector = model.encode(text)
+    return SentenceTransformer(
+        "all-MiniLM-L6-v2"
+    )
 
-    return vector.tolist()
+
+def generate_embedding(text: str) -> List[float]:
+    if not text:
+        return []
+
+    model = get_embedding_model()
+
+    embedding = model.encode(
+        text
+    )
+
+    return embedding.tolist()
