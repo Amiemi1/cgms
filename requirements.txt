@@ -12,3 +12,4 @@ bcrypt
 python-jose[cryptography]
 PyJWT
 Jinja2==3.1.6
+sentence-transformers==2.7.0
