@@ -5,6 +5,10 @@ from app.services.orchestration.event_router import (
     route_incident
 )
 
+from app.dashboard.runtime.incident_assessor import (
+    assess_runtime_impact
+)
+
 router = APIRouter()
 
 
@@ -13,14 +17,18 @@ async def runtime_event(
     payload: dict
 ):
 
-    event = payload.get(
-        "event"
-    )
+    event = payload.get("event")
+    data = payload.get("payload", {})
 
-    data = payload.get(
-        "payload",
-        {}
-    )
+    impact = assess_runtime_impact({
+        "eventName": event,
+        "payload": data
+    })
+
+    data = {
+        **data,
+        "impact": impact
+    }
 
     if event == "memory_changed":
 
@@ -40,6 +48,7 @@ async def runtime_event(
             data
         )
 
+    
     return {
         "ok": True
     }
