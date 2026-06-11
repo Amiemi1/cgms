@@ -1,29 +1,31 @@
 from fastapi import FastAPI
-
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi import Request
-
 from app.dashboard.routes.memory_panels import router as memory_router
 from fastapi.middleware.cors import CORSMiddleware
-
 from sqlmodel import SQLModel
-
 from app.db.session import engine
+
+# SPRINT 1 — EVENT-DRIVEN ORCHESTRATION
+import app.services.orchestration.handlers
 
 # ROUTERS
 from app.dashboard.routes.memory_panels import router as memory_panels_router
 from app.dashboard.routes.memory_graph import router as memory_graph_router
 from app.dashboard.routes.memory_actions import router as memory_actions_router
 from app.dashboard.routes.insights import router as insights_router
-
 from app.dashboard.routes.intelligence_api import router as intelligence_router
-
 from app.dashboard.routes.goal_api import router as goal_router
-
 from fastapi import HTTPException
 from app.db.session import SessionLocal
 from app.db.models.memory import Memory
+
+from app.dashboard.routes.runtime_events import (
+    router as runtime_router
+)
+
+from app.dashboard.routes.runtime_events import router as runtime_events_router
 
 app = FastAPI(
     title="CGMS Dashboard",
@@ -99,6 +101,9 @@ app.include_router(insights_router, prefix="/dashboard")
 app.include_router(intelligence_router)
 app.include_router(goal_router)
 app.include_router(memory_router)
+
+# SPRINT 1 — EVENT-DRIVEN ORCHESTRATION
+app.include_router(runtime_events_router)
 
 # -----------------------------
 # ROOT

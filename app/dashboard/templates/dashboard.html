@@ -13431,40 +13431,63 @@ function setStatus(s){
 }
 
 // ---------- LOAD MEMORY ----------
-
 async function loadMemory(){
 
     try {
 
-        const r = await fetch(`/dashboard/tasks/${userId}`);
+        const r =
+            await fetch(
+                `/dashboard/tasks/${userId}`
+            );
 
-        let data = [];
+        let data =
+            [];
 
         try {
 
-            data = await r.json();
+            data =
+                await r.json();
 
-        } catch (e){
+        }
 
-            console.error("❌ JSON PARSE ERROR:", e);
+        catch (e){
 
-            const text = await r.text();
+            console.error(
+                "❌ JSON PARSE ERROR:",
+                e
+            );
 
-            console.error("❌ RAW BACKEND RESPONSE:", text);
+            const text =
+                await r.text();
+
+            console.error(
+                "❌ RAW BACKEND RESPONSE:",
+                text
+            );
 
             document.getElementById("tasks").innerHTML =
                 "Backend error";
 
             return;
+
         }
 
+
         // normalize
-        const tasks = Array.isArray(data)
-            ? data
-            : (Array.isArray(data.tasks) ? data.tasks : []);
+        const tasks =
+            Array.isArray(data)
+                ? data
+                : (
+                    Array.isArray(data.tasks)
+                        ? data.tasks
+                        : []
+                );
+
 
         // global source of truth
-        window.latestTasks = tasks;
+        window.latestTasks =
+            tasks;
+
 
         // =====================================
         // MEMORY GOVERNANCE METRICS
@@ -13475,8 +13498,11 @@ async function loadMemory(){
                 m &&
                 typeof m === "object" &&
                 m.summary &&
-                !/^[0-9]+$/.test(String(m.summary).trim())
+                !/^[0-9]+$/.test(
+                    String(m.summary).trim()
+                )
             );
+
 
         window.memoryMetrics = {
 
@@ -13500,34 +13526,38 @@ async function loadMemory(){
                 ).length,
 
             duplicateCandidates:
-                detectDuplicateCandidates(validTasks).length,
+                detectDuplicateCandidates(
+                    validTasks
+                ).length,
 
             healthScore:
-                calculateMemoryHealthScore(validTasks)
+                calculateMemoryHealthScore(
+                    validTasks
+                )
 
         };
+
+
         console.log(
             "🧹 DUPLICATE CANDIDATES",
-            detectDuplicateCandidates(validTasks)
+            detectDuplicateCandidates(
+                validTasks
+            )
         );
-        
+
+
         console.log(
             "🧠 MEMORY METRICS",
             window.memoryMetrics
         );
 
+
         renderMemoryGovernanceMetrics();
 
-        //console.log(
-            //"ACTIVE TASK COUNT:",
-            //tasks.filter(t =>
-                //String(t.status || "")
-                    //.toLowerCase()
-                    //.trim() === "active"
-            //).length
-        //);
 
-        let html = "";
+        let html =
+            "";
+
 
         for (let m of tasks){
 
@@ -13535,22 +13565,29 @@ async function loadMemory(){
                 !m ||
                 typeof m !== "object" ||
                 !m.summary ||
-                /^[0-9]+$/.test(String(m.summary).trim())
+                /^[0-9]+$/.test(
+                    String(m.summary).trim()
+                )
             ){
                 continue;
             }
 
-            const type = String(
-                m.memory_type || m.type || "task"
-            )
-            .toLowerCase()
-            .trim();
 
-            const status = String(
-                m.status || "active"
-            )
-            .toLowerCase()
-            .trim();
+            const type =
+                String(
+                    m.memory_type || m.type || "task"
+                )
+                .toLowerCase()
+                .trim();
+
+
+            const status =
+                String(
+                    m.status || "active"
+                )
+                .toLowerCase()
+                .trim();
+
 
             if (
                 currentFilter !== "all" &&
@@ -13559,6 +13596,7 @@ async function loadMemory(){
                 continue;
             }
 
+
             if (
                 currentStatus !== "all" &&
                 status !== currentStatus
@@ -13566,36 +13604,98 @@ async function loadMemory(){
                 continue;
             }
 
-            html += renderTask(m);
+
+            html +=
+                renderTask(m);
+
         }
 
+
         const finalHtml =
-            html || "<b>No items match filter</b>";
+            html ||
+            "<b>No items match filter</b>";
+
 
         // =====================================
         // PREVENT REDUNDANT DOM REBUILD
         // =====================================
 
-        if (finalHtml === lastMemoryRender){
+        if (
+            finalHtml === lastMemoryRender
+        ){
+
             return;
+
         }
 
-        lastMemoryRender = finalHtml;
+
+        lastMemoryRender =
+            finalHtml;
+
 
         document.getElementById("tasks").innerHTML =
             finalHtml;
-            console.log(
-                "📋 MEMORY RENDER COMPLETE"
-            );
 
-    } catch (e){
 
-        console.error("LOAD MEMORY ERROR:", e);
+        console.log(
+            "📋 MEMORY RENDER COMPLETE"
+        );
+
+
+        // ==========================
+        // SPRINT 1
+        // EVENT ORCHESTRATION
+        // ==========================
+
+        const memoryChangedPayload = {
+            total: validTasks.length,
+            rendered: true,
+            healthScore: window.memoryMetrics?.healthScore || 0,
+            duplicateCandidates: window.memoryMetrics?.duplicateCandidates || 0
+        };
+
+        window.publishRuntimeEvent?.(
+            "memory_changed",
+            memoryChangedPayload
+        );
+
+        fetch(
+            "/runtime/event",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    event: "memory_changed",
+                    payload: memoryChangedPayload
+                })
+            }
+        ).catch(error =>
+            console.error(
+                "❌ Backend runtime event failed",
+                error
+            )
+        );
+
+        console.log("📡 Runtime event published: memory_changed");
+
+    }
+
+    catch (e){
+
+        console.error(
+            "LOAD MEMORY ERROR:",
+            e
+        );
 
         document.getElementById("tasks").innerHTML =
             "Error loading memory";
+
     }
+
 }
+
 
 function detectDuplicateCandidates(tasks){
 
