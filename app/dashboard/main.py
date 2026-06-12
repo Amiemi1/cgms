@@ -111,8 +111,8 @@ app.include_router(runtime_events_router)
 
 @app.get("/")
 def root():
-
     return {
         "system": "CGMS",
-        "status": "running"
+        "status": "running",
+        "build": "auto_deploy_test"
     }
