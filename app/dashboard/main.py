@@ -52,6 +52,22 @@ from app.dashboard.routes.environment_manifest import (
     router as environment_manifest_router
 )
 
+from app.dashboard.routes.runtime_metrics import (
+    router as runtime_metrics_router
+)
+
+from app.dashboard.routes.runtime_commands import (
+    router as runtime_commands_router
+)
+
+from app.dashboard.routes.runtime_flags import (
+    router as runtime_flags_router
+)
+
+from app.dashboard.routes.runtime_kill_switch import (
+    router as runtime_kill_switch_router
+)
+
 templates = Jinja2Templates(directory="app/dashboard/templates")
 
 
@@ -143,6 +159,22 @@ app.include_router(
 
 app.include_router(
     environment_manifest_router
+)
+
+app.include_router(
+    runtime_metrics_router
+)
+
+app.include_router(
+    runtime_commands_router
+)
+
+app.include_router(
+    runtime_flags_router
+)
+
+app.include_router(
+    runtime_kill_switch_router
 )
 
 # -----------------------------
