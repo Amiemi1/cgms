@@ -32,6 +32,22 @@ app = FastAPI(
     version="1.0"
 )
 
+from app.dashboard.routes.audit_console import (
+    router as audit_console_router
+)
+
+from app.dashboard.routes.session_replay import (
+    router as session_replay_router
+)
+
+from app.dashboard.routes.enterprise_readiness import (
+    router as enterprise_readiness_router
+)
+
+from app.dashboard.routes.system_health import (
+    router as system_health_router
+)
+
 templates = Jinja2Templates(directory="app/dashboard/templates")
 
 
@@ -104,6 +120,22 @@ app.include_router(memory_router)
 
 # SPRINT 1 — EVENT-DRIVEN ORCHESTRATION
 app.include_router(runtime_events_router)
+
+app.include_router(
+    audit_console_router
+)
+
+app.include_router(
+    session_replay_router
+)
+
+app.include_router(
+    enterprise_readiness_router
+)
+
+app.include_router(
+    system_health_router
+)
 
 # -----------------------------
 # ROOT

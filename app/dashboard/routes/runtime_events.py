@@ -9,6 +9,14 @@ from app.dashboard.runtime.incident_assessor import (
     assess_runtime_impact
 )
 
+from app.services.explainability.explainability_engine import (
+    explain_runtime_decision
+)
+
+from app.services.orchestration.session_store import (
+    store_session_event
+)
+
 router = APIRouter()
 
 
@@ -29,6 +37,21 @@ async def runtime_event(
         **data,
         "impact": impact
     }
+
+    explanation = explain_runtime_decision(
+    event,
+    data
+)
+
+    data = {
+        **data,
+        "explanation": explanation
+    }
+
+    store_session_event(
+        event,
+        data
+    )
 
     if event == "memory_changed":
 
