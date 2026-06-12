@@ -68,6 +68,14 @@ from app.dashboard.routes.runtime_kill_switch import (
     router as runtime_kill_switch_router
 )
 
+from app.dashboard.routes.runtime_policy import (
+    router as runtime_policy_router
+)
+
+from app.dashboard.routes.runtime_quarantine import (
+    router as runtime_quarantine_router
+)
+
 templates = Jinja2Templates(directory="app/dashboard/templates")
 
 
@@ -175,6 +183,14 @@ app.include_router(
 
 app.include_router(
     runtime_kill_switch_router
+)
+
+app.include_router(
+    runtime_policy_router
+)
+
+app.include_router(
+    runtime_quarantine_router
 )
 
 # -----------------------------

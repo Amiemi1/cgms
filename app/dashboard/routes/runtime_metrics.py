@@ -1,6 +1,9 @@
 from fastapi import APIRouter
 from datetime import datetime
 
+from app.services.governance.policy_enforcer import (
+    enforce_runtime_policy
+)
 
 router = APIRouter()
 
@@ -14,6 +17,16 @@ def runtime_metrics():
         datetime.utcnow() -
         START
     ).total_seconds()
+
+    policy = enforce_runtime_policy({
+
+        "healthScore": 100,
+
+        "autonomy": True,
+
+        "subsystem":
+            "memory_runtime"
+    })
 
     return {
 
@@ -34,6 +47,8 @@ def runtime_metrics():
 
         "sessionEvents":
             1,
+
+        "policy": policy,
 
         "timestamp":
             datetime.utcnow()
