@@ -48,6 +48,10 @@ from app.dashboard.routes.system_health import (
     router as system_health_router
 )
 
+from app.dashboard.routes.environment_manifest import (
+    router as environment_manifest_router
+)
+
 templates = Jinja2Templates(directory="app/dashboard/templates")
 
 
@@ -135,6 +139,10 @@ app.include_router(
 
 app.include_router(
     system_health_router
+)
+
+app.include_router(
+    environment_manifest_router
 )
 
 # -----------------------------
