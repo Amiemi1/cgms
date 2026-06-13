@@ -76,6 +76,22 @@ from app.dashboard.routes.runtime_quarantine import (
     router as runtime_quarantine_router
 )
 
+from app.dashboard.routes.connectors import (
+    router as connector_router
+)
+
+from app.dashboard.routes.connector_control import (
+    router as connector_control_router
+)
+
+from app.dashboard.routes.connector_health import (
+    router as connector_health_router
+)
+
+from app.dashboard.routes.external_ingestion import (
+    router as external_ingestion_router
+)
+
 templates = Jinja2Templates(directory="app/dashboard/templates")
 
 
@@ -191,6 +207,22 @@ app.include_router(
 
 app.include_router(
     runtime_quarantine_router
+)
+
+app.include_router(
+    connector_router
+)
+
+app.include_router(
+    connector_control_router
+)
+
+app.include_router(
+    connector_health_router
+)
+
+app.include_router(
+    external_ingestion_router
 )
 
 # -----------------------------
