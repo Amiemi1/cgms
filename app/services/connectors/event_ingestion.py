@@ -4,6 +4,9 @@ from app.services.orchestration.event_router import (
     route_memory_update
 )
 
+from app.services.workspace.context import (
+    get_workspace
+)
 
 INGESTED_EVENTS = []
 
@@ -14,9 +17,21 @@ def ingest_external_event(
 ):
 
     record = {
-        "source": source,
-        "payload": payload,
-        "status": "received",
+
+        "workspace":
+            get_workspace()[
+                "id"
+            ],
+
+        "source":
+            source,
+
+        "payload":
+            payload,
+
+        "status":
+            "received",
+
         "receivedAt":
             datetime.utcnow()
             .isoformat()
@@ -72,4 +87,26 @@ def get_ingested_events(
     limit: int = 100
 ):
 
-    return INGESTED_EVENTS[:limit]
+    workspace = get_workspace()[
+        "id"
+    ]
+
+    return [
+
+        event
+
+        for event
+
+        in INGESTED_EVENTS
+
+        if (
+            event.get(
+                "workspace"
+            )
+            ==
+            workspace
+        )
+
+    ][
+        :limit
+    ]

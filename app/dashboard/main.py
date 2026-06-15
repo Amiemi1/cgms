@@ -92,6 +92,18 @@ from app.dashboard.routes.external_ingestion import (
     router as external_ingestion_router
 )
 
+from app.dashboard.routes.workspaces import (
+    router as workspace_router
+)
+
+from app.dashboard.routes.workspace_context import (
+    router as workspace_context_router
+)
+
+from app.dashboard.routes.workspace_metrics import (
+    router as workspace_metrics_router
+)
+
 templates = Jinja2Templates(directory="app/dashboard/templates")
 
 
@@ -134,9 +146,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-
-
 
 # -----------------------------
 # DATABASE INIT
@@ -223,6 +232,18 @@ app.include_router(
 
 app.include_router(
     external_ingestion_router
+)
+
+app.include_router(
+    workspace_router
+)
+
+app.include_router(
+    workspace_context_router
+)
+
+app.include_router(
+    workspace_metrics_router
 )
 
 # -----------------------------
