@@ -104,6 +104,14 @@ from app.dashboard.routes.workspace_metrics import (
     router as workspace_metrics_router
 )
 
+from app.dashboard.routes.workspace_admin import (
+    router as workspace_admin_router
+)
+
+from app.dashboard.routes.workspace_quotas import (
+    router as workspace_quotas_router
+)
+
 templates = Jinja2Templates(directory="app/dashboard/templates")
 
 
@@ -244,6 +252,14 @@ app.include_router(
 
 app.include_router(
     workspace_metrics_router
+)
+
+app.include_router(
+    workspace_admin_router
+)
+
+app.include_router(
+    workspace_quotas_router
 )
 
 # -----------------------------
