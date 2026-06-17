@@ -116,6 +116,18 @@ from app.dashboard.routes.connector_adapters import (
     router as connector_adapters_router
 )
 
+from app.dashboard.routes.admin_summary import (
+    router as admin_summary_router
+)
+
+from app.dashboard.routes.product_console import (
+    router as product_console_router
+)
+
+from app.dashboard.routes.release_status import (
+    router as release_status_router
+)
+
 templates = Jinja2Templates(directory="app/dashboard/templates")
 
 
@@ -268,6 +280,18 @@ app.include_router(
 
 app.include_router(
     connector_adapters_router
+)
+
+app.include_router(
+    admin_summary_router
+)
+
+app.include_router(
+    product_console_router
+)
+
+app.include_router(
+    release_status_router
 )
 
 # -----------------------------
