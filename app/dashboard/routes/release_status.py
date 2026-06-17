@@ -38,3 +38,32 @@ def release_status():
                 "Packaging"
             ]
     }
+
+@router.get(
+    "/release/narrative"
+)
+def release_narrative():
+
+    return {
+
+        "product":
+
+            "CGMS",
+
+        "version":
+
+            "v1.30",
+
+        "message":
+
+            (
+                "Enterprise runtime platform "
+                "with governance, connectors, "
+                "commercial controls, and "
+                "operator visibility."
+            ),
+
+        "stage":
+
+            "release_candidate"
+    }
