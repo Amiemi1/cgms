@@ -1,4 +1,10 @@
-WORKSPACES = {
+from app.services.persistence.workspace_store import (
+    load_workspaces,
+    save_workspaces
+)
+
+
+WORKSPACES = load_workspaces() or {
     "default": {
         "name": "Default Workspace",
         "status": "active",
@@ -35,6 +41,10 @@ def create_workspace(
                 "unknown"
             )
     }
+
+    save_workspaces(
+        WORKSPACES
+    )
 
     return WORKSPACES[
         workspace_id

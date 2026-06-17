@@ -1,0 +1,17 @@
+{
+  "default": {
+    "name": "Default Workspace",
+    "status": "active",
+    "createdBy": "system"
+  },
+  "commercial-intelligence": {
+    "name": "Commercial Intelligence",
+    "status": "active",
+    "createdBy": "Murphy"
+  },
+  "persist-test": {
+    "name": "Persistence Test",
+    "status": "active",
+    "createdBy": "test"
+  }
+}

@@ -1,4 +1,10 @@
-connector_registry = {
+from app.services.persistence.connector_store import (
+    load_connectors,
+    save_connectors
+)
+
+
+DEFAULT_CONNECTORS = {
 
     "slack": {
         "enabled": False,
@@ -22,6 +28,12 @@ connector_registry = {
 }
 
 
+connector_registry = {
+    **DEFAULT_CONNECTORS,
+    **load_connectors()
+}
+
+
 def get_connectors():
 
     return connector_registry
@@ -38,6 +50,10 @@ def update_connector(
             name
         ].update(
             config
+        )
+
+        save_connectors(
+            connector_registry
         )
 
     return connector_registry
