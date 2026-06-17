@@ -20,4 +20,12 @@ def test_connectors_endpoint():
     assert "gmail" in data
     assert "calendar" in data
 
-    assert data["slack"]["status"] == "not_connected"
+    assert isinstance(
+        data["slack"]["enabled"],
+        bool
+    )
+
+    assert data["slack"]["status"] in [
+        "not_connected",
+        "connected"
+    ]

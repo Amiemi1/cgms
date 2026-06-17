@@ -13,5 +13,15 @@
     "name": "Persistence Test",
     "status": "active",
     "createdBy": "test"
+  },
+  "quota-test": {
+    "name": "Quota Test",
+    "status": "active",
+    "createdBy": "unknown"
+  },
+  "test": {
+    "name": "Test Workspace",
+    "status": "active",
+    "createdBy": "test"
   }
 }
