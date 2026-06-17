@@ -112,6 +112,10 @@ from app.dashboard.routes.workspace_quotas import (
     router as workspace_quotas_router
 )
 
+from app.dashboard.routes.connector_adapters import (
+    router as connector_adapters_router
+)
+
 templates = Jinja2Templates(directory="app/dashboard/templates")
 
 
@@ -260,6 +264,10 @@ app.include_router(
 
 app.include_router(
     workspace_quotas_router
+)
+
+app.include_router(
+    connector_adapters_router
 )
 
 # -----------------------------
