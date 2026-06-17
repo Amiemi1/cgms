@@ -28,3 +28,12 @@
 - [ ] UI
 - [ ] Documentation
 - [ ] Packaging
+
+## Production Approval
+
+[ ] Full regression green
+[ ] Persistence verified
+[ ] Connectors verified
+[ ] Commercial controls verified
+[ ] Documentation frozen
+[ ] Release approved

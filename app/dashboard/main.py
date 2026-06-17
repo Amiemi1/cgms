@@ -132,6 +132,10 @@ from app.dashboard.routes.commercial import (
     router as commercial_router
 )
 
+from app.dashboard.routes.ga_release import (
+    router as ga_router
+)
+
 templates = Jinja2Templates(directory="app/dashboard/templates")
 
 
@@ -300,6 +304,10 @@ app.include_router(
 
 app.include_router(
     commercial_router
+)
+
+app.include_router(
+    ga_router
 )
 
 # -----------------------------
