@@ -38,8 +38,8 @@ def next_action(chat_id: int):
 
 
 # 🔥 NEW ENDPOINT
-@router.get("/goals/{chat_id}")
-def get_goals(chat_id: int):
+@router.get("/intelligence/goals/{chat_id}")
+def get_intelligence_goals(chat_id: int):
 
     session = SessionLocal()
 
