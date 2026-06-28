@@ -1,0 +1,56 @@
+============================= test session starts =============================
+platform win32 -- Python 3.11.9, pytest-9.0.3, pluggy-1.6.0 -- C:\Users\MurphyPersonal\AppData\Local\Programs\Python\Python311\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\MurphyPersonal\OneDrive\Desktop\Contextual_Group_Memory_System\05_Prototype_and_Testing\cgms\cgms
+configfile: pyproject.toml
+plugins: anyio-4.12.0
+collecting ... collected 32 items
+
+tests/test_admin_summary.py::test_admin_summary PASSED                   [  3%]
+tests/test_admin_summary.py::test_product_console PASSED                 [  6%]
+tests/test_admin_summary.py::test_release_status PASSED                  [  9%]
+tests/test_commercial_layer.py::test_usage_endpoint PASSED               [ 12%]
+tests/test_commercial_layer.py::test_plan_switch PASSED                  [ 15%]
+tests/test_commercial_layer.py::test_enforcement PASSED                  [ 18%]
+tests/test_connector_adapters.py::test_slack_adapter PASSED              [ 21%]
+tests/test_connector_adapters.py::test_teams_adapter PASSED              [ 25%]
+tests/test_connector_adapters.py::test_gmail_adapter PASSED              [ 28%]
+tests/test_connector_adapters.py::test_calendar_adapter PASSED           [ 31%]
+tests/test_connectors.py::test_connectors_endpoint PASSED                [ 34%]
+tests/test_enterprise_readiness.py::test_enterprise_readiness PASSED     [ 37%]
+tests/test_environment_manifest.py::test_environment_manifest_endpoint PASSED [ 40%]
+tests/test_external_ingestion.py::test_external_ingestion PASSED         [ 43%]
+tests/test_external_ingestion.py::test_ingestion_history PASSED          [ 46%]
+tests/test_ops_observability.py::test_ops_health PASSED                  [ 50%]
+tests/test_ops_observability.py::test_ops_events PASSED                  [ 53%]
+tests/test_ops_observability.py::test_ops_latency PASSED                 [ 56%]
+tests/test_ops_observability.py::test_ops_errors PASSED                  [ 59%]
+tests/test_ops_observability.py::test_ops_runtime PASSED                 [ 62%]
+tests/test_persistence_layer.py::test_workspace_persistence PASSED       [ 65%]
+tests/test_persistence_layer.py::test_connector_persistence PASSED       [ 68%]
+tests/test_persistence_layer.py::test_connector_health PASSED            [ 71%]
+tests/test_release_readiness.py::test_release_status PASSED              [ 75%]
+tests/test_release_readiness.py::test_release_narrative PASSED           [ 78%]
+tests/test_runtime_metrics.py::test_runtime_metrics_endpoint PASSED      [ 81%]
+tests/test_system_health.py::test_system_health_endpoint PASSED          [ 84%]
+tests/test_workspace_quota.py::test_workspace_quota_blocks_events PASSED [ 87%]
+tests/test_workspace_runtime.py::test_workspace_creation PASSED          [ 90%]
+tests/test_workspace_runtime.py::test_workspace_context PASSED           [ 93%]
+tests/test_workspace_runtime.py::test_workspace_ingestion PASSED         [ 96%]
+tests/test_workspace_runtime.py::test_workspace_metrics PASSED           [100%]
+
+============================== warnings summary ===============================
+tests/test_connector_adapters.py::test_slack_adapter
+tests/test_connector_adapters.py::test_teams_adapter
+tests/test_connector_adapters.py::test_gmail_adapter
+tests/test_connector_adapters.py::test_calendar_adapter
+tests/test_external_ingestion.py::test_external_ingestion
+tests/test_workspace_quota.py::test_workspace_quota_blocks_events
+tests/test_workspace_runtime.py::test_workspace_ingestion
+  C:\Users\MurphyPersonal\OneDrive\Desktop\Contextual_Group_Memory_System\05_Prototype_and_Testing\cgms\cgms\app\services\connectors\event_ingestion.py:74: RuntimeWarning: coroutine 'route_memory_update' was never awaited
+    route_memory_update({
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================= 32 passed, 7 warnings in 1.73s ========================

@@ -61,6 +61,14 @@ from app.dashboard.routes.runtime_timeline import (
     router as runtime_timeline_router
 )
 
+from app.dashboard.routes.operator_console import (
+    router as operator_console_router
+)
+
+from app.dashboard.routes.memory_intelligence import (
+    router as memory_intelligence_router
+)
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     print("CGMS STARTING")
@@ -189,6 +197,9 @@ app.include_router(
     runtime_timeline_router
 )
 
+app.include_router(operator_console_router)
+
+app.include_router(memory_intelligence_router)
 
 @app.get("/")
 def root():
@@ -209,3 +220,25 @@ def debug_routes():
         }
         for route in app.routes
     ]
+
+@app.get(
+"/operator",
+response_class=HTMLResponse
+)
+
+def operator(
+request:
+Request
+):
+
+    return templates.TemplateResponse(
+
+        "operator_console.html",
+
+        {
+
+            "request":
+            request
+        }
+
+    )

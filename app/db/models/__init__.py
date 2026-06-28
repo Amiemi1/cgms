@@ -7,3 +7,5 @@ from .learning_log import LearningLog
 from .security_models import UserRole, SecurityLog
 from .memory_access import MemoryAccess
 from .decision_lineage import DecisionLineage
+
+from app.db.models.memory_score import MemoryScore

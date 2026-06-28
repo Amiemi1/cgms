@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CGMS Operator Console</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+margin:0;
+background:#08111f;
+color:#ffffff;
+font-family:Segoe UI, Arial;
+}
+
+.header{
+padding:24px;
+background:#0f1b2d;
+border-bottom:1px solid #22375d;
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:20px;
+flex-wrap:wrap;
+}
+
+.title{font-size:28px;font-weight:700}
+.subtitle{margin-top:8px;color:#8fa5d0}
+
+.chip{
+display:inline-block;
+padding:6px 12px;
+border-radius:999px;
+font-size:13px;
+font-weight:700;
+background:#17345c;
+border:1px solid #315b91;
+}
+
+.ok{color:#3cd47f}
+.warn{color:#ffb547}
+.bad{color:#ff647c}
+
+.actions{
+padding:20px 24px;
+display:flex;
+gap:12px;
+flex-wrap:wrap;
+align-items:center;
+}
+
+button{
+background:#1f3b66;
+color:white;
+border:1px solid #355a91;
+border-radius:10px;
+padding:12px 18px;
+cursor:pointer;
+font-weight:600;
+}
+
+button:hover{background:#2d5188}
+
+.toggle{
+margin-left:auto;
+color:#8fa5d0;
+}
+
+.grid{
+padding:24px;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+}
+
+.card{
+background:#15253f;
+border-radius:14px;
+padding:22px;
+box-shadow:0 6px 18px rgba(0,0,0,.18);
+}
+
+.value{
+font-size:42px;
+font-weight:700;
+margin-bottom:8px;
+}
+
+.label{color:#8fa5d0}
+
+.footer{
+padding:0 24px 18px 24px;
+color:#6f84ad;
+}
+
+.toast{
+position:fixed;
+right:24px;
+bottom:24px;
+background:#17345c;
+border:1px solid #315b91;
+padding:14px 18px;
+border-radius:12px;
+display:none;
+z-index:999;
+}
+
+.timeline{
+padding:24px;
+display:grid;
+grid-template-columns:1fr;
+}
+
+.event-row{
+padding:12px 0;
+border-bottom:1px solid #274061;
+}
+
+.event-meta{
+color:#8fa5d0;
+font-size:13px;
+margin-bottom:4px;
+text-transform:uppercase;
+letter-spacing:.04em;
+}
+
+.event-message{
+font-size:15px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+<div>
+<div class="title">CGMS Operator Console</div>
+<div class="subtitle" id="status">Loading...</div>
+</div>
+
+<div>
+<span class="chip" id="releaseChip">Release —</span>
+<span class="chip" id="healthChip">Health —</span>
+</div>
+</div>
+
+<div class="actions">
+<button onclick="sendAction('refresh')">Refresh Runtime</button>
+<button onclick="sendAction('pause')">Pause Runtime</button>
+<button onclick="sendAction('resume')">Resume Runtime</button>
+
+<label class="toggle">
+<input type="checkbox" id="autoRefresh" checked>
+Auto refresh
+</label>
+</div>
+
+<div class="grid">
+<div class="card"><div class="value" id="workspaces">—</div><div class="label">Workspaces</div></div>
+<div class="card"><div class="value" id="connectors">—</div><div class="label">Connected Connectors</div></div>
+<div class="card"><div class="value" id="events">—</div><div class="label">Runtime Events</div></div>
+<div class="card"><div class="value" id="errors">—</div><div class="label">Errors</div></div>
+<div class="card"><div class="value" id="version">—</div><div class="label">Release</div></div>
+</div>
+
+<div class="footer" id="updated">Last refresh —</div>
+<div class="footer" id="actionResult">Action status —</div>
+
+<div class="timeline">
+<div class="card">
+<h3>Runtime Timeline</h3>
+<div id="eventFeed">Loading...</div>
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const el={
+status:document.getElementById("status"),
+workspaces:document.getElementById("workspaces"),
+connectors:document.getElementById("connectors"),
+events:document.getElementById("events"),
+errors:document.getElementById("errors"),
+version:document.getElementById("version"),
+updated:document.getElementById("updated"),
+actionResult:document.getElementById("actionResult"),
+eventFeed:document.getElementById("eventFeed"),
+releaseChip:document.getElementById("releaseChip"),
+healthChip:document.getElementById("healthChip"),
+toast:document.getElementById("toast"),
+autoRefresh:document.getElementById("autoRefresh")
+}
+
+let loading=false
+
+function showToast(message,type="ok"){
+el.toast.innerHTML=message
+el.toast.style.display="block"
+el.toast.className=`toast ${type}`
+setTimeout(()=>{el.toast.style.display="none"},3000)
+}
+
+function fmtTime(ts){
+try{
+return new Date(ts).toLocaleTimeString()
+}
+catch{
+return "—"
+}
+}
+
+async function load(){
+if(loading)return
+loading=true
+
+try{
+const r=await fetch("/operator/console")
+if(!r.ok)throw new Error("Unable to load")
+
+const d=await r.json()
+
+el.status.innerHTML=`Status: <span class="ok">${d.status}</span>`
+el.workspaces.textContent=d.summary.workspaces
+el.connectors.textContent=`${d.summary.connectedConnectors}/${d.summary.connectors}`
+el.events.textContent=d.summary.events
+el.errors.textContent=d.summary.errors
+el.version.textContent=d.version
+
+el.releaseChip.textContent=d.version
+el.healthChip.innerHTML=d.summary.errors>0
+? `<span class="warn">Warnings</span>`
+: `<span class="ok">Healthy</span>`
+
+el.updated.textContent=`Last refresh: ${new Date().toLocaleTimeString()}`
+}
+catch(e){
+el.status.innerHTML=`<span class="warn">Console unavailable</span>`
+el.healthChip.innerHTML=`<span class="bad">Offline</span>`
+}
+finally{
+loading=false
+}
+}
+
+async function loadEvents(){
+try{
+const r=await fetch("/ops/runtime")
+const d=await r.json()
+
+el.eventFeed.innerHTML=d.timeline
+.slice()
+.reverse()
+.slice(0,10)
+.map(x=>`
+<div class="event-row">
+<div class="event-meta">${fmtTime(x.timestamp)} | ${x.type}</div>
+<div class="event-message">${x.message}</div>
+</div>
+`)
+.join("")
+}
+catch{
+el.eventFeed.innerHTML="Unavailable"
+}
+}
+
+async function sendAction(action){
+try{
+const r=await fetch("/operator/action",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({action})
+})
+
+const d=await r.json()
+
+if(d.ok){
+el.actionResult.innerHTML=`<span class="ok">${d.message}</span>`
+showToast(`✓ ${d.message}`,"ok")
+}else{
+el.actionResult.innerHTML=`<span class="warn">${d.message}</span>`
+showToast(d.message,"warn")
+}
+
+await load()
+await loadEvents()
+}
+catch(e){
+el.actionResult.innerHTML=`<span class="warn">Action failed</span>`
+showToast("Action failed","warn")
+}
+}
+
+load()
+loadEvents()
+
+setInterval(()=>{
+if(el.autoRefresh.checked){
+load()
+loadEvents()
+}
+},5000)
+</script>
+
+</body>
+</html>
