@@ -12,7 +12,7 @@ async def route_memory_update(
 ):
 
     await event_registry.publish(
-        "memory_changed",
+        "memory.changed",
         payload
     )
 

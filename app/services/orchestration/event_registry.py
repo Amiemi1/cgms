@@ -139,6 +139,32 @@ class EventRegistry:
                 "Expected format: '<bounded_context>.<action>'."
             )
 
+    async def publish(
+        self,
+        event_name: str,
+        payload: dict | None = None,
+    ):
+        """
+        Legacy compatibility publisher.
+
+        TODO(v1.76):
+        Remove this method after legacy orchestration code migrates to
+        EnterpriseEventBus.publish(DomainEvent).
+        """
+
+        from app.services.orchestration.domain_event import DomainEvent
+        from app.services.orchestration.event_bus import EnterpriseEventBus
+
+        event = DomainEvent(
+            event_name=event_name,
+            source="legacy.event_registry",
+            payload=payload or {},
+        )
+
+        bus = EnterpriseEventBus(self)
+
+        return await bus.publish(event)
+
 
 DEFAULT_EVENT_REGISTRY: Final[EventRegistry] = EventRegistry()
 
