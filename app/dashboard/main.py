@@ -24,6 +24,7 @@ from app.dashboard.routes.runtime_events import router as runtime_events_router
 from app.dashboard.routes.audit_console import router as audit_console_router
 from app.dashboard.routes.session_replay import router as session_replay_router
 from app.dashboard.routes.enterprise_readiness import router as enterprise_readiness_router
+from app.dashboard.routes.product_readiness import router as product_readiness_router
 from app.dashboard.routes.system_health import router as system_health_router
 from app.dashboard.routes.environment_manifest import router as environment_manifest_router
 from app.dashboard.routes.runtime_metrics import router as runtime_metrics_router
@@ -160,6 +161,7 @@ app.include_router(runtime_events_router)
 app.include_router(audit_console_router)
 app.include_router(session_replay_router)
 app.include_router(enterprise_readiness_router)
+app.include_router(product_readiness_router)
 app.include_router(system_health_router)
 app.include_router(environment_manifest_router)
 app.include_router(runtime_metrics_router)
