@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CGMS Product Readiness Dashboard</title>
+
+<style>
+:root {
+    --background: #08111f;
+    --surface: #101d31;
+    --surface-secondary: #15253f;
+    --surface-hover: #1b3050;
+    --border: #263d61;
+    --text: #f4f7fc;
+    --muted: #93a7ca;
+    --accent: #55a7ff;
+    --success: #43d17d;
+    --warning: #ffbd59;
+    --danger: #ff6b7a;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--background);
+    color: var(--text);
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+button {
+    font: inherit;
+}
+
+.header {
+    padding: 24px 30px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+.title {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.subtitle {
+    margin-top: 8px;
+    color: var(--muted);
+    line-height: 1.5;
+}
+
+.header-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.status-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 38px;
+    padding: 8px 14px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface-secondary);
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.status-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--warning);
+}
+
+.status-dot.ready {
+    background: var(--success);
+}
+
+.status-dot.error {
+    background: var(--danger);
+}
+
+.refresh-button {
+    min-height: 40px;
+    padding: 9px 16px;
+    border: 1px solid #39679c;
+    border-radius: 9px;
+    background: #1f426f;
+    color: #ffffff;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.refresh-button:hover {
+    background: #2b568a;
+}
+
+.refresh-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.65;
+}
+
+.page {
+    width: min(1500px, 100%);
+    margin: 0 auto;
+    padding: 28px;
+}
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(180px, 1fr));
+    gap: 18px;
+}
+
+.card {
+    background: var(--surface-secondary);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+}
+
+.metric-value {
+    margin-bottom: 8px;
+    font-size: 38px;
+    font-weight: 750;
+}
+
+.metric-label {
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.metric-detail {
+    margin-top: 12px;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.content-grid {
+    display: grid;
+    grid-template-columns: minmax(280px, 0.9fr) minmax(420px, 2.1fr);
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.section {
+    margin-top: 20px;
+}
+
+.section-heading {
+    margin: 0 0 18px;
+    font-size: 19px;
+}
+
+.score-panel {
+    min-height: 350px;
+}
+
+.score-display {
+    display: flex;
+    justify-content: center;
+    padding: 10px 0 24px;
+}
+
+.score-ring {
+    --score: 0;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background:
+        conic-gradient(
+            var(--success) calc(var(--score) * 1%),
+            #263d61 0
+        );
+    display: grid;
+    place-items: center;
+    position: relative;
+}
+
+.score-ring::before {
+    content: "";
+    width: 142px;
+    height: 142px;
+    border-radius: 50%;
+    background: var(--surface-secondary);
+    position: absolute;
+}
+
+.score-ring-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+}
+
+.score-number {
+    font-size: 45px;
+    font-weight: 750;
+}
+
+.score-caption {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.category-list {
+    display: grid;
+    gap: 14px;
+}
+
+.category-row {
+    display: grid;
+    gap: 7px;
+}
+
+.category-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.progress-track {
+    height: 9px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: #263d61;
+}
+
+.progress-value {
+    height: 100%;
+    width: 0;
+    border-radius: inherit;
+    background: var(--accent);
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 720px;
+}
+
+th,
+td {
+    padding: 13px 14px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    vertical-align: middle;
+}
+
+th {
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+td {
+    font-size: 14px;
+}
+
+.capability-name {
+    font-weight: 700;
+}
+
+.capability-id {
+    margin-top: 4px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.badge {
+    display: inline-block;
+    padding: 5px 9px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.badge.ready,
+.badge.complete,
+.badge.completed {
+    border-color: rgba(67, 209, 125, 0.42);
+    background: rgba(67, 209, 125, 0.11);
+    color: var(--success);
+}
+
+.badge.in-progress,
+.badge.in_progress,
+.badge.partial {
+    border-color: rgba(255, 189, 89, 0.45);
+    background: rgba(255, 189, 89, 0.11);
+    color: var(--warning);
+}
+
+.badge.blocked,
+.badge.not-started,
+.badge.not_started,
+.badge.missing {
+    border-color: rgba(255, 107, 122, 0.42);
+    background: rgba(255, 107, 122, 0.1);
+    color: var(--danger);
+}
+
+.recommendation-list {
+    display: grid;
+    gap: 13px;
+}
+
+.recommendation {
+    padding: 16px;
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    background: var(--surface);
+}
+
+.recommendation-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+.recommendation-title {
+    font-weight: 700;
+}
+
+.recommendation-body {
+    margin-top: 9px;
+    color: var(--muted);
+    line-height: 1.55;
+    font-size: 14px;
+}
+
+.empty-state {
+    padding: 24px;
+    border: 1px dashed var(--border);
+    border-radius: 10px;
+    color: var(--muted);
+    text-align: center;
+}
+
+.error-panel {
+    display: none;
+    margin-bottom: 20px;
+    padding: 15px 18px;
+    border: 1px solid rgba(255, 107, 122, 0.45);
+    border-radius: 10px;
+    background: rgba(255, 107, 122, 0.1);
+    color: #ffc7ce;
+}
+
+.footer {
+    padding: 10px 0 4px;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.loading {
+    opacity: 0.62;
+    pointer-events: none;
+}
+
+@media (max-width: 1050px) {
+    .summary-grid {
+        grid-template-columns: repeat(2, minmax(180px, 1fr));
+    }
+
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 620px) {
+    .header {
+        padding: 20px;
+    }
+
+    .page {
+        padding: 20px;
+    }
+
+    .summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .header-actions {
+        width: 100%;
+    }
+
+    .refresh-button {
+        flex: 1;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+    <div>
+        <h1 class="title">CGMS Product Readiness</h1>
+        <div class="subtitle">
+            Dynamic capability assessment, category scoring and prioritized
+            product-engineering recommendations.
+        </div>
+    </div>
+
+    <div class="header-actions">
+        <div class="status-chip">
+            <span class="status-dot" id="statusDot"></span>
+            <span id="statusText">Loading readiness data</span>
+        </div>
+
+        <button
+            type="button"
+            class="refresh-button"
+            id="refreshButton"
+        >
+            Refresh
+        </button>
+    </div>
+</header>
+
+<main class="page" id="dashboard">
+    <div class="error-panel" id="errorPanel"></div>
+
+    <section class="summary-grid">
+        <article class="card">
+            <div class="metric-value" id="overallScore">-</div>
+            <div class="metric-label">Overall Readiness Score</div>
+            <div class="metric-detail">Dynamic product assessment</div>
+        </article>
+
+        <article class="card">
+            <div class="metric-value" id="capabilityCount">-</div>
+            <div class="metric-label">Registered Capabilities</div>
+            <div class="metric-detail">Capabilities evaluated by the engine</div>
+        </article>
+
+        <article class="card">
+            <div class="metric-value" id="readyCount">-</div>
+            <div class="metric-label">Production-Ready Capabilities</div>
+            <div class="metric-detail">Capabilities at production-ready status</div>
+        </article>
+
+        <article class="card">
+            <div class="metric-value" id="recommendationCount">-</div>
+            <div class="metric-label">Open Recommendations</div>
+            <div class="metric-detail">Prioritized improvement opportunities</div>
+        </article>
+    </section>
+
+    <section class="content-grid">
+        <article class="card score-panel">
+            <h2 class="section-heading">Readiness Profile</h2>
+
+            <div class="score-display">
+                <div class="score-ring" id="scoreRing">
+                    <div class="score-ring-content">
+                        <div class="score-number" id="scoreRingValue">-</div>
+                        <div class="score-caption">out of 100</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="category-list" id="categoryList">
+                <div class="empty-state">Loading category scores...</div>
+            </div>
+        </article>
+
+        <article class="card">
+            <h2 class="section-heading">Capability Register</h2>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Capability</th>
+                            <th>Category</th>
+                            <th>Priority</th>
+                            <th>Status</th>
+                            <th>Score</th>
+                        </tr>
+                    </thead>
+                    <tbody id="capabilityTable">
+                        <tr>
+                            <td colspan="5">Loading capabilities...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </article>
+    </section>
+
+    <section class="section card">
+        <h2 class="section-heading">Engineering Recommendations</h2>
+
+        <div class="recommendation-list" id="recommendationList">
+            <div class="empty-state">Loading recommendations...</div>
+        </div>
+    </section>
+
+    <div class="footer" id="lastUpdated">
+        Last refreshed: -
+    </div>
+</main>
+
+<script>
+const elements = {
+    dashboard: document.getElementById("dashboard"),
+    statusDot: document.getElementById("statusDot"),
+    statusText: document.getElementById("statusText"),
+    refreshButton: document.getElementById("refreshButton"),
+    errorPanel: document.getElementById("errorPanel"),
+    overallScore: document.getElementById("overallScore"),
+    capabilityCount: document.getElementById("capabilityCount"),
+    readyCount: document.getElementById("readyCount"),
+    recommendationCount: document.getElementById("recommendationCount"),
+    scoreRing: document.getElementById("scoreRing"),
+    scoreRingValue: document.getElementById("scoreRingValue"),
+    categoryList: document.getElementById("categoryList"),
+    capabilityTable: document.getElementById("capabilityTable"),
+    recommendationList: document.getElementById("recommendationList"),
+    lastUpdated: document.getElementById("lastUpdated")
+};
+
+let loading = false;
+
+function firstDefined(...values) {
+    return values.find(
+        value => value !== undefined && value !== null
+    );
+}
+
+function clampScore(value) {
+    const number = Number(value);
+
+    if (!Number.isFinite(number)) {
+        return 0;
+    }
+
+    return Math.max(0, Math.min(100, Math.round(number)));
+}
+
+function escapeHtml(value) {
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+function displayName(value) {
+    return String(value ?? "")
+        .replaceAll("_", " ")
+        .replaceAll("-", " ")
+        .replace(/\b\w/g, character => character.toUpperCase());
+}
+
+function statusClass(value) {
+    return String(value ?? "")
+        .trim()
+        .toLowerCase()
+        .replaceAll(" ", "-");
+}
+
+function getOverallScore(assessment) {
+    return clampScore(
+        firstDefined(
+            assessment.overall_score,
+            assessment.overallScore,
+            assessment.readiness_score,
+            assessment.readinessScore,
+            assessment.score,
+            0
+        )
+    );
+}
+
+function getCapabilityStatus(capability) {
+    return firstDefined(
+        capability.status,
+        capability.readiness_status,
+        capability.readinessStatus,
+        "unknown"
+    );
+}
+
+function isReady(capability) {
+    const status = String(
+        getCapabilityStatus(capability)
+    )
+        .trim()
+        .toLowerCase();
+
+    return [
+        "production_ready",
+        "production-ready",
+        "ready",
+        "complete",
+        "completed"
+    ].includes(status);
+}
+
+function renderSummary(
+    assessment,
+    capabilities,
+    recommendations
+) {
+    const score = getOverallScore(assessment);
+    const ready = capabilities.filter(isReady).length;
+
+    elements.overallScore.textContent = `${score}%`;
+    elements.capabilityCount.textContent = capabilities.length;
+    elements.readyCount.textContent = ready;
+    elements.recommendationCount.textContent =
+        recommendations.length;
+
+    elements.scoreRingValue.textContent = score;
+    elements.scoreRing.style.setProperty("--score", score);
+}
+
+function renderCategories(categories) {
+    const entries = Object.entries(categories || {});
+
+    if (entries.length === 0) {
+        elements.categoryList.innerHTML = `
+            <div class="empty-state">
+                No category scores are currently available.
+            </div>
+        `;
+        return;
+    }
+
+    entries.sort(
+        ([first], [second]) =>
+            String(first).localeCompare(String(second))
+    );
+
+    elements.categoryList.innerHTML = entries
+        .map(([category, value]) => {
+            const score = clampScore(value);
+
+            return `
+                <div class="category-row">
+                    <div class="category-meta">
+                        <span>${escapeHtml(displayName(category))}</span>
+                        <strong>${score}%</strong>
+                    </div>
+
+                    <div class="progress-track">
+                        <div
+                            class="progress-value"
+                            style="width:${score}%"
+                        ></div>
+                    </div>
+                </div>
+            `;
+        })
+        .join("");
+}
+
+function renderCapabilities(capabilities) {
+    if (!capabilities.length) {
+        elements.capabilityTable.innerHTML = `
+            <tr>
+                <td colspan="5">
+                    No capabilities are currently registered.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    elements.capabilityTable.innerHTML = capabilities
+        .map(capability => {
+            const id = firstDefined(
+                capability.id,
+                capability.capability_id,
+                capability.capabilityId,
+                "-"
+            );
+
+            const name = firstDefined(
+                capability.name,
+                capability.title,
+                id
+            );
+
+            const category = firstDefined(
+                capability.category,
+                "Uncategorized"
+            );
+
+            const priority = firstDefined(
+                capability.priority,
+                "-"
+            );
+
+            const status = getCapabilityStatus(capability);
+
+            const score = clampScore(
+                firstDefined(
+                    capability.score,
+                    capability.readiness_score,
+                    capability.readinessScore,
+                    0
+                )
+            );
+
+            return `
+                <tr>
+                    <td>
+                        <div class="capability-name">
+                            ${escapeHtml(name)}
+                        </div>
+                        <div class="capability-id">
+                            ${escapeHtml(id)}
+                        </div>
+                    </td>
+                    <td>${escapeHtml(displayName(category))}</td>
+                    <td>
+                        <span class="badge">
+                            ${escapeHtml(priority)}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge ${escapeHtml(
+                            statusClass(status)
+                        )}">
+                            ${escapeHtml(displayName(status))}
+                        </span>
+                    </td>
+                    <td>${score}%</td>
+                </tr>
+            `;
+        })
+        .join("");
+}
+
+function renderRecommendations(recommendations) {
+    if (!recommendations.length) {
+        elements.recommendationList.innerHTML = `
+            <div class="empty-state">
+                No open engineering recommendations.
+            </div>
+        `;
+        return;
+    }
+
+    elements.recommendationList.innerHTML = recommendations
+        .map(recommendation => {
+            const title = firstDefined(
+                recommendation.title,
+                recommendation.capability_name,
+                recommendation.capabilityName,
+                recommendation.capability_id,
+                recommendation.capabilityId,
+                "Product recommendation"
+            );
+
+            const priority = firstDefined(
+                recommendation.priority,
+                "Unassigned"
+            );
+
+            const body = firstDefined(
+                recommendation.reason,
+                recommendation.recommendation,
+                recommendation.message,
+                recommendation.description,
+                recommendation.action,
+                "No recommendation details supplied."
+            );
+
+            return `
+                <article class="recommendation">
+                    <div class="recommendation-header">
+                        <div class="recommendation-title">
+                            ${escapeHtml(title)}
+                        </div>
+
+                        <span class="badge">
+                            ${escapeHtml(priority)}
+                        </span>
+                    </div>
+
+                    <div class="recommendation-body">
+                        ${escapeHtml(body)}
+                    </div>
+                </article>
+            `;
+        })
+        .join("");
+}
+
+async function fetchJson(url) {
+    const response = await fetch(url, {
+        headers: {
+            "Accept": "application/json"
+        }
+    });
+
+    if (!response.ok) {
+        throw new Error(
+            `${url} returned HTTP ${response.status}`
+        );
+    }
+
+    return response.json();
+}
+
+function setLoading(isLoading) {
+    loading = isLoading;
+    elements.dashboard.classList.toggle(
+        "loading",
+        isLoading
+    );
+    elements.refreshButton.disabled = isLoading;
+    elements.refreshButton.textContent =
+        isLoading ? "Refreshing..." : "Refresh";
+}
+
+function setHealthyStatus() {
+    elements.statusDot.className = "status-dot ready";
+    elements.statusText.textContent =
+        "Product Readiness Engine online";
+}
+
+function setErrorStatus(message) {
+    elements.statusDot.className = "status-dot error";
+    elements.statusText.textContent =
+        "Product Readiness Engine unavailable";
+
+    elements.errorPanel.textContent = message;
+    elements.errorPanel.style.display = "block";
+}
+
+async function loadDashboard() {
+    if (loading) {
+        return;
+    }
+
+    setLoading(true);
+    elements.errorPanel.style.display = "none";
+
+    try {
+        const [
+            assessment,
+            capabilities,
+            recommendations,
+            categories
+        ] = await Promise.all([
+            fetchJson("/product-readiness/assessment"),
+            fetchJson("/product-readiness/capabilities"),
+            fetchJson("/product-readiness/recommendations"),
+            fetchJson("/product-readiness/categories")
+        ]);
+
+        renderSummary(
+            assessment,
+            capabilities,
+            recommendations
+        );
+
+        renderCategories(categories);
+        renderCapabilities(capabilities);
+        renderRecommendations(recommendations);
+
+        elements.lastUpdated.textContent =
+            `Last refreshed: ${new Date().toLocaleString()}`;
+
+        setHealthyStatus();
+    } catch (error) {
+        console.error(error);
+
+        setErrorStatus(
+            "The dashboard could not retrieve Product Readiness data. " +
+            "Confirm that the Product Readiness API is registered and available."
+        );
+    } finally {
+        setLoading(false);
+    }
+}
+
+elements.refreshButton.addEventListener(
+    "click",
+    loadDashboard
+);
+
+loadDashboard();
+</script>
+
+</body>
+</html>

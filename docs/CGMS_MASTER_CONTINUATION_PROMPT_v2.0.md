@@ -812,3 +812,108 @@ Architectural decision:
 - /product-readiness provides dynamic readiness assessment, capability scoring, and prioritized engineering recommendations.
 - Production implementation files are now created directly rather than through generator scripts.
 - Existing manual_test_db.py remains unchanged and is unrelated to PRE-005.
+
+
+## Sprint 16 — Product Readiness Engine
+
+### PRE-006 — Product Readiness Dashboard
+
+Status: COMPLETE
+
+Implemented a dynamic HTML dashboard at:
+
+- GET /product-readiness/dashboard
+
+Dashboard capabilities:
+
+- overall product-readiness score;
+- registered capability count;
+- production-ready capability count;
+- prioritized recommendation count;
+- category readiness profiles;
+- complete capability register;
+- calculated capability-level scores;
+- engineering recommendation explanations;
+- manual refresh and runtime availability status.
+
+The dashboard consumes the PRE-005 Product Readiness REST API and does not duplicate readiness scoring logic.
+
+Files created:
+
+- app/dashboard/routes/product_readiness_dashboard.py
+- app/dashboard/templates/product_readiness_dashboard.html
+- tests/test_product_readiness_dashboard.py
+
+Files updated:
+
+- app/dashboard/main.py
+- app/dashboard/routes/product_readiness.py
+- tests/test_product_readiness_api.py
+
+### PRE-006A — Production Capability Bootstrap
+
+Status: COMPLETE
+
+Classification: Mandatory Architectural Intervention
+
+Reason:
+
+The Product Readiness registry had no production initialization path. The API and dashboard therefore returned an empty capability inventory during live application execution.
+
+Implemented:
+
+- authoritative 38-capability CGMS product catalogue;
+- deterministic and idempotent registry bootstrap;
+- FastAPI lifespan initialization;
+- conservative translation of approved product-readiness classifications;
+- production capability metadata and scope preservation;
+- bootstrap and startup regression coverage.
+
+Authoritative source:
+
+- docs/product/CGMS_Product_Capability_and_Feature_Prioritization_Matrix.md
+
+Readiness translation:
+
+- Implemented → IMPLEMENTED with tests_passing=True
+- Partial → IN_PROGRESS
+- Foundation → IN_PROGRESS
+- Planned → NOT_STARTED
+- Future → NOT_STARTED
+
+No capability was promoted to TESTED, HARDENED, PILOT_READY, or PRODUCTION_READY without explicit documentary evidence.
+
+Files created:
+
+- app/services/product_readiness/catalogue.py
+- app/services/product_readiness/bootstrap.py
+- tests/test_product_readiness_bootstrap.py
+
+Files updated:
+
+- app/dashboard/main.py
+- app/dashboard/routes/product_readiness.py
+- app/dashboard/templates/product_readiness_dashboard.html
+- tests/test_product_readiness_api.py
+- tests/test_product_readiness_dashboard.py
+
+Runtime result:
+
+- Overall readiness score: 23%
+- Registered capabilities: 38
+- Production-ready capabilities: 0
+- Open engineering recommendations: 29
+
+Validation:
+
+- Focused Product Readiness tests: 19 passed
+- Full regression suite: 110 passed
+- Live dashboard rendering confirmed
+- Capability-level scoring confirmed
+
+Architectural preservation:
+
+- GET /product/console remains unchanged.
+- GET /enterprise/readiness remains unchanged.
+- Existing Product Readiness API paths remain backward compatible.
+- manual_test_db.py remains unchanged and unrelated.

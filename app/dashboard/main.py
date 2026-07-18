@@ -8,6 +8,9 @@ from sqlmodel import SQLModel
 
 from app.db.models.memory import Memory
 from app.db.session import SessionLocal, engine
+from app.services.product_readiness.bootstrap import (
+    bootstrap_product_capabilities,
+)
 
 # Ensure orchestration handlers are registered
 import app.services.orchestration.handlers  # noqa: F401
@@ -70,6 +73,10 @@ from app.dashboard.routes.memory_intelligence import (
     router as memory_intelligence_router
 )
 
+from app.dashboard.routes.product_readiness_dashboard import (
+    router as product_readiness_dashboard_router,
+)
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     print("CGMS STARTING")
@@ -80,6 +87,26 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         print("DATABASE STARTUP WARNING:", e)
         print("CGMS continuing without blocking dashboard startup")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    print("CGMS STARTING")
+
+    try:
+        SQLModel.metadata.create_all(engine)
+        print("Database schema validated")
+    except Exception as e:
+        print("DATABASE STARTUP WARNING:", e)
+        print("CGMS continuing without blocking dashboard startup")
+
+    capability_count = bootstrap_product_capabilities()
+
+    print(
+        f"Product readiness catalogue loaded: "
+        f"{capability_count} capabilities"
+    )
+
+  
 
     yield
 
@@ -202,6 +229,8 @@ app.include_router(
 app.include_router(operator_console_router)
 
 app.include_router(memory_intelligence_router)
+
+app.include_router(product_readiness_dashboard_router)
 
 @app.get("/")
 def root():

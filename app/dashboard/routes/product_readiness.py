@@ -14,6 +14,7 @@ from app.services.product_readiness.registry import (
     list_all,
 )
 from app.services.product_readiness.scoring import (
+    capability_score,
     category_scores as calculate_category_scores,
 )
 
@@ -22,6 +23,17 @@ router = APIRouter(
     tags=["Product Readiness"],
 )
 
+class CapabilityReadiness(Capability):
+    score: int
+
+
+def _with_score(
+    capability: Capability,
+) -> CapabilityReadiness:
+    return CapabilityReadiness(
+        **capability.model_dump(),
+        score=capability_score(capability),
+    )
 
 @router.get(
     "/assessment",
@@ -36,22 +48,27 @@ def read_product_assessment() -> ProductAssessment:
 
 @router.get(
     "/capabilities",
-    response_model=list[Capability],
+    response_model=list[CapabilityReadiness],
 )
-def read_capabilities() -> list[Capability]:
+def read_capabilities() -> list[CapabilityReadiness]:
     """
-    Return all registered capabilities.
+    Return all registered capabilities with calculated scores.
     """
-    return list_all()
+    return [
+        _with_score(capability)
+        for capability in list_all()
+    ]
 
 
 @router.get(
     "/capabilities/{capability_id}",
-    response_model=Capability,
+    response_model=CapabilityReadiness,
 )
-def read_capability(capability_id: str) -> Capability:
+def read_capability(
+    capability_id: str,
+) -> CapabilityReadiness:
     """
-    Return a single capability.
+    Return a single capability with its calculated score.
     """
     capability = get_capability(capability_id)
 
@@ -61,7 +78,7 @@ def read_capability(capability_id: str) -> Capability:
             detail=f"Capability '{capability_id}' not found.",
         )
 
-    return capability
+    return _with_score(capability)
 
 
 @router.get(
