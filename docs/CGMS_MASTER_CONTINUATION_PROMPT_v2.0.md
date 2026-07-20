@@ -1047,3 +1047,73 @@ Validation:
 Architectural decision:
 
 PIP-001 establishes the controlled schema only. Filing facts, milestones, correspondence and evidence will be loaded through governed registries under PIP-002 and later milestones.
+
+
+### PIP-002 — Filing and Administrative Milestone Registry
+
+Status: COMPLETE
+
+Implemented a governed, thread-safe registry for confirmed CGMS patent filing and administrative records.
+
+Registry capabilities:
+
+- source-reference registration;
+- patent-matter registration;
+- filing-record registration;
+- administrative-milestone registration;
+- duplicate-record protection;
+- matter-reference validation;
+- source-reference validation;
+- deterministic filing and milestone ordering;
+- defensive copying of stored and returned records;
+- isolated matter snapshot generation;
+- idempotent confirmed-record bootstrap;
+- preservation of unrelated future registry records.
+
+Confirmed records seeded:
+
+- source references: 4
+- patent matters: 1
+- filing records: 1
+- administrative milestones: 5
+
+Confirmed filing record:
+
+- matter ID: MAT-CGMS-001
+- filing ID: FIL-CGMS-001
+- jurisdiction: United States
+- filing type: Provisional
+- application number: 63/987,873
+- filing date: 21 February 2026
+- confirmation number: 8158
+- customer number: 225429
+- Patent Center transaction number: 74563697
+- filing fee: USD 130.00
+
+Confirmed administrative milestones:
+
+- provisional patent application submitted;
+- Official Filing Receipt issued;
+- AIA/122 customer-number association submitted;
+- AIA/122 submission visible in Receipt History;
+- application dispatched from pre-examination and awaiting docketing.
+
+Governance decisions:
+
+- only previously confirmed filing and administrative facts were seeded;
+- dates without stored supporting evidence remain unset rather than estimated;
+- filing records remain highly confidential by default;
+- the registry is internal and is not exposed through public API routes;
+- the bootstrap replaces governed records with matching IDs but preserves unrelated records;
+- the registry is currently in-memory pending later persistence architecture.
+
+Files created:
+
+- app/services/patent_governance/registry.py
+- app/services/patent_governance/bootstrap.py
+- tests/test_patent_governance_registry.py
+
+Validation:
+
+- focused registry tests: 9 passed
+- full regression suite: 131 passed
