@@ -187,3 +187,6 @@ logs/
 *.db
 *.sqlite3
 logs/
+# Generated CI evidence
+artifacts/product-readiness/
+artifacts/test-results/

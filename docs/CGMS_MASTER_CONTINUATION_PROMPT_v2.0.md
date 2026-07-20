@@ -534,6 +534,15 @@ Documentation Intelligence Framework
 
 Enterprise AI
 
+✔ PRE-001 Capability Registry
+✔ PRE-002 Scoring Engine
+✔ PRE-003 Assessment Engine
+✔ PRE-004 Recommendation Engine
+✔ PRE-005 REST API
+✔ PRE-006 Dashboard
+✔ PRE-006A Production Capability Bootstrap
+◐ PRE-007 CI/CD Integration — remote validation pending
+
 
 
 ===========================================================
@@ -917,3 +926,75 @@ Architectural preservation:
 - GET /enterprise/readiness remains unchanged.
 - Existing Product Readiness API paths remain backward compatible.
 - manual_test_db.py remains unchanged and unrelated.
+
+### PRE-007 — Product Readiness CI/CD Integration
+
+Status: IMPLEMENTED — REMOTE CI VALIDATION PENDING
+
+Implemented a repository-managed Product Readiness continuous integration gate.
+
+CI controls:
+
+- full regression-suite execution;
+- deterministic bootstrap of the authoritative 38-capability catalogue;
+- capability-count and identifier validation;
+- duplicate capability detection;
+- readiness-baseline regression protection;
+- category-assessment validation;
+- machine-readable JSON evidence;
+- human-readable Markdown evidence;
+- standard development gate;
+- strict pilot and release gate.
+
+Gate modes:
+
+- Standard mode protects the approved 23% overall-readiness baseline and validates catalogue integrity.
+- Strict mode additionally prohibits unresolved P0 commercial blockers, requires all pilot-scope capabilities to reach pilot-ready status, and requires a pilot-scope score of at least 95%.
+
+Current gate results:
+
+- Overall readiness: 23%
+- Pilot-scope readiness: 29%
+- Registered capabilities: 38
+- Unresolved P0 blockers: 5
+- Pilot-scope gaps: 25
+- Open recommendations: 29
+- Standard gate: PASSED
+- Strict gate: EXPECTED FAILURE
+
+Files created:
+
+- app/services/product_readiness/ci_gate.py
+- scripts/ci/product_readiness_gate.py
+- tests/test_product_readiness_ci_gate.py
+- .github/workflows/product-readiness-ci.yml
+
+Files updated:
+
+- .env.example
+- .gitignore
+- docs/CGMS_MASTER_CONTINUATION_PROMPT_v2.0.md
+
+Environment decisions:
+
+- GitHub Actions is pinned to Python 3.11.
+- CI uses PostgreSQL 16 as a service container.
+- CI installation mirrors Render through requirements.txt, with test dependencies installed separately.
+- Placeholder environment variables are used in CI; no production secrets are committed.
+- Generated Product Readiness and test-result artifacts are excluded from Git tracking.
+- Render deployment remains unchanged until the first successful GitHub Actions run.
+
+Validation:
+
+- Product Readiness CI-gate tests: 6 passed
+- Full regression suite: 116 passed
+- Standard local gate: passed with exit code 0
+- Strict local gate: expected to fail with exit code 1
+
+Pending closure activities:
+
+- commit and push PRE-007;
+- confirm successful GitHub Actions standard-gate execution;
+- download or inspect generated CI evidence;
+- change Render auto-deploy from On Commit to After CI Checks Pass;
+- verify deployment occurs only after successful CI.
