@@ -998,3 +998,52 @@ Pending closure activities:
 - download or inspect generated CI evidence;
 - change Render auto-deploy from On Commit to After CI Checks Pass;
 - verify deployment occurs only after successful CI.
+
+
+## Sprint 17 — Patent and IP Governance
+
+### PIP-001 — Patent Governance Domain Model
+
+Status: COMPLETE
+
+Implemented a strict, evidence-linked domain model for governing CGMS patent and intellectual-property records.
+
+The model separates:
+
+- patent matters;
+- filing records;
+- administrative milestones;
+- patent documents;
+- technical evidence;
+- innovation records;
+- filing-coverage assessments;
+- patent actions;
+- correspondence;
+- deadlines;
+- source references;
+- confidentiality classifications.
+
+Governance controls:
+
+- unknown fields are rejected;
+- assignment validation is enabled;
+- mutable defaults are isolated;
+- timestamps are timezone-aware;
+- confidential records default to restricted classifications;
+- filing facts remain separate from technical and legal assessments;
+- no patent records are exposed through public routes.
+
+Files created:
+
+- app/services/patent_governance/__init__.py
+- app/services/patent_governance/models.py
+- tests/test_patent_governance_models.py
+
+Validation:
+
+- focused Patent Governance tests: 6 passed
+- full regression result: pending confirmation
+
+Architectural decision:
+
+PIP-001 establishes the controlled schema only. Filing facts, milestones, correspondence and evidence will be loaded through governed registries under PIP-002 and later milestones.
