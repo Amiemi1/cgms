@@ -1117,3 +1117,104 @@ Validation:
 
 - focused registry tests: 9 passed
 - full regression suite: 131 passed
+
+### PIP-003 — Patent Evidence Register
+
+Status: COMPLETE
+
+Implemented a governed Patent Evidence Register linking the CGMS patent matter to technical documents, repository evidence, implementation commits, release tags and regression records.
+
+Evidence architecture implemented:
+
+- PatentDocument
+- EvidenceItem
+- EvidenceVerification
+- EvidenceCollection
+- EvidenceSnapshot
+- VerificationStatus
+
+Registry capabilities:
+
+- patent-document registration;
+- evidence-item registration;
+- evidence-verification registration;
+- evidence-collection registration;
+- patent-matter validation;
+- source-reference validation;
+- evidence and document relationship validation;
+- cross-matter relationship protection;
+- duplicate-record protection;
+- defensive copying;
+- deterministic evidence ordering;
+- verification-status tracking;
+- evidence-type aggregation;
+- filing-relationship aggregation;
+- isolated evidence snapshot generation;
+- idempotent evidence bootstrap;
+- preservation of unrelated future records.
+
+Confirmed evidence catalogue:
+
+- repository evidence source references: 17
+- patent-positioning documents: 3
+- evidence items: 17
+- verification records: 17
+- evidence collections: 4
+
+Evidence collections:
+
+1. Patent and technical positioning documents
+2. Architecture and product evidence
+3. Implementation and release history
+4. Regression and validation evidence
+
+Verification position:
+
+- fully verified evidence items: 4
+- partially verified evidence items: 13
+- technical positioning documents are not classified as filed patent documents;
+- potential claim-expansion notes remain classified as potential future filing material;
+- post-filing implementation records remain distinct from the original provisional disclosure;
+- no patentability, novelty or legal claim-coverage conclusion is inferred.
+
+Tracked implementation evidence includes:
+
+- event-driven orchestration;
+- connector ingestion;
+- multi-workspace runtime;
+- tenant governance and quota enforcement;
+- connector adapters;
+- Memory Intelligence Engine;
+- Enterprise Event Bus;
+- Product Readiness dashboard;
+- Product Readiness CI gates.
+
+Regression evidence:
+
+- tracked report: artifacts/test-report-v1.60.txt
+- recorded result: 32 passed
+- recorded limitations: seven runtime warnings
+- the warnings remain explicitly preserved in the evidence record.
+
+Governance decisions:
+
+- generated Product Readiness reports under artifacts/product-readiness are not registered as permanent evidence because they are currently untracked CI outputs;
+- Git verification confirms repository history but does not substitute for complete diff-level technical review;
+- architecture and product documents with confirmed repository paths remain partially verified until full content review is formally recorded;
+- technical-positioning documents are not treated as legally reviewed claims;
+- Patent Evidence records remain internal and are not exposed through public routes.
+
+Files created:
+
+- app/services/patent_governance/evidence_registry.py
+- app/services/patent_governance/evidence_bootstrap.py
+- tests/test_patent_evidence_registry.py
+
+Files updated:
+
+- app/services/patent_governance/models.py
+
+Validation:
+
+- focused Patent Evidence tests: 11 passed
+- full regression suite: 142 passed

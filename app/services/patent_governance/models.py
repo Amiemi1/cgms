@@ -414,3 +414,97 @@ class PatentGovernanceSnapshot(GovernedModel):
     source_references: list[SourceReference] = Field(
         default_factory=list
     )
+
+class VerificationStatus(str, Enum):
+    UNVERIFIED = "unverified"
+    PARTIALLY_VERIFIED = "partially_verified"
+    VERIFIED = "verified"
+    REJECTED = "rejected"
+    SUPERSEDED = "superseded"
+
+
+class EvidenceVerification(GovernedModel):
+    id: str = Field(min_length=1)
+    matter_id: str = Field(min_length=1)
+    evidence_id: str = Field(min_length=1)
+
+    status: VerificationStatus = (
+        VerificationStatus.UNVERIFIED
+    )
+
+    verified_by: str | None = None
+    verified_date: date | None = None
+
+    repository_path_confirmed: bool = False
+    git_reference_confirmed: bool = False
+    content_reviewed: bool = False
+
+    findings: str | None = None
+    limitations: str | None = None
+
+    source_references: list[str] = Field(default_factory=list)
+
+    created_at: datetime = Field(default_factory=utc_now)
+    updated_at: datetime = Field(default_factory=utc_now)
+
+
+class EvidenceCollection(GovernedModel):
+    id: str = Field(min_length=1)
+    matter_id: str = Field(min_length=1)
+
+    title: str = Field(min_length=1)
+    description: str | None = None
+
+    evidence_ids: list[str] = Field(default_factory=list)
+    document_ids: list[str] = Field(default_factory=list)
+
+    confidentiality: ConfidentialityLevel = (
+        ConfidentialityLevel.HIGHLY_CONFIDENTIAL
+    )
+
+    status: RecordStatus = RecordStatus.IN_PROGRESS
+
+    source_references: list[str] = Field(default_factory=list)
+    notes: str | None = None
+
+    created_at: datetime = Field(default_factory=utc_now)
+    updated_at: datetime = Field(default_factory=utc_now)
+
+
+class EvidenceSnapshot(GovernedModel):
+    schema_version: str = "1.0"
+    generated_at: datetime = Field(default_factory=utc_now)
+
+    matter_id: str = Field(min_length=1)
+
+    documents: list[PatentDocument] = Field(
+        default_factory=list
+    )
+
+    evidence: list[EvidenceItem] = Field(
+        default_factory=list
+    )
+
+    verifications: list[EvidenceVerification] = Field(
+        default_factory=list
+    )
+
+    collections: list[EvidenceCollection] = Field(
+        default_factory=list
+    )
+
+    source_references: list[SourceReference] = Field(
+        default_factory=list
+    )
+
+    total_documents: int = Field(default=0, ge=0)
+    total_evidence_items: int = Field(default=0, ge=0)
+    verified_evidence_items: int = Field(default=0, ge=0)
+
+    filing_relationship_counts: dict[str, int] = Field(
+        default_factory=dict
+    )
+
+    evidence_type_counts: dict[str, int] = Field(
+        default_factory=dict
+    )
