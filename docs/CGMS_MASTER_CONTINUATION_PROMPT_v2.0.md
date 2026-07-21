@@ -1315,3 +1315,86 @@ Validation:
 
 - focused innovation-map tests: 11 passed
 - full regression suite: 153 passed
+
+### PIP-005 — Patent & IP Progress Dashboard
+
+Status: COMPLETE
+
+Implemented an isolated Patent and IP Progress Dashboard for governing the CGMS patent matter, filing milestones, evidence, technical innovations, claim candidates and required actions.
+
+Dashboard capabilities:
+
+- governed filing overview;
+- masked filing identifiers by default;
+- administrative-progress metrics;
+- evidence-verification metrics;
+- innovation implementation metrics;
+- legal-review metrics;
+- filing-coverage assessment metrics;
+- administrative timeline;
+- dynamically generated governance actions;
+- evidence-collection summaries;
+- technical innovation map;
+- technical claim-candidate map;
+- legal, confidentiality and coverage notices;
+- responsive and print-compatible presentation;
+- noindex, nofollow and noarchive metadata.
+
+Current dashboard position:
+
+- administrative milestones complete or verified: 4 of 5 — 80%;
+- fully verified evidence: 4 of 17 — 24%;
+- partially verified evidence: 13 of 17;
+- technical innovations: 9;
+- deployed innovations: 3;
+- implemented innovations: 4;
+- innovations in progress: 2;
+- professionally reviewed claim candidates: 0 of 6;
+- assessed provisional-coverage records: 0 of 9.
+
+Generated governance actions:
+
+- confirm customer-number association;
+- retain Receipt History evidence;
+- monitor further USPTO administrative processing;
+- complete evidence-content review;
+- obtain professional review of six claim candidates;
+- store and assess the filed provisional specification against mapped innovations.
+
+Confidentiality controls:
+
+- application number is masked by default;
+- confirmation number is masked by default;
+- customer number is masked by default;
+- Patent Center transaction number is masked by default;
+- the service can expose identifiers only through an explicit include_sensitive parameter;
+- the isolated route always requests a masked view;
+- the dashboard router is not registered in the production FastAPI application;
+- an automated test prevents premature production-route registration;
+- production access remains disabled pending PIP-006.
+
+Legal-governance controls:
+
+- the dashboard is an internal operational record;
+- it is not legal advice;
+- it is not an official USPTO status system;
+- it does not determine patentability, novelty, claim scope, validity or enforceability;
+- technical claim candidates remain unreviewed working records;
+- provisional filing coverage remains unassessed.
+
+Files created:
+
+- app/services/patent_governance/dashboard_service.py
+- app/dashboard/routes/patent_readiness_dashboard.py
+- app/dashboard/templates/patent_readiness_dashboard.html
+- tests/test_patent_readiness_dashboard.py
+
+Production integration decision:
+
+The Patent dashboard route remains intentionally excluded from app/dashboard/main.py. It may only be registered after PIP-006 authentication, authorization and confidentiality controls have passed focused and full regression testing.
+
+Validation:
+
+- template syntax check: passed
+- focused Patent dashboard tests: 8 passed
+- full regression suite: 161 passed

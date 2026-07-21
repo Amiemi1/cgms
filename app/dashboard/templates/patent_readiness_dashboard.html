@@ -1,0 +1,1357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="robots"
+        content="noindex, nofollow, noarchive"
+    >
+
+    <title>{{ dashboard.page.title }}</title>
+
+    <style>
+        :root {
+            --background: #07111f;
+            --surface: #0d1a2b;
+            --surface-raised: #122238;
+            --surface-soft: #172a42;
+            --border: #28405d;
+            --text: #eef5ff;
+            --muted: #9fb0c6;
+            --accent: #5ba7ff;
+            --success: #42d392;
+            --warning: #f2bc57;
+            --danger: #ff7272;
+            --critical: #ff5252;
+            --info: #74c0fc;
+            --radius: 14px;
+            --shadow:
+                0 16px 38px rgba(0, 0, 0, 0.28);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background:
+                radial-gradient(
+                    circle at top right,
+                    rgba(91, 167, 255, 0.14),
+                    transparent 32%
+                ),
+                linear-gradient(
+                    180deg,
+                    #06101d 0%,
+                    var(--background) 100%
+                );
+            color: var(--text);
+            font-family:
+                Inter,
+                "Segoe UI",
+                Arial,
+                sans-serif;
+            line-height: 1.5;
+        }
+
+        a {
+            color: inherit;
+        }
+
+        .page-shell {
+            width: min(1480px, calc(100% - 40px));
+            margin: 0 auto;
+            padding: 32px 0 60px;
+        }
+
+        .page-header {
+            position: relative;
+            overflow: hidden;
+            display: grid;
+            grid-template-columns:
+                minmax(0, 1fr)
+                auto;
+            gap: 28px;
+            align-items: start;
+            padding: 30px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(18, 34, 56, 0.96),
+                    rgba(8, 22, 39, 0.96)
+                );
+            box-shadow: var(--shadow);
+        }
+
+        .page-header::after {
+            content: "";
+            position: absolute;
+            right: -80px;
+            top: -90px;
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background:
+                rgba(91, 167, 255, 0.10);
+            pointer-events: none;
+        }
+
+        .eyebrow {
+            margin: 0 0 8px;
+            color: var(--accent);
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        h1,
+        h2,
+        h3,
+        p {
+            margin-top: 0;
+        }
+
+        h1 {
+            max-width: 900px;
+            margin-bottom: 10px;
+            font-size: clamp(2rem, 4vw, 3.2rem);
+            line-height: 1.08;
+            letter-spacing: -0.035em;
+        }
+
+        .subtitle {
+            max-width: 760px;
+            margin-bottom: 0;
+            color: var(--muted);
+            font-size: 1.04rem;
+        }
+
+        .header-controls {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            background: rgba(7, 17, 31, 0.72);
+            color: var(--muted);
+            font-size: 0.78rem;
+            font-weight: 750;
+        }
+
+        .badge::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .badge.confidential {
+            color: var(--warning);
+        }
+
+        .badge.disabled {
+            color: var(--danger);
+        }
+
+        .badge.masked {
+            color: var(--info);
+        }
+
+        .notice {
+            margin-top: 20px;
+            padding: 16px 18px;
+            border: 1px solid rgba(242, 188, 87, 0.42);
+            border-left: 4px solid var(--warning);
+            border-radius: 12px;
+            background: rgba(242, 188, 87, 0.08);
+            color: #f8deb0;
+        }
+
+        .notice strong {
+            color: #ffe8bc;
+        }
+
+        .section {
+            margin-top: 28px;
+        }
+
+        .section-heading {
+            display: flex;
+            justify-content: space-between;
+            gap: 24px;
+            align-items: end;
+            margin-bottom: 14px;
+        }
+
+        .section-heading h2 {
+            margin-bottom: 4px;
+            font-size: 1.35rem;
+        }
+
+        .section-heading p {
+            margin-bottom: 0;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .panel {
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background:
+                linear-gradient(
+                    180deg,
+                    rgba(18, 34, 56, 0.96),
+                    rgba(11, 26, 44, 0.96)
+                );
+            box-shadow: var(--shadow);
+        }
+
+        .filing-grid {
+            display: grid;
+            grid-template-columns:
+                repeat(4, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .filing-card {
+            min-height: 118px;
+            padding: 18px;
+        }
+
+        .label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--muted);
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .value {
+            display: block;
+            overflow-wrap: anywhere;
+            color: var(--text);
+            font-size: 1.02rem;
+            font-weight: 750;
+        }
+
+        .value.prominent {
+            color: var(--accent);
+            font-size: 1.28rem;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns:
+                repeat(5, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .metric-card {
+            padding: 20px;
+        }
+
+        .metric-title {
+            color: var(--muted);
+            font-size: 0.76rem;
+            font-weight: 800;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .metric-number {
+            margin-top: 8px;
+            font-size: 2rem;
+            font-weight: 850;
+            letter-spacing: -0.035em;
+        }
+
+        .metric-detail {
+            min-height: 42px;
+            margin-top: 4px;
+            color: var(--muted);
+            font-size: 0.82rem;
+        }
+
+        .progress-track {
+            overflow: hidden;
+            height: 7px;
+            margin-top: 14px;
+            border-radius: 999px;
+            background: #07111f;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: inherit;
+            background:
+                linear-gradient(
+                    90deg,
+                    var(--accent),
+                    var(--success)
+                );
+        }
+
+        .progress-fill.warning {
+            background:
+                linear-gradient(
+                    90deg,
+                    var(--warning),
+                    #ffd783
+                );
+        }
+
+        .progress-fill.danger {
+            background:
+                linear-gradient(
+                    90deg,
+                    var(--danger),
+                    #ff9b9b
+                );
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns:
+                minmax(0, 1.25fr)
+                minmax(340px, 0.75fr);
+            gap: 18px;
+        }
+
+        .timeline {
+            padding: 20px;
+        }
+
+        .timeline-item {
+            position: relative;
+            display: grid;
+            grid-template-columns:
+                20px
+                minmax(0, 1fr)
+                auto;
+            gap: 14px;
+            padding: 0 0 22px;
+        }
+
+        .timeline-item:last-child {
+            padding-bottom: 0;
+        }
+
+        .timeline-marker {
+            position: relative;
+            width: 14px;
+            height: 14px;
+            margin-top: 5px;
+            border: 3px solid var(--surface);
+            border-radius: 50%;
+            background: var(--muted);
+            box-shadow:
+                0 0 0 2px var(--border);
+        }
+
+        .timeline-item:not(:last-child)
+        .timeline-marker::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 15px;
+            width: 2px;
+            height: calc(100% + 20px);
+            transform: translateX(-50%);
+            background: var(--border);
+        }
+
+        .timeline-marker.complete,
+        .timeline-marker.verified {
+            background: var(--success);
+        }
+
+        .timeline-marker.in_progress {
+            background: var(--warning);
+        }
+
+        .timeline-title {
+            margin-bottom: 3px;
+            font-weight: 780;
+        }
+
+        .timeline-meta,
+        .timeline-copy {
+            color: var(--muted);
+            font-size: 0.83rem;
+        }
+
+        .timeline-copy {
+            margin-top: 7px;
+        }
+
+        .timeline-status {
+            white-space: nowrap;
+            padding: 5px 9px;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            color: var(--muted);
+            font-size: 0.72rem;
+            font-weight: 800;
+        }
+
+        .action-list {
+            display: grid;
+            gap: 11px;
+            padding: 16px;
+        }
+
+        .action-card {
+            padding: 15px;
+            border: 1px solid var(--border);
+            border-radius: 11px;
+            background: rgba(7, 17, 31, 0.48);
+        }
+
+        .action-topline {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 7px;
+        }
+
+        .action-title {
+            font-weight: 780;
+        }
+
+        .priority {
+            padding: 4px 8px;
+            border-radius: 999px;
+            font-size: 0.68rem;
+            font-weight: 850;
+            text-transform: uppercase;
+        }
+
+        .priority.high {
+            background: rgba(255, 114, 114, 0.14);
+            color: #ff9b9b;
+        }
+
+        .priority.medium {
+            background: rgba(242, 188, 87, 0.14);
+            color: #f6ce82;
+        }
+
+        .priority.low {
+            background: rgba(116, 192, 252, 0.14);
+            color: #9bd3ff;
+        }
+
+        .action-description {
+            margin-bottom: 8px;
+            color: var(--muted);
+            font-size: 0.83rem;
+        }
+
+        .action-source {
+            color: var(--accent);
+            font-size: 0.72rem;
+            font-weight: 750;
+        }
+
+        .collection-grid {
+            display: grid;
+            grid-template-columns:
+                repeat(4, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .collection-card {
+            padding: 18px;
+        }
+
+        .collection-card h3 {
+            margin-bottom: 7px;
+            font-size: 1rem;
+        }
+
+        .collection-card p {
+            color: var(--muted);
+            font-size: 0.82rem;
+        }
+
+        .collection-counts {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .count-chip {
+            padding: 5px 8px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--muted);
+            font-size: 0.72rem;
+        }
+
+        .table-panel {
+            overflow: hidden;
+        }
+
+        .table-scroll {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 13px 15px;
+            border-bottom: 1px solid var(--border);
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            background: rgba(7, 17, 31, 0.55);
+            color: var(--muted);
+            font-size: 0.7rem;
+            font-weight: 850;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        td {
+            font-size: 0.82rem;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: 0;
+        }
+
+        tbody tr:hover {
+            background: rgba(91, 167, 255, 0.045);
+        }
+
+        .primary-cell {
+            min-width: 240px;
+        }
+
+        .primary-cell strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .secondary-text {
+            color: var(--muted);
+            font-size: 0.75rem;
+        }
+
+        .status-chip {
+            display: inline-flex;
+            align-items: center;
+            padding: 5px 8px;
+            border-radius: 999px;
+            background: rgba(159, 176, 198, 0.12);
+            color: var(--muted);
+            font-size: 0.68rem;
+            font-weight: 850;
+            white-space: nowrap;
+        }
+
+        .status-chip.complete,
+        .status-chip.verified,
+        .status-chip.deployed,
+        .status-chip.implemented {
+            background: rgba(66, 211, 146, 0.13);
+            color: #79e8b4;
+        }
+
+        .status-chip.in_progress,
+        .status-chip.partially_verified,
+        .status-chip.evidence_linked {
+            background: rgba(242, 188, 87, 0.13);
+            color: #f5cb79;
+        }
+
+        .status-chip.technically_mapped {
+            background: rgba(91, 167, 255, 0.13);
+            color: #93c7ff;
+        }
+
+        .review-warning {
+            color: var(--warning);
+            font-weight: 750;
+        }
+
+        .governance-grid {
+            display: grid;
+            grid-template-columns:
+                repeat(3, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .governance-card {
+            padding: 19px;
+        }
+
+        .governance-card h3 {
+            margin-bottom: 8px;
+            font-size: 0.92rem;
+        }
+
+        .governance-card p {
+            margin-bottom: 0;
+            color: var(--muted);
+            font-size: 0.82rem;
+        }
+
+        .empty-state {
+            padding: 28px;
+            color: var(--muted);
+            text-align: center;
+        }
+
+        .page-footer {
+            margin-top: 30px;
+            padding-top: 18px;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 0.76rem;
+            text-align: center;
+        }
+
+        @media (max-width: 1160px) {
+            .metrics-grid {
+                grid-template-columns:
+                    repeat(3, minmax(0, 1fr));
+            }
+
+            .filing-grid,
+            .collection-grid {
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+            }
+
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+
+            .governance-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 720px) {
+            .page-shell {
+                width: min(100% - 24px, 1480px);
+                padding-top: 14px;
+            }
+
+            .page-header {
+                grid-template-columns: 1fr;
+                padding: 22px;
+            }
+
+            .header-controls {
+                justify-content: flex-start;
+            }
+
+            .metrics-grid,
+            .filing-grid,
+            .collection-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-heading {
+                align-items: start;
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .timeline-item {
+                grid-template-columns:
+                    18px
+                    minmax(0, 1fr);
+            }
+
+            .timeline-status {
+                grid-column: 2;
+                justify-self: start;
+            }
+        }
+
+        @media print {
+            body {
+                background: #ffffff;
+                color: #101828;
+            }
+
+            .page-shell {
+                width: 100%;
+                padding: 0;
+            }
+
+            .panel,
+            .page-header {
+                box-shadow: none;
+                break-inside: avoid;
+            }
+
+            .page-header,
+            .panel {
+                background: #ffffff;
+                border-color: #cbd5e1;
+            }
+
+            .subtitle,
+            .label,
+            .metric-detail,
+            .timeline-meta,
+            .timeline-copy,
+            .secondary-text,
+            .collection-card p,
+            .governance-card p,
+            .page-footer {
+                color: #475467;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="page-shell">
+        <header class="page-header">
+            <div>
+                <p class="eyebrow">
+                    Patent and IP Governance
+                </p>
+
+                <h1>
+                    {{ dashboard.page.title }}
+                </h1>
+
+                <p class="subtitle">
+                    {{ dashboard.page.subtitle }}
+                </p>
+            </div>
+
+            <div class="header-controls">
+                <span class="badge confidential">
+                    Confidential
+                </span>
+
+                <span class="badge disabled">
+                    Production Access Disabled
+                </span>
+
+                {% if dashboard.filing.identifiers_masked %}
+                    <span class="badge masked">
+                        Identifiers Masked
+                    </span>
+                {% endif %}
+            </div>
+        </header>
+
+        <div class="notice">
+            <strong>Restricted internal working record.</strong>
+            {{ dashboard.governance.confidentiality_notice }}
+        </div>
+
+        <section class="section">
+            <div class="section-heading">
+                <div>
+                    <h2>Filing Overview</h2>
+                    <p>
+                        Confirmed administrative information
+                        held in the governed patent registry.
+                    </p>
+                </div>
+            </div>
+
+            <div class="filing-grid">
+                <article class="panel filing-card">
+                    <span class="label">Matter</span>
+                    <span class="value prominent">
+                        {{ dashboard.filing.matter_id }}
+                    </span>
+                    <span class="secondary-text">
+                        {{ dashboard.filing.matter_type }}
+                    </span>
+                </article>
+
+                <article class="panel filing-card">
+                    <span class="label">Application Number</span>
+                    <span class="value prominent">
+                        {{ dashboard.filing.application_number }}
+                    </span>
+                    <span class="secondary-text">
+                        Masked by default
+                    </span>
+                </article>
+
+                <article class="panel filing-card">
+                    <span class="label">Filing Date</span>
+                    <span class="value">
+                        {{ dashboard.filing.filing_date }}
+                    </span>
+                    <span class="secondary-text">
+                        {{ dashboard.filing.jurisdiction }}
+                        jurisdiction
+                    </span>
+                </article>
+
+                <article class="panel filing-card">
+                    <span class="label">Matter Status</span>
+                    <span class="value">
+                        {{ dashboard.filing.matter_status }}
+                    </span>
+                    <span class="secondary-text">
+                        Opened
+                        {{ dashboard.filing.opened_date }}
+                    </span>
+                </article>
+
+                <article class="panel filing-card">
+                    <span class="label">
+                        Confirmation Number
+                    </span>
+                    <span class="value">
+                        {{ dashboard.filing.confirmation_number }}
+                    </span>
+                </article>
+
+                <article class="panel filing-card">
+                    <span class="label">Customer Number</span>
+                    <span class="value">
+                        {{ dashboard.filing.customer_number }}
+                    </span>
+                </article>
+
+                <article class="panel filing-card">
+                    <span class="label">
+                        Patent Center Number
+                    </span>
+                    <span class="value">
+                        {{ dashboard.filing.patent_center_number }}
+                    </span>
+                </article>
+
+                <article class="panel filing-card">
+                    <span class="label">Recorded Filing Fee</span>
+                    <span class="value">
+                        {{ dashboard.filing.filing_fee }}
+                    </span>
+                </article>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-heading">
+                <div>
+                    <h2>Governance Position</h2>
+                    <p>
+                        Current completion, evidence and
+                        professional-review indicators.
+                    </p>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <article class="panel metric-card">
+                    <div class="metric-title">
+                        Administrative Progress
+                    </div>
+
+                    <div class="metric-number">
+                        {{ dashboard.metrics.administrative.percent }}%
+                    </div>
+
+                    <div class="metric-detail">
+                        {{ dashboard.metrics.administrative.completed }}
+                        of
+                        {{ dashboard.metrics.administrative.total }}
+                        milestones complete or verified
+                    </div>
+
+                    <div class="progress-track">
+                        <div
+                            class="progress-fill"
+                            style="width:
+                                {{ dashboard.metrics.administrative.percent }}%;
+                            "
+                        ></div>
+                    </div>
+                </article>
+
+                <article class="panel metric-card">
+                    <div class="metric-title">
+                        Fully Verified Evidence
+                    </div>
+
+                    <div class="metric-number">
+                        {{ dashboard.metrics.evidence.percent }}%
+                    </div>
+
+                    <div class="metric-detail">
+                        {{ dashboard.metrics.evidence.verified }}
+                        fully verified;
+                        {{ dashboard.metrics.evidence.partially_verified }}
+                        partially verified
+                    </div>
+
+                    <div class="progress-track">
+                        <div
+                            class="progress-fill warning"
+                            style="width:
+                                {{ dashboard.metrics.evidence.percent }}%;
+                            "
+                        ></div>
+                    </div>
+                </article>
+
+                <article class="panel metric-card">
+                    <div class="metric-title">
+                        Technical Innovations
+                    </div>
+
+                    <div class="metric-number">
+                        {{ dashboard.metrics.innovations.total }}
+                    </div>
+
+                    <div class="metric-detail">
+                        {{ dashboard.metrics.innovations.deployed }}
+                        deployed,
+                        {{ dashboard.metrics.innovations.implemented }}
+                        implemented,
+                        {{ dashboard.metrics.innovations.in_progress }}
+                        in progress
+                    </div>
+                </article>
+
+                <article class="panel metric-card">
+                    <div class="metric-title">
+                        Legal Review
+                    </div>
+
+                    <div class="metric-number">
+                        {{ dashboard.metrics.legal_review.percent }}%
+                    </div>
+
+                    <div class="metric-detail">
+                        {{ dashboard.metrics.legal_review.reviewed }}
+                        of
+                        {{ dashboard.metrics.legal_review.total }}
+                        claim candidates professionally reviewed
+                    </div>
+
+                    <div class="progress-track">
+                        <div
+                            class="progress-fill danger"
+                            style="width:
+                                {{ dashboard.metrics.legal_review.percent }}%;
+                            "
+                        ></div>
+                    </div>
+                </article>
+
+                <article class="panel metric-card">
+                    <div class="metric-title">
+                        Filing Coverage Assessment
+                    </div>
+
+                    <div class="metric-number">
+                        {{ dashboard.metrics.coverage.percent }}%
+                    </div>
+
+                    <div class="metric-detail">
+                        {{ dashboard.metrics.coverage.assessed }}
+                        of
+                        {{ dashboard.metrics.coverage.total }}
+                        innovation records assessed
+                    </div>
+
+                    <div class="progress-track">
+                        <div
+                            class="progress-fill danger"
+                            style="width:
+                                {{ dashboard.metrics.coverage.percent }}%;
+                            "
+                        ></div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="section two-column">
+            <div>
+                <div class="section-heading">
+                    <div>
+                        <h2>Administrative Timeline</h2>
+                        <p>
+                            Filing and administrative events
+                            recorded against the matter.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="panel timeline">
+                    {% for milestone in dashboard.timeline %}
+                        <article class="timeline-item">
+                            <div
+                                class="
+                                    timeline-marker
+                                    {{ milestone.status_value }}
+                                "
+                            ></div>
+
+                            <div>
+                                <div class="timeline-title">
+                                    {{ milestone.title }}
+                                </div>
+
+                                <div class="timeline-meta">
+                                    {{ milestone.date }}
+                                    ·
+                                    {{ milestone.responsible_party }}
+                                </div>
+
+                                {% if milestone.next_action %}
+                                    <div class="timeline-copy">
+                                        <strong>Next action:</strong>
+                                        {{ milestone.next_action }}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <span class="timeline-status">
+                                {{ milestone.status }}
+                            </span>
+                        </article>
+                    {% else %}
+                        <div class="empty-state">
+                            No milestones recorded.
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div>
+                <div class="section-heading">
+                    <div>
+                        <h2>Priority Actions</h2>
+                        <p>
+                            Governance actions generated from
+                            current registry gaps.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="panel action-list">
+                    {% for action in dashboard.actions %}
+                        <article class="action-card">
+                            <div class="action-topline">
+                                <span class="action-title">
+                                    {{ action.title }}
+                                </span>
+
+                                <span
+                                    class="
+                                        priority
+                                        {{ action.priority|lower }}
+                                    "
+                                >
+                                    {{ action.priority }}
+                                </span>
+                            </div>
+
+                            <p class="action-description">
+                                {{ action.description }}
+                            </p>
+
+                            <span class="action-source">
+                                {{ action.source }}
+                            </span>
+                        </article>
+                    {% else %}
+                        <div class="empty-state">
+                            No open governance actions.
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-heading">
+                <div>
+                    <h2>Evidence Collections</h2>
+                    <p>
+                        Governed groupings of documentary,
+                        technical and validation evidence.
+                    </p>
+                </div>
+            </div>
+
+            <div class="collection-grid">
+                {% for collection in dashboard.evidence_collections %}
+                    <article class="panel collection-card">
+                        <span
+                            class="
+                                status-chip
+                                {{ collection.status|lower|replace(' ', '_') }}
+                            "
+                        >
+                            {{ collection.status }}
+                        </span>
+
+                        <h3>
+                            {{ collection.title }}
+                        </h3>
+
+                        <p>
+                            {{ collection.description or
+                            "No description recorded." }}
+                        </p>
+
+                        <div class="collection-counts">
+                            <span class="count-chip">
+                                {{ collection.evidence_count }}
+                                evidence items
+                            </span>
+
+                            <span class="count-chip">
+                                {{ collection.document_count }}
+                                documents
+                            </span>
+                        </div>
+                    </article>
+                {% else %}
+                    <div class="empty-state">
+                        No evidence collections recorded.
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-heading">
+                <div>
+                    <h2>Technical Innovation Map</h2>
+                    <p>
+                        Post-filing technical developments and
+                        their current implementation status.
+                    </p>
+                </div>
+            </div>
+
+            <div class="panel table-panel">
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Innovation</th>
+                                <th>Technical Area</th>
+                                <th>Status</th>
+                                <th>Filing Relationship</th>
+                                <th>Evidence</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for innovation in dashboard.innovations %}
+                                <tr>
+                                    <td class="primary-cell">
+                                        <strong>
+                                            {{ innovation.title }}
+                                        </strong>
+
+                                        <span class="secondary-text">
+                                            {{ innovation.summary }}
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        {{ innovation.technical_area }}
+                                    </td>
+
+                                    <td>
+                                        <span
+                                            class="
+                                                status-chip
+                                                {{ innovation.status_value }}
+                                            "
+                                        >
+                                            {{ innovation.status }}
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        {{ innovation.filing_relationship }}
+                                    </td>
+
+                                    <td>
+                                        {{ innovation.evidence_count }}
+                                        linked items
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="5" class="empty-state">
+                                        No innovations recorded.
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-heading">
+                <div>
+                    <h2>Technical Claim Candidates</h2>
+                    <p>
+                        Working technical candidates only;
+                        none are represented as filed or
+                        legally reviewed claims.
+                    </p>
+                </div>
+            </div>
+
+            <div class="panel table-panel">
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Candidate</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Legal Review</th>
+                                <th>Linked Records</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for candidate in dashboard.claim_candidates %}
+                                <tr>
+                                    <td class="primary-cell">
+                                        <strong>
+                                            {{ candidate.title }}
+                                        </strong>
+
+                                        <span class="secondary-text">
+                                            {{ candidate.technical_summary }}
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        {{ candidate.candidate_type }}
+                                    </td>
+
+                                    <td>
+                                        <span
+                                            class="
+                                                status-chip
+                                                {{ candidate.status_value }}
+                                            "
+                                        >
+                                            {{ candidate.status }}
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <span class="review-warning">
+                                            {{ candidate.legal_review_status }}
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        {{ candidate.innovation_count }}
+                                        innovations ·
+                                        {{ candidate.evidence_count }}
+                                        evidence items
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="5" class="empty-state">
+                                        No claim candidates recorded.
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-heading">
+                <div>
+                    <h2>Governance Notices</h2>
+                    <p>
+                        Mandatory interpretation and
+                        confidentiality controls.
+                    </p>
+                </div>
+            </div>
+
+            <div class="governance-grid">
+                <article class="panel governance-card">
+                    <h3>Legal Status</h3>
+                    <p>
+                        {{ dashboard.governance.legal_disclaimer }}
+                    </p>
+                </article>
+
+                <article class="panel governance-card">
+                    <h3>Confidentiality</h3>
+                    <p>
+                        {{ dashboard.governance.confidentiality_notice }}
+                    </p>
+                </article>
+
+                <article class="panel governance-card">
+                    <h3>Coverage Position</h3>
+                    <p>
+                        {{ dashboard.governance.coverage_notice }}
+                    </p>
+                </article>
+            </div>
+        </section>
+
+        <footer class="page-footer">
+            CGMS Patent and IP Governance · Internal operational
+            record · PIP-005 isolated dashboard
+        </footer>
+    </main>
+</body>
+</html>
