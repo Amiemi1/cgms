@@ -12,6 +12,10 @@ from app.services.product_readiness.bootstrap import (
     bootstrap_product_capabilities,
 )
 
+from app.dashboard.routes.patent_readiness_dashboard import (
+    router as patent_readiness_dashboard_router,
+)
+
 # Ensure orchestration handlers are registered
 import app.services.orchestration.handlers  # noqa: F401
 
@@ -231,6 +235,10 @@ app.include_router(operator_console_router)
 app.include_router(memory_intelligence_router)
 
 app.include_router(product_readiness_dashboard_router)
+
+app.include_router(
+    patent_readiness_dashboard_router
+)
 
 @app.get("/")
 def root():

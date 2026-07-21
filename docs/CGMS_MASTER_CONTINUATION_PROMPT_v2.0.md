@@ -1398,3 +1398,91 @@ Validation:
 - template syntax check: passed
 - focused Patent dashboard tests: 8 passed
 - full regression suite: 161 passed
+
+### PIP-006 — Authentication and Confidentiality Controls
+
+Status: COMPLETE
+
+Implemented the authenticated and role-restricted security boundary required for production access to the CGMS Patent and IP Progress Dashboard.
+
+Security architecture:
+
+- signed JWT Bearer authentication;
+- server-validated authenticated principal;
+- server-side role and permission resolution;
+- explicit view_patent_governance permission;
+- separate view_patent_sensitive permission;
+- caller-supplied role headers are not trusted;
+- unknown roles fail closed;
+- missing, invalid and expired credentials return HTTP 401;
+- authenticated users without permission receive HTTP 403.
+
+Patent access policy:
+
+- admin:
+  - may access the Patent dashboard;
+  - may view sensitive filing identifiers.
+- operator:
+  - may access the Patent dashboard;
+  - receives masked filing identifiers.
+- viewer:
+  - denied access to the Patent dashboard.
+- unknown role:
+  - authentication fails closed.
+
+Confidentiality controls:
+
+- query parameters cannot activate sensitive disclosure;
+- X-User-Role cannot elevate access;
+- sensitive permissions are derived only from the validated token role;
+- operator responses exclude the complete application number, customer number and Patent Center number;
+- Patent dashboard responses prohibit browser and intermediary caching;
+- browser indexing and archiving remain disabled;
+- framing is denied;
+- referrer transmission is disabled;
+- restrictive Content Security Policy headers are applied;
+- authentication and authorization events are logged without recording access tokens.
+
+JWT controls:
+
+- removed the hard-coded application signing secret;
+- CGMS_JWT_SECRET is required from environment configuration;
+- signing secrets must contain at least 32 characters;
+- tokens include expiration, issued-at, not-before, issuer, audience and unique token-ID claims;
+- issuer and audience are validated during decoding;
+- expired, incorrectly signed and structurally invalid tokens fail closed;
+- existing get_current_user callers remain supported through a backward-compatible authenticated dependency.
+
+Production integration:
+
+- the protected Patent dashboard router is registered in app/dashboard/main.py;
+- route: /patent-readiness/dashboard;
+- production access requires a valid Bearer token;
+- the route explicitly enables authenticated production presentation;
+- the underlying dashboard service remains closed by default;
+- direct service calls continue to report production_access_enabled as false unless explicitly enabled by the protected route.
+
+Environment configuration documented:
+
+- CGMS_JWT_SECRET
+- CGMS_JWT_EXPIRE_MINUTES
+- CGMS_JWT_ISSUER
+- CGMS_JWT_AUDIENCE
+
+Files updated:
+
+- app/services/auth/jwt_handler.py
+- app/services/auth/auth_dependency.py
+- app/services/security/rbac_policy.py
+- app/services/security/rbac_dependency.py
+- app/services/patent_governance/dashboard_service.py
+- app/dashboard/routes/patent_readiness_dashboard.py
+- app/dashboard/templates/patent_readiness_dashboard.html
+- app/dashboard/main.py
+- tests/test_patent_readiness_dashboard.py
+- .env.example
+
+Validation:
+
+- focused Patent dashboard and confidentiality suite: 17 passed
+- complete regression suite: 170 passed

@@ -179,6 +179,10 @@
             color: var(--danger);
         }
 
+        .badge.enabled {
+            color: var(--success);
+        }
+
         .badge.masked {
             color: var(--info);
         }
@@ -767,9 +771,15 @@
                     Confidential
                 </span>
 
-                <span class="badge disabled">
-                    Production Access Disabled
-                </span>
+                {% if dashboard.page.production_access_enabled %}
+                    <span class="badge enabled">
+                        Authenticated Access
+                    </span>
+                {% else %}
+                    <span class="badge disabled">
+                        Production Access Disabled
+                    </span>
+                {% endif %}
 
                 {% if dashboard.filing.identifiers_masked %}
                     <span class="badge masked">

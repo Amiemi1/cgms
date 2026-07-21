@@ -144,7 +144,9 @@ class PatentDashboardService:
         *,
         matter_id: str = CGMS_PATENT_MATTER_ID,
         include_sensitive: bool = False,
+        production_access_enabled: bool = False,
     ) -> dict[str, Any]:
+        
         self.ensure_bootstrapped()
 
         governance_snapshot = (
@@ -441,7 +443,9 @@ class PatentDashboardService:
                     "innovation governance"
                 ),
                 "confidential": True,
-                "production_access_enabled": False,
+                "production_access_enabled": (
+                    production_access_enabled
+                ),
             },
             "filing": filing_overview,
             "metrics": {
@@ -709,7 +713,11 @@ class PatentDashboardService:
 def build_patent_dashboard_view(
     *,
     include_sensitive: bool = False,
+    production_access_enabled: bool = False,
 ) -> dict[str, Any]:
     return PatentDashboardService().build_view(
-        include_sensitive=include_sensitive
+        include_sensitive=include_sensitive,
+        production_access_enabled=(
+            production_access_enabled
+        ),
     )
