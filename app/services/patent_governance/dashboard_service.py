@@ -4,6 +4,8 @@ from datetime import date
 from decimal import Decimal
 from typing import Any
 
+from threading import RLock
+
 from app.services.patent_governance.bootstrap import (
     CGMS_PATENT_MATTER_ID,
     bootstrap_confirmed_patent_records,
@@ -123,21 +125,37 @@ class PatentDashboardService:
             else get_patent_innovation_registry()
         )
 
+        self._bootstrap_lock = RLock()
+        self._bootstrapped = False
+
     def ensure_bootstrapped(self) -> None:
-        bootstrap_confirmed_patent_records(
-            self._governance_registry
-        )
+        """
+        Bootstrap the shared Patent governance registries once
+        per dashboard-service instance.
+        """
+        if self._bootstrapped:
+            return
 
-        bootstrap_confirmed_patent_evidence(
-            self._governance_registry,
-            self._evidence_registry,
-        )
+        with self._bootstrap_lock:
+            if self._bootstrapped:
+                return
 
-        bootstrap_confirmed_innovation_map(
-            self._governance_registry,
-            self._evidence_registry,
-            self._innovation_registry,
-        )
+            bootstrap_confirmed_patent_records(
+                self._governance_registry
+            )
+
+            bootstrap_confirmed_patent_evidence(
+                self._governance_registry,
+                self._evidence_registry,
+            )
+
+            bootstrap_confirmed_innovation_map(
+                self._governance_registry,
+                self._evidence_registry,
+                self._innovation_registry,
+            )
+
+            self._bootstrapped = True
 
     def build_view(
         self,
@@ -145,9 +163,11 @@ class PatentDashboardService:
         matter_id: str = CGMS_PATENT_MATTER_ID,
         include_sensitive: bool = False,
         production_access_enabled: bool = False,
+        bootstrap_records: bool = True,
     ) -> dict[str, Any]:
         
-        self.ensure_bootstrapped()
+        if bootstrap_records:
+            self.ensure_bootstrapped()
 
         governance_snapshot = (
             self._governance_registry.build_snapshot(

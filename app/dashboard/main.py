@@ -16,6 +16,10 @@ from app.dashboard.routes.patent_readiness_dashboard import (
     router as patent_readiness_dashboard_router,
 )
 
+from app.dashboard.routes.patent_evidence_export import (
+    router as patent_evidence_export_router,
+)
+
 # Ensure orchestration handlers are registered
 import app.services.orchestration.handlers  # noqa: F401
 
@@ -238,6 +242,10 @@ app.include_router(product_readiness_dashboard_router)
 
 app.include_router(
     patent_readiness_dashboard_router
+)
+
+app.include_router(
+    patent_evidence_export_router
 )
 
 @app.get("/")

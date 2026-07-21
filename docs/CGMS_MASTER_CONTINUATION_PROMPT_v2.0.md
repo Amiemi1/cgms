@@ -544,6 +544,15 @@ Enterprise AI
 ◐ PRE-007 CI/CD Integration — remote validation pending
 
 
+✔ PIP-001 Patent record model
+✔ PIP-002 Filing and milestone registry
+✔ PIP-003 Evidence register
+✔ PIP-004 Innovation and claim-expansion map
+✔ PIP-005 Patent & IP Progress Dashboard
+✔ PIP-006 Authentication and confidentiality controls
+✔ PIP-007 Exportable patent evidence package
+
+
 
 ===========================================================
 
@@ -1486,3 +1495,146 @@ Validation:
 
 - focused Patent dashboard and confidentiality suite: 17 passed
 - complete regression suite: 170 passed
+
+### PIP-007 — Exportable Patent Evidence Package
+
+Status: COMPLETE
+
+Implemented an authenticated, permission-controlled and integrity-verifiable export package for CGMS Patent and IP governance records.
+
+Export endpoint:
+
+- /patent-readiness/evidence-package
+- registered in the production FastAPI application;
+- excluded from the public OpenAPI schema;
+- requires valid Bearer authentication;
+- requires the view_patent_governance permission.
+
+Access policy:
+
+- admin:
+  - may export the governed evidence package;
+  - receives complete governed filing identifiers through the separate view_patent_sensitive permission.
+- operator:
+  - may export the governed evidence package;
+  - receives masked filing identifiers.
+- viewer:
+  - denied export access with HTTP 403.
+- missing, invalid or expired authentication:
+  - denied with HTTP 401.
+- unknown roles:
+  - fail closed.
+
+Package contents:
+
+- README.md
+- manifest.json
+- checksums.sha256
+- governance/governance_snapshot.json
+- governance/dashboard_summary.json
+- governance/governance_notices.md
+- governance/filings.csv
+- governance/milestones.csv
+- evidence/evidence_snapshot.json
+- evidence/documents.csv
+- evidence/evidence_items.csv
+- evidence/verifications.csv
+- evidence/collections.csv
+- innovation/innovation_snapshot.json
+- innovation/innovations.csv
+- innovation/claim_candidates.csv
+- innovation/innovation_claim_links.csv
+- innovation/coverage_assessments.csv
+
+Package governance:
+
+- package classification is Confidential;
+- package schema version is 1.0;
+- generated package contains 18 files;
+- JSON and CSV formats support machine and human review;
+- manifest records file paths, sizes and SHA-256 hashes;
+- checksums.sha256 permits independent file-integrity verification;
+- complete ZIP archive receives a SHA-256 digest;
+- package filename contains the UTC generation timestamp;
+- ZIP entry metadata is normalized;
+- fixed-time exports are byte-for-byte deterministic.
+
+Confidentiality controls:
+
+- sensitive filing fields are masked for operators;
+- application number, confirmation number, customer number and Patent Center transaction number are protected;
+- sensitive values are redacted from canonical fields;
+- repeated identifiers appearing inside free-text notes or descriptions are also redacted;
+- query parameters cannot activate sensitive disclosure;
+- X-User-Role cannot elevate export privileges;
+- identifier disclosure is determined exclusively from the verified principal;
+- export access is recorded without logging authentication tokens.
+
+Response protections:
+
+- Cache-Control prohibits browser and intermediary storage;
+- Pragma and Expires prevent legacy caching;
+- X-Content-Type-Options is set to nosniff;
+- framing is denied;
+- referrer transmission is disabled;
+- restrictive Content Security Policy headers are applied;
+- response includes package SHA-256, matter ID and identifier-treatment metadata.
+
+Deterministic export controls:
+
+- export records are bootstrapped once per service instance;
+- dashboard bootstrap is skipped when the exporter has already initialized the shared registries;
+- volatile registry snapshot generated_at fields are normalized to the explicit package generation time;
+- fixed-time repeated exports produce identical package bytes and identical SHA-256 hashes.
+
+Legal and operational limitations:
+
+- the export is an internal operational record;
+- it is not legal advice;
+- it is not an official USPTO status system;
+- it does not determine patentability, novelty, validity, enforceability, ownership or claim scope;
+- technical claim candidates require qualified patent-counsel review;
+- the export contains governed records and metadata;
+- it does not automatically copy source code, underlying repository files, external correspondence or the filed specification.
+
+Files created:
+
+- app/services/patent_governance/export_service.py
+- app/dashboard/routes/patent_evidence_export.py
+- tests/test_patent_evidence_export.py
+
+Files updated:
+
+- app/services/patent_governance/dashboard_service.py
+- app/dashboard/main.py
+- docs/CGMS_MASTER_CONTINUATION_PROMPT_v2.0.md
+
+Validation:
+
+- focused Patent evidence export suite: 14 passed
+- complete CGMS regression suite: 184 passed
+
+
+## Sprint 17 — Patent and IP Governance
+
+Status: COMPLETE
+
+Sprint 17 established a governed Patent and IP operating capability covering:
+
+- patent matter and filing records;
+- administrative milestone tracking;
+- technical evidence governance;
+- innovation and claim-candidate mapping;
+- filing-coverage assessment records;
+- authenticated Patent progress visibility;
+- role-separated confidential-data access;
+- deterministic and integrity-verifiable evidence exports.
+
+Production-protected routes:
+
+- /patent-readiness/dashboard
+- /patent-readiness/evidence-package
+
+Final validation baseline:
+
+- 184 tests passed.
