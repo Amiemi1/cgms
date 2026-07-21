@@ -1218,3 +1218,100 @@ Validation:
 
 - focused Patent Evidence tests: 11 passed
 - full regression suite: 142 passed
+
+### PIP-004 — Innovation and Claim-Expansion Map
+
+Status: COMPLETE
+
+Implemented a governed technical innovation and claim-expansion map for the CGMS patent matter.
+
+Architecture implemented:
+
+- ClaimCandidateType
+- ClaimCandidateStatus
+- LegalReviewStatus
+- ClaimCandidate
+- InnovationClaimLink
+- InnovationMapSnapshot
+- PatentInnovationRegistry
+- governed innovation-map bootstrap
+
+Registry capabilities:
+
+- technical-innovation registration;
+- claim-candidate registration;
+- innovation-to-claim linkage;
+- technical filing-coverage assessment;
+- patent-matter validation;
+- source-reference validation;
+- evidence-reference validation;
+- same-matter relationship enforcement;
+- duplicate-record protection;
+- defensive copying;
+- deterministic record ordering;
+- idempotent innovation-map bootstrap;
+- preservation of unrelated future records;
+- innovation, claim and filing-relationship metrics;
+- legal-review status tracking.
+
+Confirmed technical map:
+
+- innovations: 9
+- potential claim candidates: 6
+- innovation-to-claim links: 10
+- technical coverage assessments: 9
+
+Innovation status:
+
+- deployed: 3
+- implemented: 4
+- in progress: 2
+
+Mapped technical innovations:
+
+1. Event-driven memory orchestration
+2. Connector-triggered runtime orchestration
+3. Workspace-aware memory execution
+4. Commercially governed autonomous operation
+5. Policy-based event admission and quarantine
+6. Memory Intelligence Engine
+7. Enterprise Event Bus
+8. Integrated Product Readiness visibility
+9. Provider-independent defensive architecture
+
+Technical claim candidates:
+
+1. Workspace-aware memory execution
+2. Connector-triggered runtime orchestration
+3. Commercially governed autonomous operation
+4. Policy-based event admission
+5. Integrated Product Readiness visibility
+6. Provider-independent defensive architecture
+
+Governance position:
+
+- all six claim candidates require professional legal review;
+- legally reviewed candidates: 0;
+- candidates requiring legal review: 6;
+- five candidates are evidence-linked technical working records;
+- one defensive-positioning candidate is technically mapped;
+- no candidate is represented as a filed claim;
+- no patentability, novelty, validity, enforceability or claim-scope conclusion is made;
+- all nine filing-coverage assessments remain NOT_ASSESSED with zero confidence;
+- coverage remains unassessed because the filed provisional specification is not stored in the governed repository and has not been compared with the mapped innovations;
+- post-filing development remains explicitly separated from the original provisional disclosure.
+
+Files created:
+
+- app/services/patent_governance/innovation_registry.py
+- app/services/patent_governance/innovation_bootstrap.py
+- tests/test_patent_innovation_registry.py
+
+Files updated:
+
+- app/services/patent_governance/models.py
+
+Validation:
+
+- focused innovation-map tests: 11 passed
+- full regression suite: 153 passed

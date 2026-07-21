@@ -508,3 +508,186 @@ class EvidenceSnapshot(GovernedModel):
     evidence_type_counts: dict[str, int] = Field(
         default_factory=dict
     )
+
+class ClaimCandidateType(str, Enum):
+    SYSTEM = "system"
+    METHOD = "method"
+    COMPUTER_READABLE_MEDIUM = (
+        "computer_readable_medium"
+    )
+    PLATFORM = "platform"
+    DEFENSIVE_POSITIONING = (
+        "defensive_positioning"
+    )
+    OTHER = "other"
+
+
+class ClaimCandidateStatus(str, Enum):
+    CONCEPT = "concept"
+    TECHNICALLY_MAPPED = "technically_mapped"
+    EVIDENCE_LINKED = "evidence_linked"
+    READY_FOR_LEGAL_REVIEW = (
+        "ready_for_legal_review"
+    )
+    UNDER_LEGAL_REVIEW = "under_legal_review"
+    LEGALLY_REVIEWED = "legally_reviewed"
+    DEFERRED = "deferred"
+    SUPERSEDED = "superseded"
+
+
+class LegalReviewStatus(str, Enum):
+    NOT_REVIEWED = "not_reviewed"
+    REVIEW_REQUESTED = "review_requested"
+    UNDER_REVIEW = "under_review"
+    REVIEWED = "reviewed"
+    REQUIRES_REVISION = "requires_revision"
+    NOT_PURSUED = "not_pursued"
+
+
+class ClaimCandidate(GovernedModel):
+    """
+    Technical working record for possible patent protection.
+
+    This model does not represent a filed claim or a legal
+    conclusion regarding patentability or coverage.
+    """
+
+    id: str = Field(min_length=1)
+    matter_id: str = Field(min_length=1)
+
+    title: str = Field(min_length=1)
+    technical_summary: str = Field(min_length=1)
+
+    candidate_type: ClaimCandidateType = (
+        ClaimCandidateType.SYSTEM
+    )
+
+    status: ClaimCandidateStatus = (
+        ClaimCandidateStatus.CONCEPT
+    )
+
+    filing_relationship: FilingRelationship = (
+        FilingRelationship.NOT_ASSESSED
+    )
+
+    innovation_ids: list[str] = Field(
+        default_factory=list
+    )
+
+    evidence_ids: list[str] = Field(
+        default_factory=list
+    )
+
+    source_references: list[str] = Field(
+        default_factory=list
+    )
+
+    legal_review_required: bool = True
+
+    legal_review_status: LegalReviewStatus = (
+        LegalReviewStatus.NOT_REVIEWED
+    )
+
+    reviewed_by: str | None = None
+    reviewed_date: date | None = None
+
+    confidentiality: ConfidentialityLevel = (
+        ConfidentialityLevel.HIGHLY_CONFIDENTIAL
+    )
+
+    notes: str | None = None
+
+    created_at: datetime = Field(default_factory=utc_now)
+    updated_at: datetime = Field(default_factory=utc_now)
+
+
+class InnovationClaimLink(GovernedModel):
+    """
+    Governed relationship between a technical innovation
+    and a potential claim candidate.
+    """
+
+    id: str = Field(min_length=1)
+    matter_id: str = Field(min_length=1)
+
+    innovation_id: str = Field(min_length=1)
+    claim_candidate_id: str = Field(min_length=1)
+
+    linkage_strength: int = Field(
+        default=0,
+        ge=0,
+        le=100,
+    )
+
+    rationale: str | None = None
+
+    evidence_ids: list[str] = Field(
+        default_factory=list
+    )
+
+    source_references: list[str] = Field(
+        default_factory=list
+    )
+
+    status: RecordStatus = RecordStatus.DRAFT
+
+    review_required: bool = True
+    reviewed_by: str | None = None
+    reviewed_date: date | None = None
+
+    created_at: datetime = Field(default_factory=utc_now)
+    updated_at: datetime = Field(default_factory=utc_now)
+
+
+class InnovationMapSnapshot(GovernedModel):
+    schema_version: str = "1.0"
+
+    generated_at: datetime = Field(default_factory=utc_now)
+
+    matter_id: str = Field(min_length=1)
+
+    innovations: list[InnovationRecord] = Field(
+        default_factory=list
+    )
+
+    claim_candidates: list[ClaimCandidate] = Field(
+        default_factory=list
+    )
+
+    links: list[InnovationClaimLink] = Field(
+        default_factory=list
+    )
+
+    coverage_assessments: list[CoverageAssessment] = Field(
+        default_factory=list
+    )
+
+    source_references: list[SourceReference] = Field(
+        default_factory=list
+    )
+
+    total_innovations: int = Field(default=0, ge=0)
+    total_claim_candidates: int = Field(default=0, ge=0)
+    total_links: int = Field(default=0, ge=0)
+
+    legally_reviewed_candidates: int = Field(
+        default=0,
+        ge=0,
+    )
+
+    review_required_candidates: int = Field(
+        default=0,
+        ge=0,
+    )
+
+    innovation_status_counts: dict[str, int] = Field(
+        default_factory=dict
+    )
+
+    claim_status_counts: dict[str, int] = Field(
+        default_factory=dict
+    )
+
+    filing_relationship_counts: dict[str, int] = Field(
+        default_factory=dict
+    )
