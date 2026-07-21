@@ -1,17 +1,25 @@
-from sqlmodel import create_engine, Session
+from sqlmodel import Session, create_engine
+
 from app.core.config import settings
 
-# 🔥 DEBUG — show which DB your app is using
-print("APP DATABASE URL:", settings.DATABASE_URL)
 
-# Create engine
-engine = create_engine(settings.DATABASE_URL, echo=True)
+# The database URL is intentionally never written to logs.
+engine = create_engine(
+    settings.DATABASE_URL,
+    echo=True,
+)
 
-# Dependency-style session (FastAPI compatible)
+
 def get_session():
+    """
+    FastAPI-compatible database session dependency.
+    """
     with Session(engine) as session:
         yield session
 
-# Local session (used in services/tests)
+
 def SessionLocal():
+    """
+    Create a database session for services and local workflows.
+    """
     return Session(engine)

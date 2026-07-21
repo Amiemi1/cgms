@@ -1638,3 +1638,96 @@ Production-protected routes:
 Final validation baseline:
 
 - 184 tests passed.
+## Sprint 18 — Secure Browser Access and Session Management
+
+**Status:** Active
+
+### Completed
+
+- **SBA-001A — Canonical Role Resolution**
+  - Canonical roles: dmin, operator, iewer
+  - Legacy compatibility:
+    - contributor → operator
+    -
+eader → iewer
+  - Unknown roles fail closed.
+  - Focused validation: 21 passed.
+
+- **SBA-001B — Database-Backed Credential Authentication**
+  - Existing User and UserRole tables retained as the identity foundation.
+  - Existing bcrypt password hashes retained.
+  - Generic invalid-credential responses prevent account enumeration.
+  - Unknown and conflicting role assignments fail closed.
+  - Plaintext database URL startup logging removed.
+  - Focused validation: 15 passed.
+
+- **SBA-001C — Secure Browser Session Foundation**
+  - Purpose-restricted browser-session JWTs.
+  - Host-bound __Host- cookie.
+  - Secure, HttpOnly, SameSite=Strict, Path=/.
+  - Browser authentication accepts the session cookie only.
+  - Bearer tokens and caller-supplied role headers cannot become browser sessions.
+  - Permission-aware browser principal dependency implemented.
+  - Focused validation:
+    - Browser-session contract: 23 passed.
+    - Browser-session dependency: 11 passed.
+
+### Regression Baseline
+
+- Full suite: **254 passed**
+
+### Active Next Work
+
+- **SBA-001D — Secure Login and Logout Routes**
+  - CSRF-protected login form and endpoint.
+  - Database-backed authentication.
+  - Secure session-cookie issuance.
+  - POST-only logout with session-cookie removal.
+  - No unrestricted public signup.
+  - No account-enumerating authentication responses.
+
+### Security Decisions
+
+- The legacy unregistered pp/dashboard/auth.py router must not be registered.
+- Browser routes must not trust X-User-Role.
+- Browser session cookies must never be returned in response bodies.
+- Passwords, hashes, tokens, JWT secrets and database URLs must never be logged.
+- Credential-enabled wildcard CORS must be replaced before browser authentication routes are exposed.
+
+### SBA-001D — Secure Browser Login and Logout
+
+**Status:** Complete
+
+Implemented:
+
+- GET `/auth/login` secure browser sign-in page.
+- POST `/auth/login` database-backed authentication.
+- POST-only `/auth/logout`.
+- Signed, time-limited double-submit CSRF protection.
+- Secure browser-session cookie issuance.
+- Session and CSRF cookie removal on logout.
+- Generic authentication failures preventing account enumeration.
+- Form-body size, field-count, UTF-8 and content-type validation.
+- No public signup route.
+- Browser responses use no-store, CSP, frame-denial, referrer and content-type security headers.
+- Legacy `app/dashboard/auth.py` remains unregistered.
+- Credential-enabled wildcard CORS replaced with an explicit origin allowlist.
+
+Roadmap accounting:
+
+- SBA-001 secure login and authentication: complete.
+- SBA-002 secure HttpOnly session-cookie foundation: complete.
+- SBA-003 server-side role and permission revalidation: next.
+
+Validation:
+
+- Browser authentication route tests: 16 passed.
+- CSRF foundation tests: 45 passed.
+- CORS policy tests: 23 passed.
+- Full regression suite: **338 passed**.
+
+Current limitation:
+
+- Browser-session roles are still derived from the signed session claim after login.
+- SBA-003 must re-resolve the user and role from the database on every protected browser request.
+- Patent dashboard and evidence export have not yet migrated from Bearer authentication to browser-session access.

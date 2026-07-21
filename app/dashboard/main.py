@@ -20,6 +20,10 @@ from app.dashboard.routes.patent_evidence_export import (
     router as patent_evidence_export_router,
 )
 
+from app.dashboard.routes.browser_auth import (
+    router as browser_auth_router,
+)
+
 # Ensure orchestration handlers are registered
 import app.services.orchestration.handlers  # noqa: F401
 
@@ -85,6 +89,10 @@ from app.dashboard.routes.product_readiness_dashboard import (
     router as product_readiness_dashboard_router,
 )
 
+from app.services.security.cors_policy import (
+    get_allowed_cors_origins,
+)
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     print("CGMS STARTING")
@@ -132,13 +140,20 @@ templates = Jinja2Templates(
     directory="app/dashboard/templates"
 )
 
+allowed_cors_origins = (
+    get_allowed_cors_origins()
+)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=allowed_cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+)
+
+allowed_cors_origins = (
+    get_allowed_cors_origins()
 )
 
 
@@ -239,6 +254,10 @@ app.include_router(operator_console_router)
 app.include_router(memory_intelligence_router)
 
 app.include_router(product_readiness_dashboard_router)
+
+app.include_router(
+    browser_auth_router
+)
 
 app.include_router(
     patent_readiness_dashboard_router
