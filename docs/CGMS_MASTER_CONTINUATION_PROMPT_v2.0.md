@@ -1731,3 +1731,30 @@ Current limitation:
 - Browser-session roles are still derived from the signed session claim after login.
 - SBA-003 must re-resolve the user and role from the database on every protected browser request.
 - Patent dashboard and evidence export have not yet migrated from Bearer authentication to browser-session access.
+### SBA-003 — Server-Side Authorization Revalidation
+
+**Status:** Complete
+
+Implemented:
+
+- Added authoritative database-backed account and role resolution.
+- Browser sessions are revalidated against the current `User` and `UserRole` records on every protected request.
+- Missing or deleted accounts fail closed.
+- Missing, unknown and conflicting role assignments fail closed.
+- Canonical and legacy-equivalent roles remain compatible.
+- Changes to an account role invalidate previously issued browser sessions.
+- Permissions are derived from the current server-side RBAC policy.
+- Login and request-time authorization use the same role-resolution implementation.
+- The former implicit viewer fallback for accounts without role assignments was removed.
+- Caller-supplied role headers and session permission claims remain non-authoritative.
+
+Validation:
+
+- Account authorization tests: 28 passed.
+- Browser authorization tests: 13 passed.
+- Combined SBA-003 authorization validation: 55 passed.
+- Full regression suite: **382 passed**.
+
+Next planned work:
+
+- **SBA-004 — Session Expiry, Logout and Revocation Controls**

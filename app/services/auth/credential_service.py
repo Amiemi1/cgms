@@ -10,15 +10,13 @@ from sqlmodel import Session, select
 from app.db.models.security_models import UserRole
 from app.db.models.user import User
 from app.db.session import SessionLocal
+from app.services.auth.account_authorization import (
+    AccountRoleConfigurationError,
+    resolve_account_role_records,
+)
 from app.services.auth.security import (
     hash_password,
     verify_password,
-)
-from app.services.security.canonical_roles import (
-    CANONICAL_VIEWER,
-    CanonicalRoleResolution,
-    CanonicalRoleResolutionError,
-    resolve_canonical_role,
 )
 
 
@@ -39,12 +37,6 @@ class InvalidCredentialsError(ValueError):
 
     The public error is deliberately generic to prevent account
     enumeration.
-    """
-
-
-class AccountRoleConfigurationError(RuntimeError):
-    """
-    Raised when stored role assignments are unknown or conflict.
     """
 
 
@@ -112,6 +104,7 @@ def _verify_password_safely(
             password,
             password_hash,
         )
+
     except (
         TypeError,
         ValueError,
@@ -129,8 +122,8 @@ class CredentialAuthenticationService:
     Authenticate a database-backed CGMS account.
 
     Passwords are verified against the existing bcrypt hashes.
-    Stored roles are translated through the canonical-role
-    compatibility boundary before any token or session is issued.
+    Role assignments are resolved through the same authoritative
+    fail-closed resolver used for request-time authorization.
     """
 
     def __init__(
@@ -213,9 +206,15 @@ class CredentialAuthenticationService:
                     "Invalid email or password."
                 )
 
+            role_records = session.exec(
+                select(UserRole).where(
+                    UserRole.user_id == user.id
+                )
+            ).all()
+
             role_resolution = (
-                self._resolve_user_role(
-                    session=session,
+                resolve_account_role_records(
+                    role_records,
                     user_id=user.id,
                 )
             )
@@ -225,7 +224,6 @@ class CredentialAuthenticationService:
                 email=normalized_email,
                 stored_role=(
                     role_resolution.supplied_role
-                    or CANONICAL_VIEWER
                 ),
                 canonical_role=(
                     role_resolution.canonical_role
@@ -246,78 +244,23 @@ class CredentialAuthenticationService:
 
             return account
 
+        except AccountRoleConfigurationError:
+            credential_logger.error(
+                "credential_authentication_denied "
+                "user_id=%s "
+                "reason=invalid_role_configuration",
+                (
+                    user.id
+                    if user is not None
+                    and user.id is not None
+                    else "not-recorded"
+                ),
+            )
+
+            raise
+
         finally:
             session.close()
-
-    def _resolve_user_role(
-        self,
-        *,
-        session: Session,
-        user_id: int,
-    ) -> CanonicalRoleResolution:
-        role_records = session.exec(
-            select(UserRole).where(
-                UserRole.user_id == user_id
-            )
-        ).all()
-
-        if not role_records:
-            return resolve_canonical_role(
-                None,
-                default_role=CANONICAL_VIEWER,
-            )
-
-        resolutions: list[
-            CanonicalRoleResolution
-        ] = []
-
-        for role_record in role_records:
-            try:
-                resolution = (
-                    resolve_canonical_role(
-                        role_record.role
-                    )
-                )
-            except CanonicalRoleResolutionError as exc:
-                credential_logger.error(
-                    "account_role_resolution_failed "
-                    "user_id=%s reason=unknown_role",
-                    user_id,
-                )
-
-                raise AccountRoleConfigurationError(
-                    "Account role configuration is invalid."
-                ) from exc
-
-            resolutions.append(
-                resolution
-            )
-
-        canonical_roles = {
-            resolution.canonical_role
-            for resolution in resolutions
-        }
-
-        if len(canonical_roles) != 1:
-            credential_logger.error(
-                "account_role_resolution_failed "
-                "user_id=%s reason=conflicting_roles",
-                user_id,
-            )
-
-            raise AccountRoleConfigurationError(
-                "Account has conflicting role assignments."
-            )
-
-        # Prefer an exact canonical record over its legacy alias
-        # when both resolve to the same canonical role.
-        return sorted(
-            resolutions,
-            key=lambda resolution: (
-                resolution.used_legacy_alias,
-                resolution.normalized_role,
-            ),
-        )[0]
 
 
 def authenticate_credentials(

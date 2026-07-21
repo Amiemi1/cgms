@@ -11,17 +11,20 @@ from fastapi import (
     status,
 )
 
+from app.services.auth.account_authorization import (
+    AccountAuthorizationService,
+)
 from app.services.auth.auth_dependency import (
     AuthenticatedPrincipal,
+)
+from app.services.auth.browser_authorization import (
+    BrowserSessionAuthorizationError,
+    revalidate_browser_session,
 )
 from app.services.auth.browser_session import (
     BrowserSessionIdentity,
     decode_browser_session_token,
     get_browser_session_token,
-)
-from app.services.security.rbac_policy import (
-    get_permissions,
-    is_known_role,
 )
 
 
@@ -41,6 +44,18 @@ def _browser_authentication_error(
             "Pragma": "no-cache",
         },
     )
+
+
+def get_account_authorization_service(
+) -> AccountAuthorizationService:
+    """
+    Provide the authoritative database-backed account and role
+    resolver.
+
+    Tests may override this dependency without changing the
+    production authorization boundary.
+    """
+    return AccountAuthorizationService()
 
 
 def get_current_browser_session_identity(
@@ -99,42 +114,51 @@ def get_current_browser_principal(
             get_current_browser_session_identity
         ),
     ],
+    authorization_service: Annotated[
+        AccountAuthorizationService,
+        Depends(
+            get_account_authorization_service
+        ),
+    ],
 ) -> AuthenticatedPrincipal:
     """
-    Convert a validated browser-session identity into the
-    standard CGMS principal contract.
+    Revalidate a cryptographically valid browser session
+    against the current authoritative database state.
 
-    SBA-003 will strengthen this further by re-resolving the
-    account role from the database on every protected request.
+    The session role is not trusted as current authorization.
+    The account must still exist, have a valid role assignment,
+    and retain the same canonical role represented by the
+    session.
+
+    Permissions are derived from the current server policy and
+    the database-resolved role.
     """
-    if not is_known_role(
-        identity.role
-    ):
-        browser_authentication_logger.error(
+    try:
+        principal = revalidate_browser_session(
+            identity=identity,
+            service=authorization_service,
+        )
+
+    except BrowserSessionAuthorizationError:
+        browser_authentication_logger.warning(
             "browser_authentication_denied "
-            "user_id=%s reason=unknown_role",
+            "user_id=%s token_id=%s "
+            "reason=session_no_longer_authorized",
             identity.user_id,
+            identity.token_id,
         )
 
         raise _browser_authentication_error(
-            "Invalid browser-session role."
+            "Browser session is no longer authorized."
         )
-
-    principal = AuthenticatedPrincipal(
-        user_id=identity.user_id,
-        role=identity.role,
-        permissions=get_permissions(
-            identity.role
-        ),
-        token_id=identity.token_id,
-    )
 
     browser_authentication_logger.info(
         "browser_authentication_granted "
         "user_id=%s role=%s token_id=%s",
         principal.user_id,
         principal.role,
-        principal.token_id,
+        principal.token_id
+        or "not-recorded",
     )
 
     return principal
@@ -144,7 +168,7 @@ def require_browser_permission(
     permission: str,
 ) -> Callable[..., AuthenticatedPrincipal]:
     """
-    Require a permission from a validated browser-session
+    Require a permission from a database-revalidated browser
     principal.
     """
     normalized_permission = (

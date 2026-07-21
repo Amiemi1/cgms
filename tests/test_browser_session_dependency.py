@@ -9,6 +9,11 @@ from fastapi import (
 )
 from fastapi.testclient import TestClient
 
+from app.services.auth.account_authorization import (
+    AccountNotFoundError,
+    AccountRoleConfigurationError,
+    ResolvedAccountAuthorization,
+)
 from app.services.auth.auth_dependency import (
     AuthenticatedPrincipal,
 )
@@ -17,6 +22,7 @@ from app.services.auth.browser_session import (
     issue_browser_session_token,
 )
 from app.services.auth.browser_session_dependency import (
+    get_account_authorization_service,
     get_current_browser_principal,
     require_browser_permission,
 )
@@ -28,6 +34,7 @@ from app.services.auth.jwt_handler import (
 )
 from app.services.security.rbac_policy import (
     VIEW_PATENT_GOVERNANCE,
+    get_permissions,
 )
 
 
@@ -72,13 +79,91 @@ def configure_test_environment(
     )
 
 
+ROLE_USER_IDS = {
+    "admin": 1001,
+    "operator": 2001,
+    "viewer": 3001,
+}
+
+
+DEFAULT_ROLE_BY_USER_ID = {
+    user_id: role
+    for role, user_id in ROLE_USER_IDS.items()
+}
+
+
+class StubAccountAuthorizationService:
+    def __init__(
+        self,
+        *,
+        role_overrides: dict[int, str] | None = None,
+        error: Exception | None = None,
+    ) -> None:
+        self.role_overrides = (
+            role_overrides or {}
+        )
+
+        self.error = error
+
+        self.calls: list[
+            str | int
+        ] = []
+
+    def resolve(
+        self,
+        user_id: str | int,
+    ) -> ResolvedAccountAuthorization:
+        self.calls.append(
+            user_id
+        )
+
+        if self.error is not None:
+            raise self.error
+
+        normalized_user_id = int(
+            str(user_id).strip()
+        )
+
+        role = self.role_overrides.get(
+            normalized_user_id,
+            DEFAULT_ROLE_BY_USER_ID.get(
+                normalized_user_id
+            ),
+        )
+
+        if role is None:
+            raise AccountNotFoundError(
+                "Authenticated account is unavailable."
+            )
+
+        return ResolvedAccountAuthorization(
+            user_id=normalized_user_id,
+            email=(
+                f"user-{normalized_user_id}"
+                "@example.com"
+            ),
+            stored_role=role,
+            canonical_role=role,
+            used_legacy_alias=False,
+            permissions=get_permissions(
+                role
+            ),
+        )
+
+
 def build_account(
     role: str,
     *,
-    user_id: int = 1001,
+    user_id: int | None = None,
 ) -> AuthenticatedAccount:
+    resolved_user_id = (
+        user_id
+        if user_id is not None
+        else ROLE_USER_IDS[role]
+    )
+
     return AuthenticatedAccount(
-        user_id=user_id,
+        user_id=resolved_user_id,
         email="user@example.com",
         stored_role=role,
         canonical_role=role,
@@ -86,8 +171,22 @@ def build_account(
     )
 
 
-def build_app() -> FastAPI:
+def build_app(
+    authorization_service: (
+        StubAccountAuthorizationService
+        | None
+    ) = None,
+) -> FastAPI:
     app = FastAPI()
+
+    active_service = (
+        authorization_service
+        or StubAccountAuthorizationService()
+    )
+
+    app.dependency_overrides[
+        get_account_authorization_service
+    ] = lambda: active_service
 
     @app.get("/session")
     def session_endpoint(
@@ -199,7 +298,9 @@ def test_ordinary_access_token_is_not_browser_session() -> None:
         build_app()
     ).get(
         "/session",
-        headers=cookie_headers(token),
+        headers=cookie_headers(
+            token
+        ),
     )
 
     assert response.status_code == 401
@@ -207,7 +308,9 @@ def test_ordinary_access_token_is_not_browser_session() -> None:
 
 def test_authorization_header_is_not_browser_session() -> None:
     token = issue_browser_session_token(
-        build_account("admin")
+        build_account(
+            "admin"
+        )
     )
 
     response = TestClient(
@@ -236,7 +339,9 @@ def test_valid_operator_session_creates_principal() -> None:
         build_app()
     ).get(
         "/session",
-        headers=cookie_headers(token),
+        headers=cookie_headers(
+            token
+        ),
     )
 
     assert response.status_code == 200
@@ -256,30 +361,42 @@ def test_valid_operator_session_creates_principal() -> None:
 
 def test_operator_has_patent_permission() -> None:
     token = issue_browser_session_token(
-        build_account("operator")
+        build_account(
+            "operator"
+        )
     )
 
     response = TestClient(
         build_app()
     ).get(
         "/patent",
-        headers=cookie_headers(token),
+        headers=cookie_headers(
+            token
+        ),
     )
 
     assert response.status_code == 200
-    assert response.json()["role"] == "operator"
+
+    assert (
+        response.json()["role"]
+        == "operator"
+    )
 
 
 def test_viewer_is_denied_patent_permission() -> None:
     token = issue_browser_session_token(
-        build_account("viewer")
+        build_account(
+            "viewer"
+        )
     )
 
     response = TestClient(
         build_app()
     ).get(
         "/patent",
-        headers=cookie_headers(token),
+        headers=cookie_headers(
+            token
+        ),
     )
 
     assert response.status_code == 403
@@ -294,7 +411,9 @@ def test_viewer_is_denied_patent_permission() -> None:
 
 def test_role_header_cannot_elevate_viewer() -> None:
     token = issue_browser_session_token(
-        build_account("viewer")
+        build_account(
+            "viewer"
+        )
     )
 
     response = TestClient(
@@ -325,7 +444,9 @@ def test_unknown_role_session_fails_closed() -> None:
         build_app()
     ).get(
         "/session",
-        headers=cookie_headers(token),
+        headers=cookie_headers(
+            token
+        ),
     )
 
     assert response.status_code == 401
@@ -340,7 +461,9 @@ def test_custom_configured_cookie_name_is_used(
     )
 
     token = issue_browser_session_token(
-        build_account("admin")
+        build_account(
+            "admin"
+        )
     )
 
     client = TestClient(
@@ -349,7 +472,9 @@ def test_custom_configured_cookie_name_is_used(
 
     wrong_cookie_response = client.get(
         "/session",
-        headers=cookie_headers(token),
+        headers=cookie_headers(
+            token
+        ),
     )
 
     assert (
@@ -378,4 +503,111 @@ def test_empty_permission_definition_is_rejected() -> None:
         ValueError,
         match="non-empty browser permission",
     ):
-        require_browser_permission(" ")
+        require_browser_permission(
+            " "
+        )
+
+
+def test_database_role_change_invalidates_session() -> None:
+    token = issue_browser_session_token(
+        build_account(
+            "admin"
+        )
+    )
+
+    service = StubAccountAuthorizationService(
+        role_overrides={
+            ROLE_USER_IDS["admin"]: "operator",
+        }
+    )
+
+    response = TestClient(
+        build_app(
+            service
+        )
+    ).get(
+        "/session",
+        headers=cookie_headers(
+            token
+        ),
+    )
+
+    assert response.status_code == 401
+
+    assert response.json() == {
+        "detail": (
+            "Browser session is no longer authorized."
+        )
+    }
+
+    assert (
+        response.headers["cache-control"]
+        == "no-store"
+    )
+
+
+def test_deleted_database_account_invalidates_session() -> None:
+    token = issue_browser_session_token(
+        build_account(
+            "operator"
+        )
+    )
+
+    service = StubAccountAuthorizationService(
+        error=AccountNotFoundError(
+            "Authenticated account is unavailable."
+        )
+    )
+
+    response = TestClient(
+        build_app(
+            service
+        )
+    ).get(
+        "/session",
+        headers=cookie_headers(
+            token
+        ),
+    )
+
+    assert response.status_code == 401
+
+    assert response.json() == {
+        "detail": (
+            "Browser session is no longer authorized."
+        )
+    }
+
+
+def test_invalid_database_role_configuration_invalidates_session(
+) -> None:
+    token = issue_browser_session_token(
+        build_account(
+            "operator"
+        )
+    )
+
+    service = StubAccountAuthorizationService(
+        error=AccountRoleConfigurationError(
+            "Account role configuration is invalid."
+        )
+    )
+
+    response = TestClient(
+        build_app(
+            service
+        )
+    ).get(
+        "/session",
+        headers=cookie_headers(
+            token
+        ),
+    )
+
+    assert response.status_code == 401
+
+    assert response.json() == {
+        "detail": (
+            "Browser session is no longer authorized."
+        )
+    }

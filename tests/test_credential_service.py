@@ -218,7 +218,7 @@ def test_reader_maps_to_viewer(
     assert account.used_legacy_alias is True
 
 
-def test_missing_role_defaults_to_viewer(
+def test_missing_role_fails_closed(
     engine,
 ) -> None:
     add_user(
@@ -227,15 +227,16 @@ def test_missing_role_defaults_to_viewer(
         email="unassigned@example.com",
     )
 
-    account = create_service(
-        engine
-    ).authenticate(
-        email="unassigned@example.com",
-        password=TEST_PASSWORD,
-    )
-
-    assert account.canonical_role == "viewer"
-    assert account.stored_role == "viewer"
+    with pytest.raises(
+        AccountRoleConfigurationError,
+        match="role assignment is missing",
+    ):
+        create_service(
+            engine
+        ).authenticate(
+            email="unassigned@example.com",
+            password=TEST_PASSWORD,
+        )
 
 
 def test_unknown_account_uses_generic_error(
