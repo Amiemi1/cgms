@@ -1939,3 +1939,71 @@ The following pre-existing areas remain outside this milestone:
 
 SBA-005 was completed within the approved Sprint 18 roadmap. No unapproved
 roadmap deviation or security-boundary expansion was introduced.
+
+## Sprint 18 ? SBA-005 UI Polish Addendum
+
+**Status:** Complete and production-validated  
+**Validation date:** 2026-07-22  
+**Classification:** Approved Recommended Deviation  
+**Next roadmap item:** SBA-006 ? Authentication Throttling, Logging and Failure Controls
+
+### Rationale
+
+The Patent Readiness dashboard presentation defects were identified during
+SBA-005 live HTTPS validation. The addendum was approved before
+implementation and was deliberately completed before SBA-006.
+
+### Approved implementation boundary
+
+The change was restricted to:
+
+- `app/dashboard/templates/patent_readiness_dashboard.html`
+
+No changes were made to:
+
+- browser authentication;
+- persistent session management;
+- role-based access control;
+- Patent dashboard routes;
+- evidence-package export routes;
+- masking or sensitive-data permissions;
+- database models or persistence;
+- service-layer behaviour;
+- Content Security Policy or other response headers.
+
+### Presentation improvements
+
+- Replaced oversized milestone-status elements with compact status pills.
+- Added consistent timeline status-column alignment.
+- Reduced excessive timeline row height and vertical spacing.
+- Reduced action-card padding and unnecessary visual height.
+- Improved long action-title wrapping.
+- Aligned priority indicators consistently at the top right.
+- Improved balance between the timeline and priority-actions columns.
+- Reduced panel shadow intensity and tightened section spacing.
+- Improved tablet and mobile responsive behaviour.
+- Preserved the existing dark enterprise visual identity.
+- Preserved administrator and operator masking behaviour.
+
+### Automated validation
+
+- Focused Patent dashboard and export suite: **30 passed**
+- Full regression suite: **PASS**
+- No whitespace defects were reported by `git diff --check`.
+- Windows LF-to-CRLF notices remained informational only.
+
+### Live visual validation
+
+- Timeline badge polish: PASS
+- Timeline alignment and spacing: PASS
+- Action-card polish: PASS
+- Responsive layout: PASS
+- Sensitive-data masking behaviour preserved: PASS
+
+### Governance confirmation
+
+The UI Polish Addendum was implemented only after explicit approval as a
+Recommended Deviation under EG-001.
+
+The addendum did not expand the SBA-005 security boundary and did not alter
+the approved SBA-006 scope.
