@@ -7,6 +7,7 @@ from sqlalchemy import (
     BigInteger,
     Column,
     DateTime,
+    Integer,
     String,
 )
 from sqlmodel import Field, SQLModel
@@ -70,6 +71,92 @@ class SecurityLog(SQLModel, table=True):
         default_factory=utc_now,
         sa_column=Column(
             DateTime(timezone=True),
+            nullable=False,
+        ),
+    )
+
+
+class BrowserLoginThrottleRecord(
+    SQLModel,
+    table=True,
+):
+    """
+    Persistent browser-login throttle state.
+
+    ``throttle_key`` is an HMAC-derived pseudonymous identifier.
+    Raw email addresses and network addresses are never stored.
+    """
+
+    __tablename__: ClassVar[str] = (
+        "browser_login_throttle"
+    )
+
+    id: Optional[int] = Field(
+        default=None,
+        primary_key=True,
+    )
+
+    throttle_key: str = Field(
+        sa_column=Column(
+            String(64),
+            unique=True,
+            index=True,
+            nullable=False,
+        )
+    )
+
+    scope: str = Field(
+        sa_column=Column(
+            String(16),
+            index=True,
+            nullable=False,
+        )
+    )
+
+    failure_count: int = Field(
+        default=0,
+        sa_column=Column(
+            Integer,
+            nullable=False,
+        ),
+    )
+
+    window_started_at: datetime = Field(
+        sa_column=Column(
+            DateTime(timezone=True),
+            nullable=False,
+        )
+    )
+
+    blocked_until: Optional[datetime] = Field(
+        default=None,
+        sa_column=Column(
+            DateTime(timezone=True),
+            index=True,
+            nullable=True,
+        ),
+    )
+
+    last_failure_at: datetime = Field(
+        sa_column=Column(
+            DateTime(timezone=True),
+            nullable=False,
+        )
+    )
+
+    created_at: datetime = Field(
+        default_factory=utc_now,
+        sa_column=Column(
+            DateTime(timezone=True),
+            nullable=False,
+        ),
+    )
+
+    updated_at: datetime = Field(
+        default_factory=utc_now,
+        sa_column=Column(
+            DateTime(timezone=True),
+            index=True,
             nullable=False,
         ),
     )

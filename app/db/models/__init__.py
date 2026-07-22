@@ -5,6 +5,7 @@ from .insight import Insight
 from .learning_log import LearningLog
 
 from .security_models import (
+    BrowserLoginThrottleRecord,
     BrowserSessionRecord,
     SecurityLog,
     UserRole,

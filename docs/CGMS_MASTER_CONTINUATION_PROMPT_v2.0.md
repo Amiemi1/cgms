@@ -2007,3 +2007,107 @@ Recommended Deviation under EG-001.
 
 The addendum did not expand the SBA-005 security boundary and did not alter
 the approved SBA-006 scope.
+
+## Sprint 18 ? SBA-006 Authentication Throttling, Logging and Failure Controls
+
+**Status:** Complete and production-validated  
+**Validation date:** 2026-07-22  
+**Classification:** Planned Work  
+**Next roadmap item:** SBA-007 ? Production Validation and Documentation
+
+### Implemented controls
+
+- Added persistent database-backed browser-login throttling.
+- Added separate account/network-pair and network-wide control scopes.
+- Added configurable failure windows, thresholds, blocking duration and
+  retention.
+- Added HMAC-pseudonymised throttle keys.
+- Raw email addresses and client IP addresses are not persisted in throttle
+  records or login-security audit details.
+- Added trusted-proxy CIDR configuration.
+- Forwarding headers from untrusted clients are rejected rather than trusted.
+- Added generic HTTP 429 browser responses.
+- Added standards-compatible `Retry-After` headers.
+- Correct credentials remain rejected while the applicable throttle scope is
+  blocked.
+- Added persistent security events for:
+  - `browser_login_failure`;
+  - `browser_login_throttled`;
+  - `browser_login_success`.
+- Unknown or unauthenticated actors continue to use the reserved audit actor
+  identifier without disclosing whether an account exists.
+- Throttle persistence failures fail closed.
+- Session-factory failures are wrapped as controlled throttle-persistence
+  failures.
+- Successful login remains dependent on successful security-state recording.
+- Existing generic invalid-credential messaging and bcrypt timing protection
+  were preserved.
+
+### Data model
+
+Added `BrowserLoginThrottleRecord` through the existing SQLModel metadata
+initialisation mechanism.
+
+No formal migration framework was introduced because that remains outside the
+approved SBA-006 boundary.
+
+### Automated validation
+
+- SBA-006 focused suite: **95 passed**
+- Full regression suite: **485 passed**
+- Full-suite warnings: **37**
+- Whitespace gate: PASS
+- No failed tests or collection errors remained.
+
+The session-registry route tests now use an explicit isolated login-security
+test double. Production fail-closed behaviour was not weakened.
+
+### Live HTTPS validation
+
+The live runtime enforced throttling on the fifth invalid attempt:
+
+- Invalid-attempt statuses: `401, 401, 401, 401, 429`
+- Pre-throttle invalid responses were generic HTTP 401 responses: PASS
+- HTTP 429 throttling response: PASS
+- `Retry-After` header: PASS
+- Correct operator credentials rejected while blocked: PASS
+- Administrator account remained available under pair isolation: PASS
+- Failure, throttled and success audit-event coverage: PASS
+- All fresh login-security records privacy-safe: PASS
+- Throttle-record keys pseudonymous: PASS
+- Temporary validation throttle records cleared after testing: PASS
+
+The effective serving-process threshold was five attempts. The temporary
+two-attempt local override was not active in that process, but the complete
+production-default throttle lifecycle was successfully validated.
+
+### Files materially updated
+
+- `app/dashboard/routes/browser_auth.py`
+- `app/db/models/__init__.py`
+- `app/db/models/security_models.py`
+- `app/services/auth/login_throttle.py`
+- `tests/test_browser_auth.py`
+- `tests/test_browser_auth_session_registry.py`
+- `tests/test_login_throttle.py`
+
+### Architectural boundaries preserved
+
+SBA-006 did not introduce:
+
+- public registration;
+- CAPTCHA;
+- an external rate-limiting provider;
+- an RBAC redesign;
+- a browser-session redesign;
+- Patent route changes;
+- a database migration framework;
+- changes to `manual_test_db.py`.
+
+The legacy SQLAlchemy `echo=True` setting and existing FastAPI/Starlette
+deprecation warnings remain outside SBA-006.
+
+### Governance confirmation
+
+SBA-006 was delivered within the approved Sprint 18 roadmap. No unapproved
+scope deviation or security-boundary expansion was introduced.

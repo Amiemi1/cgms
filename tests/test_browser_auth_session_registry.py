@@ -7,6 +7,7 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from app.dashboard.routes.browser_auth import (
+    get_browser_login_security_service,
     get_credential_authentication_service,
     router,
 )
@@ -23,6 +24,9 @@ from app.services.auth.browser_session_dependency import (
 )
 from app.services.auth.credential_service import (
     AuthenticatedAccount,
+)
+from app.services.auth.login_throttle import (
+    LoginThrottleDecision,
 )
 from app.services.auth.session_registry import (
     BrowserSessionNotRegisteredError,
@@ -105,6 +109,57 @@ class CsrfInputParser(HTMLParser):
             self.token = attributes.get(
                 "value"
             )
+
+
+
+
+class StubLoginSecurityService:
+    """
+    Isolated login-security test double.
+
+    Throttling behaviour is tested directly in
+    test_login_throttle.py and test_browser_auth.py.
+    These session-registry tests exercise only the ordering and
+    failure behaviour of browser-session registration.
+    """
+
+    def resolve_network_identifier(
+        self,
+        request,
+    ) -> str:
+        return "203.0.113.90"
+
+    def check(
+        self,
+        *,
+        email: str,
+        network_identifier: str,
+    ) -> LoginThrottleDecision:
+        return LoginThrottleDecision.allowed()
+
+    def record_failure(
+        self,
+        *,
+        email: str,
+        network_identifier: str,
+    ) -> LoginThrottleDecision:
+        return LoginThrottleDecision.allowed()
+
+    def record_success(
+        self,
+        *,
+        email: str,
+        network_identifier: str,
+        user_id: int,
+    ) -> None:
+        return None
+
+    def record_invalid_request(
+        self,
+        *,
+        network_identifier: str,
+    ) -> LoginThrottleDecision:
+        return LoginThrottleDecision.allowed()
 
 
 class StubCredentialService:
@@ -248,6 +303,10 @@ def build_app(
         )
     )
 
+    login_security_service = (
+        StubLoginSecurityService()
+    )
+
     app.include_router(
         router
     )
@@ -255,6 +314,10 @@ def build_app(
     app.dependency_overrides[
         get_credential_authentication_service
     ] = lambda: credential_service
+
+    app.dependency_overrides[
+        get_browser_login_security_service
+    ] = lambda: login_security_service
 
     app.dependency_overrides[
         get_browser_session_registry

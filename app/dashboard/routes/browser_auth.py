@@ -47,6 +47,12 @@ from app.services.auth.credential_service import (
     CredentialAuthenticationService,
     InvalidCredentialsError,
 )
+from app.services.auth.login_throttle import (
+    BrowserLoginSecurityService,
+    LoginThrottleConfigurationError,
+    LoginThrottleDecision,
+    LoginThrottlePersistenceError,
+)
 from app.services.auth.session_registry import (
     BrowserSessionExpiredError,
     BrowserSessionNotRegisteredError,
@@ -98,6 +104,11 @@ GENERIC_SESSION_ERROR = (
     "Please try again."
 )
 
+GENERIC_THROTTLE_ERROR = (
+    "Too many sign-in attempts. "
+    "Please wait and try again."
+)
+
 
 class BrowserFormValidationError(ValueError):
     """
@@ -109,6 +120,11 @@ class BrowserFormValidationError(ValueError):
 def get_credential_authentication_service(
 ) -> CredentialAuthenticationService:
     return CredentialAuthenticationService()
+
+
+def get_browser_login_security_service(
+) -> BrowserLoginSecurityService:
+    return BrowserLoginSecurityService()
 
 
 def _apply_browser_security_headers(
@@ -178,6 +194,41 @@ def _render_login_page(
     )
 
     return response
+
+
+def _render_throttled_login_page(
+    request: Request,
+    *,
+    decision: LoginThrottleDecision,
+) -> HTMLResponse:
+    response = _render_login_page(
+        request,
+        error_message=GENERIC_THROTTLE_ERROR,
+        status_code=(
+            status.HTTP_429_TOO_MANY_REQUESTS
+        ),
+    )
+
+    response.headers["Retry-After"] = str(
+        max(
+            1,
+            decision.retry_after_seconds,
+        )
+    )
+
+    return response
+
+
+def _render_login_security_failure(
+    request: Request,
+) -> HTMLResponse:
+    return _render_login_page(
+        request,
+        error_message=GENERIC_SESSION_ERROR,
+        status_code=(
+            status.HTTP_503_SERVICE_UNAVAILABLE
+        ),
+    )
 
 
 def _invalid_request_response() -> HTMLResponse:
@@ -459,6 +510,12 @@ async def browser_login_submit(
             get_browser_session_registry
         ),
     ],
+    login_security_service: Annotated[
+        BrowserLoginSecurityService,
+        Depends(
+            get_browser_login_security_service
+        ),
+    ],
 ) -> Response:
     """
     Authenticate an account, register the resulting browser
@@ -467,6 +524,23 @@ async def browser_login_submit(
     The browser cookie is not issued unless persistent session
     registration succeeds.
     """
+    try:
+        network_identifier = (
+            login_security_service
+            .resolve_network_identifier(
+                request
+            )
+        )
+    except LoginThrottleConfigurationError:
+        authentication_logger.error(
+            "browser_login_denied "
+            "reason=throttle_configuration_failed"
+        )
+
+        return _render_login_security_failure(
+            request
+        )
+
     try:
         form_data = (
             await _parse_urlencoded_form(
@@ -507,12 +581,73 @@ async def browser_login_submit(
             "reason=invalid_request"
         )
 
+        try:
+            decision = (
+                login_security_service
+                .record_invalid_request(
+                    network_identifier=(
+                        network_identifier
+                    )
+                )
+            )
+        except (
+            LoginThrottleConfigurationError,
+            LoginThrottlePersistenceError,
+        ):
+            authentication_logger.error(
+                "browser_login_denied "
+                "reason=throttle_record_failed"
+            )
+
+            return _render_login_security_failure(
+                request
+            )
+
+        if decision.blocked:
+            return _render_throttled_login_page(
+                request,
+                decision=decision,
+            )
+
         return _render_login_page(
             request,
             error_message=GENERIC_REQUEST_ERROR,
             status_code=(
                 status.HTTP_400_BAD_REQUEST
             ),
+        )
+
+    try:
+        decision = (
+            login_security_service.check(
+                email=email,
+                network_identifier=(
+                    network_identifier
+                ),
+            )
+        )
+    except (
+        LoginThrottleConfigurationError,
+        LoginThrottlePersistenceError,
+    ):
+        authentication_logger.error(
+            "browser_login_denied "
+            "reason=throttle_check_failed"
+        )
+
+        return _render_login_security_failure(
+            request
+        )
+
+    if decision.blocked:
+        authentication_logger.warning(
+            "browser_login_denied "
+            "reason=throttled"
+        )
+
+        return _render_throttled_login_page(
+            request,
+            decision=decision,
         )
 
     try:
@@ -531,6 +666,35 @@ async def browser_login_submit(
             "browser_login_denied "
             "reason=authentication_failed"
         )
+
+        try:
+            decision = (
+                login_security_service
+                .record_failure(
+                    email=email,
+                    network_identifier=(
+                        network_identifier
+                    ),
+                )
+            )
+        except (
+            LoginThrottleConfigurationError,
+            LoginThrottlePersistenceError,
+        ):
+            authentication_logger.error(
+                "browser_login_denied "
+                "reason=throttle_record_failed"
+            )
+
+            return _render_login_security_failure(
+                request
+            )
+
+        if decision.blocked:
+            return _render_throttled_login_page(
+                request,
+                decision=decision,
+            )
 
         return _render_login_page(
             request,
@@ -588,6 +752,47 @@ async def browser_login_submit(
             status_code=(
                 status.HTTP_503_SERVICE_UNAVAILABLE
             ),
+        )
+
+    try:
+        login_security_service.record_success(
+            email=email,
+            network_identifier=(
+                network_identifier
+            ),
+            user_id=account.user_id,
+        )
+    except (
+        LoginThrottleConfigurationError,
+        LoginThrottlePersistenceError,
+    ):
+        authentication_logger.error(
+            "browser_login_denied "
+            "user_id=%s token_id=%s "
+            "reason=login_audit_failed",
+            account.user_id,
+            session_identity.token_id,
+        )
+
+        try:
+            session_registry.revoke(
+                session_identity,
+                reason="login_audit_failure",
+                revoked_by_user_id=(
+                    account.user_id
+                ),
+            )
+        except BrowserSessionRegistryError:
+            authentication_logger.critical(
+                "browser_login_cleanup_failed "
+                "user_id=%s token_id=%s "
+                "reason=session_revocation_failed",
+                account.user_id,
+                session_identity.token_id,
+            )
+
+        return _render_login_security_failure(
+            request
         )
 
     response = RedirectResponse(

@@ -12,8 +12,11 @@ from app.dashboard.routes.browser_auth import (
     AUTHENTICATED_REDIRECT_PATH,
     GENERIC_LOGIN_ERROR,
     GENERIC_REQUEST_ERROR,
+    GENERIC_SESSION_ERROR,
+    GENERIC_THROTTLE_ERROR,
     LOGIN_PATH,
     MAX_FORM_BODY_BYTES,
+    get_browser_login_security_service,
     get_credential_authentication_service,
     router,
 )
@@ -27,6 +30,10 @@ from app.services.auth.credential_service import (
     AccountRoleConfigurationError,
     AuthenticatedAccount,
     InvalidCredentialsError,
+)
+from app.services.auth.login_throttle import (
+    LoginThrottleDecision,
+    LoginThrottlePersistenceError,
 )
 
 from app.services.auth.browser_session_dependency import (
@@ -89,6 +96,134 @@ def configure_test_environment(
     )
 
 
+class StubLoginSecurityService:
+    def __init__(
+        self,
+        *,
+        preflight_decision: (
+            LoginThrottleDecision | None
+        ) = None,
+        failure_decision: (
+            LoginThrottleDecision | None
+        ) = None,
+        invalid_request_decision: (
+            LoginThrottleDecision | None
+        ) = None,
+        check_error: Exception | None = None,
+        failure_error: Exception | None = None,
+        success_error: Exception | None = None,
+        invalid_request_error: (
+            Exception | None
+        ) = None,
+    ) -> None:
+        self.preflight_decision = (
+            preflight_decision
+            or LoginThrottleDecision.allowed()
+        )
+        self.failure_decision = (
+            failure_decision
+            or LoginThrottleDecision.allowed()
+        )
+        self.invalid_request_decision = (
+            invalid_request_decision
+            or LoginThrottleDecision.allowed()
+        )
+        self.check_error = check_error
+        self.failure_error = failure_error
+        self.success_error = success_error
+        self.invalid_request_error = (
+            invalid_request_error
+        )
+        self.network_calls: list[object] = []
+        self.check_calls: list[
+            tuple[str, str]
+        ] = []
+        self.failure_calls: list[
+            tuple[str, str]
+        ] = []
+        self.success_calls: list[
+            tuple[str, str, int]
+        ] = []
+        self.invalid_request_calls: list[
+            str
+        ] = []
+
+    def resolve_network_identifier(
+        self,
+        request,
+    ) -> str:
+        self.network_calls.append(request)
+        return "203.0.113.90"
+
+    def check(
+        self,
+        *,
+        email: str,
+        network_identifier: str,
+    ) -> LoginThrottleDecision:
+        self.check_calls.append(
+            (
+                email,
+                network_identifier,
+            )
+        )
+
+        if self.check_error is not None:
+            raise self.check_error
+
+        return self.preflight_decision
+
+    def record_failure(
+        self,
+        *,
+        email: str,
+        network_identifier: str,
+    ) -> LoginThrottleDecision:
+        self.failure_calls.append(
+            (
+                email,
+                network_identifier,
+            )
+        )
+
+        if self.failure_error is not None:
+            raise self.failure_error
+
+        return self.failure_decision
+
+    def record_success(
+        self,
+        *,
+        email: str,
+        network_identifier: str,
+        user_id: int,
+    ) -> None:
+        self.success_calls.append(
+            (
+                email,
+                network_identifier,
+                user_id,
+            )
+        )
+
+        if self.success_error is not None:
+            raise self.success_error
+
+    def record_invalid_request(
+        self,
+        *,
+        network_identifier: str,
+    ) -> LoginThrottleDecision:
+        self.invalid_request_calls.append(
+            network_identifier
+        )
+
+        if self.invalid_request_error is not None:
+            raise self.invalid_request_error
+
+        return self.invalid_request_decision
+
+
 class StubCredentialService:
     def __init__(
         self,
@@ -142,6 +277,9 @@ def build_account(
 
 def build_client(
     credential_service: StubCredentialService,
+    login_security_service: (
+        StubLoginSecurityService | None
+    ) = None,
 ) -> TestClient:
     app = FastAPI()
 
@@ -152,6 +290,17 @@ def build_client(
     app.dependency_overrides[
         get_credential_authentication_service
     ] = lambda: credential_service
+
+    resolved_login_security_service = (
+        login_security_service
+        or StubLoginSecurityService()
+    )
+
+    app.dependency_overrides[
+        get_browser_login_security_service
+    ] = lambda: (
+        resolved_login_security_service
+    )
 
     return TestClient(
         app,
@@ -877,3 +1026,268 @@ def test_public_signup_route_is_not_exposed() -> None:
 
     assert get_response.status_code == 404
     assert post_response.status_code == 404
+
+
+def test_preflight_throttle_rejects_before_credential_verification(
+) -> None:
+    credential_service = StubCredentialService(
+        account=build_account()
+    )
+
+    login_security_service = (
+        StubLoginSecurityService(
+            preflight_decision=(
+                LoginThrottleDecision(
+                    blocked=True,
+                    retry_after_seconds=75,
+                    blocked_scopes=(
+                        "pair",
+                    ),
+                )
+            )
+        )
+    )
+
+    client = build_client(
+        credential_service,
+        login_security_service,
+    )
+
+    login_page = client.get(
+        LOGIN_PATH
+    )
+
+    response = client.post(
+        LOGIN_PATH,
+        data={
+            "csrf_token": extract_csrf_token(
+                login_page
+            ),
+            "email": "user@example.com",
+            "password": TEST_PASSWORD,
+        },
+        follow_redirects=False,
+    )
+
+    assert response.status_code == 429
+    assert GENERIC_THROTTLE_ERROR in response.text
+    assert response.headers["retry-after"] == "75"
+    assert credential_service.calls == []
+    assert login_security_service.failure_calls == []
+    assert_security_headers(response)
+
+
+def test_invalid_credentials_are_recorded_by_failure_control(
+) -> None:
+    credential_service = StubCredentialService(
+        error=InvalidCredentialsError(
+            "Invalid email or password."
+        )
+    )
+
+    login_security_service = (
+        StubLoginSecurityService()
+    )
+
+    client = build_client(
+        credential_service,
+        login_security_service,
+    )
+
+    login_page = client.get(
+        LOGIN_PATH
+    )
+
+    response = client.post(
+        LOGIN_PATH,
+        data={
+            "csrf_token": extract_csrf_token(
+                login_page
+            ),
+            "email": "user@example.com",
+            "password": "wrong-password",
+        },
+        follow_redirects=False,
+    )
+
+    assert response.status_code == 401
+    assert login_security_service.failure_calls == [
+        (
+            "user@example.com",
+            "203.0.113.90",
+        )
+    ]
+
+
+def test_threshold_crossing_failure_returns_429(
+) -> None:
+    credential_service = StubCredentialService(
+        error=InvalidCredentialsError(
+            "Invalid email or password."
+        )
+    )
+
+    login_security_service = (
+        StubLoginSecurityService(
+            failure_decision=(
+                LoginThrottleDecision(
+                    blocked=True,
+                    retry_after_seconds=120,
+                    blocked_scopes=(
+                        "pair",
+                    ),
+                )
+            )
+        )
+    )
+
+    client = build_client(
+        credential_service,
+        login_security_service,
+    )
+
+    login_page = client.get(
+        LOGIN_PATH
+    )
+
+    response = client.post(
+        LOGIN_PATH,
+        data={
+            "csrf_token": extract_csrf_token(
+                login_page
+            ),
+            "email": "user@example.com",
+            "password": "wrong-password",
+        },
+        follow_redirects=False,
+    )
+
+    assert response.status_code == 429
+    assert GENERIC_THROTTLE_ERROR in response.text
+    assert response.headers["retry-after"] == "120"
+    assert_security_headers(response)
+
+
+def test_throttle_check_persistence_failure_fails_closed(
+) -> None:
+    credential_service = StubCredentialService(
+        account=build_account()
+    )
+
+    login_security_service = (
+        StubLoginSecurityService(
+            check_error=(
+                LoginThrottlePersistenceError(
+                    "database unavailable"
+                )
+            )
+        )
+    )
+
+    client = build_client(
+        credential_service,
+        login_security_service,
+    )
+
+    login_page = client.get(
+        LOGIN_PATH
+    )
+
+    response = client.post(
+        LOGIN_PATH,
+        data={
+            "csrf_token": extract_csrf_token(
+                login_page
+            ),
+            "email": "user@example.com",
+            "password": TEST_PASSWORD,
+        },
+        follow_redirects=False,
+    )
+
+    assert response.status_code == 503
+    assert GENERIC_SESSION_ERROR in response.text
+    assert credential_service.calls == []
+    assert_security_headers(response)
+
+
+def test_successful_login_records_audited_success(
+) -> None:
+    account = build_account(
+        user_id=4101,
+        role="operator",
+    )
+
+    credential_service = StubCredentialService(
+        account=account
+    )
+
+    login_security_service = (
+        StubLoginSecurityService()
+    )
+
+    client = build_client(
+        credential_service,
+        login_security_service,
+    )
+
+    login_page = client.get(
+        LOGIN_PATH
+    )
+
+    response = client.post(
+        LOGIN_PATH,
+        data={
+            "csrf_token": extract_csrf_token(
+                login_page
+            ),
+            "email": " User@Example.com ",
+            "password": TEST_PASSWORD,
+        },
+        follow_redirects=False,
+    )
+
+    assert response.status_code == 303
+
+    assert login_security_service.success_calls == [
+        (
+            " User@Example.com ",
+            "203.0.113.90",
+            4101,
+        )
+    ]
+
+
+def test_invalid_login_request_updates_network_failure_control(
+) -> None:
+    credential_service = StubCredentialService(
+        account=build_account()
+    )
+
+    login_security_service = (
+        StubLoginSecurityService()
+    )
+
+    response = build_client(
+        credential_service,
+        login_security_service,
+    ).post(
+        LOGIN_PATH,
+        json={
+            "email": "user@example.com",
+            "password": TEST_PASSWORD,
+        },
+        follow_redirects=False,
+    )
+
+    assert response.status_code == 400
+
+    assert (
+        login_security_service
+        .invalid_request_calls
+        == [
+            "203.0.113.90",
+        ]
+    )
+
+    assert credential_service.calls == []
