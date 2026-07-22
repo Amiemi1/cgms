@@ -18,11 +18,13 @@ from app.services.auth.auth_dependency import (
     AuthenticatedPrincipal,
 )
 from app.services.auth.browser_session import (
+    BrowserSessionIdentity,
     SESSION_TOKEN_USE,
     issue_browser_session_token,
 )
 from app.services.auth.browser_session_dependency import (
     get_account_authorization_service,
+    get_browser_session_registry,
     get_current_browser_principal,
     require_browser_permission,
 )
@@ -31,6 +33,11 @@ from app.services.auth.credential_service import (
 )
 from app.services.auth.jwt_handler import (
     create_access_token,
+)
+from app.services.auth.session_registry import (
+    BrowserSessionNotRegisteredError,
+    BrowserSessionRecordMismatchError,
+    BrowserSessionRevokedError,
 )
 from app.services.security.rbac_policy import (
     VIEW_PATENT_GOVERNANCE,
@@ -151,6 +158,31 @@ class StubAccountAuthorizationService:
         )
 
 
+class StubBrowserSessionRegistry:
+    def __init__(
+        self,
+        *,
+        error: Exception | None = None,
+    ) -> None:
+        self.error = error
+        self.calls: list[
+            BrowserSessionIdentity
+        ] = []
+
+    def require_active(
+        self,
+        identity: BrowserSessionIdentity,
+    ) -> object:
+        self.calls.append(
+            identity
+        )
+
+        if self.error is not None:
+            raise self.error
+
+        return object()
+
+
 def build_account(
     role: str,
     *,
@@ -176,17 +208,30 @@ def build_app(
         StubAccountAuthorizationService
         | None
     ) = None,
+    session_registry: (
+        StubBrowserSessionRegistry
+        | None
+    ) = None,
 ) -> FastAPI:
     app = FastAPI()
 
-    active_service = (
+    active_authorization_service = (
         authorization_service
         or StubAccountAuthorizationService()
     )
 
+    active_session_registry = (
+        session_registry
+        or StubBrowserSessionRegistry()
+    )
+
     app.dependency_overrides[
         get_account_authorization_service
-    ] = lambda: active_service
+    ] = lambda: active_authorization_service
+
+    app.dependency_overrides[
+        get_browser_session_registry
+    ] = lambda: active_session_registry
 
     @app.get("/session")
     def session_endpoint(
@@ -245,11 +290,13 @@ def cookie_headers(
 
 
 def test_missing_browser_session_is_denied() -> None:
-    client = TestClient(
-        build_app()
-    )
+    registry = StubBrowserSessionRegistry()
 
-    response = client.get(
+    response = TestClient(
+        build_app(
+            session_registry=registry
+        )
+    ).get(
         "/session"
     )
 
@@ -259,6 +306,8 @@ def test_missing_browser_session_is_denied() -> None:
         "detail": "Browser session required."
     }
 
+    assert registry.calls == []
+
     assert (
         response.headers["cache-control"]
         == "no-store"
@@ -266,11 +315,13 @@ def test_missing_browser_session_is_denied() -> None:
 
 
 def test_invalid_browser_session_is_denied() -> None:
-    client = TestClient(
-        build_app()
-    )
+    registry = StubBrowserSessionRegistry()
 
-    response = client.get(
+    response = TestClient(
+        build_app(
+            session_registry=registry
+        )
+    ).get(
         "/session",
         headers=cookie_headers(
             "not-a-valid-session"
@@ -285,6 +336,8 @@ def test_invalid_browser_session_is_denied() -> None:
         )
     }
 
+    assert registry.calls == []
+
 
 def test_ordinary_access_token_is_not_browser_session() -> None:
     token = create_access_token(
@@ -294,8 +347,12 @@ def test_ordinary_access_token_is_not_browser_session() -> None:
         }
     )
 
+    registry = StubBrowserSessionRegistry()
+
     response = TestClient(
-        build_app()
+        build_app(
+            session_registry=registry
+        )
     ).get(
         "/session",
         headers=cookie_headers(
@@ -304,6 +361,7 @@ def test_ordinary_access_token_is_not_browser_session() -> None:
     )
 
     assert response.status_code == 401
+    assert registry.calls == []
 
 
 def test_authorization_header_is_not_browser_session() -> None:
@@ -335,8 +393,12 @@ def test_valid_operator_session_creates_principal() -> None:
         )
     )
 
+    registry = StubBrowserSessionRegistry()
+
     response = TestClient(
-        build_app()
+        build_app(
+            session_registry=registry
+        )
     ).get(
         "/session",
         headers=cookie_headers(
@@ -357,6 +419,117 @@ def test_valid_operator_session_creates_principal() -> None:
     )
 
     assert payload["token_id"]
+
+    assert len(registry.calls) == 1
+
+    assert (
+        registry.calls[0].token_id
+        == payload["token_id"]
+    )
+
+
+def test_unregistered_session_is_denied() -> None:
+    token = issue_browser_session_token(
+        build_account(
+            "operator"
+        )
+    )
+
+    registry = StubBrowserSessionRegistry(
+        error=BrowserSessionNotRegisteredError(
+            "Browser session is not registered."
+        )
+    )
+
+    response = TestClient(
+        build_app(
+            session_registry=registry
+        )
+    ).get(
+        "/session",
+        headers=cookie_headers(
+            token
+        ),
+    )
+
+    assert response.status_code == 401
+
+    assert response.json() == {
+        "detail": (
+            "Browser session is no longer active."
+        )
+    }
+
+    assert (
+        response.headers["cache-control"]
+        == "no-store"
+    )
+
+
+def test_revoked_session_is_denied() -> None:
+    token = issue_browser_session_token(
+        build_account(
+            "operator"
+        )
+    )
+
+    registry = StubBrowserSessionRegistry(
+        error=BrowserSessionRevokedError(
+            "Browser session is revoked."
+        )
+    )
+
+    response = TestClient(
+        build_app(
+            session_registry=registry
+        )
+    ).get(
+        "/session",
+        headers=cookie_headers(
+            token
+        ),
+    )
+
+    assert response.status_code == 401
+
+    assert response.json() == {
+        "detail": (
+            "Browser session is no longer active."
+        )
+    }
+
+
+def test_mismatched_session_record_is_denied() -> None:
+    token = issue_browser_session_token(
+        build_account(
+            "operator"
+        )
+    )
+
+    registry = StubBrowserSessionRegistry(
+        error=BrowserSessionRecordMismatchError(
+            "Browser session record does not match."
+        )
+    )
+
+    response = TestClient(
+        build_app(
+            session_registry=registry
+        )
+    ).get(
+        "/session",
+        headers=cookie_headers(
+            token
+        ),
+    )
+
+    assert response.status_code == 401
+
+    assert response.json() == {
+        "detail": (
+            "Browser session is no longer active."
+        )
+    }
 
 
 def test_operator_has_patent_permission() -> None:
@@ -440,8 +613,12 @@ def test_unknown_role_session_fails_closed() -> None:
         }
     )
 
+    registry = StubBrowserSessionRegistry()
+
     response = TestClient(
-        build_app()
+        build_app(
+            session_registry=registry
+        )
     ).get(
         "/session",
         headers=cookie_headers(
@@ -450,6 +627,7 @@ def test_unknown_role_session_fails_closed() -> None:
     )
 
     assert response.status_code == 401
+    assert registry.calls == []
 
 
 def test_custom_configured_cookie_name_is_used(
@@ -523,7 +701,7 @@ def test_database_role_change_invalidates_session() -> None:
 
     response = TestClient(
         build_app(
-            service
+            authorization_service=service
         )
     ).get(
         "/session",
@@ -561,7 +739,7 @@ def test_deleted_database_account_invalidates_session() -> None:
 
     response = TestClient(
         build_app(
-            service
+            authorization_service=service
         )
     ).get(
         "/session",
@@ -595,7 +773,7 @@ def test_invalid_database_role_configuration_invalidates_session(
 
     response = TestClient(
         build_app(
-            service
+            authorization_service=service
         )
     ).get(
         "/session",

@@ -1758,3 +1758,87 @@ Validation:
 Next planned work:
 
 - **SBA-004 — Session Expiry, Logout and Revocation Controls**
+
+## Sprint 18 ? SBA-004 Persistent Browser Session Revocation
+
+**Status:** Complete and production-validated  
+**Validation date:** 2026-07-22  
+**Next roadmap item:** SBA-005 ? Browser Patent Dashboard and Export Migration
+
+### Implemented capabilities
+
+- Added a persistent browser-session registry backed by
+  `BrowserSessionRecord`.
+- Browser-session JWTs are now accepted only when their token identifier
+  matches an active, unexpired, non-revoked server-side record.
+- Login registers the server-side session before issuing the hardened
+  browser-session cookie.
+- Login fails closed when persistent session registration cannot be
+  completed.
+- Logout revokes the corresponding server-side session record before
+  clearing browser cookies.
+- Stale, expired, revoked, unregistered, and mismatched sessions are
+  rejected consistently.
+- Added administrative revocation of all active browser sessions belonging
+  to a selected user.
+- Administrative session revocation requires the
+  `manage_browser_sessions` permission and is restricted to the canonical
+  administrator role.
+- Administrative revocation writes a bounded security audit record without
+  recording raw JWTs, cookies, passwords, email addresses, or secrets.
+- Added authenticated CSRF bootstrap endpoint:
+  `GET /auth/csrf`.
+- Added administrative revocation endpoint:
+  `POST /admin/browser-sessions/revoke-user`.
+- Retained strict Content Security Policy controls. Live validation used
+  same-origin form submission rather than weakening the policy.
+
+### Production validation results
+
+- Administrator login: PASS
+- Authenticated CSRF bootstrap: PASS
+- Active operator browser session: PASS
+- Administrative operator-session revocation: PASS
+- Revocation count: 1
+- Revoked-session enforcement: PASS
+- Fresh operator login after revocation: PASS
+- Administrator-session isolation: PASS
+- Logout browser-cookie removal: PASS
+- Logout server-side session revocation: PASS
+- Active administrator sessions after logout: 0
+- HTTPS local production route validation: PASS
+- Browser-session database schema validation: PASS
+
+### Automated validation
+
+- Full automated suite: **465 passed**
+- Non-blocking warnings remained limited to previously known deprecation
+  warnings.
+- `git diff --check`: clean before milestone closure.
+
+### Architectural boundary
+
+The Patent Readiness dashboard and evidence-package routes still use the
+legacy Bearer-token authentication boundary. Their migration to secure
+browser-session authentication is explicitly assigned to SBA-005 and was
+not included in SBA-004.
+
+### Files introduced or materially updated
+
+- `app/dashboard/routes/browser_auth.py`
+- `app/dashboard/routes/browser_session_administration.py`
+- `app/db/models/security_models.py`
+- `app/services/auth/browser_session_dependency.py`
+- `app/services/auth/session_registry.py`
+- `app/services/security/rbac_policy.py`
+- `app/services/security/session_administration.py`
+- Associated browser-session, CSRF, administrative-revocation, and registry
+  test modules.
+
+### Governance confirmation
+
+SBA-004 was completed within the approved Sprint 18 roadmap scope. No
+unapproved roadmap deviation was introduced. Pre-existing duplicate
+lifespan and CORS assignments in `app/dashboard/main.py`, legacy security
+service defects, Bearer-token Patent routes, and the absence of a migration
+framework remain outside this milestone.

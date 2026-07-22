@@ -24,6 +24,10 @@ from app.dashboard.routes.browser_auth import (
     router as browser_auth_router,
 )
 
+from app.dashboard.routes.browser_session_administration import (
+    router as browser_session_administration_router,
+)
+
 # Ensure orchestration handlers are registered
 import app.services.orchestration.handlers  # noqa: F401
 
@@ -257,6 +261,10 @@ app.include_router(product_readiness_dashboard_router)
 
 app.include_router(
     browser_auth_router
+)
+
+app.include_router(
+    browser_session_administration_router
 )
 
 app.include_router(

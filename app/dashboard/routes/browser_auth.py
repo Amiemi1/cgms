@@ -12,9 +12,15 @@ from fastapi import (
 )
 from fastapi.responses import (
     HTMLResponse,
+    JSONResponse,
     RedirectResponse,
     Response,
 )
+
+from app.services.auth.auth_dependency import (
+    AuthenticatedPrincipal,
+)
+
 from fastapi.templating import Jinja2Templates
 
 from app.services.auth.browser_csrf import (
@@ -31,10 +37,23 @@ from app.services.auth.browser_session import (
     issue_browser_session_token,
     set_browser_session_cookie,
 )
+from app.services.auth.browser_session_dependency import (
+    get_browser_session_registry,
+    get_current_browser_principal,
+)
+
 from app.services.auth.credential_service import (
     AccountRoleConfigurationError,
     CredentialAuthenticationService,
     InvalidCredentialsError,
+)
+from app.services.auth.session_registry import (
+    BrowserSessionExpiredError,
+    BrowserSessionNotRegisteredError,
+    BrowserSessionRecordMismatchError,
+    BrowserSessionRegistry,
+    BrowserSessionRegistryError,
+    BrowserSessionRevokedError,
 )
 
 
@@ -53,6 +72,7 @@ authentication_logger = logging.getLogger(
 
 LOGIN_PATH = "/auth/login"
 LOGOUT_PATH = "/auth/logout"
+
 AUTHENTICATED_REDIRECT_PATH = (
     "/patent-readiness/dashboard"
 )
@@ -70,6 +90,11 @@ GENERIC_LOGIN_ERROR = (
 
 GENERIC_REQUEST_ERROR = (
     "The request could not be validated. "
+    "Please try again."
+)
+
+GENERIC_SESSION_ERROR = (
+    "Authentication could not be completed. "
     "Please try again."
 )
 
@@ -92,6 +117,7 @@ def _apply_browser_security_headers(
     response.headers["Cache-Control"] = (
         "no-store, max-age=0"
     )
+
     response.headers["Pragma"] = "no-cache"
     response.headers["Expires"] = "0"
 
@@ -188,6 +214,57 @@ def _invalid_request_response() -> HTMLResponse:
     return response
 
 
+def _session_revocation_failure_response(
+) -> HTMLResponse:
+    """
+    Return a fail-closed response when server-side session
+    revocation cannot be completed.
+
+    Local browser cookies are still removed so the browser
+    cannot continue using the affected session.
+    """
+    response = HTMLResponse(
+        content=(
+            "<!doctype html>"
+            "<html lang=\"en\">"
+            "<head>"
+            "<meta charset=\"utf-8\">"
+            "<meta name=\"viewport\" "
+            "content=\"width=device-width,"
+            "initial-scale=1\">"
+            "<title>Logout Incomplete</title>"
+            "</head>"
+            "<body>"
+            "<main>"
+            "<h1>Logout could not be completed</h1>"
+            "<p>"
+            "The server could not invalidate the "
+            "current session. Please try again."
+            "</p>"
+            "</main>"
+            "</body>"
+            "</html>"
+        ),
+        status_code=(
+            status.HTTP_503_SERVICE_UNAVAILABLE
+        ),
+    )
+
+    clear_browser_session_cookie(
+        response
+    )
+
+    clear_browser_csrf_cookie(
+        response
+    )
+
+    _apply_browser_security_headers(
+        response
+    )
+
+    return response
+
+
 async def _parse_urlencoded_form(
     request: Request,
 ) -> dict[str, list[str]]:
@@ -217,6 +294,7 @@ async def _parse_urlencoded_form(
             declared_length = int(
                 content_length
             )
+
         except ValueError as exc:
             raise BrowserFormValidationError(
                 "Invalid content length."
@@ -243,6 +321,7 @@ async def _parse_urlencoded_form(
             "utf-8",
             errors="strict",
         )
+
     except UnicodeDecodeError as exc:
         raise BrowserFormValidationError(
             "Form body is not valid UTF-8."
@@ -255,6 +334,7 @@ async def _parse_urlencoded_form(
             strict_parsing=False,
             max_num_fields=MAX_FORM_FIELDS,
         )
+
     except ValueError as exc:
         raise BrowserFormValidationError(
             "Form body is invalid."
@@ -289,8 +369,20 @@ def _single_form_value(
 )
 def browser_login_page(
     request: Request,
+    session_registry: Annotated[
+        BrowserSessionRegistry,
+        Depends(
+            get_browser_session_registry
+        ),
+    ],
 ) -> Response:
-    
+    """
+    Render the browser login page.
+
+    An existing browser cookie causes an authenticated redirect
+    only when both the JWT and persistent registry record are
+    active. Stale or revoked cookies are cleared.
+    """
     existing_token = (
         get_browser_session_token(
             request
@@ -305,22 +397,46 @@ def browser_login_page(
         )
 
         if identity is not None:
-            response = RedirectResponse(
-                url=AUTHENTICATED_REDIRECT_PATH,
-                status_code=(
-                    status.HTTP_303_SEE_OTHER
-                ),
-            )
+            try:
+                session_registry.require_active(
+                    identity
+                )
 
-            _apply_browser_security_headers(
-                response
-            )
+            except BrowserSessionRegistryError:
+                authentication_logger.info(
+                    "browser_login_session_rejected "
+                    "user_id=%s token_id=%s "
+                    "reason=session_not_active",
+                    identity.user_id,
+                    identity.token_id,
+                )
 
-            return response
+            else:
+                response = RedirectResponse(
+                    url=(
+                        AUTHENTICATED_REDIRECT_PATH
+                    ),
+                    status_code=(
+                        status.HTTP_303_SEE_OTHER
+                    ),
+                )
 
-    return _render_login_page(
+                _apply_browser_security_headers(
+                    response
+                )
+
+                return response
+
+    response = _render_login_page(
         request
     )
+
+    if existing_token:
+        clear_browser_session_cookie(
+            response
+        )
+
+    return response
 
 
 @router.post(
@@ -337,8 +453,20 @@ async def browser_login_submit(
             get_credential_authentication_service
         ),
     ],
+    session_registry: Annotated[
+        BrowserSessionRegistry,
+        Depends(
+            get_browser_session_registry
+        ),
+    ],
 ) -> Response:
-    
+    """
+    Authenticate an account, register the resulting browser
+    session and issue the hardened session cookie.
+
+    The browser cookie is not issued unless persistent session
+    registration succeeds.
+    """
     try:
         form_data = (
             await _parse_urlencoded_form(
@@ -418,6 +546,50 @@ async def browser_login_submit(
         )
     )
 
+    session_identity = (
+        decode_browser_session_token(
+            session_token
+        )
+    )
+
+    if session_identity is None:
+        authentication_logger.error(
+            "browser_login_denied "
+            "user_id=%s "
+            "reason=session_token_validation_failed",
+            account.user_id,
+        )
+
+        return _render_login_page(
+            request,
+            error_message=GENERIC_SESSION_ERROR,
+            status_code=(
+                status.HTTP_503_SERVICE_UNAVAILABLE
+            ),
+        )
+
+    try:
+        session_registry.register(
+            session_identity
+        )
+
+    except BrowserSessionRegistryError:
+        authentication_logger.error(
+            "browser_login_denied "
+            "user_id=%s token_id=%s "
+            "reason=session_registration_failed",
+            account.user_id,
+            session_identity.token_id,
+        )
+
+        return _render_login_page(
+            request,
+            error_message=GENERIC_SESSION_ERROR,
+            status_code=(
+                status.HTTP_503_SERVICE_UNAVAILABLE
+            ),
+        )
+
     response = RedirectResponse(
         url=AUTHENTICATED_REDIRECT_PATH,
         status_code=(
@@ -443,13 +615,64 @@ async def browser_login_submit(
 
     authentication_logger.info(
         "browser_login_granted "
-        "user_id=%s role=%s",
+        "user_id=%s role=%s token_id=%s",
         account.user_id,
         account.canonical_role,
+        session_identity.token_id,
     )
 
     return response
 
+@router.get(
+    "/csrf",
+    response_class=JSONResponse,
+    response_model=None,
+    name="browser_authenticated_csrf",
+)
+def browser_authenticated_csrf(
+    principal: Annotated[
+        AuthenticatedPrincipal,
+        Depends(
+            get_current_browser_principal
+        ),
+    ],
+) -> JSONResponse:
+    """
+    Issue a fresh signed CSRF token for an authenticated browser
+    session.
+
+    The endpoint requires the full browser-session security
+    chain: signed cookie validation, persistent session-registry
+    validation and current database-backed authorization.
+    """
+    csrf_token = issue_browser_csrf_token()
+
+    response = JSONResponse(
+        status_code=status.HTTP_200_OK,
+        content={
+            "csrf_token": csrf_token,
+        },
+    )
+
+    set_browser_csrf_cookie(
+        response,
+        csrf_token,
+    )
+
+    _apply_browser_security_headers(
+        response
+    )
+
+    authentication_logger.info(
+        "browser_csrf_issued "
+        "user_id=%s role=%s token_id=%s",
+        principal.user_id,
+        principal.role,
+        principal.token_id
+        or "not-recorded",
+    )
+
+    return response
 
 @router.post(
     "/logout",
@@ -459,8 +682,20 @@ async def browser_login_submit(
 )
 async def browser_logout(
     request: Request,
+    session_registry: Annotated[
+        BrowserSessionRegistry,
+        Depends(
+            get_browser_session_registry
+        ),
+    ],
 ) -> Response:
-    
+    """
+    Revoke the current persistent session and clear the browser
+    authentication and CSRF cookies.
+
+    Logout remains idempotent for already revoked, expired,
+    unregistered or otherwise stale session cookies.
+    """
     try:
         form_data = (
             await _parse_urlencoded_form(
@@ -492,6 +727,58 @@ async def browser_logout(
         )
 
         return _invalid_request_response()
+
+    session_token = (
+        get_browser_session_token(
+            request
+        )
+    )
+
+    if session_token:
+        identity = (
+            decode_browser_session_token(
+                session_token
+            )
+        )
+
+        if identity is not None:
+            try:
+                session_registry.revoke(
+                    identity,
+                    reason="logout",
+                    revoked_by_user_id=(
+                        identity.user_id
+                    ),
+                )
+
+            except (
+                BrowserSessionNotRegisteredError,
+                BrowserSessionRevokedError,
+                BrowserSessionExpiredError,
+                BrowserSessionRecordMismatchError,
+            ):
+                # Logout remains idempotent for stale,
+                # previously revoked, expired or legacy
+                # unregistered cookies.
+                authentication_logger.info(
+                    "browser_logout_session_absent "
+                    "user_id=%s token_id=%s",
+                    identity.user_id,
+                    identity.token_id,
+                )
+
+            except BrowserSessionRegistryError:
+                authentication_logger.error(
+                    "browser_logout_failed "
+                    "user_id=%s token_id=%s "
+                    "reason=session_revocation_failed",
+                    identity.user_id,
+                    identity.token_id,
+                )
+
+                return (
+                    _session_revocation_failure_response()
+                )
 
     response = RedirectResponse(
         url=LOGIN_PATH,

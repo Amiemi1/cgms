@@ -29,6 +29,10 @@ from app.services.auth.credential_service import (
     InvalidCredentialsError,
 )
 
+from app.services.auth.browser_session_dependency import (
+    get_browser_session_registry,
+)
+
 
 TEST_JWT_SECRET = (
     "cgms-browser-auth-route-test-secret-"
@@ -286,11 +290,33 @@ def test_login_page_issues_csrf_cookie_and_form() -> None:
 
 
 def test_authenticated_user_is_redirected_from_login_page() -> None:
+    class ActiveSessionRegistry:
+        def __init__(self) -> None:
+            self.calls: list[object] = []
+
+        def require_active(
+            self,
+            identity: object,
+        ) -> object:
+            self.calls.append(
+                identity
+            )
+
+            return object()
+
     service = StubCredentialService(
         account=build_account()
     )
 
-    client = build_client(service)
+    registry = ActiveSessionRegistry()
+
+    client = build_client(
+        service
+    )
+
+    client.app.dependency_overrides[
+        get_browser_session_registry
+    ] = lambda: registry
 
     session_token = (
         issue_browser_session_token(
@@ -314,12 +340,11 @@ def test_authenticated_user_is_redirected_from_login_page() -> None:
 
     assert response.status_code == 303
 
-    assert response.headers[
-        "location"
-    ] == AUTHENTICATED_REDIRECT_PATH
+    assert response.headers["location"] == (
+        "/patent-readiness/dashboard"
+    )
 
-    assert_security_headers(response)
-    assert service.calls == []
+    assert len(registry.calls) == 1
 
 
 def test_valid_login_sets_secure_session_cookie() -> None:

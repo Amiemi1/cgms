@@ -26,6 +26,10 @@ from app.services.auth.browser_session import (
     decode_browser_session_token,
     get_browser_session_token,
 )
+from app.services.auth.session_registry import (
+    BrowserSessionRegistry,
+    BrowserSessionRegistryError,
+)
 
 
 browser_authentication_logger = logging.getLogger(
@@ -58,15 +62,35 @@ def get_account_authorization_service(
     return AccountAuthorizationService()
 
 
+def get_browser_session_registry(
+) -> BrowserSessionRegistry:
+    """
+    Provide the persistent server-side browser-session
+    registry.
+
+    Every protected browser request must match an active,
+    non-expired and non-revoked registry record.
+    """
+    return BrowserSessionRegistry()
+
+
 def get_current_browser_session_identity(
     request: Request,
+    session_registry: Annotated[
+        BrowserSessionRegistry,
+        Depends(
+            get_browser_session_registry
+        ),
+    ],
 ) -> BrowserSessionIdentity:
     """
-    Validate the host-bound browser-session cookie.
+    Validate the host-bound browser-session cookie and its
+    persistent server-side session record.
 
-    Missing, invalid, expired or incorrectly purposed tokens
-    fail closed. Bearer tokens and caller-supplied role headers
-    are not accepted as browser sessions.
+    Missing, malformed, expired, unregistered, revoked or
+    mismatched sessions fail closed. Bearer tokens and
+    caller-supplied role headers are not accepted as browser
+    sessions.
     """
     token = get_browser_session_token(
         request
@@ -96,6 +120,24 @@ def get_current_browser_session_identity(
             "Invalid or expired browser session."
         )
 
+    try:
+        session_registry.require_active(
+            identity
+        )
+
+    except BrowserSessionRegistryError:
+        browser_authentication_logger.warning(
+            "browser_authentication_denied "
+            "user_id=%s token_id=%s "
+            "reason=session_not_active",
+            identity.user_id,
+            identity.token_id,
+        )
+
+        raise _browser_authentication_error(
+            "Browser session is no longer active."
+        )
+
     browser_authentication_logger.info(
         "browser_session_validated "
         "user_id=%s role=%s token_id=%s",
@@ -122,16 +164,15 @@ def get_current_browser_principal(
     ],
 ) -> AuthenticatedPrincipal:
     """
-    Revalidate a cryptographically valid browser session
-    against the current authoritative database state.
+    Revalidate an active browser session against the current
+    authoritative account and role state.
 
     The session role is not trusted as current authorization.
     The account must still exist, have a valid role assignment,
-    and retain the same canonical role represented by the
-    session.
+    and retain the canonical role represented by the session.
 
     Permissions are derived from the current server policy and
-    the database-resolved role.
+    database-resolved role.
     """
     try:
         principal = revalidate_browser_session(
@@ -169,7 +210,7 @@ def require_browser_permission(
 ) -> Callable[..., AuthenticatedPrincipal]:
     """
     Require a permission from a database-revalidated browser
-    principal.
+    principal whose persistent session is active.
     """
     normalized_permission = (
         permission.strip()
