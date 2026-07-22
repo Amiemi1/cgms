@@ -2111,3 +2111,112 @@ deprecation warnings remain outside SBA-006.
 
 SBA-006 was delivered within the approved Sprint 18 roadmap. No unapproved
 scope deviation or security-boundary expansion was introduced.
+
+## Sprint 18 ? SBA-007A Production Runtime Hardening
+
+**Status:** Complete and regression-validated  
+**Validation date:** 2026-07-22  
+**Classification:** Mandatory Architectural Intervention ? approved  
+**Next roadmap item:** SBA-007B ? Production Documentation and Operational Validation
+
+### Intervention rationale
+
+The SBA-007 production-readiness audit identified runtime ambiguity and
+production-safety weaknesses in the canonical dashboard application:
+
+- duplicate application lifespan definitions;
+- duplicate CORS-origin resolution;
+- database startup failures allowing application startup to continue;
+- unconditional SQLAlchemy SQL echo logging.
+
+The intervention was approved before implementation.
+
+### Implemented controls
+
+- Consolidated the canonical dashboard application into one application
+  lifespan definition.
+- Preserved `app.dashboard.main:app` as the canonical FastAPI runtime.
+- Removed duplicate CORS-origin resolution.
+- Added explicit runtime-environment classification.
+- Supported runtime environments:
+  - `development`;
+  - `test`;
+  - `staging`;
+  - `production`.
+- Unknown or misspelled runtime environments fail closed.
+- Database schema-initialisation failure now:
+  - fails application startup in staging and production;
+  - remains warning-only in development and test.
+- Added environment-controlled SQLAlchemy SQL echo configuration.
+- SQL echo defaults to disabled.
+- SQL echo cannot be enabled in staging or production.
+- Runtime environment and database-schema readiness are recorded on
+  application state for controlled operational inspection.
+- Authentication, browser sessions, CSRF, RBAC, Patent routes and database
+  models were not redesigned.
+- `manual_test_db.py` was not modified.
+
+### Files materially updated
+
+- `app/dashboard/main.py`
+- `app/db/session.py`
+- `app/core/runtime_policy.py`
+- `tests/test_dashboard_runtime_hardening.py`
+- `tests/test_runtime_policy.py`
+
+### Validation evidence
+
+Focused SBA-007A suite:
+
+- **56 passed**
+- **0 failed**
+- **0 errors**
+
+Full regression suite:
+
+- **515 passed**
+- **37 warnings**
+- **0 failed**
+- **0 collection errors**
+
+The warnings are existing FastAPI `on_event` and Starlette
+`TemplateResponse` deprecation warnings. They did not originate from the
+SBA-007A runtime-hardening controls.
+
+`git diff --check` reported no whitespace errors. Git emitted only
+working-copy LF-to-CRLF conversion notices for two modified files.
+
+### Corrected test assumption
+
+FastAPI merges application and included-router lifespan contexts. The
+framework therefore does not preserve callable object identity between the
+original lifespan function and `app.router.lifespan_context`.
+
+The runtime-hardening test was corrected to validate:
+
+- exactly one source-level lifespan definition;
+- explicit configuration of the canonical lifespan;
+- an operational callable router lifespan context.
+
+No production runtime behaviour was weakened by this correction.
+
+### Architectural boundaries preserved
+
+SBA-007A did not introduce:
+
+- a database migration framework;
+- an authentication redesign;
+- an RBAC redesign;
+- new Patent functionality;
+- external rate-limiting infrastructure;
+- public registration;
+- deployment-platform changes;
+- health-endpoint redesign.
+
+The database migration framework and authoritative readiness-probe redesign
+remain separate roadmap decisions.
+
+### Governance confirmation
+
+The intervention was explicitly approved as SBA-007A before implementation.
+No unapproved scope expansion occurred.

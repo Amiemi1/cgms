@@ -1,4 +1,5 @@
 from contextlib import asynccontextmanager
+import logging
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -6,6 +7,10 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from sqlmodel import SQLModel
 
+from app.core.runtime_policy import (
+    get_runtime_environment,
+    initialize_database_schema,
+)
 from app.db.models.memory import Memory
 from app.db.session import SessionLocal, engine
 from app.services.product_readiness.bootstrap import (
@@ -97,40 +102,59 @@ from app.services.security.cors_policy import (
     get_allowed_cors_origins,
 )
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    print("CGMS STARTING")
+startup_logger = logging.getLogger(
+    "cgms.dashboard.startup"
+)
 
-    try:
-        SQLModel.metadata.create_all(engine)
-        print("Database schema validated")
-    except Exception as e:
-        print("DATABASE STARTUP WARNING:", e)
-        print("CGMS continuing without blocking dashboard startup")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    print("CGMS STARTING")
-
-    try:
-        SQLModel.metadata.create_all(engine)
-        print("Database schema validated")
-    except Exception as e:
-        print("DATABASE STARTUP WARNING:", e)
-        print("CGMS continuing without blocking dashboard startup")
-
-    capability_count = bootstrap_product_capabilities()
-
-    print(
-        f"Product readiness catalogue loaded: "
-        f"{capability_count} capabilities"
+    runtime_environment = (
+        get_runtime_environment()
     )
 
-  
+    startup_logger.info(
+        "cgms_starting environment=%s",
+        runtime_environment,
+    )
 
-    yield
+    database_schema_ready = (
+        initialize_database_schema(
+            create_all=(
+                SQLModel.metadata.create_all
+            ),
+            engine=engine,
+            environment=runtime_environment,
+            logger=startup_logger,
+        )
+    )
 
-    print("CGMS STOPPING")
+    app.state.runtime_environment = (
+        runtime_environment
+    )
+
+    app.state.database_schema_ready = (
+        database_schema_ready
+    )
+
+    capability_count = (
+        bootstrap_product_capabilities()
+    )
+
+    startup_logger.info(
+        "product_readiness_catalogue_loaded "
+        "capability_count=%s",
+        capability_count,
+    )
+
+    try:
+        yield
+
+    finally:
+        startup_logger.info(
+            "cgms_stopping environment=%s",
+            runtime_environment,
+        )
 
 
 app = FastAPI(
@@ -154,10 +178,6 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
-)
-
-allowed_cors_origins = (
-    get_allowed_cors_origins()
 )
 
 
