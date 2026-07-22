@@ -1,8 +1,5 @@
 from __future__ import annotations
 
-from datetime import timedelta
-
-import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
@@ -11,8 +8,11 @@ from app.dashboard.routes.patent_readiness_dashboard import (
     get_patent_dashboard_service,
     router as patent_dashboard_router,
 )
-from app.services.auth.jwt_handler import (
-    create_access_token,
+from app.services.auth.auth_dependency import (
+    AuthenticatedPrincipal,
+)
+from app.services.auth.browser_session_dependency import (
+    get_current_browser_principal,
 )
 from app.services.patent_governance.dashboard_service import (
     PatentDashboardService,
@@ -26,41 +26,9 @@ from app.services.patent_governance.innovation_registry import (
 from app.services.patent_governance.registry import (
     PatentGovernanceRegistry,
 )
-
-
-TEST_JWT_SECRET = (
-    "cgms-test-secret-key-with-more-than-32-characters"
+from app.services.security.rbac_policy import (
+    get_permissions,
 )
-
-
-@pytest.fixture(autouse=True)
-def configure_test_jwt(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    """
-    Configure a deterministic test-only JWT environment.
-
-    No production or local development secret is used.
-    """
-    monkeypatch.setenv(
-        "CGMS_JWT_SECRET",
-        TEST_JWT_SECRET,
-    )
-
-    monkeypatch.setenv(
-        "CGMS_JWT_EXPIRE_MINUTES",
-        "60",
-    )
-
-    monkeypatch.setenv(
-        "CGMS_JWT_ISSUER",
-        "cgms-test",
-    )
-
-    monkeypatch.setenv(
-        "CGMS_JWT_AUDIENCE",
-        "cgms-dashboard-test",
-    )
 
 
 def build_service() -> PatentDashboardService:
@@ -82,7 +50,24 @@ def build_service() -> PatentDashboardService:
     )
 
 
-def build_isolated_client() -> TestClient:
+def build_principal(
+    role: str,
+    *,
+    user_id: str = "browser-test-user",
+) -> AuthenticatedPrincipal:
+    return AuthenticatedPrincipal(
+        user_id=user_id,
+        role=role,
+        permissions=get_permissions(role),
+        token_id=f"{role}-browser-session",
+    )
+
+
+def build_isolated_client(
+    *,
+    role: str | None = None,
+    user_id: str = "browser-test-user",
+) -> TestClient:
     isolated_app = FastAPI()
 
     service = build_service()
@@ -91,39 +76,21 @@ def build_isolated_client() -> TestClient:
         get_patent_dashboard_service
     ] = lambda: service
 
+    if role is not None:
+        principal = build_principal(
+            role,
+            user_id=user_id,
+        )
+
+        isolated_app.dependency_overrides[
+            get_current_browser_principal
+        ] = lambda: principal
+
     isolated_app.include_router(
         patent_dashboard_router
     )
 
     return TestClient(isolated_app)
-
-
-def create_test_token(
-    role: str,
-    *,
-    user_id: str = "test-user-001",
-    expires_delta: timedelta | None = None,
-) -> str:
-    return create_access_token(
-        {
-            "user_id": user_id,
-            "role": role,
-        },
-        expires_delta=expires_delta,
-    )
-
-
-def bearer_headers(
-    token: str,
-    **additional_headers: str,
-) -> dict[str, str]:
-    headers = {
-        "Authorization": f"Bearer {token}",
-    }
-
-    headers.update(additional_headers)
-
-    return headers
 
 
 def test_dashboard_view_masks_sensitive_identifiers() -> None:
@@ -297,7 +264,7 @@ def test_dashboard_bootstrap_is_repeatable() -> None:
     assert len(second_dashboard["claim_candidates"]) == 6
 
 
-def test_missing_authentication_is_denied() -> None:
+def test_missing_browser_session_is_denied() -> None:
     client = build_isolated_client()
 
     response = client.get(
@@ -307,29 +274,27 @@ def test_missing_authentication_is_denied() -> None:
     assert response.status_code == 401
 
     assert response.json() == {
-        "detail": "Authentication required."
+        "detail": "Browser session required."
     }
 
-    assert (
-        response.headers["www-authenticate"]
-        == "Bearer"
-    )
+    assert response.headers["cache-control"] == "no-store"
+    assert response.headers["pragma"] == "no-cache"
 
 
-def test_invalid_token_is_denied() -> None:
+def test_bearer_token_cannot_authenticate_request() -> None:
     client = build_isolated_client()
 
     response = client.get(
         "/patent-readiness/dashboard",
-        headers=bearer_headers(
-            "not-a-valid-token"
-        ),
+        headers={
+            "Authorization": "Bearer not-a-browser-session",
+        },
     )
 
     assert response.status_code == 401
 
     assert response.json() == {
-        "detail": "Invalid or expired access token."
+        "detail": "Browser session required."
     }
 
 
@@ -345,20 +310,22 @@ def test_role_header_cannot_authenticate_request() -> None:
 
     assert response.status_code == 401
 
+    assert response.json() == {
+        "detail": "Browser session required."
+    }
+
 
 def test_viewer_cannot_access_patent_dashboard() -> None:
-    client = build_isolated_client()
-
-    token = create_test_token("viewer")
+    client = build_isolated_client(
+        role="viewer"
+    )
 
     response = client.get(
         "/patent-readiness/dashboard",
-        headers=bearer_headers(
-            token,
-            **{
-                "X-User-Role": "admin",
-            },
-        ),
+        headers={
+            "Authorization": "Bearer ignored",
+            "X-User-Role": "admin",
+        },
     )
 
     assert response.status_code == 403
@@ -370,31 +337,13 @@ def test_viewer_cannot_access_patent_dashboard() -> None:
         )
     }
 
-
-def test_unknown_role_fails_closed() -> None:
-    client = build_isolated_client()
-
-    token = create_test_token(
-        "patent_superuser"
-    )
-
-    response = client.get(
-        "/patent-readiness/dashboard",
-        headers=bearer_headers(token),
-    )
-
-    assert response.status_code == 401
-
-    assert response.json() == {
-        "detail": "Invalid authenticated role."
-    }
+    assert response.headers["cache-control"] == "no-store"
+    assert response.headers["pragma"] == "no-cache"
 
 
 def test_operator_receives_masked_dashboard() -> None:
-    client = build_isolated_client()
-
-    token = create_test_token(
-        "operator",
+    client = build_isolated_client(
+        role="operator",
         user_id="operator-001",
     )
 
@@ -403,12 +352,10 @@ def test_operator_receives_masked_dashboard() -> None:
             "/patent-readiness/dashboard"
             "?include_sensitive=true"
         ),
-        headers=bearer_headers(
-            token,
-            **{
-                "X-User-Role": "admin",
-            },
-        ),
+        headers={
+            "Authorization": "Bearer ignored",
+            "X-User-Role": "admin",
+        },
     )
 
     assert response.status_code == 200
@@ -422,17 +369,14 @@ def test_operator_receives_masked_dashboard() -> None:
         in body
     )
 
-    # Confirms the protected production route is enabled.
     assert "Authenticated Access" in body
     assert "Production Access Disabled" not in body
 
-    # Operator must receive the masked view.
     assert "Identifiers Masked" in body
     assert "••••7873" in body
     assert "••••5429" in body
     assert "••••3697" in body
 
-    # Query parameters and role headers must not reveal identifiers.
     assert "63/987,873" not in body
     assert "225429" not in body
     assert "74563697" not in body
@@ -444,44 +388,37 @@ def test_operator_receives_masked_dashboard() -> None:
 
 
 def test_admin_receives_sensitive_dashboard() -> None:
-    client = build_isolated_client()
-
-    token = create_test_token(
-        "admin",
+    client = build_isolated_client(
+        role="admin",
         user_id="admin-001",
     )
 
     response = client.get(
-        "/patent-readiness/dashboard",
-        headers=bearer_headers(token),
+        "/patent-readiness/dashboard"
     )
 
     assert response.status_code == 200
 
     body = response.text
 
-    # Confirms the protected production route is enabled.
     assert "Authenticated Access" in body
     assert "Production Access Disabled" not in body
 
-    # Admin has the separate sensitive-data permission.
     assert "63/987,873" in body
     assert "8158" in body
     assert "225429" in body
     assert "74563697" in body
 
-    # The masking badge must not appear for an authorized admin.
     assert "Identifiers Masked" not in body
 
 
 def test_patent_dashboard_disables_caching_and_framing() -> None:
-    client = build_isolated_client()
-
-    token = create_test_token("operator")
+    client = build_isolated_client(
+        role="operator"
+    )
 
     response = client.get(
-        "/patent-readiness/dashboard",
-        headers=bearer_headers(token),
+        "/patent-readiness/dashboard"
     )
 
     assert response.status_code == 200
@@ -514,56 +451,12 @@ def test_patent_dashboard_disables_caching_and_framing() -> None:
     ]
 
     assert "script-src 'none'" in content_security_policy
+    assert "connect-src 'self'" in content_security_policy
     assert "frame-ancestors 'none'" in content_security_policy
     assert "form-action 'none'" in content_security_policy
 
 
-def test_expired_token_is_denied() -> None:
-    client = build_isolated_client()
-
-    token = create_test_token(
-        "admin",
-        expires_delta=timedelta(
-            seconds=-1
-        ),
-    )
-
-    response = client.get(
-        "/patent-readiness/dashboard",
-        headers=bearer_headers(token),
-    )
-
-    assert response.status_code == 401
-
-    assert response.json() == {
-        "detail": "Invalid or expired access token."
-    }
-
-
-def test_token_signed_with_different_secret_is_denied(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    token = create_test_token("admin")
-
-    monkeypatch.setenv(
-        "CGMS_JWT_SECRET",
-        (
-            "different-test-secret-key-with-more-"
-            "than-32-characters"
-        ),
-    )
-
-    client = build_isolated_client()
-
-    response = client.get(
-        "/patent-readiness/dashboard",
-        headers=bearer_headers(token),
-    )
-
-    assert response.status_code == 401
-
-
-def test_production_application_registers_protected_dashboard() -> None:
+def test_production_application_registers_browser_dashboard() -> None:
     production_paths = {
         route.path
         for route in production_app.routes
@@ -582,5 +475,5 @@ def test_production_application_registers_protected_dashboard() -> None:
     assert response.status_code == 401
 
     assert response.json() == {
-        "detail": "Authentication required."
+        "detail": "Browser session required."
     }

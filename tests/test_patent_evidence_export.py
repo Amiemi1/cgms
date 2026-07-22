@@ -6,7 +6,6 @@ import json
 import zipfile
 from datetime import datetime, timezone
 
-import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
@@ -15,8 +14,11 @@ from app.dashboard.routes.patent_evidence_export import (
     get_patent_export_service,
     router as patent_export_router,
 )
-from app.services.auth.jwt_handler import (
-    create_access_token,
+from app.services.auth.auth_dependency import (
+    AuthenticatedPrincipal,
+)
+from app.services.auth.browser_session_dependency import (
+    get_current_browser_principal,
 )
 from app.services.patent_governance.evidence_registry import (
     PatentEvidenceRegistry,
@@ -30,11 +32,11 @@ from app.services.patent_governance.innovation_registry import (
 from app.services.patent_governance.registry import (
     PatentGovernanceRegistry,
 )
-
-
-TEST_JWT_SECRET = (
-    "cgms-export-test-secret-with-more-than-32-characters"
+from app.services.security.rbac_policy import (
+    get_permissions,
 )
+
+
 
 FIXED_EXPORT_TIME = datetime(
     2026,
@@ -76,31 +78,6 @@ RAW_IDENTIFIERS = {
 }
 
 
-@pytest.fixture(autouse=True)
-def configure_test_jwt(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    monkeypatch.setenv(
-        "CGMS_JWT_SECRET",
-        TEST_JWT_SECRET,
-    )
-
-    monkeypatch.setenv(
-        "CGMS_JWT_EXPIRE_MINUTES",
-        "60",
-    )
-
-    monkeypatch.setenv(
-        "CGMS_JWT_ISSUER",
-        "cgms-export-test",
-    )
-
-    monkeypatch.setenv(
-        "CGMS_JWT_AUDIENCE",
-        "cgms-export-dashboard-test",
-    )
-
-
 def build_export_service() -> PatentEvidenceExportService:
     governance_registry = PatentGovernanceRegistry()
 
@@ -120,7 +97,24 @@ def build_export_service() -> PatentEvidenceExportService:
     )
 
 
-def build_isolated_client() -> TestClient:
+def build_principal(
+    role: str,
+    *,
+    user_id: str = "browser-export-user",
+) -> AuthenticatedPrincipal:
+    return AuthenticatedPrincipal(
+        user_id=user_id,
+        role=role,
+        permissions=get_permissions(role),
+        token_id=f"{role}-browser-session",
+    )
+
+
+def build_isolated_client(
+    *,
+    role: str | None = None,
+    user_id: str = "browser-export-user",
+) -> TestClient:
     isolated_app = FastAPI()
 
     service = build_export_service()
@@ -129,37 +123,21 @@ def build_isolated_client() -> TestClient:
         get_patent_export_service
     ] = lambda: service
 
+    if role is not None:
+        principal = build_principal(
+            role,
+            user_id=user_id,
+        )
+
+        isolated_app.dependency_overrides[
+            get_current_browser_principal
+        ] = lambda: principal
+
     isolated_app.include_router(
         patent_export_router
     )
 
     return TestClient(isolated_app)
-
-
-def create_test_token(
-    role: str,
-    *,
-    user_id: str = "export-test-user",
-) -> str:
-    return create_access_token(
-        {
-            "user_id": user_id,
-            "role": role,
-        }
-    )
-
-
-def bearer_headers(
-    token: str,
-    **additional_headers: str,
-) -> dict[str, str]:
-    headers = {
-        "Authorization": f"Bearer {token}",
-    }
-
-    headers.update(additional_headers)
-
-    return headers
 
 
 def open_package(
@@ -468,7 +446,7 @@ def test_repeated_fixed_time_export_is_deterministic() -> None:
     )
 
 
-def test_missing_authentication_is_denied() -> None:
+def test_missing_browser_session_is_denied() -> None:
     client = build_isolated_client()
 
     response = client.get(
@@ -478,18 +456,58 @@ def test_missing_authentication_is_denied() -> None:
     assert response.status_code == 401
 
     assert response.json() == {
-        "detail": "Authentication required."
+        "detail": "Browser session required."
+    }
+
+    assert response.headers["cache-control"] == "no-store"
+    assert response.headers["pragma"] == "no-cache"
+
+
+def test_bearer_token_cannot_authenticate_export() -> None:
+    client = build_isolated_client()
+
+    response = client.get(
+        "/patent-readiness/evidence-package",
+        headers={
+            "Authorization": "Bearer not-a-browser-session",
+        },
+    )
+
+    assert response.status_code == 401
+
+    assert response.json() == {
+        "detail": "Browser session required."
+    }
+
+
+def test_role_header_cannot_authenticate_export() -> None:
+    client = build_isolated_client()
+
+    response = client.get(
+        "/patent-readiness/evidence-package",
+        headers={
+            "X-User-Role": "admin",
+        },
+    )
+
+    assert response.status_code == 401
+
+    assert response.json() == {
+        "detail": "Browser session required."
     }
 
 
 def test_viewer_cannot_export_package() -> None:
-    client = build_isolated_client()
-
-    token = create_test_token("viewer")
+    client = build_isolated_client(
+        role="viewer"
+    )
 
     response = client.get(
         "/patent-readiness/evidence-package",
-        headers=bearer_headers(token),
+        headers={
+            "Authorization": "Bearer ignored",
+            "X-User-Role": "admin",
+        },
     )
 
     assert response.status_code == 403
@@ -501,12 +519,13 @@ def test_viewer_cannot_export_package() -> None:
         )
     }
 
+    assert response.headers["cache-control"] == "no-store"
+    assert response.headers["pragma"] == "no-cache"
+
 
 def test_operator_receives_masked_export() -> None:
-    client = build_isolated_client()
-
-    token = create_test_token(
-        "operator",
+    client = build_isolated_client(
+        role="operator",
         user_id="operator-export-user",
     )
 
@@ -515,12 +534,10 @@ def test_operator_receives_masked_export() -> None:
             "/patent-readiness/evidence-package"
             "?include_sensitive=true"
         ),
-        headers=bearer_headers(
-            token,
-            **{
-                "X-User-Role": "admin",
-            },
-        ),
+        headers={
+            "Authorization": "Bearer ignored",
+            "X-User-Role": "admin",
+        },
     )
 
     assert response.status_code == 200
@@ -556,16 +573,13 @@ def test_operator_receives_masked_export() -> None:
 
 
 def test_admin_receives_sensitive_export() -> None:
-    client = build_isolated_client()
-
-    token = create_test_token(
-        "admin",
+    client = build_isolated_client(
+        role="admin",
         user_id="admin-export-user",
     )
 
     response = client.get(
-        "/patent-readiness/evidence-package",
-        headers=bearer_headers(token),
+        "/patent-readiness/evidence-package"
     )
 
     assert response.status_code == 200
@@ -594,13 +608,12 @@ def test_admin_receives_sensitive_export() -> None:
 
 
 def test_export_response_contains_integrity_and_security_headers() -> None:
-    client = build_isolated_client()
-
-    token = create_test_token("operator")
+    client = build_isolated_client(
+        role="operator"
+    )
 
     response = client.get(
-        "/patent-readiness/evidence-package",
-        headers=bearer_headers(token),
+        "/patent-readiness/evidence-package"
     )
 
     assert response.status_code == 200
@@ -660,7 +673,7 @@ def test_export_response_contains_integrity_and_security_headers() -> None:
     )
 
 
-def test_production_registers_protected_export_route() -> None:
+def test_production_registers_browser_export_route() -> None:
     production_paths = {
         route.path
         for route in production_app.routes
@@ -679,5 +692,5 @@ def test_production_registers_protected_export_route() -> None:
     assert response.status_code == 401
 
     assert response.json() == {
-        "detail": "Authentication required."
+        "detail": "Browser session required."
     }

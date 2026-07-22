@@ -12,8 +12,8 @@ from app.services.auth.auth_dependency import (
 from app.services.patent_governance.export_service import (
     PatentEvidenceExportService,
 )
-from app.services.security.rbac_dependency import (
-    require_permission,
+from app.services.auth.browser_session_dependency import (
+    require_browser_permission,
 )
 from app.services.security.rbac_policy import (
     VIEW_PATENT_GOVERNANCE,
@@ -49,7 +49,7 @@ def export_patent_evidence_package(
     principal: Annotated[
         AuthenticatedPrincipal,
         Depends(
-            require_permission(
+            require_browser_permission(
                 VIEW_PATENT_GOVERNANCE
             )
         ),

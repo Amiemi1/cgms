@@ -14,8 +14,8 @@ from app.services.auth.auth_dependency import (
 from app.services.patent_governance.dashboard_service import (
     PatentDashboardService,
 )
-from app.services.security.rbac_dependency import (
-    require_permission,
+from app.services.auth.browser_session_dependency import (
+    require_browser_permission,
 )
 from app.services.security.rbac_policy import (
     VIEW_PATENT_GOVERNANCE,
@@ -61,7 +61,7 @@ def patent_readiness_dashboard(
     principal: Annotated[
         AuthenticatedPrincipal,
         Depends(
-            require_permission(
+            require_browser_permission(
                 VIEW_PATENT_GOVERNANCE
             )
         ),

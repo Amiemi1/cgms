@@ -1842,3 +1842,100 @@ unapproved roadmap deviation was introduced. Pre-existing duplicate
 lifespan and CORS assignments in `app/dashboard/main.py`, legacy security
 service defects, Bearer-token Patent routes, and the absence of a migration
 framework remain outside this milestone.
+
+## Sprint 18 ? SBA-005 Browser Patent Dashboard and Export Migration
+
+**Status:** Complete and production-validated  
+**Validation date:** 2026-07-22  
+**Next roadmap item:** SBA-006 ? Authentication Throttling, Logging and Failure Controls
+
+### Implemented capabilities
+
+- Migrated the Patent Readiness dashboard from legacy Bearer-token
+  authentication to the secure browser-session authorization chain.
+- Migrated the Patent evidence-package export from legacy Bearer-token
+  authentication to the secure browser-session authorization chain.
+- Both routes now require the existing
+  `view_patent_governance` permission through
+  `require_browser_permission`.
+- Browser requests are validated through:
+  - the hardened `__Host-cgms_session` cookie;
+  - signed browser-session JWT validation;
+  - persistent server-side session-registry validation;
+  - current database-backed account and role revalidation;
+  - server-derived RBAC permission enforcement.
+- Bearer tokens cannot authenticate the migrated browser routes.
+- Caller-supplied role headers cannot authenticate or elevate access.
+- Viewer accounts remain denied access to both Patent routes.
+- Operator accounts receive masked Patent identifiers in both the dashboard
+  and evidence-package export.
+- Administrator accounts receive sensitive Patent identifiers through the
+  separate `view_patent_sensitive` permission.
+- Query parameters cannot activate sensitive disclosure.
+- Existing no-cache, anti-framing, content-type, referrer-policy and Content
+  Security Policy headers were preserved.
+- The evidence package remains a governed ZIP export with integrity,
+  confidentiality and matter-identification headers.
+- No CSRF requirement was added because both migrated operations are
+  read-only HTTP GET requests.
+
+### Automated validation
+
+- Focused Patent dashboard and export suite: **30 passed**
+- Full regression suite: **464 passed**
+- Known non-blocking warnings: **27**
+- `git diff --check`: no whitespace errors; Windows line-ending notices only.
+
+The full-suite count changed from 465 to 464 because obsolete Bearer-specific
+route tests were removed and replaced with browser-session security tests.
+No production capability was removed.
+
+### Live HTTPS production validation
+
+Administrator validation:
+
+- Login redirected successfully to `/patent-readiness/dashboard`: PASS
+- Dashboard rendered through browser-session authentication: PASS
+- Sensitive identifiers were available to the administrator: PASS
+- `Identifiers Masked` was absent: PASS
+- Evidence-package ZIP downloaded successfully: PASS
+- Export response status was HTTP 200: PASS
+- `X-CGMS-Sensitive-Identifiers: included`: PASS
+- Export security headers were present: PASS
+
+Operator validation:
+
+- Login redirected successfully to `/patent-readiness/dashboard`: PASS
+- Dashboard rendered through browser-session authentication: PASS
+- Patent identifiers were masked: PASS
+- Unmasked sensitive identifiers were not exposed: PASS
+- Evidence-package ZIP downloaded successfully: PASS
+- Export response status was HTTP 200: PASS
+- `X-CGMS-Sensitive-Identifiers: masked`: PASS
+
+### Files materially updated
+
+- `app/dashboard/routes/patent_readiness_dashboard.py`
+- `app/dashboard/routes/patent_evidence_export.py`
+- `tests/test_patent_readiness_dashboard.py`
+- `tests/test_patent_evidence_export.py`
+
+### Architectural boundary
+
+The legacy Bearer authentication implementation remains available for
+non-browser API routes that still depend on it. SBA-005 changed only the
+approved Patent browser routes and their tests.
+
+The following pre-existing areas remain outside this milestone:
+
+- legacy unregistered dashboard authentication route;
+- duplicate lifespan and CORS assignments in `app/dashboard/main.py`;
+- legacy security-service defects;
+- absence of a formal database migration framework;
+- authentication throttling and failure-control hardening assigned to
+  SBA-006.
+
+### Governance confirmation
+
+SBA-005 was completed within the approved Sprint 18 roadmap. No unapproved
+roadmap deviation or security-boundary expansion was introduced.
