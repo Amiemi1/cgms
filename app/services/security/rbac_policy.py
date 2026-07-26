@@ -3,6 +3,11 @@ from __future__ import annotations
 from collections.abc import Collection
 
 
+VIEW_DASHBOARD = (
+    "view_dashboard"
+)
+
+
 VIEW_PATENT_GOVERNANCE = (
     "view_patent_governance"
 )
@@ -22,7 +27,7 @@ ROLE_PERMISSIONS: dict[
 ] = {
     "admin": frozenset(
         {
-            "view_dashboard",
+            VIEW_DASHBOARD,
             "view_audit",
             "view_sessions",
             "manage_memory",
@@ -34,7 +39,7 @@ ROLE_PERMISSIONS: dict[
     ),
     "operator": frozenset(
         {
-            "view_dashboard",
+            VIEW_DASHBOARD,
             "view_audit",
             "view_sessions",
             "manage_memory",
@@ -43,7 +48,7 @@ ROLE_PERMISSIONS: dict[
     ),
     "viewer": frozenset(
         {
-            "view_dashboard",
+            VIEW_DASHBOARD,
             "view_audit",
         }
     ),

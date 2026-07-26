@@ -1612,7 +1612,77 @@ button.small {
 
 }
 
+
+.cgms-dashboard-nav {
+    width: min(1100px, 96%);
+    margin: 14px auto 4px;
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    background: #ffffff;
+    border: 1px solid #dce3ec;
+    border-radius: 10px;
+    box-shadow:
+        0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.cgms-dashboard-nav strong {
+    margin-right: 4px;
+    color: #23354d;
+    font-size: 12px;
+}
+
+.cgms-dashboard-nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 30px;
+    padding: 6px 10px;
+    border-radius: 7px;
+    background: #edf3f8;
+    color: #24384f;
+    font-size: 11px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.cgms-dashboard-nav a:hover,
+.cgms-dashboard-nav a:focus-visible {
+    background: #dce9f5;
+    color: #10243a;
+    outline: none;
+}
+
 </style>
+
+
+<nav
+    class="cgms-dashboard-nav"
+    aria-label="CGMS dashboard navigation"
+>
+    <strong>CGMS:</strong>
+
+    <a href="/progress">
+        Programme Progress
+    </a>
+
+    <a href="/dashboard">
+        Memory Workspace
+    </a>
+
+    <a href="/operator">
+        Operator Console
+    </a>
+
+    <a href="/product-readiness/dashboard">
+        Product Readiness
+    </a>
+
+    <a href="/patent-readiness/dashboard">
+        Patent and IP
+    </a>
+</nav>
 
 <!-- FILTERS -->
 <div class="panel">

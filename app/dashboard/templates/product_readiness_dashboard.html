@@ -417,10 +417,76 @@ td {
         flex: 1;
     }
 }
+
+.dashboard-nav {
+    width: min(1440px, calc(100% - 40px));
+    margin: 16px auto 0;
+    padding: 11px 13px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    flex-wrap: wrap;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface);
+}
+
+.dashboard-nav strong {
+    margin-right: 3px;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.dashboard-nav a {
+    padding: 7px 11px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface-secondary);
+    color: var(--text);
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.dashboard-nav a:hover,
+.dashboard-nav a:focus-visible {
+    background: var(--surface-hover);
+    outline: none;
+}
+
 </style>
 </head>
 
 <body>
+
+
+<nav
+    class="dashboard-nav"
+    aria-label="CGMS dashboard navigation"
+>
+    <strong>CGMS:</strong>
+
+    <a href="/progress">
+        Programme Progress
+    </a>
+
+    <a href="/dashboard">
+        Memory Workspace
+    </a>
+
+    <a href="/operator">
+        Operator Console
+    </a>
+
+    <a href="/product-readiness/dashboard">
+        Product Readiness
+    </a>
+
+    <a href="/patent-readiness/dashboard">
+        Patent and IP
+    </a>
+</nav>
+
 
 <header class="header">
     <div>

@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+    <meta
+        name="robots"
+        content="noindex, nofollow, noarchive"
+    >
+    <title>{{ dashboard.page.title }}</title>
+
+    <style>
+        :root {
+            --background: #07111f;
+            --surface: #0f1d30;
+            --surface-raised: #142640;
+            --surface-soft: #1a304d;
+            --border: #294563;
+            --text: #f0f6ff;
+            --muted: #9fb2cb;
+            --accent: #62adff;
+            --success: #47d18c;
+            --warning: #ffc15c;
+            --danger: #ff7373;
+            --active: #72d6ff;
+            --shadow:
+                0 14px 34px rgba(0, 0, 0, 0.22);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background:
+                radial-gradient(
+                    circle at top right,
+                    rgba(98, 173, 255, 0.15),
+                    transparent 31%
+                ),
+                var(--background);
+            color: var(--text);
+            font-family:
+                Inter,
+                "Segoe UI",
+                Arial,
+                sans-serif;
+            line-height: 1.5;
+        }
+
+        a {
+            color: inherit;
+        }
+
+        .page {
+            width: min(
+                1480px,
+                calc(100% - 36px)
+            );
+            margin: 0 auto;
+            padding: 26px 0 54px;
+        }
+
+        .hero {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 28px;
+            padding: 26px;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(98, 173, 255, 0.12),
+                    transparent 48%
+                ),
+                var(--surface);
+            box-shadow: var(--shadow);
+        }
+
+        .eyebrow {
+            margin: 0 0 8px;
+            color: var(--accent);
+            font-size: 0.76rem;
+            font-weight: 800;
+            letter-spacing: 0.13em;
+            text-transform: uppercase;
+        }
+
+        h1,
+        h2,
+        h3,
+        p {
+            margin-top: 0;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            font-size:
+                clamp(2rem, 4vw, 3.25rem);
+            line-height: 1.08;
+        }
+
+        .hero-copy {
+            max-width: 850px;
+            margin: 0;
+            color: var(--muted);
+            font-size: 1.03rem;
+        }
+
+        .badges {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            flex-wrap: wrap;
+            max-width: 430px;
+        }
+
+        .badge,
+        .status {
+            display: inline-flex;
+            align-items: center;
+            min-height: 30px;
+            padding: 5px 10px;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            background: var(--surface-soft);
+            font-size: 0.76rem;
+            font-weight: 800;
+        }
+
+        .status.complete {
+            border-color:
+                rgba(71, 209, 140, 0.48);
+            color: var(--success);
+        }
+
+        .status.pending {
+            border-color:
+                rgba(255, 193, 92, 0.48);
+            color: var(--warning);
+        }
+
+        .status.active {
+            border-color:
+                rgba(114, 214, 255, 0.52);
+            color: var(--active);
+        }
+
+        .nav {
+            display: flex;
+            gap: 10px;
+            margin: 18px 0;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            background: rgba(15, 29, 48, 0.94);
+            overflow-x: auto;
+        }
+
+        .nav a {
+            flex: 0 0 auto;
+            padding: 9px 13px;
+            border-radius: 9px;
+            text-decoration: none;
+            color: var(--muted);
+            font-size: 0.85rem;
+            font-weight: 750;
+        }
+
+        .nav a:hover,
+        .nav a:focus-visible {
+            background: var(--surface-soft);
+            color: var(--text);
+            outline: none;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns:
+                repeat(
+                    auto-fit,
+                    minmax(220px, 1fr)
+                );
+            gap: 14px;
+            margin: 18px 0;
+        }
+
+        .card,
+        .section {
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            background: var(--surface);
+            box-shadow: var(--shadow);
+        }
+
+        .card {
+            padding: 18px;
+        }
+
+        .metric-label {
+            color: var(--muted);
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .metric-value {
+            margin: 7px 0 5px;
+            font-size: 1.55rem;
+            font-weight: 850;
+        }
+
+        .metric-detail {
+            color: var(--muted);
+            font-size: 0.86rem;
+        }
+
+        .section {
+            margin-top: 18px;
+            padding: 22px;
+        }
+
+        .section-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+
+        .section-heading h2 {
+            margin: 0;
+            font-size: 1.25rem;
+        }
+
+        .section-heading p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 0.86rem;
+        }
+
+        .three-column {
+            display: grid;
+            grid-template-columns:
+                repeat(
+                    3,
+                    minmax(0, 1fr)
+                );
+            gap: 14px;
+        }
+
+        .list-card {
+            padding: 17px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--surface-raised);
+        }
+
+        .list-card h3 {
+            margin-bottom: 12px;
+            font-size: 1rem;
+        }
+
+        .plain-list {
+            display: grid;
+            gap: 9px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .plain-list li {
+            padding-bottom: 9px;
+            border-bottom:
+                1px solid rgba(41, 69, 99, 0.7);
+            color: var(--muted);
+        }
+
+        .plain-list li:last-child {
+            padding-bottom: 0;
+            border-bottom: 0;
+        }
+
+        .sprints {
+            display: grid;
+            gap: 16px;
+        }
+
+        .sprint {
+            overflow: hidden;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            background: var(--surface-raised);
+        }
+
+        .sprint-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 18px;
+            padding: 18px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sprint-header h3 {
+            margin-bottom: 7px;
+            font-size: 1.08rem;
+        }
+
+        .sprint-summary {
+            margin: 0;
+            max-width: 900px;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .milestones {
+            display: grid;
+            grid-template-columns:
+                repeat(
+                    auto-fit,
+                    minmax(250px, 1fr)
+                );
+            gap: 1px;
+            background: var(--border);
+        }
+
+        .milestone {
+            min-height: 106px;
+            padding: 15px;
+            background: var(--surface);
+        }
+
+        .milestone-id {
+            color: var(--accent);
+            font-family:
+                Consolas,
+                "Courier New",
+                monospace;
+            font-size: 0.78rem;
+            font-weight: 850;
+        }
+
+        .milestone-title {
+            margin: 6px 0 10px;
+            font-weight: 750;
+        }
+
+        .dashboard-grid,
+        .validation-grid,
+        .debt-grid {
+            display: grid;
+            grid-template-columns:
+                repeat(
+                    auto-fit,
+                    minmax(270px, 1fr)
+                );
+            gap: 13px;
+        }
+
+        .dashboard-link {
+            display: block;
+            margin-bottom: 7px;
+            color: var(--accent);
+            font-size: 1rem;
+            font-weight: 800;
+            text-decoration: none;
+        }
+
+        .dashboard-link:hover,
+        .dashboard-link:focus-visible {
+            text-decoration: underline;
+            outline: none;
+        }
+
+        .path {
+            display: inline-block;
+            margin-bottom: 10px;
+            color: var(--muted);
+            font-family:
+                Consolas,
+                "Courier New",
+                monospace;
+            font-size: 0.78rem;
+            overflow-wrap: anywhere;
+        }
+
+        .description,
+        .detail {
+            margin: 0;
+            color: var(--muted);
+            font-size: 0.87rem;
+        }
+
+        .access {
+            margin-top: 12px;
+            color: var(--text);
+            font-size: 0.78rem;
+            font-weight: 750;
+        }
+
+        .startup-list {
+            display: grid;
+            gap: 14px;
+        }
+
+        .startup-item {
+            padding: 17px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--surface-raised);
+        }
+
+        .startup-item h3 {
+            margin-bottom: 7px;
+            font-size: 1rem;
+        }
+
+        pre {
+            margin: 12px 0 0;
+            padding: 14px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: #050c16;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        code {
+            color: #cfe7ff;
+            font-family:
+                Consolas,
+                "Courier New",
+                monospace;
+            font-size: 0.84rem;
+        }
+
+        .result {
+            margin: 5px 0;
+            color: var(--success);
+            font-size: 1.08rem;
+            font-weight: 850;
+        }
+
+        .commit {
+            display: grid;
+            grid-template-columns:
+                minmax(84px, auto) 1fr auto;
+            gap: 14px;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom:
+                1px solid rgba(41, 69, 99, 0.75);
+        }
+
+        .commit:last-child {
+            border-bottom: 0;
+        }
+
+        .commit-hash {
+            color: var(--accent);
+            font-family:
+                Consolas,
+                "Courier New",
+                monospace;
+            font-weight: 850;
+        }
+
+        .governance {
+            border-color:
+                rgba(98, 173, 255, 0.55);
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(98, 173, 255, 0.1),
+                    transparent 55%
+                ),
+                var(--surface);
+        }
+
+        .footer {
+            margin-top: 22px;
+            padding-top: 18px;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 0.82rem;
+        }
+
+        @media (max-width: 900px) {
+            .hero,
+            .sprint-header {
+                flex-direction: column;
+            }
+
+            .badges {
+                justify-content: flex-start;
+            }
+
+            .three-column {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 620px) {
+            .page {
+                width: min(
+                    100% - 22px,
+                    1480px
+                );
+            }
+
+            .hero,
+            .section {
+                padding: 17px;
+            }
+
+            .commit {
+                grid-template-columns: 1fr;
+                gap: 4px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="page">
+        <header class="hero">
+            <div>
+                <p class="eyebrow">
+                    Enterprise Cognitive Operating System
+                </p>
+
+                <h1>
+                    {{ dashboard.page.title }}
+                </h1>
+
+                <p class="hero-copy">
+                    {{ dashboard.page.subtitle }}
+                </p>
+            </div>
+
+            <div class="badges">
+                <span class="badge">
+                    {{ dashboard.page.current_sprint }}
+                </span>
+
+                <span class="badge">
+                    {{ dashboard.page.current_work }}
+                </span>
+
+                <span class="badge">
+                    Role: {{ principal.role }}
+                </span>
+
+                <span class="badge">
+                    As of {{ dashboard.page.as_of }}
+                </span>
+            </div>
+        </header>
+
+        <nav
+            class="nav"
+            aria-label="Programme dashboard sections"
+        >
+            <a href="#overview">Overview</a>
+            <a href="#roadmap">Roadmap</a>
+            <a href="#dashboards">Dashboards</a>
+            <a href="#startup">Startup</a>
+            <a href="#validation">Validation</a>
+            <a href="#debt">Technical Debt</a>
+            <a href="#governance">Governance</a>
+        </nav>
+
+        <section
+            class="summary-grid"
+            id="overview"
+            aria-label="Programme summary"
+        >
+            {% for metric in dashboard.summary %}
+            <article class="card">
+                <div class="metric-label">
+                    {{ metric.label }}
+                </div>
+
+                <div class="metric-value">
+                    {{ metric.value }}
+                </div>
+
+                <div class="metric-detail">
+                    {{ metric.detail }}
+                </div>
+            </article>
+            {% endfor %}
+        </section>
+
+        <section class="section">
+            <div class="section-heading">
+                <div>
+                    <h2>Strategic Position</h2>
+                    <p>
+                        Platform foundation, productization focus
+                        and approved future direction.
+                    </p>
+                </div>
+            </div>
+
+            <div class="three-column">
+                <article class="list-card">
+                    <h3>Completed Foundations</h3>
+
+                    <ul class="plain-list">
+                        {% for item in dashboard.foundations %}
+                        <li>
+                            <strong>{{ item.title }}</strong>
+                            &mdash; {{ item.status }}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </article>
+
+                <article class="list-card">
+                    <h3>Current Focus</h3>
+
+                    <ul class="plain-list">
+                        {% for item in dashboard.current_focus %}
+                        <li>{{ item }}</li>
+                        {% endfor %}
+                    </ul>
+                </article>
+
+                <article class="list-card">
+                    <h3>Upcoming Technical Milestones</h3>
+
+                    <ul class="plain-list">
+                        {% for item in dashboard.upcoming %}
+                        <li>{{ item }}</li>
+                        {% endfor %}
+                    </ul>
+                </article>
+            </div>
+        </section>
+
+        <section
+            class="section"
+            id="roadmap"
+        >
+            <div class="section-heading">
+                <div>
+                    <h2>Programme Roadmap</h2>
+                    <p>
+                        Governed delivery history from Sprint 16
+                        through the completed Sprint 19 milestone.
+                    </p>
+                </div>
+            </div>
+
+            <div class="sprints">
+                {% for sprint in dashboard.sprints %}
+                <article class="sprint">
+                    <div class="sprint-header">
+                        <div>
+                            <h3>{{ sprint.title }}</h3>
+
+                            <p class="sprint-summary">
+                                {{ sprint.summary }}
+                            </p>
+                        </div>
+
+                        <span
+                            class="status {{ sprint.status_class }}"
+                        >
+                            {{ sprint.status }}
+                        </span>
+                    </div>
+
+                    <div class="milestones">
+                        {% for milestone in sprint.milestones %}
+                        <div class="milestone">
+                            <div class="milestone-id">
+                                {{ milestone.id }}
+                            </div>
+
+                            <div class="milestone-title">
+                                {{ milestone.title }}
+                            </div>
+
+                            <span
+                                class="status {{ milestone.status_class }}"
+                            >
+                                {{ milestone.status }}
+                            </span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section
+            class="section"
+            id="dashboards"
+        >
+            <div class="section-heading">
+                <div>
+                    <h2>Dashboard and Access Register</h2>
+                    <p>
+                        All current CGMS HTML interfaces and their
+                        local HTTPS addresses.
+                    </p>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                {% for item in dashboard.navigation %}
+                <article class="list-card">
+                    <a
+                        class="dashboard-link"
+                        href="{{ item.path }}"
+                    >
+                        {{ item.title }}
+                    </a>
+
+                    <span class="path">
+                        {{ item.local_url }}
+                    </span>
+
+                    <p class="description">
+                        {{ item.description }}
+                    </p>
+
+                    <div class="access">
+                        Access: {{ item.access }}
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+
+            {% for item in dashboard.related_tools %}
+            <article
+                class="list-card"
+                style="margin-top: 13px"
+            >
+                <a
+                    class="dashboard-link"
+                    href="{{ item.path }}"
+                >
+                    {{ item.title }}
+                </a>
+
+                <span class="path">
+                    {{ item.path }}
+                </span>
+
+                <p class="description">
+                    {{ item.description }}
+                </p>
+            </article>
+            {% endfor %}
+        </section>
+
+        <section
+            class="section"
+            id="startup"
+        >
+            <div class="section-heading">
+                <div>
+                    <h2>Startup Command Register</h2>
+                    <p>
+                        Canonical commands for the current Windows
+                        development environment.
+                    </p>
+                </div>
+            </div>
+
+            <div class="startup-list">
+                {% for item in dashboard.startup %}
+                <article class="startup-item">
+                    <h3>{{ item.title }}</h3>
+
+                    <p class="detail">
+                        {{ item.purpose }}
+                    </p>
+
+                    <pre><code>{{ item.command }}</code></pre>
+                </article>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section
+            class="section"
+            id="validation"
+        >
+            <div class="section-heading">
+                <div>
+                    <h2>Validation and Publication Evidence</h2>
+                    <p>
+                        Current authoritative operational and
+                        regression evidence.
+                    </p>
+                </div>
+            </div>
+
+            <div class="validation-grid">
+                {% for item in dashboard.validation %}
+                <article class="list-card">
+                    <h3>{{ item.title }}</h3>
+
+                    <div class="result">
+                        {{ item.result }}
+                    </div>
+
+                    <p class="detail">
+                        {{ item.detail }}
+                    </p>
+                </article>
+                {% endfor %}
+            </div>
+
+            <div style="margin-top: 18px">
+                {% for commit in dashboard.commits %}
+                <div class="commit">
+                    <span class="commit-hash">
+                        {{ commit.hash }}
+                    </span>
+
+                    <span>{{ commit.title }}</span>
+
+                    <span class="status complete">
+                        {{ commit.status }}
+                    </span>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section
+            class="section"
+            id="debt"
+        >
+            <div class="section-heading">
+                <div>
+                    <h2>Deferred Technical Debt</h2>
+                    <p>
+                        Known items preserved outside the approved
+                        PRG-001 implementation boundary.
+                    </p>
+                </div>
+            </div>
+
+            <div class="debt-grid">
+                {% for item in dashboard.technical_debt %}
+                <article class="list-card">
+                    <h3>{{ item.title }}</h3>
+
+                    <p class="detail">
+                        {{ item.detail }}
+                    </p>
+                </article>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section
+            class="section governance"
+            id="governance"
+        >
+            <div class="section-heading">
+                <div>
+                    <h2>Engineering Governance</h2>
+                    <p>
+                        {{ dashboard.governance.rule }}
+                    </p>
+                </div>
+
+                <span class="status active">
+                    {{ dashboard.governance.classification }}
+                </span>
+            </div>
+
+            <div class="three-column">
+                <article class="list-card">
+                    <h3>Approved Scope</h3>
+
+                    <p class="detail">
+                        {{ dashboard.governance.scope }}
+                    </p>
+                </article>
+
+                <article class="list-card">
+                    <h3>Architectural Boundaries</h3>
+
+                    <p class="detail">
+                        {{ dashboard.governance.boundaries }}
+                    </p>
+                </article>
+
+                <article class="list-card">
+                    <h3>Canonical Record</h3>
+
+                    <p class="detail">
+                        {{ dashboard.governance.canonical_record }}
+                    </p>
+                </article>
+            </div>
+        </section>
+
+        <footer class="footer">
+            Branch: {{ dashboard.page.branch }} &middot;
+            Current status: {{ dashboard.page.status }} &middot;
+            Canonical record:
+            {{ dashboard.page.canonical_record }}
+        </footer>
+    </main>
+</body>
+</html>

@@ -98,6 +98,11 @@ from app.dashboard.routes.product_readiness_dashboard import (
     router as product_readiness_dashboard_router,
 )
 
+
+from app.dashboard.routes.programme_progress_dashboard import (
+    router as programme_progress_dashboard_router,
+)
+
 from app.services.security.cors_policy import (
     get_allowed_cors_origins,
 )
@@ -278,6 +283,8 @@ app.include_router(operator_console_router)
 app.include_router(memory_intelligence_router)
 
 app.include_router(product_readiness_dashboard_router)
+
+app.include_router(programme_progress_dashboard_router)
 
 app.include_router(
     browser_auth_router

@@ -130,10 +130,73 @@ letter-spacing:.04em;
 font-size:15px;
 }
 
+
+.dashboard-nav {
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    flex-wrap: wrap;
+    background: #0b1728;
+    border-bottom: 1px solid #22375d;
+}
+
+.dashboard-nav strong {
+    margin-right: 3px;
+    color: #8fa5d0;
+    font-size: 13px;
+}
+
+.dashboard-nav a {
+    padding: 7px 11px;
+    border: 1px solid #315b91;
+    border-radius: 8px;
+    background: #17345c;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.dashboard-nav a:hover,
+.dashboard-nav a:focus-visible {
+    background: #2d5188;
+    outline: none;
+}
+
 </style>
 </head>
 
 <body>
+
+
+<nav
+    class="dashboard-nav"
+    aria-label="CGMS dashboard navigation"
+>
+    <strong>CGMS:</strong>
+
+    <a href="/progress">
+        Programme Progress
+    </a>
+
+    <a href="/dashboard">
+        Memory Workspace
+    </a>
+
+    <a href="/operator">
+        Operator Console
+    </a>
+
+    <a href="/product-readiness/dashboard">
+        Product Readiness
+    </a>
+
+    <a href="/patent-readiness/dashboard">
+        Patent and IP
+    </a>
+</nav>
+
 
 <div class="header">
 <div>

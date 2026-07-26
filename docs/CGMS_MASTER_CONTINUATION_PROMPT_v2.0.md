@@ -2408,3 +2408,152 @@ Closure evidence:
 - local and remote commit identifiers matched at
   `be8fa248538afa82bae8bf95c9218d6d0c1fd0f5`;
 - the working tree was clean after publication.
+
+## Sprint 19 - PRG-001 CGMS Programme Progress Dashboard
+
+**Status:** Complete and production-validated - publication pending
+**Classification:** Approved Recommended Deviation
+**Approval date:** 2026-07-26
+**Baseline branch:** `cgms-v2-roadmap`
+**Baseline commit:** `c0f208d docs(governance): record SBA-007B closure`
+
+### Approved rationale
+
+The existing `/dashboard` interface contains approximately 18,165
+lines and 437 KB of embedded operational and intelligence logic.
+Expanding that legacy interface into the programme-governance hub would
+materially increase regression risk and visual pressure.
+
+A dedicated, isolated and read-only `/progress` dashboard was approved
+under Engineering Governance Rule EG-001.
+
+### Approved delivery scope
+
+PRG-001 will provide:
+
+- the complete governed programme and milestone history;
+- current roadmap position and approved next work;
+- validation and publication evidence;
+- links to all existing CGMS HTML interfaces;
+- canonical local and production startup commands;
+- a deferred technical-debt register;
+- cross-dashboard navigation;
+- tests and security-header validation.
+
+### Security model
+
+The `/progress` route will reuse the existing `view_dashboard`
+permission through the database-revalidated browser-session
+authorization chain.
+
+Effective access:
+
+- administrator: permitted;
+- operator: permitted;
+- viewer: permitted;
+- unknown or unsupported roles: denied.
+
+No new role or expanded permission is introduced.
+
+### Architectural boundaries
+
+PRG-001 will not redesign:
+
+- authentication;
+- role-based access control;
+- Patent and IP functionality;
+- Product Readiness functionality;
+- database models or schema;
+- runtime-control behaviour;
+- existing duplicate API routes;
+- the legacy memory and intelligence dashboard.
+
+### Initial implementation baseline
+
+The initial registry records:
+
+- completed Runtime, Observability, Workspace, Memory Engine,
+  Memory Intelligence and Enterprise Event Bus foundations;
+- Sprint 16 Product Readiness milestones PRE-001 through PRE-007;
+- Sprint 17 Patent and IP milestones PIP-001 through PIP-007;
+- Sprint 18 browser-security and production-readiness milestones
+  through SBA-007B;
+- Sprint 19 PRG-001 as complete and production-validated, with publication pending;
+- the historical 528-test SBA-007B full regression baseline;
+- the current 536-test PRG-001 full regression result;
+- the successful production preflight and controlled HTTPS evidence;
+- published commits through `c0f208d`.
+
+### PRG-001 implementation and validation evidence
+
+Implemented capabilities:
+
+- added the protected, read-only `/progress` route;
+- reused the existing `view_dashboard` permission and
+  database-revalidated browser-session authorization chain;
+- introduced the governed programme-progress registry;
+- presented the completed foundations, current roadmap focus,
+  upcoming capabilities and Sprints 16 through 19;
+- presented all current CGMS HTML interfaces and local HTTPS
+  addresses;
+- presented canonical database, HTTPS runtime, login,
+  progress-dashboard and production-preflight commands;
+- added cross-dashboard navigation to `/dashboard`, `/operator`,
+  `/product-readiness/dashboard` and
+  `/patent-readiness/dashboard`;
+- preserved the public login page without authenticated-dashboard
+  navigation;
+- preserved all approved authentication, authorization, Patent,
+  Product Readiness, database and runtime boundaries.
+
+Automated validation:
+
+- initial focused PRG-001 and authorization suite:
+  **69 passed**;
+- focused dashboard and navigation suite:
+  **29 passed**;
+- complete regression suite:
+  **536 passed**;
+- known warnings:
+  **37** pre-existing FastAPI and Starlette deprecation warnings;
+- failed tests:
+  **0**;
+- collection errors:
+  **0**;
+- `git diff --check`:
+  passed with informational Windows LF-to-CRLF notices only.
+
+Controlled live HTTPS validation:
+
+- canonical application imported with **110 registered routes**;
+- HTTPS runtime opened on `127.0.0.1:8443`;
+- secure login page returned HTTP `200`;
+- temporary operator authentication returned HTTP `303`;
+- `/progress`, `/dashboard`, `/operator`,
+  `/product-readiness/dashboard` and
+  `/patent-readiness/dashboard` returned HTTP `200`;
+- cross-dashboard navigation was complete on all five interfaces;
+- programme history, startup commands, validation evidence and
+  published commits rendered successfully;
+- `Cache-Control`, `X-Content-Type-Options`, `X-Frame-Options`,
+  `Referrer-Policy` and Content Security Policy controls passed;
+- operator Patent identifiers remained masked;
+- logout returned HTTP `303`;
+- protected `/progress` access after logout returned HTTP `401`.
+
+Validation cleanup:
+
+- one temporary browser-session record was removed;
+- one temporary security-log record was removed;
+- one temporary role record was removed;
+- one temporary user record was removed;
+- cleanup verification passed;
+- the HTTPS runtime was stopped and port `8443` was released;
+- runtime logs contained no validation credentials, database URLs
+  or temporary secrets;
+- `manual_test_db.py` remained unchanged.
+
+Publication state:
+
+- PRG-001 implementation and production validation are complete;
+- implementation commit and remote publication are pending.
