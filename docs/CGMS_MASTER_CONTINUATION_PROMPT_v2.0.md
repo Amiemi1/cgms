@@ -2225,11 +2225,11 @@ No unapproved scope expansion occurred.
 
 ## Sprint 18 - SBA-007B Production Documentation and Operational Validation
 
-**Status:** Implementation, regression, operational-preflight, and controlled live-runtime validation complete; final Git inspection, commit, and push pending
+**Status:** Complete, production-validated, committed, and published
 **Validation date:** 2026-07-25
 **Classification:** Planned Work - explicitly approved
-**Current commit baseline:** `318be65 feat(runtime): harden production startup policy`
-**Next action:** Complete final repository inspection, commit the approved SBA-007B scope, and push the branch.
+**Published implementation commit:** `be8fa24 feat(operations): add production deployment preflight`
+**Next action:** Resume the approved roadmap following formal SBA-007B closure.
 
 ### Delivery scope
 
@@ -2387,7 +2387,24 @@ was not treated as a runtime failure.
 SBA-007B remained within the explicitly approved production-documentation and
 operational-validation boundary. No unapproved scope expansion occurred.
 
-Final SBA-007B closure remains conditional only on:
+### Final closure confirmation
 
-- final Git inspection;
-- commit and push confirmation.
+SBA-007B is formally complete.
+
+Closure evidence:
+
+- production preflight completed with zero failures and zero warnings;
+- focused suite completed with **13 passed**;
+- full regression suite completed with **528 passed**;
+- controlled HTTPS runtime validation completed successfully;
+- strict staging database fail-fast behaviour was confirmed;
+- role-based access, masking, logout, throttling, session revocation,
+  persistence privacy, and runtime-log privacy controls passed;
+- temporary validation credentials and records were removed;
+- pre-existing database records were preserved;
+- final repository inspection passed;
+- approved scope was committed as `be8fa24`;
+- `cgms-v2-roadmap` was pushed successfully;
+- local and remote commit identifiers matched at
+  `be8fa248538afa82bae8bf95c9218d6d0c1fd0f5`;
+- the working tree was clean after publication.
