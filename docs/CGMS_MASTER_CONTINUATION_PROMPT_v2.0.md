@@ -1645,11 +1645,13 @@ Final validation baseline:
 ### Completed
 
 - **SBA-001A — Canonical Role Resolution**
-  - Canonical roles: dmin, operator, iewer
+  - Canonical roles: dmin, operator,
+iewer
   - Legacy compatibility:
     - contributor → operator
     -
-eader → iewer
+eader →
+iewer
   - Unknown roles fail closed.
   - Focused validation: 21 passed.
 
@@ -1761,8 +1763,8 @@ Next planned work:
 
 ## Sprint 18 ? SBA-004 Persistent Browser Session Revocation
 
-**Status:** Complete and production-validated  
-**Validation date:** 2026-07-22  
+**Status:** Complete and production-validated
+**Validation date:** 2026-07-22
 **Next roadmap item:** SBA-005 ? Browser Patent Dashboard and Export Migration
 
 ### Implemented capabilities
@@ -1845,8 +1847,8 @@ framework remain outside this milestone.
 
 ## Sprint 18 ? SBA-005 Browser Patent Dashboard and Export Migration
 
-**Status:** Complete and production-validated  
-**Validation date:** 2026-07-22  
+**Status:** Complete and production-validated
+**Validation date:** 2026-07-22
 **Next roadmap item:** SBA-006 ? Authentication Throttling, Logging and Failure Controls
 
 ### Implemented capabilities
@@ -1942,9 +1944,9 @@ roadmap deviation or security-boundary expansion was introduced.
 
 ## Sprint 18 ? SBA-005 UI Polish Addendum
 
-**Status:** Complete and production-validated  
-**Validation date:** 2026-07-22  
-**Classification:** Approved Recommended Deviation  
+**Status:** Complete and production-validated
+**Validation date:** 2026-07-22
+**Classification:** Approved Recommended Deviation
 **Next roadmap item:** SBA-006 ? Authentication Throttling, Logging and Failure Controls
 
 ### Rationale
@@ -2010,9 +2012,9 @@ the approved SBA-006 scope.
 
 ## Sprint 18 ? SBA-006 Authentication Throttling, Logging and Failure Controls
 
-**Status:** Complete and production-validated  
-**Validation date:** 2026-07-22  
-**Classification:** Planned Work  
+**Status:** Complete and production-validated
+**Validation date:** 2026-07-22
+**Classification:** Planned Work
 **Next roadmap item:** SBA-007 ? Production Validation and Documentation
 
 ### Implemented controls
@@ -2114,9 +2116,9 @@ scope deviation or security-boundary expansion was introduced.
 
 ## Sprint 18 ? SBA-007A Production Runtime Hardening
 
-**Status:** Complete and regression-validated  
-**Validation date:** 2026-07-22  
-**Classification:** Mandatory Architectural Intervention ? approved  
+**Status:** Complete and regression-validated
+**Validation date:** 2026-07-22
+**Classification:** Mandatory Architectural Intervention ? approved
 **Next roadmap item:** SBA-007B ? Production Documentation and Operational Validation
 
 ### Intervention rationale
@@ -2220,3 +2222,172 @@ remain separate roadmap decisions.
 
 The intervention was explicitly approved as SBA-007A before implementation.
 No unapproved scope expansion occurred.
+
+## Sprint 18 - SBA-007B Production Documentation and Operational Validation
+
+**Status:** Implementation, regression, operational-preflight, and controlled live-runtime validation complete; final Git inspection, commit, and push pending
+**Validation date:** 2026-07-25
+**Classification:** Planned Work - explicitly approved
+**Current commit baseline:** `318be65 feat(runtime): harden production startup policy`
+**Next action:** Complete final repository inspection, commit the approved SBA-007B scope, and push the branch.
+
+### Delivery scope
+
+SBA-007B introduced production documentation and operational-preflight
+controls only. It did not redesign runtime authentication, role-based access
+control, Patent functionality, database models, or application health
+endpoints.
+
+### Files materially updated
+
+- `.env.example`
+- `README.md`
+- `docker-compose.yml`
+- `docs/deployment_checklist.md`
+
+### Files created
+
+- `docs/production_deployment_runbook.md`
+- `scripts/operations/production_preflight.py`
+- `tests/test_production_preflight.py`
+
+The transfer-only `SBA007B_MANIFEST.txt` file was not copied into the
+repository.
+
+### Operational environment restoration
+
+The local Windows development environment was restored and validated before
+SBA-007B was applied:
+
+- Windows Subsystem for Linux feature enabled;
+- WSL 2 operational;
+- Docker Desktop Linux engine operational;
+- Docker Engine version 29.6.2;
+- PostgreSQL container `cgms_db` running;
+- PostgreSQL exposed on `127.0.0.1:5432`;
+- pgvector extension enabled in the `cgms` database;
+- registered SQLModel schema created successfully;
+- browser-authentication database tests restored.
+
+The local Python environment remains:
+
+- Python 3.11.9;
+- interpreter path `C:\venvs\cgms311\Scripts\python.exe`.
+
+The machine-specific `.vscode/settings.json` remains locally excluded through
+`.git/info/exclude` and is not part of the repository.
+
+### Validation evidence
+
+Focused SBA-007B suite:
+
+- **13 passed**
+- **0 failed**
+- **0 errors**
+
+Full regression suite:
+
+- **528 passed**
+- **0 failed**
+- **0 collection errors**
+
+Known FastAPI `on_event` and Starlette `TemplateResponse` deprecation warnings
+remain pre-existing technical debt and were not modified during SBA-007B.
+
+`git diff --check` reported no whitespace defects. Git emitted only
+working-copy LF-to-CRLF conversion notices for existing modified text files.
+
+### Operational preflight and controlled live validation
+
+The production preflight was executed using temporary process-level staging
+configuration and completed with:
+
+- **0 failures**
+- **0 warnings**
+- exit code **0**
+
+No temporary secrets, database URLs, credentials, or other sensitive values
+were displayed or persisted by the preflight.
+
+A controlled HTTPS runtime was then started using the canonical ASGI
+application `app.dashboard.main:app`, the staging runtime policy, strict
+database-startup enforcement, SQL echo disabled, and the existing locally
+excluded development certificate.
+
+The live runtime validation confirmed:
+
+- HTTPS startup completed successfully on `127.0.0.1:8443`;
+- the login page returned `200`;
+- `Cache-Control: no-store, max-age=0` was present;
+- `X-Content-Type-Options: nosniff` was present;
+- `X-Frame-Options: DENY` was present;
+- `Referrer-Policy: no-referrer` was present;
+- the governed Content Security Policy was present;
+- the CSRF cookie used the `__Host-` prefix, `Secure`, `HttpOnly`,
+  `SameSite=Strict`, and `Path=/`;
+- repeated invalid login attempts produced
+  `[401, 401, 401, 401, 429]`;
+- throttled responses included `Retry-After`;
+- correct credentials remained blocked while the account throttle was active;
+- a separate administrator account remained available;
+- administrator login redirected to `/patent-readiness/dashboard`;
+- the session cookie used the `__Host-` prefix, `Secure`, `HttpOnly`,
+  `SameSite=Strict`, `Path=/`, and no `Domain` attribute;
+- administrator dashboard access returned `200` with governed sensitive
+  identifiers available;
+- operator dashboard access returned `200` with identifiers masked even when
+  `include_sensitive=true` was submitted;
+- viewer dashboard access failed closed with `403`;
+- logout revoked the persistent session, cleared both browser cookies, and
+  redirected to `/auth/login`;
+- a logged-out session was rejected on subsequent protected access;
+- administrative revocation invalidated an operator's active browser session;
+- the stale revoked session cookie was cleared;
+- throttle keys were persisted only as 64-character pseudonymous identifiers;
+- persisted browser-session token identifiers were opaque;
+- no raw validation email address, password, or network address was found in
+  the inspected persistence records;
+- runtime logs contained no validation credentials, database URLs, secret
+  configuration values, SQL statements, or SQLAlchemy echo output.
+
+Strict staging fail-fast behaviour was also validated using a separate
+controlled process and an unreachable PostgreSQL endpoint with an explicit
+connection timeout:
+
+- the process exited;
+- the exit code was non-zero;
+- application startup failure was recorded;
+- port `8444` never opened;
+- no database URL or temporary secret was exposed;
+- the healthy HTTPS runtime on port `8443` remained unaffected.
+
+The controlled HTTPS runtime was stopped cleanly after validation. Three
+temporary role-specific validation accounts and all authentication records
+created by the live exercise were removed. The eight pre-existing browser
+session records belonging to user identifiers `3001` and `4101` were
+preserved unchanged.
+
+### Architectural boundaries preserved
+
+SBA-007B did not introduce:
+
+- an authentication redesign;
+- a role-based access-control redesign;
+- new Patent functionality;
+- a database migration framework;
+- an authoritative readiness-probe redesign;
+- deployment-platform infrastructure;
+- changes to `manual_test_db.py`.
+
+The existing Docker Compose `version` deprecation notice is non-blocking and
+was not treated as a runtime failure.
+
+### Governance confirmation
+
+SBA-007B remained within the explicitly approved production-documentation and
+operational-validation boundary. No unapproved scope expansion occurred.
+
+Final SBA-007B closure remains conditional only on:
+
+- final Git inspection;
+- commit and push confirmation.
