@@ -14,7 +14,10 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
         "as_of": "26 July 2026",
         "current_sprint": "Sprint 19",
         "current_work": "PRG-001",
-        "status": "Complete and production-validated - publication pending",
+        "status": (
+            "Complete, production-validated, "
+            "committed, and published"
+        ),
         "branch": "cgms-v2-roadmap",
         "canonical_record": (
             "docs/CGMS_MASTER_CONTINUATION_PROMPT_v2.0.md"
@@ -36,10 +39,10 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
             ),
         },
         {
-            "label": "Latest published commit",
-            "value": "c0f208d",
+            "label": "Latest published implementation",
+            "value": "bcefd77",
             "detail": (
-                "SBA-007B governance closure"
+                "PRG-001 Programme Progress Dashboard"
             ),
         },
         {
@@ -415,7 +418,10 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
                     "title": (
                         "CGMS Programme Progress Dashboard"
                     ),
-                    "status": "Complete and production-validated - publication pending",
+                    "status": (
+                        "Complete, production-validated, "
+                        "committed, and published"
+                    ),
                     "status_class": "complete",
                 },
             ],
@@ -487,8 +493,24 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
                 "at c0f208d."
             ),
         },
+        {
+            "title": "PRG-001 repository publication",
+            "result": "Synchronized",
+            "detail": (
+                "Local, tracked remote and direct remote "
+                "cgms-v2-roadmap references matched at "
+                "bcefd77198eceafd086e4e63d150037c061ce0d7."
+            ),
+        },
     ],
     "commits": [
+        {
+            "hash": "bcefd77",
+            "title": (
+                "feat(dashboard): add programme progress hub"
+            ),
+            "status": "Published",
+        },
         {
             "hash": "c0f208d",
             "title": (

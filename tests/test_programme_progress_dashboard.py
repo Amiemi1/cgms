@@ -88,6 +88,38 @@ def test_registry_contains_governed_progress() -> None:
         for item in dashboard["validation"]
     )
 
+    assert any(
+        item["label"]
+        == "Latest published implementation"
+        and item["value"] == "bcefd77"
+        for item in dashboard["summary"]
+    )
+
+    assert any(
+        item["title"]
+        == "PRG-001 repository publication"
+        and item["result"] == "Synchronized"
+        and "bcefd77198eceafd086e4e63d150037c061ce0d7"
+        in item["detail"]
+        for item in dashboard["validation"]
+    )
+
+    assert dashboard["commits"][0] == {
+        "hash": "bcefd77",
+        "title": (
+            "feat(dashboard): add programme progress hub"
+        ),
+        "status": "Published",
+    }
+
+    assert (
+        dashboard["page"]["status"]
+        == (
+            "Complete, production-validated, "
+            "committed, and published"
+        )
+    )
+
     assert (
         dashboard["page"]["branch"]
         == "cgms-v2-roadmap"
@@ -168,6 +200,12 @@ def test_authorized_viewer_can_open_progress() -> None:
     )
     assert "536 passed" in body
     assert "PRG-001" in body
+    assert "bcefd77" in body
+    assert (
+        "Complete, production-validated, "
+        "committed, and published"
+        in body
+    )
     assert (
         "/patent-readiness/dashboard"
         in body

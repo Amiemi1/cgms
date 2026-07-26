@@ -2411,11 +2411,13 @@ Closure evidence:
 
 ## Sprint 19 - PRG-001 CGMS Programme Progress Dashboard
 
-**Status:** Complete and production-validated - publication pending
+**Status:** Complete, production-validated, committed, and published
 **Classification:** Approved Recommended Deviation
 **Approval date:** 2026-07-26
 **Baseline branch:** `cgms-v2-roadmap`
 **Baseline commit:** `c0f208d docs(governance): record SBA-007B closure`
+**Published implementation commit:** `bcefd77 feat(dashboard): add programme progress hub`
+**Published implementation commit ID:** `bcefd77198eceafd086e4e63d150037c061ce0d7`
 
 ### Approved rationale
 
@@ -2478,11 +2480,11 @@ The initial registry records:
 - Sprint 17 Patent and IP milestones PIP-001 through PIP-007;
 - Sprint 18 browser-security and production-readiness milestones
   through SBA-007B;
-- Sprint 19 PRG-001 as complete and production-validated, with publication pending;
+- Sprint 19 PRG-001 as complete, production-validated, committed and published;
 - the historical 528-test SBA-007B full regression baseline;
 - the current 536-test PRG-001 full regression result;
 - the successful production preflight and controlled HTTPS evidence;
-- published commits through `c0f208d`.
+- published implementation commits through `bcefd77`.
 
 ### PRG-001 implementation and validation evidence
 
@@ -2556,4 +2558,48 @@ Validation cleanup:
 Publication state:
 
 - PRG-001 implementation and production validation are complete;
-- implementation commit and remote publication are pending.
+- the implementation was committed as
+  `bcefd77198eceafd086e4e63d150037c061ce0d7`;
+- commit `bcefd77 feat(dashboard): add programme progress hub`
+  was published to `origin/cgms-v2-roadmap`;
+- the local branch, tracked remote branch and direct remote branch
+  reference all matched the complete implementation commit;
+- the working tree was clean before and after publication;
+- this canonical update constitutes the formal PRG-001 governance
+  closure record under Engineering Governance Rule EG-001.
+
+### PRG-001 formal closure
+
+PRG-001 is formally closed with the following evidence:
+
+- approved classification:
+  Recommended Deviation under EG-001;
+- delivered route:
+  `/progress`;
+- authorization:
+  existing `view_dashboard` permission;
+- registered application routes:
+  **110**;
+- focused PRG-001 tests:
+  **8 passed**;
+- complete regression suite:
+  **536 passed**;
+- known warnings:
+  **37** pre-existing deprecation warnings;
+- live HTTPS validation:
+  passed;
+- temporary validation-record cleanup:
+  complete;
+- source sanitation and presentation audit:
+  passed;
+- approved implementation scope:
+  **12 files**;
+- published implementation commit:
+  `bcefd77198eceafd086e4e63d150037c061ce0d7`;
+- remote branch:
+  `origin/cgms-v2-roadmap`;
+- `manual_test_db.py`:
+  unchanged.
+
+The next roadmap milestone must be initiated only through the
+applicable EG-001 classification and approval process.
