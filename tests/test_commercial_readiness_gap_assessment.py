@@ -166,3 +166,20 @@ def test_crg001_report_preserves_governance_boundary() -> None:
         "deprecation warnings**"
         in source
     )
+
+    assert (
+        "**Assessment status:** Complete, "
+        "regression-validated, committed and published"
+        in source
+    )
+
+    assert (
+        "**Published assessment commit:** "
+        "`16a673d80091d72f011ce5755564bdc6f74432ff`"
+        in source
+    )
+
+    assert (
+        "`origin/cgms-v2-roadmap`"
+        in source
+    )

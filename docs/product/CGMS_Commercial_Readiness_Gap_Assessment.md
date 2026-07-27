@@ -5,8 +5,9 @@
 **Classification:** Planned Work under Engineering Governance Rule EG-001
 **Assessment date:** 27 July 2026
 **Branch:** `cgms-v2-roadmap`
-**Assessment status:** Complete and regression-validated; governance closure publication pending
+**Assessment status:** Complete, regression-validated, committed and published
 **Pilot readiness verdict:** **NOT READY**
+**Published assessment commit:** `16a673d80091d72f011ce5755564bdc6f74432ff`
 **Canonical governance record:** `docs/CGMS_MASTER_CONTINUATION_PROMPT_v2.0.md`
 
 ---
@@ -621,3 +622,5 @@ The system is not yet commercially pilot-ready because its strongest implemented
 The immediate programme priority is therefore not additional feature breadth. It is the governed conversion of the existing platform into a secure, isolated, auditable and recoverable enterprise product.
 
 **CRG-001 pilot readiness verdict: NOT READY.**
+
+The assessment was committed and published as `16a673d80091d72f011ce5755564bdc6f74432ff` on `origin/cgms-v2-roadmap`.

@@ -92,7 +92,7 @@ def test_registry_contains_governed_progress() -> None:
     assert any(
         item["label"]
         == "Latest published implementation"
-        and item["value"] == "bcefd77"
+        and item["value"] == "16a673d"
         for item in dashboard["summary"]
     )
 
@@ -106,9 +106,10 @@ def test_registry_contains_governed_progress() -> None:
     )
 
     assert dashboard["commits"][0] == {
-        "hash": "bcefd77",
+        "hash": "16a673d",
         "title": (
-            "feat(dashboard): add programme progress hub"
+            "docs(governance): record CRG-001 "
+            "readiness assessment"
         ),
         "status": "Published",
     }
@@ -116,8 +117,8 @@ def test_registry_contains_governed_progress() -> None:
     assert (
         dashboard["page"]["status"]
         == (
-            "Assessment complete and regression-validated; "
-            "pilot verdict NOT READY"
+            "Complete, regression-validated, committed, "
+            "and published; pilot verdict NOT READY"
         )
     )
 
@@ -338,7 +339,7 @@ def test_registry_contains_crg001_readiness_assessment() -> None:
 
     assert (
         sprint_20["status_class"]
-        == "pending"
+        == "complete"
     )
 
     assert sprint_20["milestones"] == [
@@ -349,10 +350,11 @@ def test_registry_contains_crg001_readiness_assessment() -> None:
                 "Gap Assessment"
             ),
             "status": (
-                "Assessment complete and validated; "
+                "Complete, regression-validated, "
+                "committed, and published; "
                 "pilot verdict NOT READY"
             ),
-            "status_class": "pending",
+            "status_class": "complete",
         },
     ]
 
@@ -391,4 +393,20 @@ def test_registry_contains_crg001_readiness_assessment() -> None:
         == "CRG-001 focused closure suite"
         and item["result"] == "12 passed"
         for item in dashboard["validation"]
+    )
+
+    assert any(
+        item["title"]
+        == "CRG-001 repository publication"
+        and item["result"] == "Synchronized"
+        and "16a673d80091d72f011ce5755564bdc6f74432ff"
+        in item["detail"]
+        for item in dashboard["validation"]
+    )
+
+    assert any(
+        item["label"]
+        == "Latest published implementation"
+        and item["value"] == "16a673d"
+        for item in dashboard["summary"]
     )

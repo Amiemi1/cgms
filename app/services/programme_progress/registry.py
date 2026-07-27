@@ -15,8 +15,8 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
         "current_sprint": "Sprint 20",
         "current_work": "CRG-001",
         "status": (
-            "Assessment complete and regression-validated; "
-            "pilot verdict NOT READY"
+            "Complete, regression-validated, committed, "
+            "and published; pilot verdict NOT READY"
         ),
         "branch": "cgms-v2-roadmap",
         "canonical_record": (
@@ -41,9 +41,10 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
         },
         {
             "label": "Latest published implementation",
-            "value": "bcefd77",
+            "value": "16a673d",
             "detail": (
-                "PRG-001 Programme Progress Dashboard"
+                "CRG-001 Commercial Readiness "
+                "Gap Assessment"
             ),
         },
         {
@@ -444,10 +445,10 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
                 "Gap Assessment"
             ),
             "status": (
-                "Assessment complete and regression-validated; "
-                "publication pending"
+                "Complete, regression-validated, "
+                "committed, and published"
             ),
-            "status_class": "pending",
+            "status_class": "complete",
             "summary": (
                 "CRG-001 reassessed all 20 P0 and P1 "
                 "capabilities using repository, database, "
@@ -461,15 +462,25 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
                         "Gap Assessment"
                     ),
                     "status": (
-                        "Assessment complete and validated; "
+                        "Complete, regression-validated, "
+                        "committed, and published; "
                         "pilot verdict NOT READY"
                     ),
-                    "status_class": "pending",
+                    "status_class": "complete",
                 },
             ],
         },
     ],
     "validation": [
+        {
+            "title": "CRG-001 repository publication",
+            "result": "Synchronized",
+            "detail": (
+                "Local, tracked remote and direct remote "
+                "cgms-v2-roadmap references matched at "
+                "16a673d80091d72f011ce5755564bdc6f74432ff."
+            ),
+        },
         {
             "title": "CRG-001 complete regression suite",
             "result": "540 passed",
@@ -598,6 +609,14 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
         },
     ],
     "commits": [
+        {
+            "hash": "16a673d",
+            "title": (
+                "docs(governance): record CRG-001 "
+                "readiness assessment"
+            ),
+            "status": "Published",
+        },
         {
             "hash": "bcefd77",
             "title": (

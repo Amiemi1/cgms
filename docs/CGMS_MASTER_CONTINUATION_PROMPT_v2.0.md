@@ -2606,7 +2606,7 @@ applicable EG-001 classification and approval process.
 
 ## Sprint 20 - CRG-001 Commercial Readiness Gap Assessment
 
-**Status:** Assessment complete and regression-validated; publication pending
+**Status:** Complete, regression-validated, committed, and published
 **Classification:** Planned Work under Engineering Governance Rule EG-001
 **Approval date:** 2026-07-27
 **Baseline branch:** `cgms-v2-roadmap`
@@ -2772,4 +2772,54 @@ Focused closure validation completed with **12 passed**.
 
 The complete final-state regression suite completed with **540 passed**, **37 known deprecation warnings**, **0 failures** and **0 collection errors**.
 
-Final commit publication and formal CRG-001 publication closure evidence remain pending.
+The assessment implementation was committed and published as `16a673d80091d72f011ce5755564bdc6f74432ff`.
+
+Local, tracked remote and direct remote references matched the published commit. The repository was clean after publication.
+
+### CRG-001 formal closure
+
+CRG-001 is formally closed with the following evidence:
+
+- approved classification:
+  Planned Work under Engineering Governance Rule EG-001;
+- capabilities assessed:
+  **20**;
+- validated:
+  **1**;
+- partial:
+  **15**;
+- not ready:
+  **3**;
+- not implemented:
+  **1**;
+- P0 commercial blockers:
+  **4**;
+- total commercial blockers:
+  **10**;
+- pilot readiness verdict:
+  **NOT READY**;
+- focused closure suite:
+  **12 passed**;
+- complete regression suite:
+  **540 passed**;
+- known warnings:
+  **37** pre-existing deprecation warnings;
+- failed tests:
+  **0**;
+- collection errors:
+  **0**;
+- canonical assessment:
+  `docs/product/CGMS_Commercial_Readiness_Gap_Assessment.md`;
+- published assessment commit:
+  `16a673d80091d72f011ce5755564bdc6f74432ff`;
+- remote branch:
+  `origin/cgms-v2-roadmap`;
+- repository synchronization:
+  verified through local, tracked remote and direct remote references;
+- `manual_test_db.py`:
+  unchanged.
+
+No remediation work is authorized by this closure.
+
+The next roadmap milestone must be initiated only through the
+applicable EG-001 classification and approval process.
