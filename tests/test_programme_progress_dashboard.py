@@ -78,7 +78,8 @@ def test_registry_contains_governed_progress() -> None:
     }.issubset(milestone_ids)
 
     assert any(
-        item["value"] == "536 passed"
+        item["label"] == "Current regression suite"
+        and item["value"] == "540 passed"
         for item in dashboard["summary"]
     )
 
@@ -115,8 +116,8 @@ def test_registry_contains_governed_progress() -> None:
     assert (
         dashboard["page"]["status"]
         == (
-            "Complete, production-validated, "
-            "committed, and published"
+            "Assessment complete and regression-validated; "
+            "pilot verdict NOT READY"
         )
     )
 
@@ -301,3 +302,93 @@ def test_authenticated_dashboard_templates_include_progress_navigation(
 
         for route_path in required_paths:
             assert route_path in text
+
+def test_registry_contains_crg001_readiness_assessment() -> None:
+    dashboard = (
+        ProgrammeProgressRegistry()
+        .build_view()
+    )
+
+    assert (
+        dashboard["page"]["current_sprint"]
+        == "Sprint 20"
+    )
+
+    assert (
+        dashboard["page"]["current_work"]
+        == "CRG-001"
+    )
+
+    assert "CRG-001" in all_milestone_ids(
+        dashboard
+    )
+
+    assert any(
+        item["label"] == "Pilot readiness"
+        and item["value"] == "NOT READY"
+        and "4 P0 blockers" in item["detail"]
+        for item in dashboard["summary"]
+    )
+
+    sprint_20 = next(
+        sprint
+        for sprint in dashboard["sprints"]
+        if sprint["id"] == "SPRINT-20"
+    )
+
+    assert (
+        sprint_20["status_class"]
+        == "pending"
+    )
+
+    assert sprint_20["milestones"] == [
+        {
+            "id": "CRG-001",
+            "title": (
+                "CGMS Commercial Readiness "
+                "Gap Assessment"
+            ),
+            "status": (
+                "Assessment complete and validated; "
+                "pilot verdict NOT READY"
+            ),
+            "status_class": "pending",
+        },
+    ]
+
+    assert any(
+        item["title"]
+        == "CRG-001 capability assessment"
+        and item["result"]
+        == "20 capabilities assessed"
+        for item in dashboard["validation"]
+    )
+
+    assert any(
+        item["title"]
+        == "CRG-001 pilot readiness verdict"
+        and item["result"] == "NOT READY"
+        for item in dashboard["validation"]
+    )
+
+    assert any(
+        item["label"] == "Current regression suite"
+        and item["value"] == "540 passed"
+        for item in dashboard["summary"]
+    )
+
+    assert any(
+        item["title"]
+        == "CRG-001 complete regression suite"
+        and item["result"] == "540 passed"
+        and "37 known deprecation warnings"
+        in item["detail"]
+        for item in dashboard["validation"]
+    )
+
+    assert any(
+        item["title"]
+        == "CRG-001 focused closure suite"
+        and item["result"] == "12 passed"
+        for item in dashboard["validation"]
+    )

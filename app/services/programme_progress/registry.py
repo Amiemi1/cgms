@@ -11,12 +11,12 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
             "Authoritative delivery, validation, governance, "
             "dashboard-access and startup register."
         ),
-        "as_of": "26 July 2026",
-        "current_sprint": "Sprint 19",
-        "current_work": "PRG-001",
+        "as_of": "27 July 2026",
+        "current_sprint": "Sprint 20",
+        "current_work": "CRG-001",
         "status": (
-            "Complete, production-validated, "
-            "committed, and published"
+            "Assessment complete and regression-validated; "
+            "pilot verdict NOT READY"
         ),
         "branch": "cgms-v2-roadmap",
         "canonical_record": (
@@ -26,16 +26,17 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
     "summary": [
         {
             "label": "Current milestone",
-            "value": "PRG-001",
+            "value": "CRG-001",
             "detail": (
-                "Dedicated Programme Progress Dashboard"
+                "Commercial Readiness Gap Assessment"
             ),
         },
         {
             "label": "Current regression suite",
-            "value": "536 passed",
+            "value": "540 passed",
             "detail": (
-                "PRG-001 full regression validation"
+                "CRG-001 final-state regression with "
+                "37 known deprecation warnings"
             ),
         },
         {
@@ -49,6 +50,15 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
             "label": "Production preflight",
             "value": "0 failures",
             "detail": "0 warnings during controlled validation",
+        },
+
+        {
+            "label": "Pilot readiness",
+            "value": "NOT READY",
+            "detail": (
+                "4 P0 blockers and 10 total "
+                "commercial blockers"
+            ),
         },
     ],
     "navigation": [
@@ -426,8 +436,92 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
                 },
             ],
         },
+
+        {
+            "id": "SPRINT-20",
+            "title": (
+                "Sprint 20 - Commercial Readiness "
+                "Gap Assessment"
+            ),
+            "status": (
+                "Assessment complete and regression-validated; "
+                "publication pending"
+            ),
+            "status_class": "pending",
+            "summary": (
+                "CRG-001 reassessed all 20 P0 and P1 "
+                "capabilities using repository, database, "
+                "test, HTTPS and operational evidence."
+            ),
+            "milestones": [
+                {
+                    "id": "CRG-001",
+                    "title": (
+                        "CGMS Commercial Readiness "
+                        "Gap Assessment"
+                    ),
+                    "status": (
+                        "Assessment complete and validated; "
+                        "pilot verdict NOT READY"
+                    ),
+                    "status_class": "pending",
+                },
+            ],
+        },
     ],
     "validation": [
+        {
+            "title": "CRG-001 complete regression suite",
+            "result": "540 passed",
+            "detail": (
+                "Final-state repository regression completed "
+                "with 37 known deprecation warnings, "
+                "0 failures and 0 collection errors."
+            ),
+        },
+        {
+            "title": "CRG-001 focused closure suite",
+            "result": "12 passed",
+            "detail": (
+                "Programme Progress and canonical assessment "
+                "closure contracts passed."
+            ),
+        },
+        {
+            "title": "CRG-001 capability assessment",
+            "result": "20 capabilities assessed",
+            "detail": (
+                "All P0 and P1 capabilities were reassessed "
+                "against repository, database, automated-test, "
+                "HTTPS and operational evidence."
+            ),
+        },
+        {
+            "title": "CRG-001 pilot readiness verdict",
+            "result": "NOT READY",
+            "detail": (
+                "Four unresolved P0 blockers and ten total "
+                "commercial blockers were confirmed."
+            ),
+        },
+        {
+            "title": "CRG-001 critical readiness gaps",
+            "result": "7 critical",
+            "detail": (
+                "Critical gaps affect authorization, workspace "
+                "isolation, audit, recovery, product access, "
+                "production connectors and operations."
+            ),
+        },
+        {
+            "title": "CRG-001 canonical assessment",
+            "result": "Validated",
+            "detail": (
+                "The assessment contains 20 readiness rows, "
+                "10 blocker records and a ten-stage "
+                "remediation sequence."
+            ),
+        },
         {
             "title": "Current full regression suite",
             "result": "536 passed",

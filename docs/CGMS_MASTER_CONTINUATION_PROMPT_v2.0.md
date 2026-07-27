@@ -2603,3 +2603,173 @@ PRG-001 is formally closed with the following evidence:
 
 The next roadmap milestone must be initiated only through the
 applicable EG-001 classification and approval process.
+
+## Sprint 20 - CRG-001 Commercial Readiness Gap Assessment
+
+**Status:** Assessment complete and regression-validated; publication pending
+**Classification:** Planned Work under Engineering Governance Rule EG-001
+**Approval date:** 2026-07-27
+**Baseline branch:** `cgms-v2-roadmap`
+**Canonical assessment:** `docs/product/CGMS_Commercial_Readiness_Gap_Assessment.md`
+**Pilot readiness verdict:** **NOT READY**
+
+### Purpose
+
+CRG-001 was initiated as the approved next milestone after completion of the Product Capability and Feature Prioritization Matrix and PRG-001 Programme Progress Dashboard.
+
+Its purpose is to replace planning assumptions with an evidence-based commercial readiness position for every P0 and P1 capability before any customer or enterprise pilot is authorized.
+
+### Assessment scope
+
+CRG-001 reassessed all 20 P0 and P1 capabilities using:
+
+- repository implementation evidence;
+- database models and live schema;
+- focused automated tests;
+- authenticated and anonymous HTTPS behaviour;
+- persistence across database sessions and processes;
+- product-interface and navigation inspection;
+- connector and operator-control inspection;
+- PostgreSQL backup-tool validation;
+- Engineering Governance Rule EG-001.
+
+No product remediation, database migration, route hardening, connector activation or pilot deployment was performed.
+
+### Consolidated readiness position
+
+CRG-001 established:
+
+- capabilities assessed: **20**;
+- validated: **1**;
+- partial: **15**;
+- not ready: **3**;
+- not implemented: **1**;
+- critical-severity capabilities: **7**;
+- high-severity capabilities: **12**;
+- low-severity capabilities: **1**;
+- P0 commercial blockers: **4**;
+- total commercial blockers: **10**.
+
+The four P0 commercial blockers are:
+
+1. CAP-002 — incomplete application-wide authorization enforcement;
+2. CAP-003 — absence of persistent workspace isolation;
+3. CAP-004 — incomplete persistent enterprise audit;
+4. CAP-005 — absence of governed backup and recovery.
+
+Additional commercial blockers affect Guided Onboarding, the Knowledge Worker Interface, the Product Navigation Shell, Connector Health, the first production connector and the Operator Console.
+
+### Material live findings
+
+Anonymous HTTP `200` access was confirmed for:
+
+- `/dashboard`;
+- `/operator`;
+- `/operator/console`;
+- `/product-readiness/dashboard`.
+
+Anonymous HTTP `401` protection was confirmed for:
+
+- `/progress`;
+- `/patent-readiness/dashboard`.
+
+This evidence refined CAP-002 from a fully validated capability claim to:
+
+> The RBAC engine and canonical authorization policy are implemented and validated, but application-wide enforcement is partial.
+
+### Persistent architecture findings
+
+The assessment confirmed:
+
+- no persistent Workspace model;
+- no persistent workspace-membership model;
+- no workspace identity on principal Memory, Goal, DecisionLineage, MemoryScore or connector records;
+- persistent security-login and session audit records;
+- process-local Event Bus and explainability audit stores;
+- no connector or connector-health database table;
+- no persisted onboarding state;
+- no governed backup or restore implementation.
+
+### Backup-tool evidence
+
+PostgreSQL successfully created a temporary custom-format logical dump containing **126 parseable archive entries**.
+
+The temporary dump was removed and no restore operation was attempted.
+
+This validated PostgreSQL tool availability but did not satisfy CAP-005 because CGMS still lacks governed backup creation, retention, encryption, verification, restore testing, recovery point objective, recovery time objective and operator procedures.
+
+### Product findings
+
+The existing `/dashboard` remains the baseline Knowledge Worker and Executive Memory Interface.
+
+It contains substantial memory, intelligence, task, goal, decision, timeline, search and operational modules.
+
+It remains commercially incomplete because it:
+
+- is anonymously accessible;
+- lacks authenticated identity binding;
+- lacks workspace context;
+- uses a hard-coded negative user identifier;
+- combines multiple product and operational concerns in one interface.
+
+The existing cross-dashboard links remain an interim navigation layer rather than the approved Product Navigation Shell.
+
+### Connector and operator findings
+
+Slack, Microsoft Teams, Gmail and Calendar adapter prototypes and automated tests exist.
+
+No connector currently demonstrates the complete production control set covering credentials, persistent configuration, workspace binding, retries, idempotency, failure audit and controlled pilot evidence.
+
+The Operator Console exposes operational HTML and JSON anonymously and therefore remains a commercial blocker.
+
+### Proposed remediation sequence
+
+CRG-001 recommends, but does not authorize, the following sequence:
+
+1. Application-Wide Authorization Enforcement;
+2. Persistent Workspace Isolation Foundation;
+3. Unified Persistent Enterprise Audit;
+4. Backup, Restore and Recovery Controls;
+5. Identity-Bound Product Shell and Workspace Experience;
+6. Production Connector Foundation and Pilot Adapter;
+7. Core Memory and Decision Workflow Hardening;
+8. Intelligence, Explainability and Search Validation;
+9. Guided Onboarding;
+10. Controlled Commercial Pilot Validation.
+
+### Governance boundary
+
+CRG-001 is an assessment and governance-closure milestone.
+
+It does not authorize:
+
+- route hardening;
+- schema or database migration;
+- workspace-model implementation;
+- audit-store implementation;
+- backup or restore implementation;
+- connector activation;
+- product-shell implementation;
+- dashboard redesign;
+- Operator Console redesign;
+- commercial pilot execution.
+
+Each remediation milestone requires its own applicable EG-001 classification and explicit approval.
+
+### Closure state
+
+The canonical assessment has been created and structurally validated with:
+
+- **621 lines**;
+- **20 readiness rows**;
+- the correct readiness and severity distributions;
+- **10 commercial blockers**;
+- **10 remediation stages**;
+- the **NOT READY** pilot verdict;
+- an explicit non-authorization boundary.
+
+Focused closure validation completed with **12 passed**.
+
+The complete final-state regression suite completed with **540 passed**, **37 known deprecation warnings**, **0 failures** and **0 collection errors**.
+
+Final commit publication and formal CRG-001 publication closure evidence remain pending.
