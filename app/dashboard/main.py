@@ -1,7 +1,7 @@
 from contextlib import asynccontextmanager
 import logging
 
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
@@ -15,6 +15,10 @@ from app.db.models.memory import Memory
 from app.db.session import SessionLocal, engine
 from app.services.product_readiness.bootstrap import (
     bootstrap_product_capabilities,
+)
+
+from app.services.auth.application_authorization import (
+    enforce_application_authorization,
 )
 
 from app.dashboard.routes.patent_readiness_dashboard import (
@@ -166,6 +170,11 @@ app = FastAPI(
     title="CGMS Dashboard",
     version="1.50",
     lifespan=lifespan,
+    dependencies=[
+        Depends(
+            enforce_application_authorization
+        ),
+    ],
 )
 
 

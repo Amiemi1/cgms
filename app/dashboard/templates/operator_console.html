@@ -242,6 +242,178 @@ Auto refresh
 <div class="toast" id="toast"></div>
 
 <script>
+
+// AAE-001 AUTHENTICATED FETCH
+const CGMS_CSRF_HEADER_NAME =
+    "X-CSRF-Token";
+
+const CGMS_CSRF_REJECTION_DETAIL =
+    "The authenticated browser request could not be validated.";
+
+const CGMS_CSRF_UNSAFE_METHODS =
+    new Set([
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+    ]);
+
+let cgmsCsrfToken = null;
+let cgmsCsrfTokenRequest = null;
+
+async function cgmsObtainCsrfToken(
+    forceRefresh = false
+){
+    if (forceRefresh){
+        cgmsCsrfToken = null;
+    }
+
+    if (cgmsCsrfToken){
+        return cgmsCsrfToken;
+    }
+
+    if (!cgmsCsrfTokenRequest){
+        cgmsCsrfTokenRequest =
+            (async function(){
+                const response = await fetch(
+                    "/auth/csrf",
+                    {
+                        method: "GET",
+                        credentials: "same-origin",
+                        cache: "no-store",
+                        headers: {
+                            "Accept": "application/json"
+                        }
+                    }
+                );
+
+                if (!response.ok){
+                    throw new Error(
+                        "Unable to obtain CSRF token."
+                    );
+                }
+
+                const payload =
+                    await response.json();
+
+                const token =
+                    (
+                        payload
+                        && typeof payload.csrf_token
+                            === "string"
+                    )
+                    ? payload.csrf_token.trim()
+                    : "";
+
+                if (!token){
+                    throw new Error(
+                        "CSRF token response is invalid."
+                    );
+                }
+
+                cgmsCsrfToken = token;
+
+                return token;
+            })();
+    }
+
+    try {
+        return await cgmsCsrfTokenRequest;
+    }
+
+    finally {
+        cgmsCsrfTokenRequest = null;
+    }
+}
+
+async function cgmsAuthenticatedFetch(
+    input,
+    init = {}
+){
+    const requestOptions = {
+        ...init,
+        credentials: "same-origin"
+    };
+
+    const method = String(
+        requestOptions.method || "GET"
+    ).toUpperCase();
+
+    if (
+        !CGMS_CSRF_UNSAFE_METHODS.has(
+            method
+        )
+    ){
+        return fetch(
+            input,
+            requestOptions
+        );
+    }
+
+    async function executeRequest(
+        forceTokenRefresh
+    ){
+        const csrfToken =
+            await cgmsObtainCsrfToken(
+                forceTokenRefresh
+            );
+
+        const headers = new Headers(
+            requestOptions.headers || {}
+        );
+
+        headers.set(
+            CGMS_CSRF_HEADER_NAME,
+            csrfToken
+        );
+
+        return fetch(
+            input,
+            {
+                ...requestOptions,
+                headers
+            }
+        );
+    }
+
+    let response =
+        await executeRequest(false);
+
+    if (response.status !== 400){
+        return response;
+    }
+
+    let rejectionDetail = null;
+
+    try {
+        const rejectionPayload =
+            await response.clone().json();
+
+        rejectionDetail =
+            rejectionPayload
+            ? rejectionPayload.detail
+            : null;
+    }
+
+    catch {
+        return response;
+    }
+
+    if (
+        rejectionDetail
+        !== CGMS_CSRF_REJECTION_DETAIL
+    ){
+        return response;
+    }
+
+    response =
+        await executeRequest(true);
+
+    return response;
+}
+// END AAE-001 AUTHENTICATED FETCH
+
+
 const el={
 status:document.getElementById("status"),
 workspaces:document.getElementById("workspaces"),
@@ -333,7 +505,7 @@ el.eventFeed.innerHTML="Unavailable"
 
 async function sendAction(action){
 try{
-const r=await fetch("/operator/action",{
+const r=await cgmsAuthenticatedFetch("/operator/action",{
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({action})
