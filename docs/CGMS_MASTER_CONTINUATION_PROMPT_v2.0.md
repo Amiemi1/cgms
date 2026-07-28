@@ -2823,3 +2823,218 @@ No remediation work is authorized by this closure.
 
 The next roadmap milestone must be initiated only through the
 applicable EG-001 classification and approval process.
+
+## Sprint 21 - AAE-001 Application-Wide Authorization Enforcement
+
+**Status:** Complete, regression-validated, live-validated, committed, published and formally closed
+**Classification:** Mandatory Security Intervention under Engineering Governance Rule EG-001
+**Approval date:** 2026-07-27
+**Closure date:** 2026-07-28
+**Baseline branch:** `cgms-v2-roadmap`
+**Baseline commit:** `d7a4beeb14380c37d1d5d05f99a70778baaa22c7`
+**Implementation commit:** `1d5aea387f84a3b4a12423f55c542c724d1374e7`
+**Commercial-readiness origin:** CRG-001 remediation sequence stage 1
+
+### Purpose
+
+AAE-001 was initiated to close the critical CAP-002 finding established by CRG-001: CGMS had a validated authentication and permission framework, but authorization was not enforced consistently across the complete application route surface.
+
+The approved objective was to apply the existing authenticated-principal and permission framework consistently across HTML dashboards, JSON APIs, operator routes, connector and ingestion routes, workspace administration routes, memory and intelligence routes, and state-changing operations.
+
+### Classification and approval basis
+
+AAE-001 was executed as a **Mandatory Security Intervention under EG-001** because continued exposure of product, connector, ingestion and operational routes without a consistent authorization boundary represented a material security and commercial-readiness risk.
+
+The intervention was explicitly constrained to enforcement of the existing role and permission model. It did not authorize expansion or redesign of that model.
+
+### Delivered application-wide authorization control
+
+The implementation introduced the canonical application authorization service:
+
+- `app/services/auth/application_authorization.py`.
+
+The service defines and enforces:
+
+- route-specific permission requirements;
+- public, browser-only, bearer-only and dual authentication transports;
+- explicit Authorization-header precedence;
+- rejection of browser-session fallback when explicit Bearer credentials are malformed;
+- rejection of Bearer authentication on browser-only routes;
+- persistent browser-session and current-account revalidation;
+- signed double-submit CSRF validation for unsafe browser requests;
+- fail-closed treatment of unclassified unsafe routes;
+- `view_dashboard` as the conservative default for unclassified safe reads;
+- use of the existing `manage_users` permission for sensitive administrative mutations without creating new roles or permissions.
+
+The guard is registered globally through `app/dashboard/main.py`.
+
+### Production authorization surface
+
+Final production inspection established:
+
+- registered APIRoutes: **106**;
+- APIRoutes inheriting the application guard: **106**;
+- unguarded APIRoutes: **0**;
+- public method/path registrations: **4**;
+- protected method/path registrations: **102**.
+
+The transport distribution is:
+
+- public: **4**;
+- browser-only: **8**;
+- bearer-only: **10**;
+- dual transport: **84**.
+
+The intentionally public registrations remain limited to:
+
+- `GET /`;
+- `GET /auth/login`;
+- `POST /auth/login`;
+- `POST /auth/logout`.
+
+### Frontend CSRF integration
+
+The authenticated browser CSRF contract uses:
+
+- token endpoint: `GET /auth/csrf`;
+- response field: `csrf_token`;
+- required mutation header: `X-CSRF-Token`;
+- signed cookie: `__Host-cgms_csrf`;
+- cookie path: `/`;
+- Secure: `True`;
+- HttpOnly: `True`;
+- SameSite: `strict`;
+- token lifetime: **600 seconds**.
+
+The Dashboard and Operator Console now use an authenticated fetch helper that obtains and retains the token in JavaScript memory, sends same-origin credentials and attaches the canonical CSRF header to unsafe requests.
+
+Final frontend inspection established:
+
+- unsafe browser requests: **14**;
+- Dashboard mutations: **13**;
+- Operator Console mutations: **1**;
+- raw unsafe `fetch()` calls: **0**.
+
+The Product Readiness dashboard remained read-only and was not altered.
+
+### Legacy test migration
+
+Legacy route tests were migrated to authenticated execution through a targeted harness in `tests/conftest.py`.
+
+The harness:
+
+- applies only to the identified legacy test modules;
+- supplies signed administrator Bearer credentials for bearer-only and dual API tests;
+- supplies a validated browser-session dependency override for browser-only dashboard tests;
+- preserves anonymous-denial tests;
+- does not bypass the global application guard.
+
+### Validation evidence
+
+Focused frontend and authorization validation completed with:
+
+- **37 passed**;
+- **5 known template deprecation warnings**.
+
+The complete final-state regression suite completed with:
+
+- **570 passed**;
+- **37 known deprecation warnings**;
+- **0 failures**;
+- **0 collection errors**.
+
+Production surface validation confirmed:
+
+- **106 of 106** APIRoutes guarded;
+- **4** public and **102** protected registrations;
+- the expected public, browser, bearer and dual transport distribution;
+- all **14** unsafe frontend requests routed through authenticated CSRF handling.
+
+### Controlled live HTTPS validation
+
+A fresh HTTPS process was started and validated on `127.0.0.1:8443`.
+
+The validation run used listener PID **25684**. This PID is transient local runtime evidence and is not part of the permanent security contract.
+
+Live validation confirmed:
+
+- anonymous `GET /`: **200**;
+- anonymous `GET /auth/login`: **200**;
+- anonymous `GET /dashboard`: **401**;
+- anonymous `GET /operator`: **401**;
+- anonymous `GET /product-readiness/dashboard`: **401**;
+- anonymous `GET /system/health`: **401**;
+- authenticated `GET /dashboard`: **200**;
+- authenticated `GET /operator`: **200**;
+- authenticated `GET /product-readiness/dashboard`: **200**;
+- bearer-only route presented with a browser session: **401**;
+- browser-only route presented with a Bearer header: **401**;
+- authenticated `GET /auth/csrf`: **200**;
+- browser mutation without the CSRF header: **400**;
+- browser mutation with a valid CSRF header: **200**.
+
+### Files delivered
+
+Implementation files:
+
+- `app/dashboard/main.py`;
+- `app/services/auth/application_authorization.py`;
+- `app/dashboard/templates/dashboard.html`;
+- `app/dashboard/templates/operator_console.html`.
+
+Test and migration files:
+
+- `tests/conftest.py`;
+- `tests/test_application_authorization.py`;
+- `tests/test_frontend_csrf_integration.py`.
+
+### Architectural boundaries preserved
+
+AAE-001 did not introduce:
+
+- new roles;
+- new permissions;
+- an RBAC policy redesign;
+- persistent Workspace or membership models;
+- workspace-scoped records;
+- connector persistence;
+- connector credential storage;
+- unified persistent enterprise audit;
+- backup, restore or recovery controls;
+- dashboard redesign;
+- Operator Console redesign;
+- commercial pilot authorization.
+
+`manual_test_db.py` remained unchanged.
+
+### Commercial-readiness effect
+
+AAE-001 closes the specific CAP-002 application-wide authorization-enforcement gap.
+
+The current post-AAE-001 position is:
+
+- CAP-002 Role-Based Access Control: **Validated**;
+- CAP-002 commercial-blocker status: **resolved**;
+- unresolved P0 commercial blockers: **3**;
+- total unresolved commercial blockers: **9**;
+- commercial pilot verdict: **NOT READY**.
+
+Authorization-related gaps affecting CAP-016, CAP-018, CAP-019 and CAP-021 were remediated, but those capabilities retain their CRG-001 readiness status because their remaining non-authorization gaps were outside AAE-001.
+
+CAP-003, CAP-004 and CAP-005 remain unresolved.
+
+### Formal closure
+
+AAE-001 implementation was committed and published as `1d5aea387f84a3b4a12423f55c542c724d1374e7` on `origin/cgms-v2-roadmap`.
+
+AAE-001 is formally closed with:
+
+- complete route-level authorization enforcement;
+- explicit authentication-transport boundaries;
+- complete browser mutation CSRF integration;
+- full regression validation;
+- controlled live HTTPS validation;
+- synchronized local and remote implementation references;
+- preserved architectural boundaries.
+
+The next dependency-driven remediation milestone is Persistent Workspace Isolation Foundation. That milestone is **not authorized** by this closure and requires its own EG-001 classification, impact statement and explicit approval.

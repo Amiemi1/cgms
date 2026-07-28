@@ -624,3 +624,94 @@ The immediate programme priority is therefore not additional feature breadth. It
 **CRG-001 pilot readiness verdict: NOT READY.**
 
 The assessment was committed and published as `16a673d80091d72f011ce5755564bdc6f74432ff` on `origin/cgms-v2-roadmap`.
+
+## 15. Post-Assessment Remediation Update — AAE-001
+
+**Update date:** 28 July 2026
+**Remediation milestone:** AAE-001
+**Classification:** Mandatory Security Intervention under Engineering Governance Rule EG-001
+**Implementation commit:** `1d5aea387f84a3b4a12423f55c542c724d1374e7`
+**Status:** Complete, regression-validated, live-validated, committed and published
+
+### 15.1 Historical-assessment boundary
+
+Sections 1–14 retain the CRG-001 evidence and readiness position as assessed on 27 July 2026.
+
+The original CAP-002 row, Critical Gap Register and blocker totals are retained as an immutable historical assessment snapshot. This section records the subsequent remediation delta and supersedes only the application-wide authorization finding.
+
+### 15.2 CAP-002 remediation result
+
+AAE-001 introduced a global application authorization guard and applied the existing role and permission framework across all **106** registered APIRoutes.
+
+Post-remediation validation established:
+
+- guarded APIRoutes: **106**;
+- unguarded APIRoutes: **0**;
+- public method/path registrations: **4**;
+- protected method/path registrations: **102**;
+- browser-only registrations: **8**;
+- bearer-only registrations: **10**;
+- dual-transport registrations: **84**;
+- unsafe frontend requests using authenticated CSRF handling: **14**;
+- raw unsafe frontend requests: **0**.
+
+The complete regression suite recorded **570 passed** with **37 known non-blocking deprecation warnings**.
+
+Controlled live HTTPS validation confirmed anonymous denial, authenticated browser access, transport separation, missing-CSRF rejection and valid-CSRF acceptance.
+
+### 15.3 Readiness-status transition
+
+| Capability | CRG-001 Snapshot | Post-AAE-001 Position | Commercial-Blocker Effect |
+|---|---|---|---|
+| CAP-002 — Role-Based Access Control | Partial | Validated | Resolved |
+| CAP-016 — Knowledge Worker Interface | Partial | Partial | Authorization gap closed; identity, workspace and product-workflow gaps remain |
+| CAP-018 — Connector Health | Partial | Partial | Authorization gap closed; persistence, health and operational-control gaps remain |
+| CAP-019 — First Production Connector | Not Ready | Not Ready | Authorization gap closed; no production connector control set exists |
+| CAP-021 — Operator Console | Partial | Partial | Authorization boundary closed; remaining product and operational-readiness gaps remain |
+
+CAP-002 is validated within the existing CGMS role and permission model.
+
+This status does not establish persistent tenant or workspace authorization. Workspace isolation and membership remain governed by CAP-003.
+
+### 15.4 Current blocker position
+
+Resolving CAP-002 changes the current unresolved blocker position from:
+
+- P0 commercial blockers: **4 to 3**;
+- total commercial blockers: **10 to 9**.
+
+The remaining P0 blockers are:
+
+1. CAP-003 — Workspace Isolation;
+2. CAP-004 — Persistent Audit Store;
+3. CAP-005 — Backup and Restore.
+
+The original CRG-001 distribution remains the historical assessment distribution and has not been rewritten.
+
+### 15.5 Preserved limitations
+
+AAE-001 did not establish:
+
+- persistent Workspace or membership models;
+- tenant-scoped memory, intelligence, connector or audit records;
+- unified persistent enterprise audit;
+- governed backup, retention, restore or recovery controls;
+- production connector configuration or credential persistence;
+- a production connector pilot;
+- identity-bound workspace navigation;
+- guided onboarding;
+- commercial pilot authorization.
+
+### 15.6 Updated remediation sequence
+
+Remediation sequence stage 1, Application-Wide Authorization Enforcement, is complete.
+
+The next dependency-driven stage is Persistent Workspace Isolation Foundation. It remains subject to separate EG-001 classification and explicit approval.
+
+### 15.7 Pilot-readiness verdict
+
+The AAE-001 security intervention materially improves the CGMS commercial-readiness position and removes CAP-002 as a P0 blocker.
+
+The system nevertheless remains outside controlled commercial pilot entry because persistent workspace isolation, unified auditability and recoverability are unresolved.
+
+**Current pilot-readiness verdict: NOT READY.**
