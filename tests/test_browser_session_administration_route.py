@@ -136,6 +136,7 @@ def build_principal(
     role: str,
 ) -> AuthenticatedPrincipal:
     return AuthenticatedPrincipal(
+        workspace_id="default",
         user_id=(
             "9001"
             if role == "admin"

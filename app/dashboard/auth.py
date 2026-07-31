@@ -1,12 +1,36 @@
-from fastapi import APIRouter
+from __future__ import annotations
+
+from typing import Annotated
+
+from fastapi import (
+    APIRouter,
+    Depends,
+    HTTPException,
+    status,
+)
 from pydantic import BaseModel
 from sqlmodel import select
 
-from app.db.session import SessionLocal
 from app.db.models.user import User
-
-from app.services.auth.security import hash_password, verify_password
-from app.services.auth.jwt_handler import create_access_token
+from app.db.session import SessionLocal
+from app.services.auth.credential_service import (
+    AccountRoleConfigurationError,
+    CredentialAuthenticationService,
+    InvalidCredentialsError,
+)
+from app.services.auth.jwt_handler import (
+    create_access_token,
+)
+from app.services.auth.security import (
+    hash_password,
+)
+from app.services.workspace.repository import (
+    WorkspaceRepositoryError,
+)
+from app.services.workspace.resolution import (
+    WorkspaceContextResolver,
+    get_workspace_context_resolver,
+)
 
 
 router = APIRouter()
@@ -22,32 +46,63 @@ class LoginRequest(BaseModel):
     password: str
 
 
-@router.post("/signup")
-def signup(data: SignupRequest):
+def get_credential_authentication_service(
+) -> CredentialAuthenticationService:
+    return CredentialAuthenticationService()
 
+
+def _authentication_denied(
+) -> HTTPException:
+    return HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Invalid credentials.",
+        headers={
+            "WWW-Authenticate": "Bearer",
+        },
+    )
+
+
+@router.post("/signup")
+def signup(
+    data: SignupRequest,
+):
     session = SessionLocal()
 
     try:
-
         existing_user = session.exec(
-            select(User).where(User.email == data.email)
+            select(
+                User
+            ).where(
+                User.email
+                == data.email
+            )
         ).first()
 
         if existing_user:
-            return {"error": "user already exists"}
+            return {
+                "error":
+                    "user already exists"
+            }
 
         new_user = User(
             email=data.email,
-            password_hash=hash_password(data.password)
+            password_hash=hash_password(
+                data.password
+            ),
         )
 
-        session.add(new_user)
+        session.add(
+            new_user
+        )
+
         session.commit()
-        session.refresh(new_user)
+        session.refresh(
+            new_user
+        )
 
         return {
             "message": "User created",
-            "user_id": new_user.id
+            "user_id": new_user.id,
         }
 
     finally:
@@ -55,28 +110,58 @@ def signup(data: SignupRequest):
 
 
 @router.post("/login")
-def login(data: LoginRequest):
+def login(
+    data: LoginRequest,
+    credential_service: Annotated[
+        CredentialAuthenticationService,
+        Depends(
+            get_credential_authentication_service
+        ),
+    ],
+    workspace_context_resolver: Annotated[
+        WorkspaceContextResolver,
+        Depends(
+            get_workspace_context_resolver
+        ),
+    ],
+):
+    try:
+        account = (
+            credential_service.authenticate(
+                email=data.email,
+                password=data.password,
+            )
+        )
 
-    session = SessionLocal()
+    except (
+        InvalidCredentialsError,
+        AccountRoleConfigurationError,
+    ):
+        raise _authentication_denied()
 
     try:
+        workspace_context = (
+            workspace_context_resolver
+            .resolve_default(
+                account.user_id
+            )
+        )
 
-        user = session.exec(
-            select(User).where(User.email == data.email)
-        ).first()
+    except WorkspaceRepositoryError:
+        raise _authentication_denied()
 
-        if not user:
-            return {"error": "User not found"}
-
-        if not verify_password(data.password, user.password_hash):
-            return {"error": "Invalid password"}
-
-        token = create_access_token({"user_id": user.id})
-
-        return {
-            "access_token": token,
-            "token_type": "bearer"
+    token = create_access_token(
+        {
+            "user_id":
+                account.user_id,
+            "role":
+                account.canonical_role,
+            "workspace_id":
+                workspace_context.workspace_id,
         }
+    )
 
-    finally:
-        session.close()
+    return {
+        "access_token": token,
+        "token_type": "bearer",
+    }

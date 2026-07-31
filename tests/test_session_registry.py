@@ -100,6 +100,7 @@ def test_registers_active_session(
 
     state = registry.register(
         build_identity(),
+        workspace_id="default",
         now=BASE_TIME,
     )
 
@@ -127,11 +128,13 @@ def test_registration_is_idempotent(
 
     first = registry.register(
         identity,
+        workspace_id="default",
         now=BASE_TIME,
     )
 
     second = registry.register(
         identity,
+        workspace_id="default",
         now=BASE_TIME,
     )
 
@@ -154,6 +157,7 @@ def test_conflicting_token_id_is_rejected(
 
     registry.register(
         build_identity(),
+        workspace_id="default",
         now=BASE_TIME,
     )
 
@@ -166,6 +170,7 @@ def test_conflicting_token_id_is_rejected(
     ):
         registry.register(
             conflicting,
+            workspace_id="default",
             now=BASE_TIME,
         )
 
@@ -184,6 +189,7 @@ def test_expired_session_cannot_be_registered(
             build_identity(
                 expires_at=BASE_TIME,
             ),
+            workspace_id="default",
             now=BASE_TIME,
         )
 
@@ -213,6 +219,7 @@ def test_active_session_is_validated(
 
     registry.register(
         identity,
+        workspace_id="default",
         now=BASE_TIME,
     )
 
@@ -239,6 +246,7 @@ def test_user_mismatch_is_denied(
 
     registry.register(
         build_identity(),
+        workspace_id="default",
         now=BASE_TIME,
     )
 
@@ -262,6 +270,7 @@ def test_role_mismatch_is_denied(
 
     registry.register(
         build_identity(),
+        workspace_id="default",
         now=BASE_TIME,
     )
 
@@ -285,6 +294,7 @@ def test_issued_at_mismatch_is_denied(
 
     registry.register(
         build_identity(),
+        workspace_id="default",
         now=BASE_TIME,
     )
 
@@ -311,6 +321,7 @@ def test_expiry_mismatch_is_denied(
 
     registry.register(
         build_identity(),
+        workspace_id="default",
         now=BASE_TIME,
     )
 
@@ -339,6 +350,7 @@ def test_expired_record_is_denied(
 
     registry.register(
         identity,
+        workspace_id="default",
         now=BASE_TIME,
     )
 
@@ -365,6 +377,7 @@ def test_revoke_marks_session_revoked(
 
     registry.register(
         identity,
+        workspace_id="default",
         now=BASE_TIME,
     )
 
@@ -403,6 +416,7 @@ def test_revoke_is_idempotent(
 
     registry.register(
         identity,
+        workspace_id="default",
         now=BASE_TIME,
     )
 
@@ -450,6 +464,7 @@ def test_invalid_revocation_reason_is_rejected(
 
     registry.register(
         identity,
+        workspace_id="default",
         now=BASE_TIME,
     )
 
@@ -474,6 +489,7 @@ def test_revoked_session_cannot_be_registered_again(
 
     registry.register(
         identity,
+        workspace_id="default",
         now=BASE_TIME,
     )
 
@@ -490,6 +506,7 @@ def test_revoked_session_cannot_be_registered_again(
     ):
         registry.register(
             identity,
+            workspace_id="default",
             now=(
                 BASE_TIME
                 + timedelta(minutes=2)
@@ -519,16 +536,19 @@ def test_revoke_all_revokes_active_user_sessions(
 
     registry.register(
         first,
+        workspace_id="default",
         now=BASE_TIME,
     )
 
     registry.register(
         second,
+        workspace_id="default",
         now=BASE_TIME,
     )
 
     registry.register(
         other_user,
+        workspace_id="default",
         now=BASE_TIME,
     )
 
@@ -596,11 +616,13 @@ def test_revoke_all_ignores_expired_sessions(
 
     registry.register(
         expired_later,
+        workspace_id="default",
         now=BASE_TIME,
     )
 
     registry.register(
         active,
+        workspace_id="default",
         now=BASE_TIME,
     )
 
@@ -626,3 +648,77 @@ def test_raw_token_is_not_a_database_column() -> None:
     assert "jwt" not in column_names
     assert "cookie" not in column_names
     assert "token_id" in column_names
+
+def test_registration_requires_explicit_workspace(
+    engine,
+) -> None:
+    registry = create_registry(
+        engine
+    )
+
+    with pytest.raises(
+        TypeError
+    ):
+        registry.register(
+            build_identity(),
+            now=BASE_TIME,
+        )
+
+
+def test_workspace_update_is_session_bound(
+    engine,
+) -> None:
+    registry = create_registry(
+        engine
+    )
+
+    first = build_identity(
+        token_id="workspace-session-first",
+    )
+
+    second = build_identity(
+        token_id="workspace-session-second",
+    )
+
+    registry.register(
+        first,
+        workspace_id="default",
+        now=BASE_TIME,
+    )
+
+    registry.register(
+        second,
+        workspace_id="default",
+        now=BASE_TIME,
+    )
+
+    updated = registry.set_workspace(
+        first,
+        workspace_id=(
+            "commercial-intelligence"
+        ),
+        now=BASE_TIME,
+    )
+
+    unchanged = registry.require_active(
+        second,
+        now=BASE_TIME,
+    )
+
+    assert (
+        updated.workspace_id
+        == "commercial-intelligence"
+    )
+
+    assert (
+        unchanged.workspace_id
+        == "default"
+    )
+
+    assert (
+        registry.require_active(
+            first,
+            now=BASE_TIME,
+        ).workspace_id
+        == "commercial-intelligence"
+    )

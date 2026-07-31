@@ -20,6 +20,12 @@ from app.services.security.canonical_roles import (
     CanonicalRoleResolutionError,
     canonical_role_name,
 )
+from app.services.workspace.repository import (
+    WorkspaceRepositoryError,
+)
+from app.services.workspace.resolution import (
+    WorkspaceContextResolver,
+)
 
 
 browser_authorization_logger = logging.getLogger(
@@ -106,26 +112,24 @@ def _resolve_current_authorization(
 def revalidate_browser_session(
     *,
     identity: BrowserSessionIdentity,
+    workspace_id: str,
     service: AccountAuthorizationService,
+    workspace_context_resolver: (
+        WorkspaceContextResolver
+    ),
 ) -> AuthenticatedPrincipal:
     """
-    Revalidate a cryptographically valid browser session against
-    the current database account and role state.
+    Revalidate a browser session against current account, role,
+    workspace membership and workspace lifecycle state.
 
-    Authorization succeeds only when:
-
-    - the account still exists;
-    - the persisted user identifier is canonical;
-    - the account has one resolvable role;
-    - the current canonical role matches the session role.
-
-    A changed role requires a new login so that an old session
-    cannot retain elevated permissions.
+    Workspace identity is supplied from the persistent browser
+    session record and is never accepted from the browser JWT.
     """
     try:
         token_role = canonical_role_name(
             identity.role
         )
+
     except CanonicalRoleResolutionError as exc:
         raise _deny(
             reason="invalid_session_role",
@@ -139,7 +143,9 @@ def revalidate_browser_session(
         )
     )
 
-    token_user_id = identity.user_id.strip()
+    token_user_id = (
+        identity.user_id.strip()
+    )
 
     if (
         authorization.token_subject
@@ -159,8 +165,26 @@ def revalidate_browser_session(
             identity=identity,
         )
 
+    try:
+        workspace_context = (
+            workspace_context_resolver
+            .resolve_requested(
+                user_id=authorization.user_id,
+                workspace_id=workspace_id,
+            )
+        )
+
+    except WorkspaceRepositoryError as exc:
+        raise _deny(
+            reason="workspace_not_authorized",
+            identity=identity,
+        ) from exc
+
     principal = AuthenticatedPrincipal(
         user_id=authorization.token_subject,
+        workspace_id=(
+            workspace_context.workspace_id
+        ),
         role=authorization.canonical_role,
         permissions=authorization.permissions,
         token_id=identity.token_id,
@@ -168,8 +192,10 @@ def revalidate_browser_session(
 
     browser_authorization_logger.info(
         "browser_session_revalidation_granted "
-        "user_id=%s role=%s token_id=%s",
+        "user_id=%s workspace_id=%s "
+        "role=%s token_id=%s",
         principal.user_id,
+        principal.workspace_id,
         principal.role,
         principal.token_id
         or "not-recorded",

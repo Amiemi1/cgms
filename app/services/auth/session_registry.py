@@ -23,6 +23,10 @@ from app.services.security.canonical_roles import (
     CanonicalRoleResolutionError,
     canonical_role_name,
 )
+from app.services.workspace.repository import (
+    InvalidWorkspaceIdentifierError,
+    normalize_workspace_identifier,
+)
 
 
 session_registry_logger = logging.getLogger(
@@ -94,6 +98,14 @@ class BrowserSessionRevocationReasonError(
     """
 
 
+class BrowserSessionWorkspaceError(
+    BrowserSessionRegistryError
+):
+    """
+    Raised when a browser session cannot be bound to a valid
+    workspace identifier.
+    """
+
 @dataclass(
     frozen=True,
     slots=True,
@@ -101,6 +113,8 @@ class BrowserSessionRevocationReasonError(
 class BrowserSessionState:
     token_id: str
     user_id: int
+    workspace_id: str
+
     role: str
     issued_at: datetime
     expires_at: datetime
@@ -208,12 +222,28 @@ def _normalize_role(
         ) from exc
 
 
+def _normalize_workspace_id(
+    value: str,
+) -> str:
+    try:
+        return normalize_workspace_identifier(
+            value
+        )
+
+    except InvalidWorkspaceIdentifierError as exc:
+        raise BrowserSessionWorkspaceError(
+            "Browser session workspace is invalid."
+        ) from exc
+
 def _state_from_record(
     record: BrowserSessionRecord,
 ) -> BrowserSessionState:
     return BrowserSessionState(
         token_id=record.token_id,
         user_id=record.user_id,
+        workspace_id=_normalize_workspace_id(
+            record.workspace_id
+        ),
         role=_normalize_role(
             record.role
         ),
@@ -307,9 +337,16 @@ class BrowserSessionRegistry:
         self,
         identity: BrowserSessionIdentity,
         *,
+        workspace_id: str,
         now: datetime | None = None,
     ) -> BrowserSessionState:
         current_time = _current_time(now)
+
+        normalized_workspace_id = (
+            _normalize_workspace_id(
+                workspace_id
+            )
+        )
 
         token_id = _normalize_token_id(
             identity.token_id
@@ -356,9 +393,15 @@ class BrowserSessionRegistry:
             ).first()
 
             if existing is not None:
-                if not _record_matches_identity(
-                    existing,
-                    identity,
+                if (
+                    not _record_matches_identity(
+                        existing,
+                        identity,
+                    )
+                    or _normalize_workspace_id(
+                        existing.workspace_id
+                    )
+                    != normalized_workspace_id
                 ):
                     raise (
                         BrowserSessionRecordConflictError(
@@ -384,6 +427,9 @@ class BrowserSessionRegistry:
             record = BrowserSessionRecord(
                 token_id=token_id,
                 user_id=user_id,
+                workspace_id=(
+                    normalized_workspace_id
+                ),
                 role=role,
                 issued_at=issued_at,
                 expires_at=expires_at,
@@ -413,6 +459,10 @@ class BrowserSessionRegistry:
                         concurrent_record,
                         identity,
                     )
+                    and _normalize_workspace_id(
+                        concurrent_record.workspace_id
+                    )
+                    == normalized_workspace_id
                     and concurrent_record.revoked_at
                     is None
                 ):
@@ -439,6 +489,107 @@ class BrowserSessionRegistry:
                 state.role,
                 state.token_id,
                 state.expires_at.isoformat(),
+            )
+
+            return state
+
+        finally:
+            session.close()
+
+    def set_workspace(
+        self,
+        identity: BrowserSessionIdentity,
+        *,
+        workspace_id: str,
+        now: datetime | None = None,
+    ) -> BrowserSessionState:
+        """
+        Bind one active persistent browser session to a workspace.
+
+        Membership and workspace lifecycle validation is performed
+        by the authoritative workspace resolver before this method
+        is called. The update is restricted to the selected token ID.
+        """
+        current_time = _current_time(now)
+
+        normalized_workspace_id = (
+            _normalize_workspace_id(
+                workspace_id
+            )
+        )
+
+        token_id = _normalize_token_id(
+            identity.token_id
+        )
+
+        session = self._session_factory()
+
+        try:
+            record = session.exec(
+                select(
+                    BrowserSessionRecord
+                ).where(
+                    BrowserSessionRecord.token_id
+                    == token_id
+                )
+            ).first()
+
+            if record is None:
+                raise BrowserSessionNotRegisteredError(
+                    "Browser session is not registered."
+                )
+
+            if not _record_matches_identity(
+                record,
+                identity,
+            ):
+                raise BrowserSessionRecordMismatchError(
+                    "Browser session record does not match."
+                )
+
+            state = _state_from_record(
+                record
+            )
+
+            if state.is_revoked:
+                raise BrowserSessionRevokedError(
+                    "Browser session is revoked."
+                )
+
+            if state.is_expired_at(
+                current_time
+            ):
+                raise BrowserSessionExpiredError(
+                    "Browser session is expired."
+                )
+
+            if (
+                state.workspace_id
+                != normalized_workspace_id
+            ):
+                record.workspace_id = (
+                    normalized_workspace_id
+                )
+
+                session.add(
+                    record
+                )
+
+                session.commit()
+                session.refresh(
+                    record
+                )
+
+                state = _state_from_record(
+                    record
+                )
+
+            session_registry_logger.info(
+                "browser_session_workspace_bound "
+                "user_id=%s workspace_id=%s token_id=%s",
+                state.user_id,
+                state.workspace_id,
+                state.token_id,
             )
 
             return state

@@ -29,6 +29,7 @@ def build_client(
     app.include_router(router)
 
     principal = AuthenticatedPrincipal(
+        workspace_id="default",
         user_id="progress-test-user",
         role="viewer",
         permissions=permissions,

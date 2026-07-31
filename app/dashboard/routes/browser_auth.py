@@ -61,6 +61,13 @@ from app.services.auth.session_registry import (
     BrowserSessionRegistryError,
     BrowserSessionRevokedError,
 )
+from app.services.workspace.repository import (
+    WorkspaceRepositoryError,
+)
+from app.services.workspace.resolution import (
+    WorkspaceContextResolver,
+    get_workspace_context_resolver,
+)
 
 
 router = APIRouter(
@@ -510,6 +517,12 @@ async def browser_login_submit(
             get_browser_session_registry
         ),
     ],
+    workspace_context_resolver: Annotated[
+        WorkspaceContextResolver,
+        Depends(
+            get_workspace_context_resolver
+        ),
+    ],
     login_security_service: Annotated[
         BrowserLoginSecurityService,
         Depends(
@@ -704,6 +717,30 @@ async def browser_login_submit(
             ),
         )
 
+    try:
+        workspace_context = (
+            workspace_context_resolver
+            .resolve_default(
+                account.user_id
+            )
+        )
+
+    except WorkspaceRepositoryError:
+        authentication_logger.error(
+            "browser_login_denied "
+            "user_id=%s "
+            "reason=default_workspace_resolution_failed",
+            account.user_id,
+        )
+
+        return _render_login_page(
+            request,
+            error_message=GENERIC_SESSION_ERROR,
+            status_code=(
+                status.HTTP_503_SERVICE_UNAVAILABLE
+            ),
+        )
+
     session_token = (
         issue_browser_session_token(
             account
@@ -734,7 +771,10 @@ async def browser_login_submit(
 
     try:
         session_registry.register(
-            session_identity
+            session_identity,
+            workspace_id=(
+                workspace_context.workspace_id
+            ),
         )
 
     except BrowserSessionRegistryError:

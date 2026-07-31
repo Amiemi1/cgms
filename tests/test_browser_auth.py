@@ -39,6 +39,10 @@ from app.services.auth.login_throttle import (
 from app.services.auth.browser_session_dependency import (
     get_browser_session_registry,
 )
+from app.services.workspace.resolution import (
+    ResolvedWorkspaceContext,
+    get_workspace_context_resolver,
+)
 
 
 TEST_JWT_SECRET = (
@@ -275,10 +279,41 @@ def build_account(
     )
 
 
+class StubWorkspaceContextResolver:
+    def __init__(
+        self,
+        workspace_id: str = "default",
+    ) -> None:
+        self.workspace_id = workspace_id
+
+        self.calls: list[
+            str | int
+        ] = []
+
+    def resolve_default(
+        self,
+        user_id: str | int,
+    ) -> ResolvedWorkspaceContext:
+        self.calls.append(
+            user_id
+        )
+
+        return ResolvedWorkspaceContext(
+            workspace_id=self.workspace_id,
+            workspace_name=(
+                "Default Workspace"
+            ),
+            user_id=int(user_id),
+            membership_id=1,
+        )
+
 def build_client(
     credential_service: StubCredentialService,
     login_security_service: (
         StubLoginSecurityService | None
+    ) = None,
+    workspace_context_resolver: (
+        StubWorkspaceContextResolver | None
     ) = None,
 ) -> TestClient:
     app = FastAPI()
@@ -300,6 +335,17 @@ def build_client(
         get_browser_login_security_service
     ] = lambda: (
         resolved_login_security_service
+    )
+
+    resolved_workspace_context_resolver = (
+        workspace_context_resolver
+        or StubWorkspaceContextResolver()
+    )
+
+    app.dependency_overrides[
+        get_workspace_context_resolver
+    ] = lambda: (
+        resolved_workspace_context_resolver
     )
 
     return TestClient(

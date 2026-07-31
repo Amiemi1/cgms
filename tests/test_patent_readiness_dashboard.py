@@ -56,6 +56,7 @@ def build_principal(
     user_id: str = "browser-test-user",
 ) -> AuthenticatedPrincipal:
     return AuthenticatedPrincipal(
+        workspace_id="default",
         user_id=user_id,
         role=role,
         permissions=get_permissions(role),

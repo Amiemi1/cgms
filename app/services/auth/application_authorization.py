@@ -40,6 +40,10 @@ from app.services.security.rbac_policy import (
     VIEW_PATENT_GOVERNANCE,
     VIEW_PATENT_SENSITIVE,
 )
+from app.services.workspace.resolution import (
+    WorkspaceContextResolver,
+    get_workspace_context_resolver,
+)
 
 
 application_authorization_logger = logging.getLogger(
@@ -470,6 +474,12 @@ def enforce_application_authorization(
             get_account_authorization_service
         ),
     ],
+    workspace_context_resolver: Annotated[
+        WorkspaceContextResolver,
+        Depends(
+            get_workspace_context_resolver
+        ),
+    ],
 ) -> AuthenticatedPrincipal | None:
     """
     Enforce the governed application-wide authorization policy.
@@ -545,7 +555,13 @@ def enforce_application_authorization(
 
     if use_bearer_transport:
         principal = get_current_principal(
-            credentials
+            credentials=credentials,
+            authorization_service=(
+                authorization_service
+            ),
+            workspace_context_resolver=(
+                workspace_context_resolver
+            ),
         )
 
         _require_principal_permission(
@@ -562,8 +578,15 @@ def enforce_application_authorization(
     )
 
     principal = get_current_browser_principal(
-        identity,
-        authorization_service,
+        request=request,
+        identity=identity,
+        authorization_service=(
+            authorization_service
+        ),
+        session_registry=session_registry,
+        workspace_context_resolver=(
+            workspace_context_resolver
+        ),
     )
 
     _require_principal_permission(

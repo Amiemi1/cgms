@@ -123,7 +123,7 @@ def configure_browser_principal(
         authorization_module,
         "get_current_browser_principal",
         (
-            lambda identity, authorization_service:
+            lambda **_kwargs:
             principal
         ),
     )
@@ -253,7 +253,7 @@ def test_bearer_read_with_permission_is_allowed(
     monkeypatch.setattr(
         authorization_module,
         "get_current_principal",
-        lambda credentials: principal,
+        lambda **_kwargs: principal,
     )
 
     response = TestClient(
@@ -453,7 +453,7 @@ def test_bearer_mutation_does_not_require_csrf(
     monkeypatch.setattr(
         authorization_module,
         "get_current_principal",
-        lambda credentials: principal,
+        lambda **_kwargs: principal,
     )
 
     def unexpected_csrf(
@@ -651,7 +651,7 @@ def test_bearer_only_route_accepts_bearer(
     monkeypatch.setattr(
         authorization_module,
         "get_current_principal",
-        lambda credentials: principal,
+        lambda **_kwargs: principal,
     )
 
     response = TestClient(

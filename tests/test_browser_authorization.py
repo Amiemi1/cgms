@@ -26,6 +26,9 @@ from app.services.security.rbac_policy import (
     VIEW_PATENT_SENSITIVE,
     get_permissions,
 )
+from app.services.workspace.resolution import (
+    ResolvedWorkspaceContext,
+)
 
 
 class StubAuthorizationService:
@@ -55,6 +58,46 @@ class StubAuthorizationService:
 
         return self.authorization
 
+
+class StubWorkspaceContextResolver:
+    def __init__(
+        self,
+        *,
+        error: Exception | None = None,
+    ) -> None:
+        self.error = error
+
+        self.calls: list[
+            tuple[
+                str | int,
+                str,
+            ]
+        ] = []
+
+    def resolve_requested(
+        self,
+        *,
+        user_id: str | int,
+        workspace_id: str,
+    ) -> ResolvedWorkspaceContext:
+        self.calls.append(
+            (
+                user_id,
+                workspace_id,
+            )
+        )
+
+        if self.error is not None:
+            raise self.error
+
+        return ResolvedWorkspaceContext(
+            workspace_id=workspace_id,
+            workspace_name="Default Workspace",
+            user_id=int(
+                str(user_id).strip()
+            ),
+            membership_id=1,
+        )
 
 def build_identity(
     *,
@@ -102,6 +145,8 @@ def test_matching_current_role_creates_principal() -> None:
     )
 
     principal = revalidate_browser_session(
+        workspace_context_resolver=StubWorkspaceContextResolver(),
+        workspace_id="default",
         identity=build_identity(),
         service=service,
     )
@@ -136,6 +181,8 @@ def test_admin_permissions_come_from_current_policy() -> None:
     )
 
     principal = revalidate_browser_session(
+        workspace_context_resolver=StubWorkspaceContextResolver(),
+        workspace_id="default",
         identity=build_identity(
             role="admin"
         ),
@@ -160,6 +207,8 @@ def test_legacy_role_record_can_resolve_canonically() -> None:
     )
 
     principal = revalidate_browser_session(
+        workspace_context_resolver=StubWorkspaceContextResolver(),
+        workspace_id="default",
         identity=build_identity(
             role="operator"
         ),
@@ -198,6 +247,8 @@ def test_changed_role_invalidates_session(
         BrowserSessionAuthorizationError
     ) as error:
         revalidate_browser_session(
+            workspace_context_resolver=StubWorkspaceContextResolver(),
+            workspace_id="default",
             identity=build_identity(
                 role=session_role
             ),
@@ -218,6 +269,8 @@ def test_deleted_account_invalidates_session() -> None:
         BrowserSessionAuthorizationError
     ) as error:
         revalidate_browser_session(
+            workspace_context_resolver=StubWorkspaceContextResolver(),
+            workspace_id="default",
             identity=build_identity(),
             service=service,
         )
@@ -239,6 +292,8 @@ def test_invalid_role_configuration_invalidates_session() -> None:
         BrowserSessionAuthorizationError
     ) as error:
         revalidate_browser_session(
+            workspace_context_resolver=StubWorkspaceContextResolver(),
+            workspace_id="default",
             identity=build_identity(),
             service=service,
         )
@@ -260,6 +315,8 @@ def test_invalid_account_identifier_invalidates_session() -> None:
         BrowserSessionAuthorizationError
     ) as error:
         revalidate_browser_session(
+            workspace_context_resolver=StubWorkspaceContextResolver(),
+            workspace_id="default",
             identity=build_identity(
                 user_id="invalid"
             ),
@@ -283,6 +340,8 @@ def test_noncanonical_numeric_identifier_is_rejected() -> None:
         BrowserSessionAuthorizationError
     ) as error:
         revalidate_browser_session(
+            workspace_context_resolver=StubWorkspaceContextResolver(),
+            workspace_id="default",
             identity=build_identity(
                 user_id="01001"
             ),
@@ -304,6 +363,8 @@ def test_unknown_session_role_is_rejected() -> None:
         BrowserSessionAuthorizationError
     ) as error:
         revalidate_browser_session(
+            workspace_context_resolver=StubWorkspaceContextResolver(),
+            workspace_id="default",
             identity=build_identity(
                 role="superuser"
             ),
@@ -329,6 +390,8 @@ def test_failure_message_does_not_disclose_reason() -> None:
         BrowserSessionAuthorizationError
     ) as error:
         revalidate_browser_session(
+            workspace_context_resolver=StubWorkspaceContextResolver(),
+            workspace_id="default",
             identity=build_identity(),
             service=service,
         )

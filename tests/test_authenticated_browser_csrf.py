@@ -61,6 +61,7 @@ def build_principal(
     role: str = "operator",
 ) -> AuthenticatedPrincipal:
     return AuthenticatedPrincipal(
+        workspace_id="default",
         user_id="1001",
         role=role,
         permissions=get_permissions(

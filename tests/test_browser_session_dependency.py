@@ -43,6 +43,11 @@ from app.services.security.rbac_policy import (
     VIEW_PATENT_GOVERNANCE,
     get_permissions,
 )
+from types import SimpleNamespace
+from app.services.workspace.resolution import (
+    ResolvedWorkspaceContext,
+    get_workspace_context_resolver,
+)
 
 
 TEST_JWT_SECRET = (
@@ -163,8 +168,11 @@ class StubBrowserSessionRegistry:
         self,
         *,
         error: Exception | None = None,
+        workspace_id: str = "default",
     ) -> None:
         self.error = error
+        self.workspace_id = workspace_id
+
         self.calls: list[
             BrowserSessionIdentity
         ] = []
@@ -180,8 +188,53 @@ class StubBrowserSessionRegistry:
         if self.error is not None:
             raise self.error
 
-        return object()
+        return SimpleNamespace(
+            workspace_id=self.workspace_id
+        )
 
+
+
+class StubWorkspaceContextResolver:
+    def __init__(
+        self,
+        *,
+        error: Exception | None = None,
+    ) -> None:
+        self.error = error
+
+        self.calls: list[
+            tuple[
+                str | int,
+                str,
+            ]
+        ] = []
+
+    def resolve_requested(
+        self,
+        *,
+        user_id: str | int,
+        workspace_id: str,
+    ) -> ResolvedWorkspaceContext:
+        self.calls.append(
+            (
+                user_id,
+                workspace_id,
+            )
+        )
+
+        if self.error is not None:
+            raise self.error
+
+        return ResolvedWorkspaceContext(
+            workspace_id=str(
+                workspace_id
+            ).strip(),
+            workspace_name="Default Workspace",
+            user_id=int(
+                str(user_id).strip()
+            ),
+            membership_id=1,
+        )
 
 def build_account(
     role: str,
@@ -212,6 +265,10 @@ def build_app(
         StubBrowserSessionRegistry
         | None
     ) = None,
+    workspace_context_resolver: (
+        StubWorkspaceContextResolver
+        | None
+    ) = None,
 ) -> FastAPI:
     app = FastAPI()
 
@@ -225,6 +282,11 @@ def build_app(
         or StubBrowserSessionRegistry()
     )
 
+    active_workspace_resolver = (
+        workspace_context_resolver
+        or StubWorkspaceContextResolver()
+    )
+
     app.dependency_overrides[
         get_account_authorization_service
     ] = lambda: active_authorization_service
@@ -232,6 +294,10 @@ def build_app(
     app.dependency_overrides[
         get_browser_session_registry
     ] = lambda: active_session_registry
+
+    app.dependency_overrides[
+        get_workspace_context_resolver
+    ] = lambda: active_workspace_resolver
 
     @app.get("/session")
     def session_endpoint(
@@ -268,6 +334,7 @@ def build_app(
         }
 
     return app
+
 
 
 def cookie_headers(

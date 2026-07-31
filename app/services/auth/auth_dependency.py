@@ -18,6 +18,17 @@ from app.services.security.rbac_policy import (
     is_known_role,
     normalize_role,
 )
+from app.services.auth.account_authorization import (
+    AccountAuthorizationError,
+    AccountAuthorizationService,
+)
+from app.services.workspace.repository import (
+    WorkspaceRepositoryError,
+)
+from app.services.workspace.resolution import (
+    WorkspaceContextResolver,
+    get_workspace_context_resolver,
+)
 
 
 security = HTTPBearer(
@@ -29,20 +40,18 @@ authentication_logger = logging.getLogger(
 )
 
 
-@dataclass(
-    frozen=True,
-    slots=True,
-)
+@dataclass(frozen=True)
 class AuthenticatedPrincipal:
     """
     Server-validated identity used for CGMS authorization.
 
-    Permissions are derived from the server-side role policy.
-    They are never accepted directly from request headers or
-    untrusted token permission claims.
+    Workspace access is resolved from persistent membership state.
+    Role permissions continue to come exclusively from the
+    server-side global role policy.
     """
 
     user_id: str
+    workspace_id: str
     role: str
     permissions: frozenset[str]
     token_id: str | None = None
@@ -52,7 +61,6 @@ class AuthenticatedPrincipal:
         permission: str,
     ) -> bool:
         return permission in self.permissions
-
 
 def _authentication_error(
     detail: str,
@@ -66,17 +74,38 @@ def _authentication_error(
     )
 
 
+def get_bearer_account_authorization_service(
+) -> AccountAuthorizationService:
+    """
+    Provide authoritative account and role resolution for
+    Bearer-token authentication.
+    """
+    return AccountAuthorizationService()
+
 def get_current_principal(
     credentials: Annotated[
         HTTPAuthorizationCredentials | None,
         Depends(security),
     ],
+    authorization_service: Annotated[
+        AccountAuthorizationService,
+        Depends(
+            get_bearer_account_authorization_service
+        ),
+    ],
+    workspace_context_resolver: Annotated[
+        WorkspaceContextResolver,
+        Depends(
+            get_workspace_context_resolver
+        ),
+    ],
 ) -> AuthenticatedPrincipal:
     """
-    Resolve a verified CGMS principal from a signed Bearer token.
+    Resolve a workspace-bound principal from a signed Bearer token.
 
-    Missing, invalid, expired or structurally incomplete tokens
-    fail closed with HTTP 401.
+    The token must contain a workspace identifier. Account role,
+    active workspace membership and workspace lifecycle state are
+    revalidated from persistent server-side state on every request.
     """
     if credentials is None:
         authentication_logger.warning(
@@ -112,9 +141,18 @@ def get_current_principal(
             "Invalid or expired access token."
         )
 
-    user_id = payload.get("user_id")
+    user_id = payload.get(
+        "user_id"
+    )
+
     role = normalize_role(
-        payload.get("role")
+        payload.get(
+            "role"
+        )
+    )
+
+    workspace_id = payload.get(
+        "workspace_id"
     )
 
     if (
@@ -124,6 +162,21 @@ def get_current_principal(
         authentication_logger.warning(
             "authentication_denied "
             "reason=invalid_user_id"
+        )
+
+        raise _authentication_error(
+            "Invalid authenticated principal."
+        )
+
+    if (
+        not isinstance(workspace_id, str)
+        or not workspace_id.strip()
+    ):
+        authentication_logger.warning(
+            "authentication_denied "
+            "user_id=%s "
+            "reason=invalid_workspace_claim",
+            user_id.strip(),
         )
 
         raise _authentication_error(
@@ -142,27 +195,94 @@ def get_current_principal(
             "Invalid authenticated role."
         )
 
+    try:
+        authorization = (
+            authorization_service.resolve(
+                user_id.strip()
+            )
+        )
+
+    except AccountAuthorizationError:
+        authentication_logger.warning(
+            "authentication_denied "
+            "user_id=%s "
+            "reason=account_revalidation_failed",
+            user_id.strip(),
+        )
+
+        raise _authentication_error(
+            "Invalid authenticated principal."
+        )
+
+    if (
+        authorization.token_subject
+        != user_id.strip()
+        or authorization.canonical_role
+        != role
+    ):
+        authentication_logger.warning(
+            "authentication_denied "
+            "user_id=%s "
+            "reason=account_or_role_changed",
+            user_id.strip(),
+        )
+
+        raise _authentication_error(
+            "Invalid authenticated principal."
+        )
+
+    try:
+        workspace_context = (
+            workspace_context_resolver
+            .resolve_requested(
+                user_id=authorization.user_id,
+                workspace_id=workspace_id.strip(),
+            )
+        )
+
+    except WorkspaceRepositoryError:
+        authentication_logger.warning(
+            "authentication_denied "
+            "user_id=%s workspace_id=%s "
+            "reason=workspace_not_authorized",
+            user_id.strip(),
+            workspace_id.strip(),
+        )
+
+        raise _authentication_error(
+            "Invalid authenticated principal."
+        )
+
     principal = AuthenticatedPrincipal(
-        user_id=user_id.strip(),
-        role=role,
-        permissions=get_permissions(role),
+        user_id=authorization.token_subject,
+        workspace_id=(
+            workspace_context.workspace_id
+        ),
+        role=authorization.canonical_role,
+        permissions=authorization.permissions,
         token_id=(
-            str(payload["jti"]).strip()
-            if payload.get("jti")
+            str(
+                payload["jti"]
+            ).strip()
+            if payload.get(
+                "jti"
+            )
             else None
         ),
     )
 
     authentication_logger.info(
         "authentication_granted "
-        "user_id=%s role=%s token_id=%s",
+        "user_id=%s workspace_id=%s "
+        "role=%s token_id=%s",
         principal.user_id,
+        principal.workspace_id,
         principal.role,
-        principal.token_id or "not-recorded",
+        principal.token_id
+        or "not-recorded",
     )
 
     return principal
-
 
 def get_current_user(
     principal: Annotated[

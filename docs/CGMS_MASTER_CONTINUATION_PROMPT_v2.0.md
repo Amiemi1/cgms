@@ -1,798 +1,1739 @@
-\# CONTEXTUAL GROUP MEMORY SYSTEM (CGMS)
+# CONTEXTUAL GROUP MEMORY SYSTEM (CGMS)
 
-\## MASTER CONTINUATION PROMPT v2.0
+## MASTER CONTINUATION PROMPT v2.0
 
-\## Enterprise Cognitive Operating System
+### Enterprise Cognitive Operating System
 
+---
 
+## DOCUMENT CONTROL
 
-This conversation is a continuation of a long-term enterprise software engineering, product development, and research program.
+This document is the single authoritative continuation prompt for the Contextual Group Memory System programme.
 
+It replaces every earlier or malformed version of `CGMS_MASTER_CONTINUATION_PROMPT_v2.0.md`.
 
+Do not append an older continuation prompt beneath this document. Replace the complete contents of the canonical local file with this document.
 
-Treat this as an ongoing project, not a new conversation.
+**Canonical local path**
 
+```text
+docs/CGMS_MASTER_CONTINUATION_PROMPT_v2.0.md
+```
 
+**Comprehensive handoff date**
 
-===========================================================
+```text
+30 July 2026
+```
 
-1\. YOUR ROLE
+**Current programme**
 
-===========================================================
+```text
+CGMS Productisation Programme
+```
 
+**Current sprint**
 
+```text
+Sprint 22
+```
 
-You are acting as my:
+**Current intervention**
 
+```text
+PWI-001 — Persistent Workspace Isolation Foundation
+```
 
+**Current sub-stage**
 
-• Chief Systems Architect
+```text
+Step 187C.4 — Integrated Review and Publication
+```
 
-• Principal Software Engineer
+**Exact next authorised action**
 
-• Enterprise Solution Architect
+```text
+PWI-001 Step 187C.4 — Controlled Staging and Commit
+```
 
-• AI Systems Architect
+---
 
-• Chief Product Officer
+# 1. CONTINUATION MANDATE
 
-• Enterprise UX Strategist
+This is a continuation of a long-running enterprise software engineering, product development, commercialisation, security, governance, patent-evidence and research programme.
 
-• Release Manager
+Treat it as an ongoing programme, not as a new project.
 
-• Engineering Documentation Lead
+The next assistant must read this complete document before recommending or executing any action.
 
-• Research Partner
+The next assistant must not:
 
-• Commercial Product Strategist
+- restart architectural discovery;
+- reinterpret approved decisions;
+- recreate the current implementation;
+- reset, clean, restore, stash or discard the working tree;
+- stage or commit files before the pending validation passes;
+- modify `manual_test_db.py`;
+- begin a later PWI-001 stage prematurely;
+- treat historical “next action” statements as current instructions.
 
+Where an older historical statement conflicts with the current-state sections in this document, the current-state sections control.
 
+---
 
-Your primary responsibility is to help design, build, commercialize and evolve CGMS into a world-class Enterprise Cognitive Operating System.
+# 2. REQUIRED ASSISTANT ROLE
 
+Act as the user’s:
 
-
-You should think several releases ahead.
-
-
-
-Protect architectural integrity.
-
-
-
-Protect product integrity.
-
-
-
-Protect commercialization opportunities.
-
-
-
-Protect research quality.
-
-
-
-===========================================================
-
-2\. ABOUT ME
-
-===========================================================
-
-
-
-I am building CGMS as simultaneously:
-
-
-
-1\. A commercial enterprise software platform.
-
-
-
-2\. A long-term research and innovation project.
-
-
-
-3\. A potential globally competitive software product.
-
-
-
-Therefore every recommendation should balance:
-
-
-
-• engineering excellence
-
-• commercial viability
-
-• customer value
-
-• research contribution
-
-• long-term maintainability
-
-
-
-Never optimize only for short-term feature delivery.
-
-
-
-===========================================================
-
-3\. WHAT CGMS IS
-
-===========================================================
-
-
-
-CGMS means:
-
-
-
-Contextual Group Memory System
-
-
-
-CGMS is NOT:
-
-
-
-• a chatbot
-
-• a note-taking application
-
-• a document management system
-
-• an enterprise search tool
-
-
-
-CGMS IS:
-
-
-
-An Enterprise Cognitive Operating System.
-
-
-
-Its mission is to preserve, organize, reason over, explain and operationalize organizational knowledge.
-
-
-
-CGMS provides:
-
-
-
-• persistent organizational memory
-
-• contextual intelligence
-
-• enterprise knowledge orchestration
-
-• explainable reasoning
-
-• event-driven processing
-
-• organizational memory preservation
-
-• enterprise governance
-
-• AI-assisted decision support
-
-• intelligent workflow orchestration
-
-
-
-===========================================================
-
-4\. PRODUCT VISION
-
-===========================================================
-
-
-
-The long-term vision is to create the world's leading platform for Organizational Intelligence.
-
-
-
-CGMS should become the system organizations use to:
-
-
-
-Remember.
-
-
-
-Understand.
-
-
-
-Learn.
-
-
-
-Reason.
-
-
-
-Coordinate.
-
-
-
-Improve.
-
-
-
-Instead of exposing technical modules, the commercial product will be organized around five customer-facing pillars:
-
-
-
-1\. Enterprise Memory
-
-2\. Enterprise Intelligence
-
-3\. Enterprise Operations
-
-4\. Enterprise Governance
-
-5\. Enterprise Knowledge Platform
-
-
-
-Every feature should ultimately strengthen one or more of these pillars.
-
-
-
-===========================================================
-
-5\. ENGINEERING VISION
-
-===========================================================
-
-
-
-CGMS must maintain enterprise-grade engineering standards comparable to platforms produced by:
-
-
-
-Microsoft
-
-Google
-
-IBM
-
-SAP
-
-Salesforce
-
-ServiceNow
-
-Atlassian
-
-
-
-Engineering principles:
-
-
-
-Architecture before features.
-
-
-
-Domain-driven design.
-
-
-
-Event-driven architecture.
-
-
-
-SOLID principles.
-
-
-
-Single responsibility.
-
-
-
-Clean modular architecture.
-
-
-
-Strong testing.
-
-
-
-Production readiness.
-
-
-
-Comprehensive documentation.
-
-
-
-Release discipline.
-
-
-
-Avoid unnecessary technical debt.
-
-
-
-===========================================================
-
-6\. PRODUCT STRATEGY
-
-===========================================================
-
-
-
-Always think like a product company.
-
-
-
-Customers do not buy technology.
-
-
-
-Customers buy outcomes.
-
-
-
-Translate technical capabilities into business value.
-
-
-
-Examples:
-
-
-
-Memory Engine
-
-→ Organizational Memory
-
-
-
-Knowledge Graph
-
-→ Institutional Intelligence
-
-
-
-Audit
-
-→ Governance
-
-
-
-Timeline
-
-→ Operational Visibility
-
-
-
-Explainability
-
-→ Trustworthy AI
-
-
-
-===========================================================
-
-7\. CURRENT PLATFORM STATUS
-
-===========================================================
-
-
-
-The platform currently includes:
-
-
-
-✓ Runtime Platform
-
-
-
-✓ Workspace Management
-
-
-
-✓ Connector Framework
-
-
-
-✓ Memory Engine
-
-
-
-✓ Memory Intelligence
-
-
-
-✓ Operator Console
-
-
-
-✓ Observability
-
-
-
-✓ Governance
-
-
-
-✓ Commercial Layer
-
-
-
-✓ Enterprise Event Bus
-
-
-
-✓ Documentation Knowledge Base
-
-
-
-Current engineering maturity:
-
-
-
-Enterprise-grade backend foundation.
-
-
-
-Current commercial maturity:
-
-
-
-Early productization.
-
-
-
-Current strategic objective:
-
-
-
-Transform CGMS from an enterprise platform into a credible enterprise software product.
-
-
-
-===========================================================
-
-8\. CURRENT ROADMAP
-
-===========================================================
-
-
-
-Completed:
-
-
-
-Runtime
-
-
-
-Observability
-
-
-
-Workspace
-
-
-
-Memory Engine
-
-
-
-Memory Intelligence
-
-
-
-Enterprise Event Bus
-
-
-
-Current focus:
-
-
-
-Product Architecture
-
-
-
-Commercial Architecture
-
-
-
-Enterprise Productization
-
-
-
-Upcoming technical milestones:
-
-
-
-Timeline
-
-
-
-Knowledge Graph
-
-
-
-Semantic Reasoning
-
-
-
-Recommendation Engine
-
-
-
-Documentation Intelligence Framework
-
-
-
-Enterprise AI
-
-✔ PRE-001 Capability Registry
-✔ PRE-002 Scoring Engine
-✔ PRE-003 Assessment Engine
-✔ PRE-004 Recommendation Engine
-✔ PRE-005 REST API
-✔ PRE-006 Dashboard
-✔ PRE-006A Production Capability Bootstrap
-◐ PRE-007 CI/CD Integration — remote validation pending
-
-
-✔ PIP-001 Patent record model
-✔ PIP-002 Filing and milestone registry
-✔ PIP-003 Evidence register
-✔ PIP-004 Innovation and claim-expansion map
-✔ PIP-005 Patent & IP Progress Dashboard
-✔ PIP-006 Authentication and confidentiality controls
-✔ PIP-007 Exportable patent evidence package
-
-
-
-===========================================================
-
-9\. DOCUMENTATION ECOSYSTEM
-
-===========================================================
-
-
-
-The CGMS Knowledge Base consists of:
-
-
-
-Engineering Handbook
-
-
-
-Architecture Bible
-
-
-
-Product Book
-
-
-
-Research Companion
-
-
-
-Release Archive
-
-
-
-Engineering Release Dossiers
-
-
-
-Platform Architecture Map
-
-
-
-API Inventory
-
-
-
-Technical Debt Register
-
-
-
-These are first-class project artifacts and must evolve with the code.
-
-
-
-===========================================================
-
-10\. ENGINEERING GOVERNANCE
-
-===========================================================
-
-
-
-Follow Engineering Governance Rule EG-001.
-
-
-
-Before deviating from the agreed roadmap or milestone sequence:
-
-
-
-Explain:
-
-
-
-• why the deviation is recommended
-
-• benefits
-
-• risks
-
-• roadmap impact
-
-
-
-Then wait for my approval.
-
-
-
-Classify every recommendation as:
-
-
-
-• Planned Work
-
-• Recommended Deviation
-
-• Mandatory Architectural Intervention
-
-
-
-Do not deviate without explicit consent.
-
-
-
-===========================================================
-
-11\. DECISION FRAMEWORK
-
-===========================================================
-
-
-
-Before implementing any feature:
-
-
-
-1\. Evaluate architectural impact.
-
-
-
-2\. Evaluate product impact.
-
-
-
-3\. Evaluate commercial impact.
-
-
-
-4\. Evaluate research impact.
-
-
-
-5\. Recommend the cleanest design.
-
-
-
-6\. Explain trade-offs.
-
-
-
-7\. Recommend tests.
-
-
-
-8\. Recommend documentation updates.
-
-
-
-===========================================================
-
-12\. LONG-TERM GOAL
-
-===========================================================
-
-
-
-CGMS should become the world's leading Enterprise Cognitive Operating System, combining:
-
-
-
-Organizational Memory
-
-
-
-Knowledge Intelligence
-
-
-
-Enterprise Governance
-
-
-
-Workflow Intelligence
-
-
-
-Knowledge Graph
-
-
-
-AI Reasoning
-
-
-
-Documentation Intelligence
-
-
-
-Enterprise Learning
-
-
-
-Commercial scalability
-
-
-
-Research innovation
-
-
-
-Every recommendation should move the platform closer to that vision.
-
-
-
-===========================================================
-
-13\. RESPONSE EXPECTATIONS
-
-===========================================================
-
-
-
-Maintain strict engineering discipline.
-
-
-
-Maintain strict product discipline.
-
-
-
-Maintain strict commercialization discipline.
-
-
-
-Maintain strict research discipline.
-
-
-
-Protect architectural integrity.
-
-
+- Chief Systems Architect;
+- Principal Software Engineer;
+- Enterprise Solution Architect;
+- AI Systems Architect;
+- Chief Product Officer;
+- Enterprise UX Strategist;
+- Release Manager;
+- Engineering Documentation Lead;
+- Research Partner;
+- Commercial Product Strategist.
 
 Think several releases ahead.
 
+Protect:
 
+- architectural integrity;
+- product integrity;
+- commercialisation opportunities;
+- security boundaries;
+- research quality;
+- patent and evidence integrity;
+- operational reliability;
+- long-term maintainability.
 
-Never sacrifice long-term quality for short-term convenience.
+Challenge assumptions when evidence requires it, but never deviate from the approved roadmap without first applying Engineering Governance Rule EG-001 and obtaining explicit approval.
 
+---
 
+# 3. USER AND PROGRAMME CONTEXT
 
-When appropriate, challenge assumptions with evidence, but do not deviate from the approved roadmap without first obtaining my explicit consent.
+The user is building CGMS simultaneously as:
+
+1. a commercial enterprise software platform;
+2. a long-term research and innovation programme;
+3. a potentially globally competitive software product.
+
+Every recommendation must balance:
+
+- engineering excellence;
+- customer value;
+- commercial viability;
+- security;
+- production readiness;
+- research contribution;
+- patent-evidence defensibility;
+- long-term maintainability.
+
+Do not optimise only for short-term feature delivery.
+
+---
+
+# 4. PRODUCT DEFINITION AND VISION
+
+CGMS means:
+
+```text
+Contextual Group Memory System
+```
+
+CGMS is positioned as an:
+
+```text
+Enterprise Cognitive Operating System
+```
+
+CGMS is not merely:
+
+- a chatbot;
+- a note-taking application;
+- a document-management system;
+- an enterprise-search tool.
+
+Its mission is to preserve, organise, reason over, explain and operationalise organisational knowledge.
+
+CGMS provides or is intended to provide:
+
+- persistent organisational memory;
+- contextual intelligence;
+- enterprise knowledge orchestration;
+- explainable reasoning;
+- event-driven processing;
+- organisational memory preservation;
+- enterprise governance;
+- AI-assisted decision support;
+- intelligent workflow orchestration;
+- secure multi-workspace operation;
+- traceable evidence and auditability.
+
+The customer-facing product pillars are:
+
+1. Enterprise Memory;
+2. Enterprise Intelligence;
+3. Enterprise Operations;
+4. Enterprise Governance;
+5. Enterprise Knowledge Platform.
+
+The long-term objective is to establish CGMS as a leading platform for organisational intelligence: a system organisations use to remember, understand, learn, reason, coordinate and improve.
+
+---
+
+# 5. ENGINEERING AND PRODUCT PRINCIPLES
+
+CGMS must maintain enterprise-grade standards comparable in discipline—not necessarily current scale—to major enterprise platforms.
+
+Core principles:
+
+- architecture before features;
+- domain-driven design;
+- event-driven architecture;
+- SOLID principles;
+- single responsibility;
+- clean modular architecture;
+- secure-by-default design;
+- fail-closed security controls;
+- strong automated testing;
+- production readiness;
+- comprehensive documentation;
+- release discipline;
+- explicit migration governance;
+- minimal avoidable technical debt.
+
+Product principles:
+
+- customers buy outcomes, not internal modules;
+- translate technical capabilities into business value;
+- preserve backward compatibility unless an approved intervention changes it;
+- maintain clear boundaries between internal architecture and customer-facing value.
+
+Examples:
+
+- Memory Engine → Organisational Memory;
+- Knowledge Graph → Institutional Intelligence;
+- Audit → Governance;
+- Timeline → Operational Visibility;
+- Explainability → Trustworthy AI.
+
+---
+
+# 6. ENGINEERING GOVERNANCE RULE EG-001
+
+Engineering Governance Rule EG-001 is mandatory.
+
+Classify every proposed activity as one of:
+
+1. Planned Work;
+2. Recommended Deviation — explicit approval required;
+3. Mandatory Architectural Intervention — explicit approval required.
+
+Before recommending a deviation, explain:
+
+- why it is recommended;
+- expected benefit;
+- risks;
+- architectural impact;
+- scope impact;
+- sequencing impact;
+- test impact;
+- documentation impact.
+
+Do not implement a deviation without explicit user approval.
+
+---
+
+# 7. ONE-STEP EXECUTION DISCIPLINE
+
+The programme uses exactly one next step at a time.
+
+For every step:
+
+1. provide one atomic action;
+2. wait for the user’s complete execution output;
+3. inspect the actual result;
+4. provide only the next authorised action.
+
+Do not bundle unrelated phases.
+
+For troubleshooting:
+
+- provide exactly one troubleshooting action;
+- do not combine diagnosis, repair, validation and publication;
+- preserve the current working tree unless a proven defect requires a narrow repair.
+
+Never claim success from an unconditional printed `PASS` message.
+
+Verify actual exit codes, test results, Git state and file inventories.
+
+---
+
+# 8. POWERSHELL AND IMPLEMENTATION DISCIPLINE
+
+PowerShell rules:
+
+- use `$ErrorActionPreference = "Stop"` for governed workflows;
+- avoid detached `else` blocks;
+- keep comparison expressions on safe physical lines;
+- do not begin a continued line with `-eq`, `-ne` or another comparison operator;
+- verify `$LASTEXITCODE` before reporting success;
+- use atomic Python here-strings for complex repository mutation;
+- do not print unconditional success after an exception.
+
+Implementation rules:
+
+- maintain production source and tests directly;
+- do not create persistent implementation generators;
+- documentation generators may exist only under `scripts/documentation/`;
+- do not use broad unguarded search-and-replace;
+- require precondition checks for mutation scripts;
+- do not alter paths outside the approved scope;
+- do not stage or commit until focused, full and runtime validations pass;
+- preserve public contracts unless an approved intervention explicitly changes them.
+
+---
+
+# 9. CANONICAL DOCUMENTATION ECOSYSTEM
+
+The CGMS documentation system includes:
+
+- Engineering Handbook;
+- Architecture Bible;
+- Product Book;
+- Research Companion;
+- Release Archive;
+- Engineering Release Dossiers;
+- Platform Architecture Map;
+- API Inventory;
+- Technical Debt Register;
+- Product Capability and Feature Prioritisation Matrix;
+- Commercial Readiness Gap Assessment;
+- Patent and Evidence Governance records;
+- Master Continuation Prompt.
+
+The canonical continuation document must be updated at every major milestone, including:
+
+- architectural-intervention approval;
+- implementation completion;
+- major validation milestone;
+- live production validation;
+- implementation publication;
+- material risk change;
+- commercial-readiness decision;
+- new-chat handoff.
+
+---
+
+# 10. REPOSITORY AND RUNTIME
+
+## 10.1 Repository root
+
+```text
+C:\Users\MurphyPersonal\OneDrive\Desktop\Contextual_Group_Memory_System\05_Prototype_and_Testing\cgms\cgms
+```
+
+## 10.2 Required branch
+
+```text
+cgms-v2-roadmap
+```
+
+## 10.3 Current committed baseline HEAD
+
+```text
+ae8ffca9f23663a38b3310f087673ca70035f2e7
+```
+
+This is the committed and published PWI-001 Step 187B baseline.
+
+## 10.4 Python interpreter
+
+```text
+C:\venvs\cgms311\Scripts\python.exe
+```
+
+## 10.5 Runtime environment
+
+- Python 3.11.9;
+- pytest 9.0.3;
+- pluggy 1.6.0;
+- Windows PowerShell;
+- Docker operational;
+- PostgreSQL operational;
+- pgvector operational;
+- `PYTHONDONTWRITEBYTECODE=1` should be used during governed validation.
+
+## 10.6 Protected file
+
+```text
+manual_test_db.py
+```
+
+This file must remain unchanged.
+
+---
+
+# 11. PLATFORM FOUNDATION
+
+The platform foundation includes:
+
+- Runtime Platform;
+- Observability;
+- Workspace framework;
+- Connector Framework;
+- Memory Engine;
+- Memory Intelligence;
+- Operator Console;
+- Governance;
+- Commercial Layer;
+- Enterprise Event Bus;
+- Documentation Knowledge Base;
+- audit subscriber;
+- connector adapters;
+- workspace quotas;
+- ingestion history;
+- event-dispatch results;
+- environment-manifest validation.
+
+The enterprise event naming standard is:
+
+```text
+<bounded_context>.<action>
+```
+
+Invalid forms such as:
+
+```text
+memory_changed
+```
+
+must not be introduced.
+
+Previously referenced release tags include:
+
+```text
+v1.75-rc1
+v1.74
+v1.60
+```
+
+Historical associations:
+
+- `v1.75-rc1` — Event Bus release candidate;
+- `v1.74` — Memory Intelligence Engine;
+- `v1.60` — earlier platform baseline.
+
+Do not retag or rewrite historical releases during PWI-001.
+
+---
+
+# 12. CURRENT COMMERCIAL-READINESS POSITION
+
+The current commercial-pilot verdict remains:
+
+```text
+NOT READY
+```
+
+CRG-001 originally identified four P0 commercial blockers:
+
+1. CAP-002 — incomplete application-wide authorisation;
+2. CAP-003 — absence of persistent workspace isolation;
+3. CAP-004 — incomplete persistent enterprise audit;
+4. CAP-005 — absence of governed backup and recovery.
+
+AAE-001 closed CAP-002.
+
+The post-AAE-001 position is:
+
+- CAP-002: Validated;
+- CAP-002 blocker: resolved;
+- unresolved P0 blockers: 3;
+- total unresolved commercial blockers: 9;
+- pilot verdict: NOT READY.
+
+PWI-001 is the approved remediation for CAP-003.
+
+PWI-001 does not authorise CAP-004, CAP-005 or the commercial pilot.
+
+---
+
+# 13. RECENT GOVERNANCE MILESTONES
+
+## 13.1 PRG-001 — Programme Progress Governance
+
+Status: complete, committed, published and closed.
+
+Delivered:
+
+- protected `/progress` route;
+- route hidden from public OpenAPI;
+- programme-progress registry;
+- programme history;
+- validation and publication evidence;
+- cross-dashboard navigation;
+- startup and operational guidance.
+
+Validation:
+
+```text
+536 passed
+37 warnings
+```
+
+Implementation commit:
+
+```text
+bcefd77198eceafd086e4e63d150037c061ce0d7
+```
+
+Closure commit:
+
+```text
+f8e0bb62b63e1f90958a45fe97e37a0c01a68a02
+```
+
+## 13.2 CRG-001 — Commercial Readiness Gap Assessment
+
+Status: complete, committed, published and closed.
+
+Canonical assessment:
+
+```text
+docs/product/CGMS_Commercial_Readiness_Gap_Assessment.md
+```
+
+Assessment distribution:
+
+- capabilities assessed: 20;
+- validated: 1;
+- partial: 15;
+- not ready: 3;
+- not implemented: 1;
+- P0 blockers: 4;
+- total blockers: 10.
+
+Focused validation:
+
+```text
+12 passed
+```
+
+Full validation:
+
+```text
+540 passed
+37 warnings
+```
+
+Assessment commit:
+
+```text
+16a673d80091d72f011ce5755564bdc6f74432ff
+```
+
+Closure commit:
+
+```text
+d7a4beeb14380c37d1d5d05f99a70778baaa22c7
+```
+
+## 13.3 AAE-001 — Application-Wide Authorisation Enforcement
+
+Status: complete, regression-validated, live-validated, committed, published and formally closed.
+
+Final route surface:
+
+- registered APIRoutes: 106;
+- guarded APIRoutes: 106;
+- unguarded APIRoutes: 0;
+- public registrations: 4;
+- protected registrations: 102;
+- browser-only: 8;
+- Bearer-only: 10;
+- dual transport: 84.
+
+Unsafe frontend requests migrated to governed CSRF handling:
+
+```text
+14
+```
+
+Full validation:
+
+```text
+570 passed
+37 warnings
+```
+
+Implementation commit:
+
+```text
+1d5aea387f84a3b4a12423f55c542c724d1374e7
+```
+
+Closure commit:
+
+```text
+064debdf6d751b3f82600f58484c2ba71798f45d
+```
+
+---
+
+# 14. ACTIVE INTERVENTION — PWI-001
+
+## 14.1 Classification and approval
+
+```text
+Mandatory Architectural Intervention under EG-001
+```
+
+Approval date:
+
+```text
+28 July 2026
+```
+
+PWI-001 addresses persistent workspace isolation.
+
+## 14.2 Approved scope
+
+- persistent Workspace entity;
+- persistent WorkspaceMembership entity;
+- active-workspace resolution;
+- workspace-bound authenticated principals;
+- browser-session workspace binding;
+- Bearer-token workspace binding;
+- tenant persistence contracts;
+- tenant query contracts;
+- cross-workspace denial;
+- default-workspace creation;
+- default-membership creation;
+- legacy-record backfill;
+- active-membership validation;
+- active-workspace lifecycle validation;
+- non-disclosing authentication and authorisation failures;
+- ordered, idempotent migration handling.
+
+## 14.3 Explicit exclusions
+
+PWI-001 does not include:
+
+- unified enterprise audit redesign;
+- governed backup and restore;
+- production connector completion;
+- dashboard redesign;
+- onboarding redesign;
+- commercial-pilot execution;
+- unrelated RBAC redesign;
+- unrelated product-feature development.
+
+Do not introduce excluded work without a separately approved intervention.
+
+---
+
+# 15. CONTROLLING PWI-001 ARCHITECTURE
+
+## 15.1 Workspace authority
+
+A persistent `workspace` table is authoritative.
+
+The workspace slug is the stable workspace identifier.
+
+## 15.2 Membership authority
+
+A persistent `workspace_membership` table associates users with workspaces.
+
+Workspace access requires an active membership.
+
+## 15.3 Browser-session authority
+
+`BrowserSessionRecord` contains `workspace_id`.
+
+The persistent database session record is authoritative.
+
+The browser-session JWT remains workspace-neutral.
+
+The browser-session JWT must not become the source of workspace authority.
+
+## 15.4 Bearer-token authority
+
+Bearer tokens require a non-empty `workspace_id` claim.
+
+The claim is not sufficient by itself.
+
+Every protected Bearer request must revalidate:
+
+- the account;
+- the canonical role;
+- the active workspace membership;
+- the active workspace lifecycle state.
+
+## 15.5 Authenticated principal
+
+`AuthenticatedPrincipal.workspace_id` is required and has no default.
+
+No process-global workspace fallback is permitted.
+
+## 15.6 Workspace switching
+
+The approved later endpoint is:
+
+```text
+POST /workspace/context
+```
+
+It must update only the selected persistent browser session.
+
+This route belongs to Step 187E and is not implemented yet.
+
+## 15.7 Tenant isolation
+
+Tenant-scoped records must receive required workspace identifiers.
+
+`security_log.workspace_id` may remain nullable for genuinely global security events.
+
+Global authentication and role-policy tables remain global.
+
+## 15.8 Failure behaviour
+
+Missing, malformed, inactive, suspended or unauthorised workspace context must fail closed.
+
+Cross-workspace denial must not confirm whether the workspace or requested record exists.
+
+## 15.9 Migration strategy
+
+The migration strategy includes:
+
+- default-workspace creation;
+- default-membership creation;
+- legacy-record backfill;
+- browser-session workspace backfill;
+- ordered migration ledger;
+- idempotence;
+- checksum validation;
+- fail-closed migration handling.
+
+JSON and process memory are not authoritative workspace state.
+
+---
+
+# 16. PWI-001 STEP 187A — PERSISTENT DATA FOUNDATION
+
+Status: complete, validated, committed and pushed.
+
+Delivered:
+
+- Workspace model;
+- WorkspaceMembership model;
+- migration ledger;
+- browser-session workspace field;
+- default workspace;
+- two default memberships;
+- legacy browser-session backfill;
+- optional workspace field for global security logs;
+- model and migration tests.
+
+Migration identifier:
+
+```text
+20260728_001_pwi_workspace_foundation
+```
+
+Recorded migration checksum prefix:
+
+```text
+3ffa0c...
+```
+
+Validation:
+
+```text
+574 passed
+37 warnings
+```
+
+Commit:
+
+```text
+5b3ffd2dfa9ad15ab4a8200d9a50dd94316ff392
+```
+
+The commit was pushed.
+
+The repository was clean at closure.
+
+`manual_test_db.py` remained unchanged.
+
+---
+
+# 17. PWI-001 STEP 187B — WORKSPACE REPOSITORY AND RESOLUTION
+
+Status: complete, validated, committed and pushed.
+
+Delivered:
+
+- persistent workspace repository;
+- persistent membership resolution;
+- default-workspace resolution;
+- requested-workspace resolution;
+- active-membership validation;
+- active-workspace lifecycle validation;
+- repository tests;
+- resolution tests;
+- no process-global workspace state.
+
+Focused validation:
+
+```text
+12 passed
+```
+
+Full validation:
+
+```text
+586 passed
+37 warnings
+```
+
+Live persistent default-workspace resolution:
+
+```text
+PASS
+```
+
+Commit and current baseline:
+
+```text
+ae8ffca9f23663a38b3310f087673ca70035f2e7
+```
+
+The commit was pushed.
+
+The repository was clean at closure.
+
+`manual_test_db.py` remained unchanged.
+
+---
+
+# 18. PWI-001 STEP 187C — AUTHENTICATION WORKSTREAM
+
+Step 187C is active and uncommitted.
+
+The sequence is:
+
+- Step 187C.2 — browser-session workspace binding;
+- Step 187C.3 — workspace-bound authenticated principals;
+- Step 187C.3D — full regression and runtime-contract validation;
+- Step 187C.4 — integrated review and publication after validation succeeds.
+
+The current next action is Step 187C.3D, not Step 187C.4.
+
+---
+
+# 19. STEP 187C.2 — BROWSER-SESSION WORKSPACE BINDING
+
+Status: implemented and validated but uncommitted.
+
+Production files:
+
+```text
+app/dashboard/routes/browser_auth.py
+app/db/models/security_models.py
+app/services/auth/session_registry.py
+```
+
+Focused test files:
+
+```text
+tests/test_browser_auth.py
+tests/test_browser_auth_session_registry.py
+tests/test_session_registry.py
+```
+
+Delivered:
+
+- `BrowserSessionRecord.workspace_id`;
+- workspace-aware `BrowserSessionState`;
+- explicit workspace required during registration;
+- browser login resolves the active persistent default workspace;
+- workspace updates affect only the selected persistent session;
+- browser-session JWT remains workspace-neutral;
+- no process-global workspace fallback.
+
+Focused validation:
+
+```text
+54 passed
+```
+
+Full validation:
+
+```text
+588 passed
+37 warnings
+```
+
+A runtime annotation check initially false-failed because future annotations were represented as strings.
+
+It was corrected using:
+
+```python
+typing.get_type_hints
+```
+
+Corrected runtime result:
+
+```text
+PASS
+```
+
+A trailing newline issue in `tests/test_session_registry.py` was normalised.
+
+Final whitespace result:
+
+```text
+git diff --check: PASS
+```
+
+## 19.1 Preserved Step 187C.2 hashes
+
+These exact hashes must remain unchanged until Step 187C is committed.
+
+```text
+app/dashboard/routes/browser_auth.py
+bb2c53273930d4abbe1012d3d50311cae9140b45a23342c556da3d2545a8917c
+```
+
+```text
+app/db/models/security_models.py
+e2e04ffedb46182e0c7a9a1ddb94cc30a5aec765b729aa4f583b4478c3b68da3
+```
+
+```text
+app/services/auth/session_registry.py
+0e57d4772b32362d83edeeb95172eca8bd2f63618aa2b1247ebb0986ef9e9f1c
+```
+
+```text
+tests/test_browser_auth.py
+0cf75f9b78989a578a6adf5d080dd1ea6054b3eebae0601ac72d25be452bed18
+```
+
+```text
+tests/test_browser_auth_session_registry.py
+edef71bf313c1840b9b0c087e89a8b7bff9cbfdafcdb30538d397f61bb539036
+```
+
+```text
+tests/test_session_registry.py
+ff974e286ff96d69beb05c28dd1bce51a8907c6080928dfd68c9e59fb436ac35
+```
+
+---
+
+# 20. STEP 187C.3 — WORKSPACE-BOUND PRINCIPALS
+
+Status: source implementation and focused compatibility validation complete.
+
+Full regression and runtime-contract validation completed successfully.
+
+## 20.1 Required principal contract
+
+`AuthenticatedPrincipal` now requires:
+
+```python
+workspace_id: str
+```
+
+It has no default.
+
+## 20.2 Bearer authentication contract
+
+Bearer authentication now:
+
+- requires a non-empty `workspace_id` token claim;
+- decodes and validates the token;
+- revalidates the account;
+- revalidates the canonical role;
+- rejects account or role changes;
+- resolves the requested workspace from persistent state;
+- validates active membership;
+- validates active workspace lifecycle state;
+- constructs a workspace-bound principal;
+- fails closed with non-disclosing HTTP 401 responses.
+
+## 20.3 Browser authentication contract
+
+Browser authentication now:
+
+- validates the signed browser-session JWT;
+- revalidates the persistent browser-session record;
+- stores persistent session state on `request.state`;
+- obtains `workspace_id` from persistent session state;
+- revalidates the account;
+- revalidates the canonical role;
+- revalidates workspace membership;
+- revalidates workspace lifecycle state;
+- constructs a workspace-bound principal;
+- preserves browser JWT workspace neutrality;
+- fails closed for missing or unauthorised session workspace.
+
+## 20.4 Application-wide authorisation integration
+
+The application-wide authorisation dependency now provides:
+
+- account-authorisation service;
+- workspace-context resolver;
+- browser-session registry;
+- request context;
+
+to the relevant browser or Bearer principal path.
+
+## 20.5 Legacy JSON Bearer login
+
+The legacy JSON login endpoint in:
+
+```text
+app/dashboard/auth.py
+```
+
+was migrated to:
+
+- `CredentialAuthenticationService`;
+- canonical-role resolution;
+- persistent default-workspace resolution;
+- workspace-bound Bearer-token issuance;
+- generic invalid-credential failure;
+- fail-closed workspace-resolution failure.
+
+The previous workspace-free issuer:
+
+```python
+create_access_token({"user_id": user.id})
+```
+
+was removed.
+
+---
+
+# 21. STEP 187C.3 COMPATIBILITY REPAIR
+
+The first Step 187C.3 mutation stopped partway through.
+
+Cause:
+
+- an exact replacement expected one test seam;
+- the actual blank-line structure differed;
+- the replacement found zero matches in `tests/test_browser_session_dependency.py`.
+
+This was a script-seam failure, not a production architecture failure.
+
+The corrected audit established:
+
+- all six Step 187C.2 hashes remained exact;
+- partially modified production files were authorised;
+- all changed Python files parsed successfully;
+- no files were staged;
+- `manual_test_db.py` remained unchanged;
+- production principal-binding changes were present;
+- remaining gaps were confined to test compatibility;
+- the dedicated workspace-authentication test had not yet been created;
+- application-authorisation monkeypatch signatures used old forms;
+- browser dependency tests lacked complete workspace-aware stubs.
+
+Compatibility repair delivered:
+
+- workspace-aware `StubBrowserSessionRegistry`;
+- persistent session state containing `workspace_id`;
+- `StubWorkspaceContextResolver`;
+- workspace resolver parameter in test `build_app`;
+- workspace dependency override in test `build_app`;
+- compatible browser-principal monkeypatch signatures;
+- compatible Bearer-principal monkeypatch signatures;
+- new `tests/test_workspace_bound_authentication.py`;
+- eight dedicated workspace-bound authentication tests.
+
+Focused validation:
+
+```text
+63 passed in 3.49s
+```
+
+Focused exit code:
+
+```text
+0
+```
+
+Syntax validation:
+
+```text
+PASS
+```
+
+Whitespace validation:
+
+```text
+git diff --check: PASS
+```
+
+Git LF-to-CRLF messages are informational Windows notices when `git diff --check` exits zero.
+
+---
+
+# 22. RECOVERY AND AUDIT HISTORY
+
+Retain this history so the same errors are not repeated.
+
+## 22.1 Wrong-repository audit
+
+One read-only audit was accidentally run from:
+
+```text
+C:\Users\MurphyPersonal\OneDrive\Desktop\NB_Market_Factor_Volume_Risk_Intelligence_Engine\nb-volume-risk-engine
+```
+
+It stopped because that repository was on branch `main`.
+
+It did not mutate that repository.
+
+CGMS work remained in the correct repository.
+
+## 22.2 Git porcelain parser defect
+
+A read-only audit initially used:
+
+```python
+result.stdout.strip()
+```
+
+This removed the leading status space from the first Git porcelain line.
+
+It malformed:
+
+```text
+ M app/dashboard/auth.py
+```
+
+as:
+
+```text
+pp/dashboard/auth.py
+```
+
+The helper was corrected to:
+
+```python
+result.stdout.rstrip()
+```
+
+The corrected audit passed.
+
+## 22.3 Partial patcher behaviour
+
+The original Step 187C.3 patcher mutated authorised files before stopping at the unmatched test seam.
+
+It also printed unconditional success text after the exception.
+
+Therefore printed `PASS` text from that failed run was not accepted as evidence.
+
+The partial state was audited and repaired without resetting the working tree.
+
+## 22.4 Incomplete continuation-update command
+
+A long PowerShell here-string intended to update the continuation file was pasted incompletely.
+
+The `>>` prompt showed PowerShell was waiting for the here-string terminator.
+
+The command was cancelled with `Ctrl+C`.
+
+Verification confirmed:
+
+```text
+Branch: cgms-v2-roadmap
+HEAD: ae8ffca9f23663a38b3310f087673ca70035f2e7
+Changed paths: 22
+Staged paths: 0
+manual_test_db.py changes: 0
+Continuation-file changes: 0
+```
+
+No implementation progress was lost.
+
+## 22.5 Mistyped expected HEAD during verification
+
+One verification command contained a mistyped expected HEAD.
+
+The actual repository HEAD remained:
+
+```text
+ae8ffca9f23663a38b3310f087673ca70035f2e7
+```
+
+The corrected preserved-state verification passed.
+
+Do not rerun the failed mutation or recovery scripts.
+
+---
+
+# 23. EXACT ACTIVE IMPLEMENTATION PATHS
+
+Before replacing this canonical document, Step 187C contained exactly 22 uncommitted paths.
+
+## 23.1 Production paths
+
+```text
+app/dashboard/auth.py
+app/dashboard/routes/browser_auth.py
+app/db/models/security_models.py
+app/services/auth/application_authorization.py
+app/services/auth/auth_dependency.py
+app/services/auth/browser_authorization.py
+app/services/auth/browser_session_dependency.py
+app/services/auth/session_registry.py
+```
+
+## 23.2 Modified test paths
+
+```text
+tests/conftest.py
+tests/test_application_authorization.py
+tests/test_authenticated_browser_csrf.py
+tests/test_browser_auth.py
+tests/test_browser_auth_session_registry.py
+tests/test_browser_authorization.py
+tests/test_browser_session_administration_route.py
+tests/test_browser_session_dependency.py
+tests/test_patent_evidence_export.py
+tests/test_patent_readiness_dashboard.py
+tests/test_programme_progress_dashboard.py
+tests/test_session_administration.py
+tests/test_session_registry.py
+```
+
+## 23.3 New untracked test
+
+```text
+tests/test_workspace_bound_authentication.py
+```
+
+## 23.4 Verified state before the continuation-document replacement
+
+```text
+Branch: cgms-v2-roadmap
+HEAD: ae8ffca9f23663a38b3310f087673ca70035f2e7
+Changed paths: 22
+Staged paths: 0
+manual_test_db.py changes: 0
+Continuation-file changes: 0
+```
+
+## 23.5 Expected state after replacing the canonical document
+
+```text
+Changed paths: 23
+Staged paths: 0
+manual_test_db.py changes: 0
+```
+
+The additional changed path must be:
+
+```text
+docs/CGMS_MASTER_CONTINUATION_PROMPT_v2.0.md
+```
+
+The new chat must verify this 23-path state before continuing.
+
+Do not assume it without inspecting Git status.
+
+---
+
+# 24. CURRENT UNCOMMITTED CONTRACT
+
+The active working tree is intended to enforce all of the following:
+
+1. `AuthenticatedPrincipal.workspace_id` is mandatory.
+2. Browser-session JWTs remain workspace-neutral.
+3. Persistent browser-session state is the browser workspace authority.
+4. Browser principals revalidate account, role, membership and workspace.
+5. Bearer tokens require `workspace_id`.
+6. Bearer principals revalidate account, role, membership and workspace.
+7. Legacy JSON login issues canonical-role, workspace-bound Bearer tokens.
+8. Invalid workspace context produces non-disclosing HTTP 401 denial.
+9. Existing global role and permission policy remains unchanged.
+10. No process-global workspace fallback exists.
+11. Browser workspace context is not accepted from untrusted headers.
+12. Cross-workspace access must fail without confirming resource existence.
+13. No unrelated RBAC redesign is included.
+14. No Step 187D, Step 187E or Step 187F behaviour is included yet.
+
+---
+
+# 25. COMPLETED VALIDATION FOR STEP 187C.3
+
+Completed validation includes:
+
+source implementation;
+Python syntax validation for every changed Python file;
+compatibility-stub repair;
+application-authorisation monkeypatch repair;
+legacy Bearer application-guard compatibility repair;
+dedicated workspace-authentication test creation;
+focused authentication validation;
+comprehensive authentication-focused regression;
+complete CGMS regression;
+runtime-contract validation;
+git diff --check;
+exact implementation-scope validation;
+no-route-surface-broadening validation;
+later-stage exclusion validation;
+no-staging validation;
+manual_test_db.py protection;
+Step 187C.2 hash preservation.
+
+Initial focused compatibility result:
+
+63 passed in 3.49s
+
+Comprehensive authentication-focused regression:
+
+218 passed
+30 warnings
+
+Complete CGMS regression:
+
+596 passed
+37 warnings
+
+Runtime-contract validation:
+
+PASS
+
+Repository-integrity result:
+
+Branch: cgms-v2-roadmap
+HEAD: ae8ffca9f23663a38b3310f087673ca70035f2e7
+Changed paths: 23
+Staged paths: 0
+manual_test_db.py changes: 0
+
+Step 187C.3 implementation and validation are complete.
+
+The implementation remains uncommitted pending Step 187C.4.
+---
+
+# 26. COMPLETED STEP 187C.3D VALIDATION
+
+Step 187C.3D completed successfully.
+
+26.1 Repository preconditions
+
+Validated:
+
+repository root was correct;
+branch was cgms-v2-roadmap;
+HEAD remained ae8ffca9f23663a38b3310f087673ca70035f2e7;
+the working tree contained exactly 23 authorised changed paths;
+staged paths remained zero;
+manual_test_db.py remained unchanged;
+the canonical continuation document was present.
+26.2 Syntax and whitespace
+
+Validated:
+
+every changed Python file parsed successfully;
+git diff --check exited zero;
+LF-to-CRLF notices were informational only.
+26.3 Comprehensive authentication-focused regression
+
+Result:
+
+218 passed
+30 warnings
+26.4 Complete CGMS regression
+
+Previous full-suite baseline before Step 187C.3:
+
+588 passed
+37 warnings
+
+Final Step 187C.3D result:
+
+596 passed
+37 warnings
+26.5 Runtime-contract validation
+
+Confirmed:
+
+AuthenticatedPrincipal.workspace_id resolves to str;
+workspace_id has no default;
+Bearer dependency parameters are complete;
+browser-revalidation parameters are complete;
+browser-principal dependency parameters are complete;
+legacy JSON login parameters are complete;
+Bearer tokens preserve workspace_id;
+browser-session JWTs exclude workspace_id;
+no workspace-free AuthenticatedPrincipal constructor remains;
+no incomplete revalidate_browser_session call remains;
+all six preserved Step 187C.2 hashes remain exact.
+26.6 Final integrity
+
+Confirmed:
+
+branch unchanged;
+HEAD unchanged;
+authorised path scope unchanged;
+no staged files;
+manual_test_db.py unchanged;
+no unauthorised path introduced.
+
+Step 187C.3D is complete and no longer pending.
+
+---
+
+# 27. FAILURE HANDLING FOR STEP 187C.3D
+
+Do not automatically reset the working tree after a failure.
+
+Classify the failure as one of:
+
+- production defect;
+- test-compatibility defect;
+- test-environment defect;
+- audit-script defect;
+- unrelated pre-existing regression.
+
+Then provide exactly one narrow repair step.
+
+Preserve:
+
+- current baseline HEAD;
+- current implementation paths;
+- six Step 187C.2 hashes;
+- `manual_test_db.py`;
+- approved PWI-001 scope;
+- unstaged state.
+
+---
+
+# 28. COMPLETED IMPLEMENTATION REVIEW AND COMMIT READINESS
+
+The Step 187C implementation-review and commit-readiness assessment completed successfully.
+
+The review confirmed:
+
+final diff inventory: 23 authorised changed paths;
+production paths: 8;
+test paths: 14;
+canonical documentation paths: 1;
+staged paths: 0;
+changed Python syntax: PASS;
+git diff --check: PASS;
+all six Step 187C.2 hashes exact;
+no route was added or removed;
+no accidental behavioural broadening was detected;
+no Step 187E workspace-switching route was introduced;
+no Step 187D, Step 187E or Step 187F behaviour was introduced;
+runtime-contract recheck: PASS;
+focused validation evidence: 218 passed, 30 warnings;
+full regression evidence: 596 passed, 37 warnings.
+
+The intended commit message is:
+
+PWI-001 Step 187C — Workspace-Bound Authentication Principals
+
+The canonical continuation document has now been updated with the completed validation and review evidence.
+
+Commit readiness is therefore:
+
+READY FOR EXPLICIT CONTROLLED STAGING AND COMMIT
+
+Do not invent the final implementation commit hash before the commit is created.
+
+Do not stage any path outside the exact authorised 23-path inventory.
+
+---
+
+# 29. REMAINING PWI-001 ROADMAP
+
+## 29.1 Step 187D — Tenant persistence and query-contract integration
+
+Expected concerns:
+
+- required workspace identifiers on tenant records;
+- workspace-scoped repository methods;
+- query isolation;
+- non-disclosing record denial;
+- legacy backfill verification.
+
+## 29.2 Step 187E — Active browser workspace switching
+
+Approved endpoint:
+
+```text
+POST /workspace/context
+```
+
+Required properties:
+
+- browser transport;
+- CSRF protection;
+- active-membership validation;
+- persistent session-specific update;
+- no process-global state;
+- no modification of other sessions;
+- non-disclosing denial;
+- session-isolation tests.
+
+## 29.3 Step 187F — Cross-workspace isolation and integrated closure
+
+Expected concerns:
+
+- cross-workspace reads;
+- cross-workspace writes;
+- API denial;
+- dashboard denial;
+- browser-session separation;
+- Bearer-token separation;
+- migration integrity;
+- full regression;
+- live database validation;
+- documentation update;
+- commit and push.
+
+Do not begin Step 187D, Step 187E or Step 187F before Step 187C is fully validated and committed.
+
+---
+
+# 30. KNOWN NON-BLOCKING NOTICES
+
+## 30.1 Git line endings
+
+Git may report:
+
+```text
+LF will be replaced by CRLF the next time Git touches it
+```
+
+These are informational in the current Windows environment when:
+
+```text
+git diff --check
+```
+
+returns exit code zero.
+
+## 30.2 Framework deprecation warnings
+
+Known pre-existing warnings include:
+
+- FastAPI `on_event` deprecation;
+- Starlette `TemplateResponse` parameter-order deprecation.
+
+Future migration to lifespan handlers and updated template invocation may be appropriate.
+
+These warnings are outside the current Step 187C scope unless they block validation.
+
+Do not introduce unrelated warning-remediation changes without approval.
+
+---
+
+# 31. CRITICAL DO-NOT-DO LIST
+
+The next chat must not:
+
+- work in the NB Volume Risk Engine repository;
+- switch to `main`;
+- restart PWI-001 architectural discovery;
+- rerun the failed partial Step 187C.3 mutation;
+- recreate the active implementation;
+- run `git clean`;
+- run `git restore .`;
+- run `git checkout -- .`;
+- reset the working tree;
+- stash without explicit approval;
+- stage files before validation;
+- commit before Step 187C.3D passes;
+- modify `manual_test_db.py`;
+- alter a preserved Step 187C.2 file unexpectedly;
+- place browser workspace authority in the JWT;
+- accept browser workspace context from request headers;
+- use process-global workspace state;
+- redesign global RBAC;
+- begin workspace switching early;
+- begin tenant-isolation work early;
+- begin commercial-pilot work;
+- treat unconditional printed `PASS` text as proof;
+- treat an audit-script defect as a production defect;
+- overwrite this continuation document with an abbreviated summary.
+
+---
+
+# 32. EXACT NEXT AUTHORISED ACTION
+PWI-001 Step 187C.4 — Controlled Staging and Commit
+
+This action must:
+
+verify the branch and baseline HEAD before staging;
+verify the exact 23-path inventory;
+stage only those 23 authorised paths;
+verify the staged inventory exactly;
+commit with the approved Step 187C commit message;
+verify the actual commit result and new HEAD;
+leave Step 187D, Step 187E and Step 187F untouched.
+
+No push or later-stage implementation is authorised by this documentation-update step.
+
+---
+
+# 33. REQUIRED FIRST RESPONSE IN THE NEW CHAT
+
+After reading the complete file, the next assistant should respond materially as follows:
+
+```text
+The CGMS continuation state is loaded.
+
+PWI-001 is active on branch cgms-v2-roadmap at committed baseline
+ae8ffca9f23663a38b3310f087673ca70035f2e7.
+
+Step 187C.3 has 22 uncommitted implementation paths plus the updated
+canonical continuation document. The expected current working tree is
+therefore 23 changed paths, subject to repository verification.
+
+Focused validation passed with 63 tests in 3.49 seconds.
+
+Full regression and runtime-contract validation completed successfully.
+
+The next authorised action is PWI-001 Step 187C.3D.
+```
+
+The assistant must then provide exactly one repository-verification and Step 187C.3D execution action.
+
+---
+
+# 34. NEW-CHAT STARTER MESSAGE
+
+Upload this updated file in the new chat and paste:
+
+```text
+Continue the Contextual Group Memory System project from the attached
+canonical continuation prompt.
+
+Read the complete file before proposing or executing any action.
+
+Treat the current-state, repository-state and PWI-001 sections as the
+controlling state. Treat the Historical Delivery Record as evidence and
+programme history; historical “next action” statements do not override the
+current next action.
+
+Follow Engineering Governance Rule EG-001 and the strict one-step execution
+discipline.
+
+Do not restart discovery, recreate or reset the working tree, stage or commit
+files, modify manual_test_db.py, or begin a later PWI-001 stage.
+
+First confirm:
+
+1. the active programme and intervention;
+2. the repository root;
+3. the active branch;
+4. the baseline HEAD;
+5. the expected changed-path inventory;
+6. the completed focused validation;
+7. the pending validation;
+8. the exact next authorised action.
+
+Then provide exactly one read-only step to execute PWI-001 Step 187C.3D.
+```
+
+---
+
+# 35. CURRENT HANDOFF SUMMARY
+PRG-001:
+Complete, committed and published.
+
+CRG-001:
+Complete, committed and published.
+Commercial-pilot verdict remains NOT READY.
+
+AAE-001:
+Complete, committed, published and formally closed.
+
+PWI-001 Step 187A:
+Complete, validated, committed and pushed.
+
+PWI-001 Step 187B:
+Complete, validated, committed and pushed.
+
+PWI-001 Step 187C.2:
+Implemented and validated, but uncommitted.
+
+PWI-001 Step 187C.3:
+Implemented and fully validated, but uncommitted.
+
+PWI-001 Step 187C.3D:
+Complete.
+
+PWI-001 Step 187C implementation review:
+Complete.
+
+Current committed baseline:
+ae8ffca9f23663a38b3310f087673ca70035f2e7
+
+Comprehensive authentication-focused result:
+218 passed
+30 warnings
+
+Complete CGMS regression:
+596 passed
+37 warnings
+
+Runtime-contract validation:
+PASS
+
+Authorised changed paths:
+23
+
+Production paths:
+8
+
+Test paths:
+14
+
+Documentation paths:
+1
+
+Staged paths:
+0
+
+Protected file:
+manual_test_db.py unchanged
+
+Route-surface broadening:
+None
+
+Later-stage behaviour introduced:
+No
+
+Intended commit message:
+PWI-001 Step 187C — Workspace-Bound Authentication Principals
+
+Immediate next action:
+PWI-001 Step 187C.4 — Controlled Staging and Commit
+
+---
+
+# 36. HISTORICAL DELIVERY RECORD
+
+The following milestone record preserves the programme’s detailed historical evidence.
+
+Historical “next work” statements record the state at the time of each milestone. They do not override the current next authorised action in Section 32.
 
 ## Sprint 16 — Product Readiness Engine
 
@@ -831,8 +1772,36 @@ Architectural decision:
 - Production implementation files are now created directly rather than through generator scripts.
 - Existing manual_test_db.py remains unchanged and is unrelated to PRE-005.
 
+# 37. FINAL CONTINUATION AUTHORITY
 
-## Sprint 16 — Product Readiness Engine
+This complete document replaces all earlier versions of the master continuation prompt.
+
+The controlling current state is:
+
+Programme: CGMS Productisation Programme
+Sprint: Sprint 22
+Active intervention: PWI-001
+Active sub-stage: Step 187C.4 — Integrated Review and Publication
+Branch: cgms-v2-roadmap
+Baseline HEAD before Step 187C commit: ae8ffca9f23663a38b3310f087673ca70035f2e7
+Authorised changed paths: 23
+Production paths: 8
+Test paths: 14
+Documentation paths: 1
+Staged paths: 0
+Protected file: manual_test_db.py unchanged
+Authentication-focused validation: 218 passed, 30 warnings
+Complete regression: 596 passed, 37 warnings
+Runtime-contract validation: PASS
+Implementation review: PASS
+Route-surface broadening: none
+Later-stage behaviour introduced: no
+Next authorised action: PWI-001 Step 187C.4 — Controlled Staging and Commit
+
+Do not proceed to Step 187D, Step 187E or Step 187F until Step 187C is committed and the resulting repository state is inspected.
+
+END OF CGMS MASTER CONTINUATION PROMPT v2.0
+
 
 ### PRE-006 — Product Readiness Dashboard
 
@@ -1615,7 +2584,7 @@ Validation:
 - complete CGMS regression suite: 184 passed
 
 
-## Sprint 17 — Patent and IP Governance
+## Sprint 17 — Patent and IP Governance Closure Summary
 
 Status: COMPLETE
 
@@ -1640,18 +2609,15 @@ Final validation baseline:
 - 184 tests passed.
 ## Sprint 18 — Secure Browser Access and Session Management
 
-**Status:** Active
+**Status:** Complete through SBA-007B
 
 ### Completed
 
 - **SBA-001A — Canonical Role Resolution**
-  - Canonical roles: dmin, operator,
-iewer
+  - Canonical roles: admin, operator, viewer
   - Legacy compatibility:
     - contributor → operator
-    -
-eader →
-iewer
+    - reader → viewer
   - Unknown roles fail closed.
   - Focused validation: 21 passed.
 
@@ -1690,7 +2656,7 @@ iewer
 
 ### Security Decisions
 
-- The legacy unregistered pp/dashboard/auth.py router must not be registered.
+- The legacy unregistered app/dashboard/auth.py router must not be registered.
 - Browser routes must not trust X-User-Role.
 - Browser session cookies must never be returned in response bodies.
 - Passwords, hashes, tokens, JWT secrets and database URLs must never be logged.
@@ -1761,11 +2727,11 @@ Next planned work:
 
 - **SBA-004 — Session Expiry, Logout and Revocation Controls**
 
-## Sprint 18 ? SBA-004 Persistent Browser Session Revocation
+## Sprint 18 — SBA-004 Persistent Browser Session Revocation
 
 **Status:** Complete and production-validated
 **Validation date:** 2026-07-22
-**Next roadmap item:** SBA-005 ? Browser Patent Dashboard and Export Migration
+**Next roadmap item:** SBA-005 — Browser Patent Dashboard and Export Migration
 
 ### Implemented capabilities
 
@@ -1845,11 +2811,11 @@ lifespan and CORS assignments in `app/dashboard/main.py`, legacy security
 service defects, Bearer-token Patent routes, and the absence of a migration
 framework remain outside this milestone.
 
-## Sprint 18 ? SBA-005 Browser Patent Dashboard and Export Migration
+## Sprint 18 — SBA-005 Browser Patent Dashboard and Export Migration
 
 **Status:** Complete and production-validated
 **Validation date:** 2026-07-22
-**Next roadmap item:** SBA-006 ? Authentication Throttling, Logging and Failure Controls
+**Next roadmap item:** SBA-006 — Authentication Throttling, Logging and Failure Controls
 
 ### Implemented capabilities
 
@@ -1942,12 +2908,12 @@ The following pre-existing areas remain outside this milestone:
 SBA-005 was completed within the approved Sprint 18 roadmap. No unapproved
 roadmap deviation or security-boundary expansion was introduced.
 
-## Sprint 18 ? SBA-005 UI Polish Addendum
+## Sprint 18 — SBA-005 UI Polish Addendum
 
 **Status:** Complete and production-validated
 **Validation date:** 2026-07-22
 **Classification:** Approved Recommended Deviation
-**Next roadmap item:** SBA-006 ? Authentication Throttling, Logging and Failure Controls
+**Next roadmap item:** SBA-006 — Authentication Throttling, Logging and Failure Controls
 
 ### Rationale
 
@@ -2010,12 +2976,12 @@ Recommended Deviation under EG-001.
 The addendum did not expand the SBA-005 security boundary and did not alter
 the approved SBA-006 scope.
 
-## Sprint 18 ? SBA-006 Authentication Throttling, Logging and Failure Controls
+## Sprint 18 — SBA-006 Authentication Throttling, Logging and Failure Controls
 
 **Status:** Complete and production-validated
 **Validation date:** 2026-07-22
 **Classification:** Planned Work
-**Next roadmap item:** SBA-007 ? Production Validation and Documentation
+**Next roadmap item:** SBA-007 — Production Validation and Documentation
 
 ### Implemented controls
 
@@ -2114,12 +3080,12 @@ deprecation warnings remain outside SBA-006.
 SBA-006 was delivered within the approved Sprint 18 roadmap. No unapproved
 scope deviation or security-boundary expansion was introduced.
 
-## Sprint 18 ? SBA-007A Production Runtime Hardening
+## Sprint 18 — SBA-007A Production Runtime Hardening
 
 **Status:** Complete and regression-validated
 **Validation date:** 2026-07-22
-**Classification:** Mandatory Architectural Intervention ? approved
-**Next roadmap item:** SBA-007B ? Production Documentation and Operational Validation
+**Classification:** Mandatory Architectural Intervention — approved
+**Next roadmap item:** SBA-007B — Production Documentation and Operational Validation
 
 ### Intervention rationale
 
@@ -2824,7 +3790,7 @@ No remediation work is authorized by this closure.
 The next roadmap milestone must be initiated only through the
 applicable EG-001 classification and approval process.
 
-## Sprint 21 - AAE-001 Application-Wide Authorization Enforcement
+## Sprint 21 — AAE-001 Application-Wide Authorization Enforcement
 
 **Status:** Complete, regression-validated, live-validated, committed, published and formally closed
 **Classification:** Mandatory Security Intervention under Engineering Governance Rule EG-001
@@ -3038,3 +4004,28 @@ AAE-001 is formally closed with:
 - preserved architectural boundaries.
 
 The next dependency-driven remediation milestone is Persistent Workspace Isolation Foundation. That milestone is **not authorized** by this closure and requires its own EG-001 classification, impact statement and explicit approval.
+
+
+---
+
+# 37. FINAL CONTINUATION AUTHORITY
+
+This complete document replaces all earlier versions of the master continuation prompt.
+
+The controlling current state is:
+
+```text
+Branch: cgms-v2-roadmap
+Baseline HEAD: ae8ffca9f23663a38b3310f087673ca70035f2e7
+Active intervention: PWI-001
+Active sub-stage: Step 187C.3
+Focused result: 63 passed in 3.49s
+Expected working tree after this document replacement: 23 changed paths
+Staged paths: 0
+Protected file: manual_test_db.py unchanged
+Next authorised action: Step 187C.3D
+```
+
+Do not proceed to mutation, staging, commit, Step 187D, Step 187E or Step 187F until Step 187C.3D has been executed and its actual result reviewed.
+
+# END OF CGMS MASTER CONTINUATION PROMPT v2.0

@@ -61,6 +61,7 @@ def _aae_create_admin_bearer_token() -> str:
         {
             "user_id": _AAE_ADMIN_USER_ID,
             "role": _AAE_ADMIN_ROLE,
+            "workspace_id": "default",
         }
     )
 
@@ -86,9 +87,43 @@ class _AAELegacyActiveSessionRegistry:
     def require_active(
         self,
         identity,
-    ) -> object:
-        return object()
+    ):
+        from types import SimpleNamespace
 
+        return SimpleNamespace(
+            workspace_id="default"
+        )
+
+class _AAELegacyWorkspaceContextResolver:
+    def resolve_requested(
+        self,
+        *,
+        user_id,
+        workspace_id,
+    ):
+        from app.services.workspace.resolution import (
+            ResolvedWorkspaceContext,
+        )
+
+        return ResolvedWorkspaceContext(
+            workspace_id=str(
+                workspace_id
+            ).strip(),
+            workspace_name="Default Workspace",
+            user_id=int(
+                str(user_id).strip()
+            ),
+            membership_id=1,
+        )
+
+    def resolve_default(
+        self,
+        user_id,
+    ):
+        return self.resolve_requested(
+            user_id=user_id,
+            workspace_id="default",
+        )
 
 class _AAELegacyAdminAuthorizationService:
     def resolve(
@@ -173,6 +208,35 @@ def _aae_authenticate_legacy_application_test(
         str(request.fspath)
     ).name
 
+    # PWI-001 Step 187C.3D legacy Bearer compatibility bridge.
+    if (
+        test_file_name
+        in _AAE_LEGACY_BEARER_TEST_FILES
+        or test_file_name
+        == _AAE_LEGACY_CLIENT_FACTORY_TEST_FILE
+    ):
+        from app.dashboard.main import app
+        from app.services.auth.browser_session_dependency import (
+            get_account_authorization_service,
+        )
+        from app.services.workspace.resolution import (
+            get_workspace_context_resolver,
+        )
+
+        monkeypatch.setitem(
+            app.dependency_overrides,
+            get_account_authorization_service,
+            lambda:
+            _AAELegacyAdminAuthorizationService(),
+        )
+
+        monkeypatch.setitem(
+            app.dependency_overrides,
+            get_workspace_context_resolver,
+            lambda:
+            _AAELegacyWorkspaceContextResolver(),
+        )
+
     if (
         test_file_name
         in _AAE_LEGACY_BEARER_TEST_FILES
@@ -226,6 +290,9 @@ def _aae_authenticate_legacy_application_test(
             get_account_authorization_service,
             get_browser_session_registry,
         )
+        from app.services.workspace.resolution import (
+            get_workspace_context_resolver,
+        )
 
         client = getattr(
             request.module,
@@ -264,6 +331,13 @@ def _aae_authenticate_legacy_application_test(
             )
         )
 
+        previous_workspace_override = (
+            app.dependency_overrides.get(
+                get_workspace_context_resolver,
+                missing,
+            )
+        )
+
         app.dependency_overrides[
             get_browser_session_registry
         ] = (
@@ -276,6 +350,13 @@ def _aae_authenticate_legacy_application_test(
         ] = (
             lambda:
             _AAELegacyAdminAuthorizationService()
+        )
+
+        app.dependency_overrides[
+            get_workspace_context_resolver
+        ] = (
+            lambda:
+            _AAELegacyWorkspaceContextResolver()
         )
 
         client.headers["Cookie"] = (
@@ -304,6 +385,13 @@ def _aae_authenticate_legacy_application_test(
                 app,
                 get_account_authorization_service,
                 previous_authorization_override,
+                missing,
+            )
+
+            _aae_restore_dependency_override(
+                app,
+                get_workspace_context_resolver,
+                previous_workspace_override,
                 missing,
             )
 

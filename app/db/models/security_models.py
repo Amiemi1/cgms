@@ -193,6 +193,15 @@ class BrowserSessionRecord(
         )
     )
 
+    workspace_id: str = Field(
+        default="default",
+        sa_column=Column(
+            String(64),
+            index=True,
+            nullable=False,
+        ),
+    )
+
     role: str = Field(
         sa_column=Column(
             String(32),

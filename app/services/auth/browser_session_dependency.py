@@ -30,6 +30,10 @@ from app.services.auth.session_registry import (
     BrowserSessionRegistry,
     BrowserSessionRegistryError,
 )
+from app.services.workspace.resolution import (
+    WorkspaceContextResolver,
+    get_workspace_context_resolver,
+)
 
 
 browser_authentication_logger = logging.getLogger(
@@ -121,8 +125,14 @@ def get_current_browser_session_identity(
         )
 
     try:
-        session_registry.require_active(
-            identity
+        session_state = (
+            session_registry.require_active(
+                identity
+            )
+        )
+
+        request.state.cgms_browser_session_state = (
+            session_state
         )
 
     except BrowserSessionRegistryError:
@@ -150,6 +160,7 @@ def get_current_browser_session_identity(
 
 
 def get_current_browser_principal(
+    request: Request,
     identity: Annotated[
         BrowserSessionIdentity,
         Depends(
@@ -162,25 +173,67 @@ def get_current_browser_principal(
             get_account_authorization_service
         ),
     ],
+    session_registry: Annotated[
+        BrowserSessionRegistry,
+        Depends(
+            get_browser_session_registry
+        ),
+    ],
+    workspace_context_resolver: Annotated[
+        WorkspaceContextResolver,
+        Depends(
+            get_workspace_context_resolver
+        ),
+    ],
 ) -> AuthenticatedPrincipal:
     """
-    Revalidate an active browser session against the current
-    authoritative account and role state.
+    Build a workspace-bound browser principal.
 
-    The session role is not trusted as current authorization.
-    The account must still exist, have a valid role assignment,
-    and retain the canonical role represented by the session.
-
-    Permissions are derived from the current server policy and
-    database-resolved role.
+    The authoritative workspace comes from the persistent browser
+    session registry. Account role, workspace membership and
+    workspace lifecycle state are then revalidated.
     """
     try:
-        principal = revalidate_browser_session(
-            identity=identity,
-            service=authorization_service,
+        session_state = getattr(
+            request.state,
+            "cgms_browser_session_state",
+            None,
         )
 
-    except BrowserSessionAuthorizationError:
+        if session_state is None:
+            session_state = (
+                session_registry.require_active(
+                    identity
+                )
+            )
+
+        workspace_id = getattr(
+            session_state,
+            "workspace_id",
+            None,
+        )
+
+        if (
+            not isinstance(workspace_id, str)
+            or not workspace_id.strip()
+        ):
+            raise BrowserSessionAuthorizationError(
+                "invalid_session_workspace"
+            )
+
+        principal = revalidate_browser_session(
+            identity=identity,
+            workspace_id=workspace_id,
+            service=authorization_service,
+            workspace_context_resolver=(
+                workspace_context_resolver
+            ),
+        )
+
+    except (
+        BrowserSessionAuthorizationError,
+        BrowserSessionRegistryError,
+    ):
         browser_authentication_logger.warning(
             "browser_authentication_denied "
             "user_id=%s token_id=%s "
@@ -195,15 +248,16 @@ def get_current_browser_principal(
 
     browser_authentication_logger.info(
         "browser_authentication_granted "
-        "user_id=%s role=%s token_id=%s",
+        "user_id=%s workspace_id=%s "
+        "role=%s token_id=%s",
         principal.user_id,
+        principal.workspace_id,
         principal.role,
         principal.token_id
         or "not-recorded",
     )
 
     return principal
-
 
 def require_browser_permission(
     permission: str,

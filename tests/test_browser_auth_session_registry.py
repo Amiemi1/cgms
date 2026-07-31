@@ -34,6 +34,10 @@ from app.services.auth.session_registry import (
     BrowserSessionRegistryError,
     BrowserSessionRevokedError,
 )
+from app.services.workspace.resolution import (
+    ResolvedWorkspaceContext,
+    get_workspace_context_resolver,
+)
 
 
 TEST_JWT_SECRET = (
@@ -189,6 +193,34 @@ class StubCredentialService:
         return self.account
 
 
+class StubWorkspaceContextResolver:
+    def __init__(
+        self,
+        workspace_id: str = "default",
+    ) -> None:
+        self.workspace_id = workspace_id
+
+        self.calls: list[
+            str | int
+        ] = []
+
+    def resolve_default(
+        self,
+        user_id: str | int,
+    ) -> ResolvedWorkspaceContext:
+        self.calls.append(
+            user_id
+        )
+
+        return ResolvedWorkspaceContext(
+            workspace_id=self.workspace_id,
+            workspace_name=(
+                "Default Workspace"
+            ),
+            user_id=int(user_id),
+            membership_id=1,
+        )
+
 class StubSessionRegistry:
     def __init__(
         self,
@@ -215,7 +247,10 @@ class StubSessionRegistry:
         self.revoke_error = revoke_error
 
         self.register_calls: list[
-            BrowserSessionIdentity
+            tuple[
+                BrowserSessionIdentity,
+                str,
+            ]
         ] = []
 
         self.require_active_calls: list[
@@ -233,9 +268,14 @@ class StubSessionRegistry:
     def register(
         self,
         identity: BrowserSessionIdentity,
+        *,
+        workspace_id: str,
     ) -> object:
         self.register_calls.append(
-            identity
+            (
+                identity,
+                workspace_id,
+            )
         )
 
         if self.register_error is not None:
@@ -322,6 +362,16 @@ def build_app(
     app.dependency_overrides[
         get_browser_session_registry
     ] = lambda: registry
+
+    workspace_context_resolver = (
+        StubWorkspaceContextResolver()
+    )
+
+    app.dependency_overrides[
+        get_workspace_context_resolver
+    ] = lambda: (
+        workspace_context_resolver
+    )
 
     return app
 
@@ -435,8 +485,13 @@ def test_successful_login_registers_session_before_redirect(
     assert decoded is not None
 
     assert (
-        registry.register_calls[0].token_id
+        registry.register_calls[0][0].token_id
         == decoded.token_id
+    )
+
+    assert (
+        registry.register_calls[0][1]
+        == "default"
     )
 
 
