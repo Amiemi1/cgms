@@ -47,13 +47,13 @@ PWI-001 — Persistent Workspace Isolation Foundation
 **Current sub-stage**
 
 ```text
-Step 187C.4 — Integrated Review and Publication
+Step 187C.4 — Canonical Closure and Publication
 ```
 
 **Exact next authorised action**
 
 ```text
-PWI-001 Step 187C.4 — Controlled Staging and Commit
+PWI-001 Step 187C.4 — Controlled Canonical Closure Commit and Push
 ```
 
 ---
@@ -823,16 +823,49 @@ The repository was clean at closure.
 
 # 18. PWI-001 STEP 187C — AUTHENTICATION WORKSTREAM
 
-Step 187C is active and uncommitted.
+Step 187C implementation, validation, controlled commit and post-commit integrity review are complete.
 
-The sequence is:
+Authoritative implementation commit:
 
-- Step 187C.2 — browser-session workspace binding;
-- Step 187C.3 — workspace-bound authenticated principals;
-- Step 187C.3D — full regression and runtime-contract validation;
-- Step 187C.4 — integrated review and publication after validation succeeds.
+```text
+05dcb2d0feba9bd0ad7c08fd8455302c183cec5a
+```
 
-The current next action is Step 187C.3D, not Step 187C.4.
+Parent commit:
+
+```text
+ae8ffca9f23663a38b3310f087673ca70035f2e7
+```
+
+Commit subject:
+
+```text
+PWI-001 Step 187C — Workspace-Bound Authentication Principals
+```
+
+The implementation commit contains exactly 23 authorised paths:
+
+- 8 production paths;
+- 14 test paths;
+- 1 canonical continuation document.
+
+The post-commit integrity audit confirmed:
+
+- correct branch and commit parent;
+- correct author and committer identity;
+- exact committed-path inventory;
+- clean working tree;
+- zero staged paths;
+- `manual_test_db.py` not committed;
+- no Step 187D, Step 187E or Step 187F behaviour introduced.
+
+The current next authorised action is:
+
+```text
+PWI-001 Step 187C.4 — Controlled Canonical Closure Commit and Push
+```
+
+Step 187D, Step 187E and Step 187F remain unauthorised until canonical closure and remote synchronization are complete.
 
 ---
 
@@ -1422,41 +1455,61 @@ Preserve:
 
 ---
 
-# 28. COMPLETED IMPLEMENTATION REVIEW AND COMMIT READINESS
+# 28. COMPLETED IMPLEMENTATION COMMIT AND POST-COMMIT AUDIT
 
-The Step 187C implementation-review and commit-readiness assessment completed successfully.
+Step 187C implementation review, validation, controlled commit and post-commit integrity assessment completed successfully.
 
-The review confirmed:
+Validation evidence:
 
-final diff inventory: 23 authorised changed paths;
-production paths: 8;
-test paths: 14;
-canonical documentation paths: 1;
-staged paths: 0;
-changed Python syntax: PASS;
-git diff --check: PASS;
-all six Step 187C.2 hashes exact;
-no route was added or removed;
-no accidental behavioural broadening was detected;
-no Step 187E workspace-switching route was introduced;
-no Step 187D, Step 187E or Step 187F behaviour was introduced;
-runtime-contract recheck: PASS;
-focused validation evidence: 218 passed, 30 warnings;
-full regression evidence: 596 passed, 37 warnings.
+- authentication-focused regression: 218 passed, 30 warnings;
+- complete CGMS regression: 596 passed, 37 warnings;
+- runtime-contract validation: PASS;
+- route-surface broadening: none;
+- later-stage behaviour introduced: no.
 
-The intended commit message is:
+Authoritative implementation commit:
 
+```text
+05dcb2d0feba9bd0ad7c08fd8455302c183cec5a
+```
+
+Commit subject:
+
+```text
 PWI-001 Step 187C — Workspace-Bound Authentication Principals
+```
 
-The canonical continuation document has now been updated with the completed validation and review evidence.
+Author and committer:
 
-Commit readiness is therefore:
+```text
+Murphy Sankay Oboh <jommoas@live.com>
+```
 
-READY FOR EXPLICIT CONTROLLED STAGING AND COMMIT
+Committed inventory:
 
-Do not invent the final implementation commit hash before the commit is created.
+- 23 authorised paths;
+- 8 production paths;
+- 14 test paths;
+- 1 canonical continuation document.
 
-Do not stage any path outside the exact authorised 23-path inventory.
+Post-commit repository state:
+
+- working tree: clean;
+- staged paths: 0;
+- `manual_test_db.py`: not committed;
+- push performed: no.
+
+The approved canonical closure commit message is:
+
+```text
+docs(governance): close PWI-001 Step 187C
+```
+
+Canonical closure readiness:
+
+```text
+READY FOR CONTROLLED CANONICAL CLOSURE COMMIT AND PUSH
+```
 
 ---
 
@@ -1548,72 +1601,74 @@ Do not introduce unrelated warning-remediation changes without approval.
 
 The next chat must not:
 
-- work in the NB Volume Risk Engine repository;
+- work in another repository;
 - switch to `main`;
 - restart PWI-001 architectural discovery;
-- rerun the failed partial Step 187C.3 mutation;
-- recreate the active implementation;
-- run `git clean`;
-- run `git restore .`;
-- run `git checkout -- .`;
-- reset the working tree;
-- stash without explicit approval;
-- stage files before validation;
-- commit before Step 187C.3D passes;
+- recreate the completed Step 187C implementation;
+- reset, restore, clean or stash the working tree;
+- amend authoritative implementation commit `05dcb2d0feba9bd0ad7c08fd8455302c183cec5a`;
 - modify `manual_test_db.py`;
-- alter a preserved Step 187C.2 file unexpectedly;
-- place browser workspace authority in the JWT;
-- accept browser workspace context from request headers;
-- use process-global workspace state;
-- redesign global RBAC;
-- begin workspace switching early;
-- begin tenant-isolation work early;
-- begin commercial-pilot work;
-- treat unconditional printed `PASS` text as proof;
-- treat an audit-script defect as a production defect;
-- overwrite this continuation document with an abbreviated summary.
+- include any file other than the canonical continuation document in the closure commit;
+- use a closure commit message other than `docs(governance): close PWI-001 Step 187C`;
+- force-push;
+- begin Step 187D, Step 187E or Step 187F before closure publication and synchronization verification;
+- overwrite or remove the Historical Delivery Record.
 
 ---
 
 # 32. EXACT NEXT AUTHORISED ACTION
-PWI-001 Step 187C.4 — Controlled Staging and Commit
+
+```text
+PWI-001 Step 187C.4 — Controlled Canonical Closure Commit and Push
+```
 
 This action must:
 
-verify the branch and baseline HEAD before staging;
-verify the exact 23-path inventory;
-stage only those 23 authorised paths;
-verify the staged inventory exactly;
-commit with the approved Step 187C commit message;
-verify the actual commit result and new HEAD;
-leave Step 187D, Step 187E and Step 187F untouched.
+- verify branch `cgms-v2-roadmap`;
+- verify current HEAD `05dcb2d0feba9bd0ad7c08fd8455302c183cec5a`;
+- verify that only the canonical continuation document is changed;
+- stage only `docs/CGMS_MASTER_CONTINUATION_PROMPT_v2.0.md`;
+- commit with `docs(governance): close PWI-001 Step 187C`;
+- push the current branch to its configured upstream;
+- verify local HEAD, tracked upstream and direct remote branch references;
+- leave Step 187D, Step 187E and Step 187F untouched.
 
-No push or later-stage implementation is authorised by this documentation-update step.
+No implementation change or later-stage work is authorised.
 
 ---
 
 # 33. REQUIRED FIRST RESPONSE IN THE NEW CHAT
 
-After reading the complete file, the next assistant should respond materially as follows:
+After reading the complete file, the next assistant should confirm:
 
 ```text
 The CGMS continuation state is loaded.
 
-PWI-001 is active on branch cgms-v2-roadmap at committed baseline
-ae8ffca9f23663a38b3310f087673ca70035f2e7.
+PWI-001 remains active on branch cgms-v2-roadmap.
 
-Step 187C.3 has 22 uncommitted implementation paths plus the updated
-canonical continuation document. The expected current working tree is
-therefore 23 changed paths, subject to repository verification.
+Step 187C implementation, validation and the implementation commit are complete.
 
-Focused validation passed with 63 tests in 3.49 seconds.
+The authoritative implementation commit is:
+05dcb2d0feba9bd0ad7c08fd8455302c183cec5a
 
-Full regression and runtime-contract validation completed successfully.
+The implementation commit contains exactly 23 authorised paths:
+8 production paths, 14 test paths and the canonical continuation document.
 
-The next authorised action is PWI-001 Step 187C.3D.
+Step 187C.3D passed:
+218 authentication-focused tests passed with 30 warnings.
+596 complete regression tests passed with 37 warnings.
+Runtime-contract validation passed.
+
+The post-commit integrity audit passed.
+The working tree was clean and manual_test_db.py was not committed.
+
+The canonical closure update is the only authorised working-tree change.
+
+The next authorised action is:
+PWI-001 Step 187C.4 — Controlled Canonical Closure Commit and Push
 ```
 
-The assistant must then provide exactly one repository-verification and Step 187C.3D execution action.
+The assistant must then provide exactly one controlled canonical closure commit-and-push action.
 
 ---
 
@@ -1622,60 +1677,46 @@ The assistant must then provide exactly one repository-verification and Step 187
 Upload this updated file in the new chat and paste:
 
 ```text
-Continue the Contextual Group Memory System project from the attached
-canonical continuation prompt.
+Continue the Contextual Group Memory System project from the attached canonical continuation prompt.
 
 Read the complete file before proposing or executing any action.
 
-Treat the current-state, repository-state and PWI-001 sections as the
-controlling state. Treat the Historical Delivery Record as evidence and
-programme history; historical “next action” statements do not override the
-current next action.
+Treat the current-state, repository-state and PWI-001 sections as the controlling state. Treat the Historical Delivery Record as evidence and programme history.
 
-Follow Engineering Governance Rule EG-001 and the strict one-step execution
-discipline.
+Follow Engineering Governance Rule EG-001 and strict one-step execution.
 
-Do not restart discovery, recreate or reset the working tree, stage or commit
-files, modify manual_test_db.py, or begin a later PWI-001 stage.
+Do not restart discovery, recreate or reset the working tree, amend the authoritative Step 187C implementation commit, modify manual_test_db.py, stage unauthorised paths, or begin a later PWI-001 stage.
 
-First confirm:
+Confirm the branch, authoritative Step 187C implementation commit, exact committed inventory, completed validation, post-commit audit, canonical closure working-tree state and the exact next authorised action.
 
-1. the active programme and intervention;
-2. the repository root;
-3. the active branch;
-4. the baseline HEAD;
-5. the expected changed-path inventory;
-6. the completed focused validation;
-7. the pending validation;
-8. the exact next authorised action.
+Then provide exactly one controlled canonical closure commit-and-push action.
+```
 
-Then provide exactly one read-only step to execute PWI-001 Step 187C.3D.
+Authoritative Step 187C implementation commit:
+
+```text
+05dcb2d0feba9bd0ad7c08fd8455302c183cec5a
 ```
 
 ---
 
 # 35. CURRENT HANDOFF SUMMARY
-PRG-001:
-Complete, committed and published.
 
-CRG-001:
-Complete, committed and published.
-Commercial-pilot verdict remains NOT READY.
+```text
+Programme:
+CGMS Productisation Programme
 
-AAE-001:
-Complete, committed, published and formally closed.
+Active intervention:
+PWI-001
 
-PWI-001 Step 187A:
-Complete, validated, committed and pushed.
-
-PWI-001 Step 187B:
-Complete, validated, committed and pushed.
+Branch:
+cgms-v2-roadmap
 
 PWI-001 Step 187C.2:
-Implemented and validated, but uncommitted.
+Complete and validated.
 
 PWI-001 Step 187C.3:
-Implemented and fully validated, but uncommitted.
+Complete and fully validated.
 
 PWI-001 Step 187C.3D:
 Complete.
@@ -1683,10 +1724,25 @@ Complete.
 PWI-001 Step 187C implementation review:
 Complete.
 
-Current committed baseline:
+PWI-001 Step 187C implementation commit:
+Complete.
+
+PWI-001 Step 187C post-commit integrity audit:
+Complete.
+
+Authoritative implementation commit:
+05dcb2d0feba9bd0ad7c08fd8455302c183cec5a
+
+Implementation parent:
 ae8ffca9f23663a38b3310f087673ca70035f2e7
 
-Comprehensive authentication-focused result:
+Commit subject:
+PWI-001 Step 187C — Workspace-Bound Authentication Principals
+
+Author and committer:
+Murphy Sankay Oboh <jommoas@live.com>
+
+Authentication-focused regression:
 218 passed
 30 warnings
 
@@ -1697,7 +1753,7 @@ Complete CGMS regression:
 Runtime-contract validation:
 PASS
 
-Authorised changed paths:
+Committed paths:
 23
 
 Production paths:
@@ -1709,23 +1765,30 @@ Test paths:
 Documentation paths:
 1
 
-Staged paths:
+Post-commit working tree:
+CLEAN
+
+Post-commit staged paths:
 0
 
+Canonical closure working-tree state after this update:
+1 authorised changed path
+
+Authorised changed path:
+docs/CGMS_MASTER_CONTINUATION_PROMPT_v2.0.md
+
 Protected file:
-manual_test_db.py unchanged
+manual_test_db.py unchanged and not committed
 
-Route-surface broadening:
-None
-
-Later-stage behaviour introduced:
+Push performed:
 No
 
-Intended commit message:
-PWI-001 Step 187C — Workspace-Bound Authentication Principals
+Approved closure commit message:
+docs(governance): close PWI-001 Step 187C
 
 Immediate next action:
-PWI-001 Step 187C.4 — Controlled Staging and Commit
+PWI-001 Step 187C.4 — Controlled Canonical Closure Commit and Push
+```
 
 ---
 
@@ -1778,27 +1841,39 @@ This complete document replaces all earlier versions of the master continuation 
 
 The controlling current state is:
 
+```text
 Programme: CGMS Productisation Programme
 Sprint: Sprint 22
 Active intervention: PWI-001
-Active sub-stage: Step 187C.4 — Integrated Review and Publication
+Active sub-stage: Step 187C.4 — Canonical Closure and Publication
 Branch: cgms-v2-roadmap
-Baseline HEAD before Step 187C commit: ae8ffca9f23663a38b3310f087673ca70035f2e7
-Authorised changed paths: 23
+Pre-Step-187C parent commit: ae8ffca9f23663a38b3310f087673ca70035f2e7
+Authoritative Step 187C implementation commit: 05dcb2d0feba9bd0ad7c08fd8455302c183cec5a
+Implementation commit subject: PWI-001 Step 187C — Workspace-Bound Authentication Principals
+Implementation commit author and committer: Murphy Sankay Oboh <jommoas@live.com>
+Committed implementation paths: 23
 Production paths: 8
 Test paths: 14
 Documentation paths: 1
-Staged paths: 0
-Protected file: manual_test_db.py unchanged
+Post-commit integrity audit: PASS
+Post-commit working tree: CLEAN
+Canonical closure update: prepared but not committed
+Current authorised changed paths after this update: 1
+Current authorised changed path: docs/CGMS_MASTER_CONTINUATION_PROMPT_v2.0.md
+Current staged paths: 0
+Protected file: manual_test_db.py unchanged and not committed
 Authentication-focused validation: 218 passed, 30 warnings
 Complete regression: 596 passed, 37 warnings
 Runtime-contract validation: PASS
 Implementation review: PASS
 Route-surface broadening: none
 Later-stage behaviour introduced: no
-Next authorised action: PWI-001 Step 187C.4 — Controlled Staging and Commit
+Push performed: no
+Approved closure commit message: docs(governance): close PWI-001 Step 187C
+Next authorised action: PWI-001 Step 187C.4 — Controlled Canonical Closure Commit and Push
+```
 
-Do not proceed to Step 187D, Step 187E or Step 187F until Step 187C is committed and the resulting repository state is inspected.
+Do not proceed to Step 187D, Step 187E or Step 187F until the canonical closure commit is created, pushed and remotely verified.
 
 END OF CGMS MASTER CONTINUATION PROMPT v2.0
 
