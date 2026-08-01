@@ -11,12 +11,12 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
             "Authoritative delivery, validation, governance, "
             "dashboard-access and startup register."
         ),
-        "as_of": "27 July 2026",
-        "current_sprint": "Sprint 20",
-        "current_work": "CRG-001",
+        "as_of": "1 August 2026",
+        "current_sprint": "Sprint 22",
+        "current_work": "PWI-001 Step 187D",
         "status": (
-            "Complete, regression-validated, committed, "
-            "and published; pilot verdict NOT READY"
+            "Step 187C complete, published and reconciled; "
+            "Step 187D approved and not started"
         ),
         "branch": "cgms-v2-roadmap",
         "canonical_record": (
@@ -26,39 +26,42 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
     "summary": [
         {
             "label": "Current milestone",
-            "value": "CRG-001",
+            "value": "PWI-001 Step 187D",
             "detail": (
-                "Commercial Readiness Gap Assessment"
+                "Tenant Persistence and Query-Contract Integration; "
+                "approved and not started"
             ),
         },
         {
             "label": "Current regression suite",
-            "value": "540 passed",
+            "value": "596 passed",
             "detail": (
-                "CRG-001 final-state regression with "
+                "Step 187C complete regression with "
                 "37 known deprecation warnings"
             ),
         },
         {
             "label": "Latest published implementation",
-            "value": "16a673d",
+            "value": "05dcb2d",
             "detail": (
-                "CRG-001 Commercial Readiness "
-                "Gap Assessment"
+                "PWI-001 Step 187C — Workspace-Bound "
+                "Authentication Principals"
             ),
         },
         {
-            "label": "Production preflight",
-            "value": "0 failures",
-            "detail": "0 warnings during controlled validation",
+            "label": "Runtime contracts",
+            "value": "PASS",
+            "detail": (
+                "No routes added or removed and no "
+                "Step 187D, 187E or 187F behaviour introduced"
+            ),
         },
-
         {
             "label": "Pilot readiness",
             "value": "NOT READY",
             "detail": (
-                "4 P0 blockers and 10 total "
-                "commercial blockers"
+                "CAP-003 remains partial while persistence and "
+                "cross-workspace closure continue"
             ),
         },
     ],
@@ -165,17 +168,14 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
         },
     ],
     "current_focus": [
-        "Product Architecture",
-        "Commercial Architecture",
-        "Enterprise Productization",
+        "PWI-001 Step 187D controlled implementation planning",
+        "Tenant persistence and workspace ownership contracts",
+        "Workspace-scoped repository and query isolation",
     ],
     "upcoming": [
-        "Timeline",
-        "Knowledge Graph",
-        "Semantic Reasoning",
-        "Recommendation Engine",
-        "Documentation Intelligence Framework",
-        "Enterprise AI",
+        "PWI-001 Step 187D implementation and validation",
+        "PWI-001 Step 187E active workspace switching",
+        "PWI-001 Step 187F integrated isolation closure",
     ],
     "sprints": [
         {
@@ -470,8 +470,87 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
                 },
             ],
         },
+        {
+            "id": "SPRINT-22",
+            "title": (
+                "Sprint 22 - Persistent Workspace "
+                "Isolation Foundation"
+            ),
+            "status": (
+                "Step 187C complete; Step 187D approved "
+                "and not started"
+            ),
+            "status_class": "active",
+            "summary": (
+                "PWI-001 Step 187C established workspace-bound "
+                "authentication principals and was validated, "
+                "published and reconciled. Step 187D is approved "
+                "as Planned Work within the existing intervention."
+            ),
+            "milestones": [
+                {
+                    "id": "PWI-001-187C",
+                    "title": "Workspace-Bound Authentication Principals",
+                    "status": (
+                        "Complete, validated, published "
+                        "and reconciled"
+                    ),
+                    "status_class": "complete",
+                },
+                {
+                    "id": "PWI-001-187D",
+                    "title": (
+                        "Tenant Persistence and "
+                        "Query-Contract Integration"
+                    ),
+                    "status": "Approved as Planned Work; not started",
+                    "status_class": "active",
+                },
+            ],
+        },
     ],
     "validation": [
+        {
+            "title": "PWI-001 Step 187D governance approval",
+            "result": "Approved — not started",
+            "detail": (
+                "Approved as Planned Work within the existing approved PWI-001 Mandatory Architectural Intervention."
+            ),
+        },
+        {
+            "title": "PWI-001 Step 187C repository publication",
+            "result": "Synchronized",
+            "detail": (
+                "Published commit chain: implementation "
+                "05dcb2d0feba9bd0ad7c08fd8455302c183cec5a; canonical closure "
+                "4624bf8c4c2944c3a8d05232b4565f3d5ed77e00; final reconciliation "
+                "595de8fcd5c645a26c4c020028a750a6ee36bffc. Local, tracked upstream "
+                "and direct remote cgms-v2-roadmap references "
+                "matched at the final reconciliation commit."
+            ),
+        },
+        {
+            "title": "PWI-001 Step 187C runtime contracts",
+            "result": "PASS",
+            "detail": (
+                "No routes were added or removed and no "
+                "Step 187D, Step 187E or Step 187F behaviour "
+                "was introduced."
+            ),
+        },
+        {
+            "title": "PWI-001 Step 187C complete regression",
+            "result": "596 passed",
+            "detail": "Complete CGMS regression passed with 37 warnings.",
+        },
+        {
+            "title": "PWI-001 Step 187C authentication suite",
+            "result": "218 passed",
+            "detail": (
+                "Authentication-focused regression passed with "
+                "30 warnings."
+            ),
+        },
         {
             "title": "CRG-001 repository publication",
             "result": "Synchronized",
@@ -609,6 +688,27 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
         },
     ],
     "commits": [
+        {
+            "hash": "595de8f",
+            "title": (
+                "docs(governance): reconcile PWI-001 "
+                "Step 187C publication state"
+            ),
+            "status": "Published",
+        },
+        {
+            "hash": "4624bf8",
+            "title": "docs(governance): close PWI-001 Step 187C",
+            "status": "Published",
+        },
+        {
+            "hash": "05dcb2d",
+            "title": (
+                "PWI-001 Step 187C — Workspace-Bound "
+                "Authentication Principals"
+            ),
+            "status": "Published",
+        },
         {
             "hash": "16a673d",
             "title": (
@@ -791,19 +891,19 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
     ],
     "governance": {
         "rule": "Engineering Governance Rule EG-001",
-        "classification": "Approved Recommended Deviation",
-        "approval_date": "26 July 2026",
+        "classification": "Approved Recommended Deviation — PWI-001 Dashboard Currency Update",
+        "approval_date": "1 August 2026",
         "canonical_record": (
             "docs/CGMS_MASTER_CONTINUATION_PROMPT_v2.0.md"
         ),
         "scope": (
-            "Read-only programme progress, validation, "
-            "navigation and startup reporting."
+            "Programme Progress currency update for Step 187C "
+            "closure evidence and Step 187D approval."
         ),
         "boundaries": (
-            "No authentication redesign, RBAC redesign, "
-            "Patent redesign, Product Readiness redesign, "
-            "database schema change or runtime-control redesign."
+            "No Product Readiness status change, authentication "
+            "or RBAC redesign, persistence implementation, "
+            "route redesign or Step 187D production work."
         ),
     },
 }

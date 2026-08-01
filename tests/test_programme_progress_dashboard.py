@@ -59,9 +59,7 @@ def test_registry_contains_governed_progress() -> None:
         .build_view()
     )
 
-    milestone_ids = all_milestone_ids(
-        dashboard
-    )
+    milestone_ids = all_milestone_ids(dashboard)
 
     assert {
         "PRE-001",
@@ -76,57 +74,54 @@ def test_registry_contains_governed_progress() -> None:
         "SBA-007A",
         "SBA-007B",
         "PRG-001",
+        "CRG-001",
+        "PWI-001-187C",
+        "PWI-001-187D",
     }.issubset(milestone_ids)
 
     assert any(
         item["label"] == "Current regression suite"
-        and item["value"] == "540 passed"
+        and item["value"] == "596 passed"
         for item in dashboard["summary"]
     )
 
     assert any(
-        item["title"] == "SBA-007B closure baseline"
-        and item["result"] == "528 passed"
-        for item in dashboard["validation"]
-    )
-
-    assert any(
-        item["label"]
-        == "Latest published implementation"
-        and item["value"] == "16a673d"
+        item["label"] == "Latest published implementation"
+        and item["value"] == "05dcb2d"
         for item in dashboard["summary"]
     )
 
     assert any(
-        item["title"]
-        == "PRG-001 repository publication"
+        item["title"] == "PWI-001 Step 187C repository publication"
         and item["result"] == "Synchronized"
-        and "bcefd77198eceafd086e4e63d150037c061ce0d7"
-        in item["detail"]
+        and "595de8fcd5c645a26c4c020028a750a6ee36bffc" in item["detail"]
         for item in dashboard["validation"]
     )
 
-    assert dashboard["commits"][0] == {
-        "hash": "16a673d",
-        "title": (
-            "docs(governance): record CRG-001 "
-            "readiness assessment"
-        ),
-        "status": "Published",
-    }
-
-    assert (
-        dashboard["page"]["status"]
-        == (
-            "Complete, regression-validated, committed, "
-            "and published; pilot verdict NOT READY"
-        )
+    assert any(
+        item["title"] == "PWI-001 Step 187C runtime contracts"
+        and item["result"] == "PASS"
+        for item in dashboard["validation"]
     )
 
-    assert (
-        dashboard["page"]["branch"]
-        == "cgms-v2-roadmap"
+    assert any(
+        item["title"] == "PWI-001 Step 187D governance approval"
+        and item["result"] == "Approved — not started"
+        and "Planned Work" in item["detail"]
+        for item in dashboard["validation"]
     )
+
+    assert [item["hash"] for item in dashboard["commits"][:3]] == [
+        "595de8f",
+        "4624bf8",
+        "05dcb2d",
+    ]
+
+    assert dashboard["page"]["status"] == (
+        "Step 187C complete, published and reconciled; "
+        "Step 187D approved and not started"
+    )
+    assert dashboard["page"]["branch"] == "cgms-v2-roadmap"
 
 
 def test_registry_contains_all_html_interfaces() -> None:
@@ -197,26 +192,13 @@ def test_authorized_viewer_can_open_progress() -> None:
 
     body = response.text
 
-    assert (
-        "CGMS Programme Progress Dashboard"
-        in body
-    )
-    assert "536 passed" in body
-    assert "PRG-001" in body
-    assert "bcefd77" in body
-    assert (
-        "Complete, production-validated, "
-        "committed, and published"
-        in body
-    )
-    assert (
-        "/patent-readiness/dashboard"
-        in body
-    )
-    assert (
-        "docker compose up -d db"
-        in body
-    )
+    assert "CGMS Programme Progress Dashboard" in body
+    assert "596 passed" in body
+    assert "PWI-001-187D" in body
+    assert "595de8f" in body
+    assert "Step 187C complete, published and reconciled" in body
+    assert "/patent-readiness/dashboard" in body
+    assert "docker compose up -d db" in body
 
 
 def test_progress_denies_missing_permission() -> None:
@@ -305,30 +287,17 @@ def test_authenticated_dashboard_templates_include_progress_navigation(
         for route_path in required_paths:
             assert route_path in text
 
-def test_registry_contains_crg001_readiness_assessment() -> None:
+def test_registry_preserves_crg001_readiness_assessment() -> None:
     dashboard = (
         ProgrammeProgressRegistry()
         .build_view()
     )
 
-    assert (
-        dashboard["page"]["current_sprint"]
-        == "Sprint 20"
-    )
-
-    assert (
-        dashboard["page"]["current_work"]
-        == "CRG-001"
-    )
-
-    assert "CRG-001" in all_milestone_ids(
-        dashboard
-    )
+    assert "CRG-001" in all_milestone_ids(dashboard)
 
     assert any(
         item["label"] == "Pilot readiness"
         and item["value"] == "NOT READY"
-        and "4 P0 blockers" in item["detail"]
         for item in dashboard["summary"]
     )
 
@@ -338,76 +307,76 @@ def test_registry_contains_crg001_readiness_assessment() -> None:
         if sprint["id"] == "SPRINT-20"
     )
 
-    assert (
-        sprint_20["status_class"]
-        == "complete"
+    assert sprint_20["status_class"] == "complete"
+    assert sprint_20["milestones"][0]["id"] == "CRG-001"
+
+    assert any(
+        item["title"] == "CRG-001 capability assessment"
+        and item["result"] == "20 capabilities assessed"
+        for item in dashboard["validation"]
     )
 
-    assert sprint_20["milestones"] == [
+    assert any(
+        item["title"] == "CRG-001 complete regression suite"
+        and item["result"] == "540 passed"
+        and "37 known deprecation warnings" in item["detail"]
+        for item in dashboard["validation"]
+    )
+
+
+def test_registry_contains_pwi001_current_state() -> None:
+    dashboard = (
+        ProgrammeProgressRegistry()
+        .build_view()
+    )
+
+    assert dashboard["page"]["as_of"] == "1 August 2026"
+    assert dashboard["page"]["current_sprint"] == "Sprint 22"
+    assert dashboard["page"]["current_work"] == "PWI-001 Step 187D"
+
+    sprint_22 = next(
+        sprint
+        for sprint in dashboard["sprints"]
+        if sprint["id"] == "SPRINT-22"
+    )
+
+    assert sprint_22["status_class"] == "active"
+    assert sprint_22["milestones"] == [
         {
-            "id": "CRG-001",
-            "title": (
-                "CGMS Commercial Readiness "
-                "Gap Assessment"
-            ),
+            "id": "PWI-001-187C",
+            "title": "Workspace-Bound Authentication Principals",
             "status": (
-                "Complete, regression-validated, "
-                "committed, and published; "
-                "pilot verdict NOT READY"
+                "Complete, validated, published "
+                "and reconciled"
             ),
             "status_class": "complete",
+        },
+        {
+            "id": "PWI-001-187D",
+            "title": (
+                "Tenant Persistence and "
+                "Query-Contract Integration"
+            ),
+            "status": "Approved as Planned Work; not started",
+            "status_class": "active",
         },
     ]
 
     assert any(
-        item["title"]
-        == "CRG-001 capability assessment"
-        and item["result"]
-        == "20 capabilities assessed"
+        item["title"] == "PWI-001 Step 187C authentication suite"
+        and item["result"] == "218 passed"
+        and "30 warnings" in item["detail"]
         for item in dashboard["validation"]
     )
 
     assert any(
-        item["title"]
-        == "CRG-001 pilot readiness verdict"
-        and item["result"] == "NOT READY"
+        item["title"] == "PWI-001 Step 187C complete regression"
+        and item["result"] == "596 passed"
+        and "37 warnings" in item["detail"]
         for item in dashboard["validation"]
     )
 
-    assert any(
-        item["label"] == "Current regression suite"
-        and item["value"] == "540 passed"
-        for item in dashboard["summary"]
-    )
-
-    assert any(
-        item["title"]
-        == "CRG-001 complete regression suite"
-        and item["result"] == "540 passed"
-        and "37 known deprecation warnings"
-        in item["detail"]
-        for item in dashboard["validation"]
-    )
-
-    assert any(
-        item["title"]
-        == "CRG-001 focused closure suite"
-        and item["result"] == "12 passed"
-        for item in dashboard["validation"]
-    )
-
-    assert any(
-        item["title"]
-        == "CRG-001 repository publication"
-        and item["result"] == "Synchronized"
-        and "16a673d80091d72f011ce5755564bdc6f74432ff"
-        in item["detail"]
-        for item in dashboard["validation"]
-    )
-
-    assert any(
-        item["label"]
-        == "Latest published implementation"
-        and item["value"] == "16a673d"
-        for item in dashboard["summary"]
+    assert dashboard["governance"]["classification"] == (
+        "Approved Recommended Deviation — "
+        "PWI-001 Dashboard Currency Update"
     )
