@@ -47,13 +47,13 @@ PWI-001 — Persistent Workspace Isolation Foundation
 **Current sub-stage**
 
 ```text
-Step 187C — Complete, Published and Formally Closed
+Step 187D — Approved as Planned Work; Controlled Discovery Pending
 ```
 
 **Exact next authorised action**
 
 ```text
-PWI-001 — EG-001 Classification and Explicit Approval of the Next Roadmap Stage
+PWI-001 Step 187D — Controlled Implementation Discovery and Boundary Validation
 ```
 
 ---
@@ -821,52 +821,57 @@ The repository was clean at closure.
 
 ---
 
-# 18. PWI-001 STEP 187C — AUTHENTICATION WORKSTREAM
+# 18. PWI-001 ACTIVE WORKSTREAM
 
-Step 187C is complete, validated, committed, published and formally closed.
+PWI-001 Step 187C is complete, validated, committed, published, reconciled and formally closed.
 
-Implementation commit:
-
-```text
-05dcb2d0feba9bd0ad7c08fd8455302c183cec5a
-```
-
-Canonical closure commit:
-
-```text
-4624bf8c4c2944c3a8d05232b4565f3d5ed77e00
-```
-
-Commit sequence:
+Authoritative Step 187C commit chain:
 
 - pre-Step-187C parent: `ae8ffca9f23663a38b3310f087673ca70035f2e7`;
-- implementation commit: `05dcb2d0feba9bd0ad7c08fd8455302c183cec5a`;
-- canonical closure commit: `4624bf8c4c2944c3a8d05232b4565f3d5ed77e00`.
+- implementation: `05dcb2d0feba9bd0ad7c08fd8455302c183cec5a`;
+- canonical closure: `4624bf8c4c2944c3a8d05232b4565f3d5ed77e00`;
+- final publication-state reconciliation: `595de8fcd5c645a26c4c020028a750a6ee36bffc`.
 
-The published implementation contains exactly 23 authorised paths:
+The Programme Progress Dashboard currency update was approved as a Recommended Deviation within PWI-001 governance support and published at:
 
-- 8 production paths;
-- 14 test paths;
-- 1 canonical continuation document.
+```text
+6a422b0a269581d2e86b4f9e5081e552479b3c35
+```
 
-The published canonical closure commit contains exactly one path:
+Dashboard update subject:
 
-- `docs/CGMS_MASTER_CONTINUATION_PROMPT_v2.0.md`.
+```text
+feat(dashboard): update PWI-001 programme progress currency
+```
 
-Publication verification confirmed:
+The dashboard update:
 
-- local HEAD, tracked upstream and direct remote references match;
-- working tree is clean;
-- staged paths are zero;
-- `manual_test_db.py` remains unchanged;
-- no Step 187D, Step 187E or Step 187F behaviour was introduced.
+- records Step 187C closure and publication evidence;
+- records Step 187D approval and classification;
+- preserves Product Readiness CAP-003 as partial/in progress;
+- introduces no Step 187D production behaviour;
+- changes no authentication, persistence or query contracts.
 
-Step 187D, Step 187E and Step 187F remain unauthorised.
+PWI-001 Step 187D is now approved as Planned Work within the existing approved PWI-001 Mandatory Architectural Intervention.
+
+Step 187D title:
+
+```text
+Tenant Persistence and Query-Contract Integration
+```
+
+Step 187D status:
+
+```text
+APPROVED — IMPLEMENTATION NOT STARTED
+```
+
+Step 187E and Step 187F remain unauthorised.
 
 The next governed action is:
 
 ```text
-PWI-001 — EG-001 Classification and Explicit Approval of the Next Roadmap Stage
+PWI-001 Step 187D — Controlled Implementation Discovery and Boundary Validation
 ```
 
 ---
@@ -1457,55 +1462,54 @@ Preserve:
 
 ---
 
-# 28. COMPLETED IMPLEMENTATION, CLOSURE AND PUBLICATION
+# 28. COMPLETED PUBLICATION AND CURRENT VALIDATION
 
-PWI-001 Step 187C implementation, validation, controlled commit, canonical closure and publication completed successfully.
+Step 187C implementation and closure remain complete.
 
-Validation evidence:
+Step 187C closure validation:
 
 - authentication-focused regression: 218 passed, 30 warnings;
-- complete CGMS regression: 596 passed, 37 warnings;
+- complete CGMS regression at Step 187C closure: 596 passed, 37 warnings;
 - runtime-contract validation: PASS;
 - route-surface broadening: none;
 - later-stage behaviour introduced: no.
 
-Implementation publication:
+Published Step 187C commits:
 
 ```text
-Commit: 05dcb2d0feba9bd0ad7c08fd8455302c183cec5a
-Subject: PWI-001 Step 187C — Workspace-Bound Authentication Principals
-Author and committer: Murphy Sankay Oboh <jommoas@live.com>
-Committed paths: 23
+Implementation: 05dcb2d0feba9bd0ad7c08fd8455302c183cec5a
+Canonical closure: 4624bf8c4c2944c3a8d05232b4565f3d5ed77e00
+Final reconciliation: 595de8fcd5c645a26c4c020028a750a6ee36bffc
 ```
 
-Canonical closure publication:
+Published dashboard currency update:
 
 ```text
-Commit: 4624bf8c4c2944c3a8d05232b4565f3d5ed77e00
-Subject: docs(governance): close PWI-001 Step 187C
-Author and committer: Murphy Sankay Oboh <jommoas@live.com>
-Committed paths: 1
+Commit: 6a422b0a269581d2e86b4f9e5081e552479b3c35
+Subject: feat(dashboard): update PWI-001 programme progress currency
+Committed paths: 3
 ```
 
-Remote publication state:
+Dashboard update validation:
 
-- branch: `cgms-v2-roadmap`;
-- upstream: `origin/cgms-v2-roadmap`;
-- local HEAD: `4624bf8c4c2944c3a8d05232b4565f3d5ed77e00`;
-- tracked upstream HEAD: `4624bf8c4c2944c3a8d05232b4565f3d5ed77e00`;
-- direct remote HEAD: `4624bf8c4c2944c3a8d05232b4565f3d5ed77e00`;
-- synchronization: VERIFIED;
-- working tree: CLEAN;
-- staged paths: 0;
+- focused Programme Progress and Product Readiness regression: 17 passed, 5 warnings;
+- complete CGMS regression after dashboard update: 597 passed, 37 warnings;
+- `git diff --check`: PASS;
+- Product Readiness capability status changed: no;
+- Step 187D production implementation started: no;
 - `manual_test_db.py`: unchanged.
 
-Step 187C closure status:
+Dashboard-update publication state:
 
-```text
-COMPLETE, COMMITTED, PUBLISHED AND FORMALLY CLOSED
-```
+- dashboard update commit: `6a422b0a269581d2e86b4f9e5081e552479b3c35`;
+- branch: `cgms-v2-roadmap`;
+- upstream: `origin/cgms-v2-roadmap`;
+- dashboard-update synchronization: VERIFIED.
 
-The next roadmap stage is not authorised by this closure.
+Canonical publication state:
+
+- resolve from the repository HEAD containing this controlling file after commit;
+- do not treat the dashboard update commit as the canonical publication HEAD.
 
 ---
 
@@ -1599,44 +1603,54 @@ The next chat must not:
 
 - work in another repository;
 - switch to `main`;
-- restart PWI-001 Step 187C discovery or implementation;
-- reset, restore, clean, stash or amend the published commits;
+- restart Step 187C discovery or implementation;
+- represent Step 187D implementation as started;
+- begin Step 187E or Step 187F;
+- reset, restore, clean, stash or amend published commits;
 - modify `manual_test_db.py`;
 - force-push;
-- represent Step 187D, Step 187E or Step 187F as authorised;
-- begin a later PWI-001 stage before EG-001 classification and explicit approval;
+- change Product Readiness CAP-003 status as part of Step 187D discovery;
+- introduce workspace switching, reserved for Step 187E;
+- introduce integrated cross-workspace closure, reserved for Step 187F;
 - overwrite or remove the Historical Delivery Record;
-- treat historical next-action statements as controlling current authority.
+- treat historical next-action statements as controlling authority.
 
-Authoritative published commits:
+Dashboard update commit:
 
-- implementation: `05dcb2d0feba9bd0ad7c08fd8455302c183cec5a`;
-- canonical closure: `4624bf8c4c2944c3a8d05232b4565f3d5ed77e00`.
+```text
+6a422b0a269581d2e86b4f9e5081e552479b3c35
+```
+
+Step 187D discovery must remain read-only until its exact implementation inventory, migration boundary, repository contracts, exclusions and validation plan are reviewed.
 
 ---
 
 # 32. EXACT NEXT AUTHORISED ACTION
 
 ```text
-PWI-001 — EG-001 Classification and Explicit Approval of the Next Roadmap Stage
+PWI-001 Step 187D — Controlled Implementation Discovery and Boundary Validation
 ```
 
-This action is governance-only and must:
+This action is read-only and must:
 
-- review the approved PWI-001 roadmap sequence;
-- identify the proposed next stage;
-- assign the applicable EG-001 classification;
-- define its exact implementation boundary;
-- identify explicit exclusions and protected files;
-- obtain explicit approval before any mutation;
-- preserve the published Step 187C commits and clean repository state.
+- inventory tenant-scoped persistent models and tables;
+- distinguish tenant-scoped records from genuinely global records;
+- inventory repository and query methods that access tenant records;
+- identify workspace-neutral reads, lists, updates and deletes;
+- identify legacy records requiring default-workspace backfill;
+- identify migration-ordering and idempotence requirements;
+- identify all callers that will require workspace context;
+- define the exact Step 187D production and test path inventory;
+- define explicit exclusions and protected files;
+- define focused and complete validation gates;
+- produce an EG-001 implementation boundary for review before mutation.
 
-This action does not itself authorise Step 187D, Step 187E, Step 187F or any implementation change.
+This action does not authorise file modification, migration creation, repository-contract changes, staging, commit or push.
 
-Proposed reconciliation commit message for this document-only update:
+Canonical publication subject:
 
 ```text
-docs(governance): reconcile PWI-001 Step 187C publication state
+docs(governance): record PWI-001 dashboard currency and Step 187D approval
 ```
 
 ---
@@ -1648,28 +1662,32 @@ After reading the complete file, the next assistant should confirm:
 ```text
 The CGMS continuation state is loaded.
 
-PWI-001 Step 187C is complete, validated, committed, published and formally closed.
-
 Branch:
 cgms-v2-roadmap
 
-Implementation commit:
-05dcb2d0feba9bd0ad7c08fd8455302c183cec5a
+Dashboard update commit:
+6a422b0a269581d2e86b4f9e5081e552479b3c35
 
-Canonical closure commit:
-4624bf8c4c2944c3a8d05232b4565f3d5ed77e00
+Canonical publication commit:
+Resolve from the repository HEAD containing this file.
 
-Local HEAD, tracked upstream and direct remote references matched at the canonical closure commit.
+PWI-001 Step 187C is complete, validated, published, reconciled and formally closed.
 
-The working tree was clean, staged paths were zero and manual_test_db.py remained unchanged.
+The Programme Progress Dashboard is current through the published dashboard update commit.
 
-Step 187D, Step 187E and Step 187F have not been started and are not yet authorised.
+PWI-001 Step 187D — Tenant Persistence and Query-Contract Integration — is approved as Planned Work within the existing approved PWI-001 Mandatory Architectural Intervention.
+
+Step 187D implementation has not started.
+
+Step 187E and Step 187F remain unauthorised.
+
+The working tree was clean, staged paths were zero, local and remote references matched, and manual_test_db.py remained unchanged.
 
 The next governed action is:
-PWI-001 — EG-001 Classification and Explicit Approval of the Next Roadmap Stage
+PWI-001 Step 187D — Controlled Implementation Discovery and Boundary Validation
 ```
 
-The assistant must not provide implementation commands for a later stage until EG-001 classification and explicit approval are recorded.
+The assistant must not provide mutation commands until the discovery output and exact Step 187D implementation boundary are reviewed.
 
 ---
 
@@ -1682,23 +1700,24 @@ Continue the Contextual Group Memory System project from the attached canonical 
 
 Read the complete file before proposing or executing any action.
 
-Treat the current-state, repository-state and PWI-001 sections as controlling. Treat the Historical Delivery Record as evidence and programme history only.
+Treat the controlling current-state, repository-state and PWI-001 sections as authoritative. Treat the Historical Delivery Record as evidence and programme history only.
 
-PWI-001 Step 187C is complete, committed, published and formally closed.
+Dashboard update commit:
+6a422b0a269581d2e86b4f9e5081e552479b3c35
 
-Do not restart Step 187C, amend its published commits, reset the repository, modify manual_test_db.py, force-push, or begin Step 187D, Step 187E or Step 187F.
+Canonical publication commit:
+Resolve from the repository HEAD containing this file.
 
-First confirm the branch, implementation commit, canonical closure commit, remote synchronization, clean working tree and completed validation.
+PWI-001 Step 187C is complete, published, reconciled and formally closed.
 
-Then perform only the next governed action:
-PWI-001 — EG-001 Classification and Explicit Approval of the Next Roadmap Stage.
-```
+PWI-001 Step 187D — Tenant Persistence and Query-Contract Integration — is approved as Planned Work, but implementation has not started.
 
-Published commits:
+Do not restart Step 187C, begin Step 187E or Step 187F, reset the repository, modify manual_test_db.py, force-push, or change Product Readiness CAP-003 status.
 
-```text
-Implementation: 05dcb2d0feba9bd0ad7c08fd8455302c183cec5a
-Canonical closure: 4624bf8c4c2944c3a8d05232b4565f3d5ed77e00
+First confirm the branch, dashboard update commit, canonical publication commit, remote synchronization, clean working tree, validation results and Step 187D approval.
+
+Then perform only:
+PWI-001 Step 187D — Controlled Implementation Discovery and Boundary Validation.
 ```
 
 ---
@@ -1715,8 +1734,11 @@ Sprint 22
 Active intervention:
 PWI-001
 
-PWI-001 Step 187C:
-Complete, validated, committed, published and formally closed.
+Current stage:
+Step 187D approved as Planned Work; implementation not started
+
+Step 187D title:
+Tenant Persistence and Query-Contract Integration
 
 Branch:
 cgms-v2-roadmap
@@ -1724,49 +1746,48 @@ cgms-v2-roadmap
 Pre-Step-187C parent:
 ae8ffca9f23663a38b3310f087673ca70035f2e7
 
-Implementation commit:
+Step 187C implementation commit:
 05dcb2d0feba9bd0ad7c08fd8455302c183cec5a
 
-Implementation subject:
-PWI-001 Step 187C — Workspace-Bound Authentication Principals
-
-Canonical closure commit:
+Step 187C canonical closure commit:
 4624bf8c4c2944c3a8d05232b4565f3d5ed77e00
 
-Canonical closure subject:
-docs(governance): close PWI-001 Step 187C
+Step 187C final reconciliation commit:
+595de8fcd5c645a26c4c020028a750a6ee36bffc
 
-Author and committer:
-Murphy Sankay Oboh <jommoas@live.com>
+Dashboard currency update commit:
+6a422b0a269581d2e86b4f9e5081e552479b3c35
 
-Authentication-focused regression:
+Dashboard currency update subject:
+feat(dashboard): update PWI-001 programme progress currency
+
+Dashboard deviation:
+PWI-001 Dashboard Currency Update — Step 187C Closure and Step 187D Approval
+
+Dashboard deviation classification:
+Approved Recommended Deviation within PWI-001 governance support
+
+Step 187D classification:
+Planned Work within the existing approved PWI-001 Mandatory Architectural Intervention
+
+Step 187C authentication-focused regression:
 218 passed
 30 warnings
 
-Complete CGMS regression:
+Step 187C complete regression:
 596 passed
+37 warnings
+
+Dashboard focused regression:
+17 passed
+5 warnings
+
+Current complete CGMS regression:
+597 passed
 37 warnings
 
 Runtime-contract validation:
 PASS
-
-Implementation committed paths:
-23
-
-Implementation production paths:
-8
-
-Implementation test paths:
-14
-
-Implementation documentation paths:
-1
-
-Canonical closure committed paths:
-1
-
-Canonical closure path:
-docs/CGMS_MASTER_CONTINUATION_PROMPT_v2.0.md
 
 Local/remote synchronization:
 VERIFIED
@@ -1780,23 +1801,26 @@ Staged paths:
 Protected file:
 manual_test_db.py unchanged
 
-Route-surface broadening:
-None
+Product Readiness CAP-003:
+Partial / in progress; unchanged
 
-Later-stage behaviour introduced:
+Step 187D production implementation started:
 No
 
-Push performed:
-Yes
-
-Step 187D/187E/187F started:
+Step 187E/187F authorised:
 No
 
 Next governed action:
-PWI-001 — EG-001 Classification and Explicit Approval of the Next Roadmap Stage
+PWI-001 Step 187D — Controlled Implementation Discovery and Boundary Validation
 
-Post-publication reconciliation record:
-This document is the authoritative reconciled Step 187C state.
+Canonical dashboard-state record:
+This controlling document records the authoritative dashboard and Step 187D approval state.
+
+Canonical publication commit:
+Resolve from the repository HEAD containing this file.
+
+Canonical publication subject:
+docs(governance): record PWI-001 dashboard currency and Step 187D approval
 ```
 
 ---
@@ -1854,34 +1878,36 @@ The controlling current state is:
 Programme: CGMS Productisation Programme
 Sprint: Sprint 22
 Intervention: PWI-001
-Current status: Step 187C complete, published and formally closed
+Current stage: Step 187D approved as Planned Work; implementation not started
+Step 187D title: Tenant Persistence and Query-Contract Integration
 Branch: cgms-v2-roadmap
-Pre-Step-187C parent commit: ae8ffca9f23663a38b3310f087673ca70035f2e7
+Pre-Step-187C parent: ae8ffca9f23663a38b3310f087673ca70035f2e7
 Step 187C implementation commit: 05dcb2d0feba9bd0ad7c08fd8455302c183cec5a
-Step 187C implementation subject: PWI-001 Step 187C — Workspace-Bound Authentication Principals
 Step 187C canonical closure commit: 4624bf8c4c2944c3a8d05232b4565f3d5ed77e00
-Step 187C canonical closure subject: docs(governance): close PWI-001 Step 187C
-Author and committer: Murphy Sankay Oboh <jommoas@live.com>
-Implementation committed paths: 23
-Canonical closure committed paths: 1
-Authentication-focused validation: 218 passed, 30 warnings
-Complete regression: 596 passed, 37 warnings
+Step 187C final reconciliation commit: 595de8fcd5c645a26c4c020028a750a6ee36bffc
+Dashboard update commit: 6a422b0a269581d2e86b4f9e5081e552479b3c35
+Dashboard update subject: feat(dashboard): update PWI-001 programme progress currency
+Dashboard update classification: Approved Recommended Deviation within PWI-001 governance support
+Step 187D classification: Planned Work within the existing approved PWI-001 Mandatory Architectural Intervention
+Step 187C authentication validation: 218 passed, 30 warnings
+Step 187C complete regression: 596 passed, 37 warnings
+Dashboard focused regression: 17 passed, 5 warnings
+Current complete regression: 597 passed, 37 warnings
 Runtime-contract validation: PASS
-Post-publication audit: PASS
 Local/remote synchronization: VERIFIED
 Working tree: CLEAN
 Staged paths: 0
 Protected file: manual_test_db.py unchanged
-Route-surface broadening: none
-Later-stage behaviour introduced: no
-Push performed: yes
-Step 187D/187E/187F started: no
-Later-stage authorization: NOT GRANTED
-Post-publication reconciliation record: this document is the authoritative reconciled Step 187C state
-Next governed action: PWI-001 — EG-001 Classification and Explicit Approval of the Next Roadmap Stage
+Product Readiness CAP-003: partial/in progress and unchanged
+Step 187D production implementation started: no
+Step 187E/187F authorised: no
+Canonical dashboard-state record: this document is the authoritative controlling state
+Canonical publication commit: resolve from the repository HEAD containing this file
+Canonical publication subject: docs(governance): record PWI-001 dashboard currency and Step 187D approval
+Next governed action: PWI-001 Step 187D — Controlled Implementation Discovery and Boundary Validation
 ```
 
-Do not proceed to Step 187D, Step 187E or Step 187F until the proposed next roadmap stage has been classified under EG-001 and explicitly approved.
+Do not mutate Step 187D production code until controlled discovery and boundary validation are complete and the exact implementation inventory is explicitly approved.
 
 END OF CGMS MASTER CONTINUATION PROMPT v2.0
 
