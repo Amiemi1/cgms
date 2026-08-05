@@ -6,27 +6,43 @@ from app.db.session import SessionLocal
 from app.db.models.memory import Memory
 from app.db.models.insight import Insight
 from app.db.models.memory_relationship import MemoryRelationship
+from app.services.workspace.tenant_scope import normalize_workspace_id
 
 
-def generate_insights(chat_id: int):
+def generate_insights(
+    chat_id: int,
+    workspace_id: str,
+):
 
     session = SessionLocal()
 
     scored_insights = []
+    resolved_workspace_id = normalize_workspace_id(workspace_id)
 
     try:
 
         memories = session.exec(
-            select(Memory).where(Memory.chat_id == chat_id)
-        ).all()
-
-        memory_ids = [m.id for m in memories]
-
-        relationships = session.exec(
-            select(MemoryRelationship).where(
-                MemoryRelationship.source_memory_id.in_(memory_ids)
+            select(Memory).where(
+                Memory.workspace_id == resolved_workspace_id,
+                Memory.chat_id == chat_id,
             )
         ).all()
+
+        memory_ids = [m.id for m in memories if m.id is not None]
+
+        relationships = (
+            session.exec(
+                select(MemoryRelationship).where(
+                    MemoryRelationship.workspace_id
+                    == resolved_workspace_id,
+                    MemoryRelationship.source_memory_id.in_(
+                        memory_ids
+                    ),
+                )
+            ).all()
+            if memory_ids
+            else []
+        )
 
         memory_map = {m.id: m for m in memories}
 
@@ -179,6 +195,7 @@ def generate_insights(chat_id: int):
         for msg in final_insights:
 
             insight = Insight(
+                workspace_id=resolved_workspace_id,
                 chat_id=chat_id,
                 message=msg,
                 insight_type="predictive"

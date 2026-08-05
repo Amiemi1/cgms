@@ -1,12 +1,15 @@
 from datetime import datetime, timezone
 from typing import Optional
 
-from sqlalchemy import BigInteger, Column
+from sqlalchemy import BigInteger, Column, String
 from sqlmodel import Field, SQLModel
 
 
 class Message(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
+    workspace_id: str = Field(
+        sa_column=Column(String(64), index=True, nullable=False)
+    )
     telegram_message_id: int = Field(sa_column=Column(BigInteger, nullable=False))
     chat_id: int = Field(sa_column=Column(BigInteger, nullable=False))
     user_id: Optional[int] = Field(default=None, sa_column=Column(BigInteger, nullable=True))

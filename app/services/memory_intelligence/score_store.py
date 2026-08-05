@@ -3,30 +3,63 @@ import json
 from sqlmodel import Session, select
 
 from app.db.session import engine
+from app.db.models.memory import Memory
 from app.db.models.memory_score import MemoryScore
+from app.services.workspace.tenant_scope import (
+    inherit_workspace_id,
+    load_scoped_record,
+    normalize_workspace_id,
+)
 
 
 SCORE_CACHE = {}
 
 
+def _cache_key(
+    workspace_id: str,
+    memory_id: int,
+) -> tuple[str, int]:
+    return (
+        normalize_workspace_id(workspace_id),
+        int(memory_id),
+    )
+
+
 def save_score(
     memory_id: int,
-    score: dict
+    score: dict,
+    workspace_id: str,
 ):
-
-    SCORE_CACHE[
-        memory_id
-    ] = score
+    resolved_workspace_id = normalize_workspace_id(workspace_id)
 
     with Session(engine) as session:
+        memory = load_scoped_record(
+            session,
+            Memory,
+            memory_id,
+            resolved_workspace_id,
+        )
+
+        if memory is None:
+            return None
+
+        authoritative_workspace_id = inherit_workspace_id(memory)
+        key = _cache_key(
+            authoritative_workspace_id,
+            memory_id,
+        )
+        SCORE_CACHE[key] = score
 
         existing = session.exec(
             select(MemoryScore).where(
+                MemoryScore.workspace_id
+                == authoritative_workspace_id,
                 MemoryScore.memory_id == memory_id
             )
         ).first()
 
         payload = {
+            "workspace_id": authoritative_workspace_id,
             "memory_id": memory_id,
             "importance": score["importance"],
             "confidence": score["confidence"],
@@ -43,11 +76,11 @@ def save_score(
 
         if existing:
 
-            for key, value in payload.items():
+            for key_name, value in payload.items():
 
                 setattr(
                     existing,
-                    key,
+                    key_name,
                     value
                 )
 
@@ -65,18 +98,19 @@ def save_score(
 
         session.commit()
 
-    return SCORE_CACHE[
-        memory_id
-    ]
+    return SCORE_CACHE[key]
 
 
 def get_score(
-    memory_id: int
+    memory_id: int,
+    workspace_id: str,
 ):
-
-    cached = SCORE_CACHE.get(
-        memory_id
+    resolved_workspace_id = normalize_workspace_id(workspace_id)
+    key = _cache_key(
+        resolved_workspace_id,
+        memory_id,
     )
+    cached = SCORE_CACHE.get(key)
 
     if cached:
 
@@ -86,6 +120,8 @@ def get_score(
 
         score = session.exec(
             select(MemoryScore).where(
+                MemoryScore.workspace_id
+                == resolved_workspace_id,
                 MemoryScore.memory_id == memory_id
             )
         ).first()
@@ -110,12 +146,18 @@ def get_score(
         }
 
 
-def get_all_scores():
+def get_all_scores(
+    workspace_id: str,
+):
+    resolved_workspace_id = normalize_workspace_id(workspace_id)
 
     with Session(engine) as session:
 
         scores = session.exec(
-            select(MemoryScore)
+            select(MemoryScore).where(
+                MemoryScore.workspace_id
+                == resolved_workspace_id
+            )
         ).all()
 
         return [
@@ -133,10 +175,13 @@ def get_all_scores():
             }
             for s in scores
         ]
-    
-def get_memory_intelligence_dashboard():
 
-    scores = get_all_scores()
+
+def get_memory_intelligence_dashboard(
+    workspace_id: str,
+):
+
+    scores = get_all_scores(workspace_id)
 
     total = len(scores)
 

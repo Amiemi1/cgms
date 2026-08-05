@@ -9,9 +9,20 @@ from app.db.models.memory_relationship import MemoryRelationship
 
 from app.services.retrieval.embedding_service import generate_embedding
 from app.services.retrieval.vector_search import vector_search
+from app.services.workspace.tenant_scope import (
+    load_scoped_record,
+    normalize_workspace_id,
+)
 
 
-def explain_memory(session, chat_id, query):
+def explain_memory(
+    session,
+    chat_id,
+    query,
+    workspace_id: str,
+):
+
+    resolved_workspace_id = normalize_workspace_id(workspace_id)
 
     # ------------------------------------------------
     # Generate embedding for query
@@ -27,6 +38,7 @@ def explain_memory(session, chat_id, query):
         session=session,
         embedding=embedding,
         chat_id=chat_id,
+        workspace_id=resolved_workspace_id,
         limit=1
     )
 
@@ -35,7 +47,12 @@ def explain_memory(session, chat_id, query):
 
     memory_id = results[0][0]
 
-    target = session.get(Memory, memory_id)
+    target = load_scoped_record(
+        session,
+        Memory,
+        memory_id,
+        resolved_workspace_id,
+    )
 
     if not target:
         return "No explanation available."
@@ -46,6 +63,8 @@ def explain_memory(session, chat_id, query):
 
     relationships = session.exec(
         select(MemoryRelationship).where(
+            MemoryRelationship.workspace_id
+            == resolved_workspace_id,
             MemoryRelationship.source_memory_id == target.id
         )
     ).all()
@@ -62,7 +81,12 @@ def explain_memory(session, chat_id, query):
 
         for r in relationships:
 
-            related_memory = session.get(Memory, r.target_memory_id)
+            related_memory = load_scoped_record(
+                session,
+                Memory,
+                r.target_memory_id,
+                resolved_workspace_id,
+            )
 
             if not related_memory:
                 continue

@@ -12,6 +12,10 @@ from app.services.retrieval.embedding_service import generate_embedding
 from app.services.memory.memory_graph import link_memories
 from app.services.reasoning.decision_lineage_service import record_decision_lineage
 from app.services.time_parser.parser import extract_time_safe
+from app.services.workspace.tenant_scope import (
+    load_scoped_record,
+    resolve_legacy_workspace_id,
+)
 
 
 def register_ingestion_handlers(dp):
@@ -22,6 +26,7 @@ def register_ingestion_handlers(dp):
     @dp.message(~F.text.startswith("/"))
     async def fallback_handler(message: Message):
 
+        workspace_id = resolve_legacy_workspace_id()
         session = SessionLocal()
 
         try:
@@ -34,7 +39,8 @@ def register_ingestion_handlers(dp):
                 session=session,
                 chat_id=message.chat.id,
                 message_id=message.message_id,
-                text=message.text
+                text=message.text,
+                workspace_id=workspace_id,
             )
 
             if not candidate:
@@ -83,12 +89,18 @@ def register_ingestion_handlers(dp):
     @dp.callback_query()
     async def handle_buttons(callback: CallbackQuery):
 
+        workspace_id = resolve_legacy_workspace_id()
         session = SessionLocal()
 
         try:
 
             action, candidate_id = callback.data.split(":")
-            candidate = session.get(CandidateMemory, int(candidate_id))
+            candidate = load_scoped_record(
+                session,
+                CandidateMemory,
+                int(candidate_id),
+                workspace_id,
+            )
 
             if not candidate:
                 await callback.message.answer("Candidate not found.")
@@ -120,6 +132,7 @@ def register_ingestion_handlers(dp):
                 embedding = generate_embedding(candidate.summary)
 
                 memory = Memory(
+                    workspace_id=workspace_id,
                     chat_id=candidate.chat_id,
                     source_message_id=candidate.message_id,
                     summary=candidate.summary,
@@ -146,7 +159,8 @@ def register_ingestion_handlers(dp):
                         decision_id=memory.id,
                         source_memory_id=None,
                         reasoning_engine="reasoning_engine",
-                        triggered_by_user=callback.from_user.id
+                        triggered_by_user=callback.from_user.id,
+                        workspace_id=workspace_id,
                     )
 
                 # --------------------------------

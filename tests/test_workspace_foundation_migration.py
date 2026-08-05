@@ -9,8 +9,15 @@ from app.db.migrations import (
     MigrationStateError,
     run_database_migrations,
 )
+from app.db.migrations.pwi_001_tenant_persistence import (
+    MIGRATION_ID as TENANT_PERSISTENCE_MIGRATION_ID,
+    TENANT_SCOPED_TABLES,
+)
 from app.db.migrations.pwi_001_workspace_foundation import (
-    MIGRATION_ID,
+    MIGRATION_ID as WORKSPACE_FOUNDATION_MIGRATION_ID,
+)
+from app.db.migrations.runner import (
+    _default_migrations,
 )
 
 
@@ -43,14 +50,28 @@ def build_legacy_engine():
             """
         )
 
-        connection.exec_driver_sql(
-            """
-            CREATE TABLE memory (
-                id INTEGER PRIMARY KEY,
-                summary VARCHAR NOT NULL
+        for table_name in TENANT_SCOPED_TABLES:
+            quoted_table = f'"{table_name}"'
+
+            if table_name == "memory":
+                connection.exec_driver_sql(
+                    f"""
+                    CREATE TABLE {quoted_table} (
+                        id INTEGER PRIMARY KEY,
+                        summary VARCHAR NOT NULL
+                    )
+                    """
+                )
+                continue
+
+            connection.exec_driver_sql(
+                f"""
+                CREATE TABLE {quoted_table} (
+                    id INTEGER PRIMARY KEY,
+                    payload VARCHAR
+                )
+                """
             )
-            """
-        )
 
         connection.exec_driver_sql(
             """
@@ -110,6 +131,18 @@ def build_legacy_engine():
     return engine
 
 
+def test_default_migration_inventory_is_ordered():
+    migration_ids = tuple(
+        migration.migration_id
+        for migration in _default_migrations()
+    )
+
+    assert migration_ids == (
+        WORKSPACE_FOUNDATION_MIGRATION_ID,
+        TENANT_PERSISTENCE_MIGRATION_ID,
+    )
+
+
 def test_foundation_migration_seeds_and_backfills():
     engine = build_legacy_engine()
 
@@ -119,7 +152,8 @@ def test_foundation_migration_seeds_and_backfills():
         )
 
         assert result.applied_migrations == (
-            MIGRATION_ID,
+            WORKSPACE_FOUNDATION_MIGRATION_ID,
+            TENANT_PERSISTENCE_MIGRATION_ID,
         )
 
         inspector = inspect(
@@ -256,30 +290,32 @@ def test_foundation_migration_is_idempotent():
         )
 
         assert first.applied_migrations == (
-            MIGRATION_ID,
+            WORKSPACE_FOUNDATION_MIGRATION_ID,
+            TENANT_PERSISTENCE_MIGRATION_ID,
         )
 
         assert second.applied_migrations == ()
         assert second.skipped_migrations == (
-            MIGRATION_ID,
+            WORKSPACE_FOUNDATION_MIGRATION_ID,
+            TENANT_PERSISTENCE_MIGRATION_ID,
         )
 
         with engine.connect() as connection:
-            ledger_count = connection.execute(
+            ledger_rows = connection.execute(
                 text(
                     """
-                    SELECT COUNT(*)
+                    SELECT migration_id
                     FROM schema_migration
-                    WHERE migration_id = :migration_id
+                    ORDER BY applied_at, migration_id
                     """
-                ),
-                {
-                    "migration_id":
-                        MIGRATION_ID,
-                },
-            ).scalar_one()
+                )
+            ).scalars().all()
 
-            assert ledger_count == 1
+            assert set(ledger_rows) == {
+                WORKSPACE_FOUNDATION_MIGRATION_ID,
+                TENANT_PERSISTENCE_MIGRATION_ID,
+            }
+            assert len(ledger_rows) == 2
 
     finally:
         engine.dispose()
@@ -305,7 +341,7 @@ def test_migration_checksum_mismatch_fails_closed():
                 {
                     "checksum": "0" * 64,
                     "migration_id":
-                        MIGRATION_ID,
+                        WORKSPACE_FOUNDATION_MIGRATION_ID,
                 },
             )
 

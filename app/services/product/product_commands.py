@@ -3,15 +3,22 @@ from sqlmodel import Session, select
 
 from app.db.models.memory import Memory
 from app.services.retrieval.vector_search import vector_search
+from app.services.workspace.tenant_scope import normalize_workspace_id
 
 
 # =========================
 # SUMMARY
 # =========================
-def generate_summary(session: Session, chat_id: int) -> str:
+def generate_summary(
+    session: Session,
+    chat_id: int,
+    workspace_id: str,
+) -> str:
+    resolved_workspace_id = normalize_workspace_id(workspace_id)
 
     memories = session.exec(
         select(Memory).where(
+            Memory.workspace_id == resolved_workspace_id,
             Memory.chat_id == chat_id,
             Memory.status == "active"
         )
@@ -34,10 +41,16 @@ def generate_summary(session: Session, chat_id: int) -> str:
 # =========================
 # LIST
 # =========================
-def generate_list(session: Session, chat_id: int) -> str:
+def generate_list(
+    session: Session,
+    chat_id: int,
+    workspace_id: str,
+) -> str:
+    resolved_workspace_id = normalize_workspace_id(workspace_id)
 
     memories = session.exec(
         select(Memory).where(
+            Memory.workspace_id == resolved_workspace_id,
             Memory.chat_id == chat_id,
             Memory.status == "active"
         )
@@ -65,9 +78,19 @@ def generate_list(session: Session, chat_id: int) -> str:
 # =========================
 # SEARCH
 # =========================
-def generate_search(session: Session, chat_id: int, query: str) -> str:
-
-    memories = vector_search(session, query, chat_id, limit=10)
+def generate_search(
+    session: Session,
+    chat_id: int,
+    query: str,
+    workspace_id: str,
+) -> str:
+    memories = vector_search(
+        session,
+        query,
+        chat_id,
+        workspace_id,
+        limit=10,
+    )
 
     if not memories:
         return "No matching items found."

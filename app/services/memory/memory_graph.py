@@ -3,9 +3,12 @@ from sqlmodel import select
 from app.db.models.memory import Memory
 from app.db.models.memory_relationship import MemoryRelationship
 from app.services.retrieval.vector_search import vector_search
+from app.services.workspace.tenant_scope import inherit_workspace_id
 
 
 def link_memories(session, new_memory):
+
+    workspace_id = inherit_workspace_id(new_memory)
 
     # ------------------------------------------------
     # RULE RELATIONSHIPS
@@ -13,7 +16,10 @@ def link_memories(session, new_memory):
 
     recent_memories = session.exec(
         select(Memory)
-        .where(Memory.chat_id == new_memory.chat_id)
+        .where(
+            Memory.workspace_id == workspace_id,
+            Memory.chat_id == new_memory.chat_id,
+        )
         .order_by(Memory.created_at.desc())
         .limit(10)
     ).all()
@@ -36,6 +42,7 @@ def link_memories(session, new_memory):
 
         existing = session.exec(
             select(MemoryRelationship).where(
+                MemoryRelationship.workspace_id == workspace_id,
                 MemoryRelationship.source_memory_id == new_memory.id,
                 MemoryRelationship.target_memory_id == memory.id,
                 MemoryRelationship.relationship_type == relationship_type
@@ -46,6 +53,7 @@ def link_memories(session, new_memory):
             continue
 
         relationship = MemoryRelationship(
+            workspace_id=workspace_id,
             source_memory_id=new_memory.id,
             target_memory_id=memory.id,
             relationship_type=relationship_type
@@ -66,6 +74,7 @@ def link_memories(session, new_memory):
         session=session,
         embedding=new_memory.embedding,
         chat_id=new_memory.chat_id,
+        workspace_id=workspace_id,
         limit=5
     )
 
@@ -82,6 +91,7 @@ def link_memories(session, new_memory):
 
         existing = session.exec(
             select(MemoryRelationship).where(
+                MemoryRelationship.workspace_id == workspace_id,
                 MemoryRelationship.source_memory_id == new_memory.id,
                 MemoryRelationship.target_memory_id == memory_id,
                 MemoryRelationship.relationship_type == "semantic_related"
@@ -92,6 +102,7 @@ def link_memories(session, new_memory):
             continue
 
         relationship = MemoryRelationship(
+            workspace_id=workspace_id,
             source_memory_id=new_memory.id,
             target_memory_id=memory_id,
             relationship_type="semantic_related"

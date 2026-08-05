@@ -1,6 +1,7 @@
 from app.services.memory_intelligence.events import (
     process_memory_event
 )
+from app.services.workspace.tenant_scope import normalize_workspace_id
 
 
 SUPPORTED_MEMORY_EVENTS = [
@@ -13,7 +14,8 @@ SUPPORTED_MEMORY_EVENTS = [
 
 def handle_memory_intelligence_hook(
     event_name: str,
-    memory_id: int
+    memory_id: int,
+    workspace_id: str,
 ):
 
     if event_name not in SUPPORTED_MEMORY_EVENTS:
@@ -28,5 +30,8 @@ def handle_memory_intelligence_hook(
         {
             "event": event_name,
             "memory_id": memory_id,
+            "workspace_id": normalize_workspace_id(
+                workspace_id
+            ),
         }
     )

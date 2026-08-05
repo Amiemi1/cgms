@@ -1,7 +1,7 @@
 from sqlmodel import SQLModel, Field
 from typing import Optional
 from datetime import datetime
-from sqlalchemy import Column, BigInteger
+from sqlalchemy import Column, BigInteger, String
 
 
 # ==============================================================
@@ -13,6 +13,10 @@ class DecisionLineage(SQLModel, table=True):
     __tablename__ = "decision_lineage"
 
     id: Optional[int] = Field(default=None, primary_key=True)
+
+    workspace_id: str = Field(
+        sa_column=Column(String(64), index=True, nullable=False)
+    )
 
     decision_id: int = Field(index=True)
 

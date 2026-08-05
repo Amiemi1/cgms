@@ -2,11 +2,15 @@ from typing import Optional
 from datetime import datetime
 
 from sqlmodel import Field, SQLModel
-from sqlalchemy import BigInteger, Column
+from sqlalchemy import BigInteger, Column, String
 
 
 class Learning(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
+
+    workspace_id: str = Field(
+        sa_column=Column(String(64), index=True, nullable=False)
+    )
 
     chat_id: int = Field(sa_column=Column(BigInteger, nullable=False))
     memory_id: int = Field(sa_column=Column(BigInteger, nullable=False))

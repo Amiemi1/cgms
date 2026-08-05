@@ -11,6 +11,10 @@ class CandidateMemory(SQLModel, table=True):
 
     id: Optional[int] = Field(default=None, primary_key=True)
 
+    workspace_id: str = Field(
+        sa_column=Column(String(64), index=True, nullable=False)
+    )
+
     # Telegram chat IDs must be BIGINT
     chat_id: int = Field(
         sa_column=Column(BigInteger, index=True, nullable=False)

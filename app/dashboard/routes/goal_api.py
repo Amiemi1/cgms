@@ -1,16 +1,32 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 
-from app.db.session import SessionLocal
 from app.db.models.goal import Goal
+from app.db.session import SessionLocal
+from app.services.auth.application_authorization import (
+    enforce_application_authorization,
+)
+from app.services.workspace.tenant_scope import get_current_workspace_id
 
 
 router = APIRouter()
 
 
+def _get_workspace_id(
+    principal=Depends(
+        enforce_application_authorization
+    ),
+) -> str:
+    return get_current_workspace_id(principal)
+
+
+
 @router.get("/dashboard/goals/{chat_id}")
 def get_goals(
     chat_id: int,
-    limit: int = 20
+    workspace_id: str = Depends(
+        _get_workspace_id
+    ),
+    limit: int = 20,
 ):
 
     db = SessionLocal()
@@ -20,6 +36,7 @@ def get_goals(
         goals = (
             db.query(Goal)
             .filter(
+                Goal.workspace_id == workspace_id,
                 Goal.chat_id == chat_id,
                 Goal.status != "deleted"
             )

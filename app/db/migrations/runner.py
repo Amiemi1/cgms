@@ -94,9 +94,13 @@ def _default_migrations() -> tuple[DatabaseMigration, ...]:
     from app.db.migrations.pwi_001_workspace_foundation import (
         PWI_001_WORKSPACE_FOUNDATION,
     )
+    from app.db.migrations.pwi_001_tenant_persistence import (
+        PWI_001_TENANT_PERSISTENCE,
+    )
 
     return (
         PWI_001_WORKSPACE_FOUNDATION,
+        PWI_001_TENANT_PERSISTENCE,
     )
 
 

@@ -11,15 +11,32 @@ from app.services.embedding.embedding_service import generate_embedding
 from app.services.intelligence.prioritization_service import get_prioritized_tasks
 from app.services.intelligence.insight_service import generate_insights
 
+from app.services.auth.application_authorization import (
+    enforce_application_authorization,
+)
+from app.services.workspace.tenant_scope import (
+    get_current_workspace_id,
+    load_scoped_record,
+)
+
 from fastapi import Body
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from app.db.models import Memory # or wherever your Memory model is
 from app.db.session import SessionLocal
 
 from fastapi import Body, Request
 
 router = APIRouter(tags=["Dashboard"])
+
+
+def _get_workspace_id(
+    principal=Depends(
+        enforce_application_authorization
+    ),
+) -> str:
+    return get_current_workspace_id(principal)
+
 
 
 # --------------------------------------------------
@@ -68,11 +85,19 @@ def build_hierarchy(tasks):
 # TASKS ENDPOINT (ONLY ONE)
 # ---------------------------------------------
 @router.get("/tasks/{chat_id}")
-def get_tasks(chat_id: int):
+def get_tasks(
+    chat_id: int,
+    workspace_id: str = Depends(
+        _get_workspace_id
+    ),
+):
     session = SessionLocal()
     try:
         memories = session.exec(
-            select(Memory).where(Memory.chat_id == chat_id)
+            select(Memory).where(
+                Memory.workspace_id == workspace_id,
+                Memory.chat_id == chat_id,
+            )
         ).all()
 
         tasks = []
@@ -143,7 +168,12 @@ def get_tasks(chat_id: int):
 # --------------------------------------------------
 
 @router.get("/events/{chat_id}")
-def get_events(chat_id: int):
+def get_events(
+    chat_id: int,
+    workspace_id: str = Depends(
+        _get_workspace_id
+    ),
+):
 
     session = SessionLocal()
 
@@ -151,7 +181,10 @@ def get_events(chat_id: int):
 
         events = session.exec(
             select(Memory)
-            .where(Memory.chat_id == chat_id)
+            .where(
+                Memory.workspace_id == workspace_id,
+                Memory.chat_id == chat_id,
+            )
             .order_by(Memory.created_at.desc())
         ).all()
 
@@ -166,7 +199,12 @@ def get_events(chat_id: int):
 # --------------------------------------------------
 
 @router.get("/decisions/{chat_id}")
-def get_decisions(chat_id: int):
+def get_decisions(
+    chat_id: int,
+    workspace_id: str = Depends(
+        _get_workspace_id
+    ),
+):
 
     session = SessionLocal()
 
@@ -174,7 +212,10 @@ def get_decisions(chat_id: int):
 
         decisions = session.exec(
             select(Memory)
-            .where(Memory.chat_id == chat_id)
+            .where(
+                Memory.workspace_id == workspace_id,
+                Memory.chat_id == chat_id,
+            )
             .order_by(Memory.created_at.desc())
         ).all()
 
@@ -189,14 +230,22 @@ def get_decisions(chat_id: int):
 # --------------------------------------------------
 
 @router.get("/insights/{chat_id}")
-def get_insights(chat_id: int):
+def get_insights(
+    chat_id: int,
+    workspace_id: str = Depends(
+        _get_workspace_id
+    ),
+):
 
     session = SessionLocal()
 
     try:
         memories = session.exec(
             select(Memory)
-            .where(Memory.chat_id == chat_id)
+            .where(
+                Memory.workspace_id == workspace_id,
+                Memory.chat_id == chat_id,
+            )
             .order_by(Memory.created_at.desc())
             .limit(50)
         ).all()
@@ -236,12 +285,22 @@ def get_insights(chat_id: int):
 # --------------------------------------------------
 
 @router.patch("/memory/{memory_id}/restore")
-def restore_memory(memory_id: int):
+def restore_memory(
+    memory_id: int,
+    workspace_id: str = Depends(
+        _get_workspace_id
+    ),
+):
 
     session = SessionLocal()
 
     try:
-        m = session.get(Memory, memory_id)
+        m = load_scoped_record(
+            session,
+            Memory,
+            memory_id,
+            workspace_id,
+        )
 
         if not m:
             return {"error": "not found"}
@@ -261,12 +320,22 @@ def restore_memory(memory_id: int):
 # --------------------------------------------------
 
 @router.patch("/memory/{memory_id}/reopen")
-def reopen_memory(memory_id: int):
+def reopen_memory(
+    memory_id: int,
+    workspace_id: str = Depends(
+        _get_workspace_id
+    ),
+):
 
     session = SessionLocal()
 
     try:
-        m = session.get(Memory, memory_id)
+        m = load_scoped_record(
+            session,
+            Memory,
+            memory_id,
+            workspace_id,
+        )
 
         if not m:
             return {"error": "not found"}
@@ -286,7 +355,12 @@ def reopen_memory(memory_id: int):
 # --------------------------------------------------
 
 @router.get("/timeline/{chat_id}")
-def get_timeline(chat_id: int):
+def get_timeline(
+    chat_id: int,
+    workspace_id: str = Depends(
+        _get_workspace_id
+    ),
+):
 
     session = SessionLocal()
 
@@ -294,10 +368,13 @@ def get_timeline(chat_id: int):
 
         memories = session.exec(
             select(Memory)
-            .where(Memory.chat_id == chat_id)
+            .where(
+                Memory.workspace_id == workspace_id,
+                Memory.chat_id == chat_id,
+            )
             .order_by(Memory.created_at.desc())
         ).all()
-        
+
         return [
             {
                 "time": m.created_at,
@@ -315,13 +392,23 @@ def get_timeline(chat_id: int):
 # --------------------------------------------------
 
 @router.patch("/memory/{memory_id}/complete")
-def complete_memory(memory_id: int):
+def complete_memory(
+    memory_id: int,
+    workspace_id: str = Depends(
+        _get_workspace_id
+    ),
+):
 
     session = SessionLocal()
 
     try:
 
-        memory = session.get(Memory, memory_id)
+        memory = load_scoped_record(
+            session,
+            Memory,
+            memory_id,
+            workspace_id,
+        )
 
         if not memory:
             return {"error": "Memory not found"}
@@ -337,6 +424,7 @@ def complete_memory(memory_id: int):
 
                 siblings = session.exec(
                     select(Memory).where(
+                        Memory.workspace_id == workspace_id,
                         Memory.chat_id == child.chat_id
                     )
                 ).all()
@@ -348,7 +436,12 @@ def complete_memory(memory_id: int):
 
                 if siblings and all(s.status == "completed" for s in siblings):
 
-                    parent = session.get(Memory, parent_id)
+                    parent = load_scoped_record(
+                        session,
+                        Memory,
+                        parent_id,
+                        workspace_id,
+                    )
 
                     if parent and parent.status != "completed":
                         parent.status = "completed"
@@ -372,12 +465,22 @@ def complete_memory(memory_id: int):
 # --------------------------------------------------
 
 @router.delete("/memory/{memory_id}")
-def delete_memory(memory_id: int):
+def delete_memory(
+    memory_id: int,
+    workspace_id: str = Depends(
+        _get_workspace_id
+    ),
+):
 
     session = SessionLocal()
 
     try:
-        m = session.get(Memory, memory_id)
+        m = load_scoped_record(
+            session,
+            Memory,
+            memory_id,
+            workspace_id,
+        )
 
         if not m:
             return {"error": "not found"}
@@ -397,12 +500,22 @@ def delete_memory(memory_id: int):
 # --------------------------------------------------
 
 @router.patch("/memory/{memory_id}/delay")
-def delay_memory(memory_id: int):
+def delay_memory(
+    memory_id: int,
+    workspace_id: str = Depends(
+        _get_workspace_id
+    ),
+):
 
     session = SessionLocal()
 
     try:
-        m = session.get(Memory, memory_id)
+        m = load_scoped_record(
+            session,
+            Memory,
+            memory_id,
+            workspace_id,
+        )
 
         if not m:
             return {"error": "not found"}
@@ -425,7 +538,12 @@ def delay_memory(memory_id: int):
 # --------------------------------------------------
 
 @router.delete("/memory/deduplicate/{chat_id}")
-def deduplicate_memories(chat_id: int):
+def deduplicate_memories(
+    chat_id: int,
+    workspace_id: str = Depends(
+        _get_workspace_id
+    ),
+):
 
     session = SessionLocal()
 
@@ -433,7 +551,10 @@ def deduplicate_memories(chat_id: int):
 
         memories = session.exec(
             select(Memory)
-            .where(Memory.chat_id == chat_id)
+            .where(
+                Memory.workspace_id == workspace_id,
+                Memory.chat_id == chat_id,
+            )
         ).all()
 
         seen = set()
@@ -465,7 +586,13 @@ def deduplicate_memories(chat_id: int):
 # --------------------------------------------------
 
 @router.get("/search/{chat_id}")
-def semantic_search(chat_id: int, q: str):
+def semantic_search(
+    chat_id: int,
+    q: str,
+    workspace_id: str = Depends(
+        _get_workspace_id
+    ),
+):
 
     session = SessionLocal()
 
@@ -476,6 +603,7 @@ def semantic_search(chat_id: int, q: str):
             session=session,
             chat_id=chat_id,
             embedding=emb,
+            workspace_id=workspace_id,
             limit=10
         )
 
@@ -489,14 +617,22 @@ def semantic_search(chat_id: int, q: str):
 # --------------------------------------------------
 
 @router.get("/memory-graph/{chat_id}")
-def memory_graph(chat_id: int):
+def memory_graph(
+    chat_id: int,
+    workspace_id: str = Depends(
+        _get_workspace_id
+    ),
+):
 
     session = SessionLocal()
 
     try:
         memories = session.exec(
             select(Memory)
-            .where(Memory.chat_id == chat_id)
+            .where(
+                Memory.workspace_id == workspace_id,
+                Memory.chat_id == chat_id,
+            )
             .limit(50)
         ).all()
 
@@ -526,7 +662,12 @@ def memory_graph(chat_id: int):
 
 
 @router.post("/tasks/complete")
-def complete_task(payload: dict = Body(...)):
+def complete_task(
+    payload: dict = Body(...),
+    workspace_id: str = Depends(
+        _get_workspace_id
+    ),
+):
     session = SessionLocal()
     try:
         task_id = payload.get("id")
@@ -534,7 +675,12 @@ def complete_task(payload: dict = Body(...)):
         if not task_id:
             return {"status": "error", "message": "No task id provided"}
 
-        task = session.get(Memory, task_id)
+        task = load_scoped_record(
+            session,
+            Memory,
+            task_id,
+            workspace_id,
+        )
 
         if not task:
             return {"status": "not found"}
@@ -543,6 +689,7 @@ def complete_task(payload: dict = Body(...)):
         # ✅ COMPLETE ALL CHILDREN
         children = session.exec(
             select(Memory).where(
+                Memory.workspace_id == workspace_id,
                 Memory.depends_on.contains([task.id])
             )
         ).all()
@@ -569,7 +716,12 @@ def complete_task(payload: dict = Body(...)):
 # TASK BREAKDOWN ENDPOINT
 # ===============================
 @router.post("/tasks/breakdown")
-async def breakdown_task(request: Request):
+async def breakdown_task(
+    request: Request,
+    workspace_id: str = Depends(
+        _get_workspace_id
+    ),
+):
 
     session = SessionLocal()
 
@@ -608,7 +760,12 @@ async def breakdown_task(request: Request):
                 }
             )
 
-        task = session.get(Memory, int(task_id))
+        task = load_scoped_record(
+            session,
+            Memory,
+            int(task_id),
+            workspace_id,
+        )
 
         if not task:
             raise HTTPException(
@@ -650,6 +807,7 @@ async def breakdown_task(request: Request):
 
         for s in subtasks:
             new_task = Memory(
+                workspace_id=workspace_id,
                 chat_id=task.chat_id,
                 source_message_id=0,
                 summary=s,

@@ -5,22 +5,21 @@
 from sqlmodel import Session
 from sqlalchemy import text
 
+from app.services.workspace.tenant_scope import normalize_workspace_id
 
-def search_memories(session, chat_id, embedding, limit=5):
+
+def search_memories(
+    session,
+    chat_id,
+    embedding,
+    workspace_id: str,
+    limit=5,
+):
     """
     Perform semantic search on memories using pgvector.
-
-    Parameters
-    ----------
-    session : SQLModel session
-    chat_id : Telegram chat id
-    embedding : list[float]
-    limit : int
-
-    Returns
-    -------
-    list of rows
     """
+
+    resolved_workspace_id = normalize_workspace_id(workspace_id)
 
     # -------------------------------------------------
     # DEBUG
@@ -39,8 +38,9 @@ def search_memories(session, chat_id, embedding, limit=5):
             memory_type,
             (embedding <-> CAST(:embedding AS vector)) AS distance
         FROM memory
-        WHERE chat_id = :chat_id
-        AND embedding IS NOT NULL
+        WHERE workspace_id = :workspace_id
+          AND chat_id = :chat_id
+          AND embedding IS NOT NULL
         ORDER BY embedding <-> CAST(:embedding AS vector)
         LIMIT :limit
     """)
@@ -53,6 +53,7 @@ def search_memories(session, chat_id, embedding, limit=5):
         query,
         {
             "embedding": embedding,
+            "workspace_id": resolved_workspace_id,
             "chat_id": chat_id,
             "limit": limit
         }
@@ -68,12 +69,20 @@ def search_memories(session, chat_id, embedding, limit=5):
 
     return rows
 
+
 # =====================================================
 # SEMANTIC SEARCH SERVICE
 # =====================================================
 
 
-def search_memories(session: Session, chat_id: int, embedding: list, limit: int = 10):
+def search_memories(
+    session: Session,
+    chat_id: int,
+    embedding: list,
+    workspace_id: str,
+    limit: int = 10,
+):
+    resolved_workspace_id = normalize_workspace_id(workspace_id)
 
     # Convert embedding list → pgvector string
     emb_str = "[" + ",".join([str(x) for x in embedding]) + "]"
@@ -82,7 +91,8 @@ def search_memories(session: Session, chat_id: int, embedding: list, limit: int 
         SELECT id, summary, memory_type,
                1 - (embedding <=> CAST(:embedding AS vector)) AS score
         FROM memory
-        WHERE chat_id = :chat_id
+        WHERE workspace_id = :workspace_id
+          AND chat_id = :chat_id
           AND embedding IS NOT NULL
         ORDER BY embedding <=> CAST(:embedding AS vector)
         LIMIT :limit
@@ -90,6 +100,7 @@ def search_memories(session: Session, chat_id: int, embedding: list, limit: int 
 
     rows = session.execute(query, {
         "embedding": emb_str,
+        "workspace_id": resolved_workspace_id,
         "chat_id": chat_id,
         "limit": limit
     }).fetchall()

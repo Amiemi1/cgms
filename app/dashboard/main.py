@@ -20,6 +20,9 @@ from app.services.product_readiness.bootstrap import (
 from app.services.auth.application_authorization import (
     enforce_application_authorization,
 )
+from app.services.workspace.tenant_scope import (
+    get_current_workspace_id,
+)
 
 from app.dashboard.routes.patent_readiness_dashboard import (
     router as patent_readiness_dashboard_router,
@@ -110,6 +113,14 @@ from app.dashboard.routes.programme_progress_dashboard import (
 from app.services.security.cors_policy import (
     get_allowed_cors_origins,
 )
+
+
+def _get_workspace_id(
+    principal=Depends(
+        enforce_application_authorization
+    ),
+) -> str:
+    return get_current_workspace_id(principal)
 
 startup_logger = logging.getLogger(
     "cgms.dashboard.startup"
@@ -204,13 +215,19 @@ def dashboard(request: Request):
 
 
 @app.post("/dashboard/tasks/{task_id}/complete")
-def mark_task_complete(task_id: int):
+def mark_task_complete(
+    task_id: int,
+    workspace_id: str = Depends(
+        _get_workspace_id
+    ),
+):
     db = SessionLocal()
 
     try:
         task = (
             db.query(Memory)
             .filter(
+                Memory.workspace_id == workspace_id,
                 Memory.id == task_id,
                 Memory.memory_type == "task",
             )

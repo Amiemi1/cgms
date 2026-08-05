@@ -15,6 +15,7 @@ from app.services.strategy.strategy_engine import generate_strategy
 
 from app.services.search.vector_search_service import search_memories
 from app.services.embedding.embedding_service import generate_embedding
+from app.services.workspace.tenant_scope import resolve_legacy_workspace_id
 
 
 def register_intelligence_handlers(dp):
@@ -124,6 +125,7 @@ def register_intelligence_handlers(dp):
     @dp.message(F.text == "/memory")
     async def memory_handler(message: Message):
 
+        workspace_id = resolve_legacy_workspace_id()
         session = SessionLocal()
 
         try:
@@ -131,10 +133,14 @@ def register_intelligence_handlers(dp):
             result = session.execute(text("""
                 SELECT id, summary, memory_type, is_locked
                 FROM memory
-                WHERE chat_id = :chat_id
+                WHERE workspace_id = :workspace_id
+                  AND chat_id = :chat_id
                 ORDER BY created_at DESC
                 LIMIT 10
-            """), {"chat_id": message.chat.id})
+            """), {
+                "workspace_id": workspace_id,
+                "chat_id": message.chat.id,
+            })
 
             rows = result.fetchall()
 
@@ -161,6 +167,7 @@ def register_intelligence_handlers(dp):
     @dp.message(F.text.startswith("/search"))
     async def search_handler(message: Message):
 
+        workspace_id = resolve_legacy_workspace_id()
         session = SessionLocal()
 
         try:
@@ -187,6 +194,7 @@ def register_intelligence_handlers(dp):
                 session=session,
                 chat_id=message.chat.id,
                 embedding=query_embedding,
+                workspace_id=workspace_id,
                 limit=5
             )
 

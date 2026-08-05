@@ -8,9 +8,20 @@ from app.db.models.memory import Memory
 from app.db.models.memory_relationship import MemoryRelationship
 from app.services.retrieval.embedding_service import generate_embedding
 from app.services.retrieval.vector_search import vector_search
+from app.services.workspace.tenant_scope import (
+    load_scoped_record,
+    normalize_workspace_id,
+)
 
 
-def trace_reasoning(session, chat_id, query):
+def trace_reasoning(
+    session,
+    chat_id,
+    query,
+    workspace_id: str,
+):
+
+    resolved_workspace_id = normalize_workspace_id(workspace_id)
 
     # ------------------------------------------------
     # Find closest memory
@@ -22,6 +33,7 @@ def trace_reasoning(session, chat_id, query):
         session=session,
         embedding=embedding,
         chat_id=chat_id,
+        workspace_id=resolved_workspace_id,
         limit=1
     )
 
@@ -30,7 +42,12 @@ def trace_reasoning(session, chat_id, query):
 
     start_memory_id = results[0][0]
 
-    start_memory = session.get(Memory, start_memory_id)
+    start_memory = load_scoped_record(
+        session,
+        Memory,
+        start_memory_id,
+        resolved_workspace_id,
+    )
 
     if not start_memory:
         return "No reasoning trace found."
@@ -47,6 +64,8 @@ def trace_reasoning(session, chat_id, query):
 
         relation = session.exec(
             select(MemoryRelationship).where(
+                MemoryRelationship.workspace_id
+                == resolved_workspace_id,
                 MemoryRelationship.source_memory_id == current_id
             )
         ).first()
@@ -54,7 +73,12 @@ def trace_reasoning(session, chat_id, query):
         if not relation:
             break
 
-        next_memory = session.get(Memory, relation.target_memory_id)
+        next_memory = load_scoped_record(
+            session,
+            Memory,
+            relation.target_memory_id,
+            resolved_workspace_id,
+        )
 
         if not next_memory:
             break

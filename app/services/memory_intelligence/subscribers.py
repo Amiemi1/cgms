@@ -35,10 +35,12 @@ def memory_intelligence_subscriber(event: DomainEvent) -> None:
         return
 
     memory_id = event.payload.get("memory_id")
+    event_payload = {
+        "event": mapped_event_name,
+        "memory_id": memory_id,
+    }
 
-    process_memory_event(
-        {
-            "event": mapped_event_name,
-            "memory_id": memory_id,
-        }
-    )
+    if event.workspace_id is not None:
+        event_payload["workspace_id"] = event.workspace_id
+
+    process_memory_event(event_payload)

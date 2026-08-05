@@ -1,6 +1,6 @@
 import asyncio
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
 from app.db.models.memory import Memory
 from app.db.session import SessionLocal
@@ -8,35 +8,61 @@ from app.services.orchestration.contracts.memory_events import (
     memory_priority_changed_event,
 )
 from app.services.orchestration.event_bus import DEFAULT_EVENT_BUS
+from app.services.auth.application_authorization import (
+    enforce_application_authorization,
+)
+from app.services.workspace.tenant_scope import (
+    get_current_workspace_id,
+    load_scoped_record,
+)
 
 
-router = APIRouter(prefix="/memory", tags=["Memory Actions"])
+router = APIRouter(
+    prefix="/memory",
+    tags=["Memory Actions"],
+)
 
 
-def publish_memory_event(event) -> None:
-    """
-    Publish memory domain events from synchronous route handlers.
+def _get_workspace_id(
+    principal=Depends(
+        enforce_application_authorization
+    ),
+) -> str:
+    return get_current_workspace_id(principal)
 
-    TODO(v1.76):
-    Convert memory action routes to async and await DEFAULT_EVENT_BUS.publish()
-    directly.
-    """
 
+
+def publish_memory_event(event):
     try:
-        asyncio.run(DEFAULT_EVENT_BUS.publish(event))
+        loop = asyncio.get_running_loop()
     except RuntimeError:
-        # Compatibility fallback for environments where an event loop
-        # may already be running.
-        loop = asyncio.get_event_loop()
-        loop.run_until_complete(DEFAULT_EVENT_BUS.publish(event))
+        asyncio.run(
+            DEFAULT_EVENT_BUS.publish(event)
+        )
+        return
+
+    loop.create_task(
+        DEFAULT_EVENT_BUS.publish(event)
+    )
 
 
 @router.patch("/{memory_id}/priority")
-def update_priority(memory_id: int, priority: int):
+def update_priority(
+    memory_id: int,
+    priority: int,
+    workspace_id: str = Depends(
+        _get_workspace_id
+    ),
+):
     session = SessionLocal()
 
     try:
-        memory = session.get(Memory, memory_id)
+        memory = load_scoped_record(
+            session,
+            Memory,
+            memory_id,
+            workspace_id,
+        )
 
         if not memory:
             return {"error": "Memory not found"}
@@ -50,6 +76,7 @@ def update_priority(memory_id: int, priority: int):
 
         event = memory_priority_changed_event(
             memory_id=memory.id,
+            workspace_id=workspace_id,
             source="memory_actions.update_priority",
             old_priority=old_priority,
             new_priority=priority,

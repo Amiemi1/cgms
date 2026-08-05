@@ -1,8 +1,15 @@
 from app.services.retrieval.vector_search import vector_search
 from app.services.retrieval.embedding_service import generate_embedding
+from app.services.workspace.tenant_scope import normalize_workspace_id
 
 
-def run_query(session, chat_id: int, query: str, limit: int = 5):
+def run_query(
+    session,
+    chat_id: int,
+    query: str,
+    workspace_id: str,
+    limit: int = 5,
+):
 
     try:
 
@@ -26,6 +33,9 @@ def run_query(session, chat_id: int, query: str, limit: int = 5):
             session=session,
             embedding=embedding,
             chat_id=chat_id,
+            workspace_id=normalize_workspace_id(
+                workspace_id
+            ),
             limit=limit
         )
 
@@ -47,7 +57,7 @@ def run_query(session, chat_id: int, query: str, limit: int = 5):
 
         return memories
 
-    except Exception as e:
+    except Exception:
 
         import traceback
         print("\nRETRIEVAL ERROR")

@@ -1,26 +1,53 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from sqlmodel import select
 
-from app.db.session import SessionLocal
 from app.db.models.memory import Memory
 from app.db.models.memory_relationship import MemoryRelationship
+from app.db.session import SessionLocal
+from app.services.auth.application_authorization import (
+    enforce_application_authorization,
+)
+from app.services.workspace.tenant_scope import get_current_workspace_id
 
-router = APIRouter(prefix="/memory-graph", tags=["Memory Graph"])
+
+router = APIRouter(
+    prefix="/memory-graph",
+    tags=["Memory Graph"],
+)
+
+
+def _get_workspace_id(
+    principal=Depends(
+        enforce_application_authorization
+    ),
+) -> str:
+    return get_current_workspace_id(principal)
+
 
 
 @router.get("/{chat_id}")
-def get_memory_graph(chat_id: int):
+def get_memory_graph(
+    chat_id: int,
+    workspace_id: str = Depends(
+        _get_workspace_id
+    ),
+):
 
     session = SessionLocal()
 
     try:
 
         memories = session.exec(
-            select(Memory).where(Memory.chat_id == chat_id)
+            select(Memory).where(
+                Memory.workspace_id == workspace_id,
+                Memory.chat_id == chat_id,
+            )
         ).all()
 
         relationships = session.exec(
-            select(MemoryRelationship)
+            select(MemoryRelationship).where(
+                MemoryRelationship.workspace_id == workspace_id
+            )
         ).all()
 
         nodes = []

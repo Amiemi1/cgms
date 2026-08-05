@@ -23,7 +23,7 @@ docs/CGMS_MASTER_CONTINUATION_PROMPT_v2.0.md
 **Comprehensive handoff date**
 
 ```text
-30 July 2026
+4 August 2026
 ```
 
 **Current programme**
@@ -47,13 +47,13 @@ PWI-001 — Persistent Workspace Isolation Foundation
 **Current sub-stage**
 
 ```text
-Step 187D — Approved as Planned Work; Controlled Discovery Pending
+Step 187D — Technical Implementation and Governed Database Validation Complete; Canonical Closure Recorded
 ```
 
 **Exact next authorised action**
 
 ```text
-PWI-001 Step 187D — Controlled Implementation Discovery and Boundary Validation
+PWI-001 Step 187D — Canonical Closure Review and Exact 59-Path Pre-Staging Validation
 ```
 
 ---
@@ -72,9 +72,9 @@ The next assistant must not:
 - reinterpret approved decisions;
 - recreate the current implementation;
 - reset, clean, restore, stash or discard the working tree;
-- stage or commit files before the pending validation passes;
+- stage, commit or push files without a separately approved governance boundary;
 - modify `manual_test_db.py`;
-- begin a later PWI-001 stage prematurely;
+- begin Step 187E or Step 187F without separate approval;
 - treat historical “next action” statements as current instructions.
 
 Where an older historical statement conflicts with the current-state sections in this document, the current-state sections control.
@@ -346,10 +346,12 @@ cgms-v2-roadmap
 ## 10.3 Current committed baseline HEAD
 
 ```text
-ae8ffca9f23663a38b3310f087673ca70035f2e7
+d39adc7234ce8af56f3a7e8263e5d757ebd5d5ab
 ```
 
-This is the committed and published PWI-001 Step 187B baseline.
+This is the committed and published baseline immediately preceding the uncommitted Step 187D implementation.
+
+Local HEAD, configured upstream HEAD and direct remote branch HEAD were all verified at this value during final Step 187D validation.
 
 ## 10.4 Python interpreter
 
@@ -360,7 +362,7 @@ C:\venvs\cgms311\Scripts\python.exe
 ## 10.5 Runtime environment
 
 - Python 3.11.9;
-- pytest 9.0.3;
+- pytest 9.1.1;
 - pluggy 1.6.0;
 - Windows PowerShell;
 - Docker operational;
@@ -634,6 +636,14 @@ PWI-001 does not include:
 - unrelated product-feature development.
 
 Do not introduce excluded work without a separately approved intervention.
+
+## 14.4 Current intervention state
+
+Step 187A, Step 187B, Step 187C and the technical implementation and governed database-validation scope of Step 187D are complete.
+
+Step 187D currently remains uncommitted at 58 validated implementation paths plus this canonical document after the present closure update.
+
+Step 187E and Step 187F have not started and are not authorised by this closure.
 
 ---
 
@@ -1222,96 +1232,127 @@ Do not rerun the failed mutation or recovery scripts.
 
 ---
 
-# 23. EXACT ACTIVE IMPLEMENTATION PATHS
+# 23. EXACT ACTIVE STEP 187D IMPLEMENTATION PATHS
 
-Before replacing this canonical document, Step 187C contained exactly 22 uncommitted paths.
+Before this canonical closure update, the Step 187D working tree contained exactly 58 validated changed paths.
 
-## 23.1 Production paths
-
-```text
-app/dashboard/auth.py
-app/dashboard/routes/browser_auth.py
-app/db/models/security_models.py
-app/services/auth/application_authorization.py
-app/services/auth/auth_dependency.py
-app/services/auth/browser_authorization.py
-app/services/auth/browser_session_dependency.py
-app/services/auth/session_registry.py
-```
-
-## 23.2 Modified test paths
+## 23.1 Production and migration paths — 50
 
 ```text
-tests/conftest.py
-tests/test_application_authorization.py
-tests/test_authenticated_browser_csrf.py
-tests/test_browser_auth.py
-tests/test_browser_auth_session_registry.py
-tests/test_browser_authorization.py
-tests/test_browser_session_administration_route.py
-tests/test_browser_session_dependency.py
-tests/test_patent_evidence_export.py
-tests/test_patent_readiness_dashboard.py
-tests/test_programme_progress_dashboard.py
-tests/test_session_administration.py
-tests/test_session_registry.py
+app/dashboard/main.py
+app/dashboard/routes/goal_api.py
+app/dashboard/routes/insights.py
+app/dashboard/routes/intelligence_api.py
+app/dashboard/routes/memory_actions.py
+app/dashboard/routes/memory_graph.py
+app/dashboard/routes/memory_intelligence.py
+app/dashboard/routes/memory_panels.py
+app/db/migrations/pwi_001_tenant_persistence.py
+app/db/migrations/runner.py
+app/db/models/candidate_memory.py
+app/db/models/decision_lineage.py
+app/db/models/goal.py
+app/db/models/insight.py
+app/db/models/learning.py
+app/db/models/learning_log.py
+app/db/models/memory.py
+app/db/models/memory_access.py
+app/db/models/memory_relationship.py
+app/db/models/memory_score.py
+app/db/models/message.py
+app/handlers/ingestion_handler.py
+app/handlers/intelligence_handler.py
+app/services/agent/action_engine.py
+app/services/agent/learning_engine.py
+app/services/graph/vector_graph.py
+app/services/ingestion/message_ingestor.py
+app/services/insights/insight_engine.py
+app/services/insights/proactive_engine.py
+app/services/intelligence/explain_engine.py
+app/services/intelligence/prioritization_service.py
+app/services/intelligence/trace_engine.py
+app/services/learning/learning_engine.py
+app/services/memory/consolidation_engine.py
+app/services/memory/memory_graph.py
+app/services/memory/memory_pipeline.py
+app/services/memory/save_candidate.py
+app/services/memory/save_message.py
+app/services/memory_intelligence/events.py
+app/services/memory_intelligence/hooks.py
+app/services/memory_intelligence/score_store.py
+app/services/memory_intelligence/subscribers.py
+app/services/product/product_commands.py
+app/services/reasoning/decision_lineage_service.py
+app/services/retrieval/query_engine.py
+app/services/retrieval/vector_search.py
+app/services/search/vector_search_service.py
+app/services/security/memory_access_control.py
+app/services/workspace/tenant_scope.py
+app/web/routers/search_api.py
 ```
 
-## 23.3 New untracked test
+## 23.2 Test paths — 8
 
 ```text
-tests/test_workspace_bound_authentication.py
+tests/test_memory_actions_event_publish.py
+tests/test_pwi_001_tenant_persistence_migration.py
+tests/test_tenant_model_workspace_binding.py
+tests/test_tenant_query_isolation.py
+tests/test_tenant_raw_sql_isolation.py
+tests/test_tenant_record_denial.py
+tests/test_workspace_foundation_migration.py
+tests/test_workspace_tenant_scope.py
 ```
 
-## 23.4 Verified state before the continuation-document replacement
+## 23.3 Verified state before this canonical closure update
 
 ```text
 Branch: cgms-v2-roadmap
-HEAD: ae8ffca9f23663a38b3310f087673ca70035f2e7
-Changed paths: 22
+HEAD: d39adc7234ce8af56f3a7e8263e5d757ebd5d5ab
+Upstream HEAD: d39adc7234ce8af56f3a7e8263e5d757ebd5d5ab
+Direct remote HEAD: d39adc7234ce8af56f3a7e8263e5d757ebd5d5ab
+Changed paths: 58
 Staged paths: 0
-manual_test_db.py changes: 0
-Continuation-file changes: 0
+manual_test_db.py: unchanged
+Published Step 187A migration: unchanged
 ```
 
-## 23.5 Expected state after replacing the canonical document
+## 23.4 Expected state after this canonical closure update
 
 ```text
-Changed paths: 23
+Changed paths: 59
 Staged paths: 0
-manual_test_db.py changes: 0
+Additional changed path: docs/CGMS_MASTER_CONTINUATION_PROMPT_v2.0.md
 ```
 
-The additional changed path must be:
-
-```text
-docs/CGMS_MASTER_CONTINUATION_PROMPT_v2.0.md
-```
-
-The new chat must verify this 23-path state before continuing.
-
-Do not assume it without inspecting Git status.
+The next governed action must verify the exact 59-path state and must not assume it.
 
 ---
 
-# 24. CURRENT UNCOMMITTED CONTRACT
+# 24. CURRENT UNCOMMITTED STEP 187D CONTRACT
 
-The active working tree is intended to enforce all of the following:
+The active working tree and governed PostgreSQL schema now enforce all of the following:
 
-1. `AuthenticatedPrincipal.workspace_id` is mandatory.
-2. Browser-session JWTs remain workspace-neutral.
-3. Persistent browser-session state is the browser workspace authority.
-4. Browser principals revalidate account, role, membership and workspace.
-5. Bearer tokens require `workspace_id`.
-6. Bearer principals revalidate account, role, membership and workspace.
-7. Legacy JSON login issues canonical-role, workspace-bound Bearer tokens.
-8. Invalid workspace context produces non-disclosing HTTP 401 denial.
-9. Existing global role and permission policy remains unchanged.
-10. No process-global workspace fallback exists.
-11. Browser workspace context is not accepted from untrusted headers.
-12. Cross-workspace access must fail without confirming resource existence.
-13. No unrelated RBAC redesign is included.
-14. No Step 187D, Step 187E or Step 187F behaviour is included yet.
+1. The eleven tenant models require a non-null, indexed `workspace_id`.
+2. Tenant record producers bind an explicit workspace or inherit it from an authoritative parent record.
+3. Browser-facing tenant routes derive workspace context from the already-authorised authenticated principal.
+4. Tenant ORM queries are constrained by `workspace_id`.
+5. Tenant primary-key loads use scoped, non-disclosing lookup contracts.
+6. Raw SQL and vector-search paths bind and filter by `workspace_id`.
+7. Missing records and cross-workspace records produce the same external denial behaviour.
+8. Relationship, scoring, lineage and access child records inherit parent workspace ownership.
+9. Caller-supplied child workspace values cannot override authoritative parent ownership.
+10. Legacy non-browser ingress may use only the explicit transitional default-workspace resolver.
+11. No process-global workspace fallback is permitted.
+12. The global role and permission model remains unchanged.
+13. `security_log.workspace_id` and genuinely global authentication and policy tables remain outside tenant persistence.
+14. `PWI_001_TENANT_PERSISTENCE` is registered immediately after `PWI_001_WORKSPACE_FOUNDATION`.
+15. The governed PostgreSQL migration ledger records both migrations with validated checksums.
+16. All eleven tenant tables have non-null columns, workspace indexes, workspace foreign keys and nonblank check constraints.
+17. Migration execution is idempotent.
+18. Step 187E browser workspace switching is not included.
+19. Step 187F integrated cross-workspace closure is not included.
+20. `manual_test_db.py` remains unchanged.
 
 ---
 
@@ -1437,7 +1478,7 @@ Step 187C.3D is complete and no longer pending.
 
 ---
 
-# 27. FAILURE HANDLING FOR STEP 187C.3D
+# 27. HISTORICAL FAILURE HANDLING FOR STEP 187C.3D
 
 Do not automatically reset the working tree after a failure.
 
@@ -1464,15 +1505,7 @@ Preserve:
 
 # 28. COMPLETED PUBLICATION AND CURRENT VALIDATION
 
-Step 187C implementation and closure remain complete.
-
-Step 187C closure validation:
-
-- authentication-focused regression: 218 passed, 30 warnings;
-- complete CGMS regression at Step 187C closure: 596 passed, 37 warnings;
-- runtime-contract validation: PASS;
-- route-surface broadening: none;
-- later-stage behaviour introduced: no.
+Step 187C implementation and publication remain complete.
 
 Published Step 187C commits:
 
@@ -1487,53 +1520,82 @@ Published dashboard currency update:
 ```text
 Commit: 6a422b0a269581d2e86b4f9e5081e552479b3c35
 Subject: feat(dashboard): update PWI-001 programme progress currency
-Committed paths: 3
 ```
 
-Dashboard update validation:
+Current published repository baseline:
 
-- focused Programme Progress and Product Readiness regression: 17 passed, 5 warnings;
-- complete CGMS regression after dashboard update: 597 passed, 37 warnings;
+```text
+d39adc7234ce8af56f3a7e8263e5d757ebd5d5ab
+```
+
+Step 187D technical validation completed with:
+
+- import-smoke validation: 7 passed;
+- focused tenant-isolation validation: 37 passed;
+- focused migration validation: 10 passed;
+- authentication and workspace regression: 84 passed;
+- complete CGMS regression: 633 passed, 37 warnings;
+- route contracts: 116;
+- normalized route-surface SHA-256: `d11f3c1fd30c9e42eb6e028fee77f0d3119aa5c97be808aa7abeb2dc972f2d4f`;
+- route additions or removals: 0;
 - `git diff --check`: PASS;
-- Product Readiness capability status changed: no;
-- Step 187D production implementation started: no;
-- `manual_test_db.py`: unchanged.
+- final implementation changed paths before canonical closure: 58;
+- staged paths: 0.
 
-Dashboard-update publication state:
+Governed PostgreSQL validation completed with:
 
-- dashboard update commit: `6a422b0a269581d2e86b4f9e5081e552479b3c35`;
-- branch: `cgms-v2-roadmap`;
-- upstream: `origin/cgms-v2-roadmap`;
-- dashboard-update synchronization: VERIFIED.
+- connection dialect: PostgreSQL;
+- database: `postgresql+psycopg://postgres:***@127.0.0.1:5432/cgms`;
+- active default workspace: verified;
+- tenant tables validated: 11;
+- null or blank tenant ownership after migration: 0;
+- orphan tenant ownership after migration: 0;
+- non-null workspace columns: 11;
+- workspace indexes: 11;
+- workspace foreign keys: 11;
+- workspace check constraints: 11;
+- first migration run applied `20260802_002_pwi_tenant_persistence` and skipped the existing foundation migration;
+- second migration run applied no migrations and skipped both registered migrations.
 
-Canonical publication state:
-
-- resolve from the repository HEAD containing this controlling file after commit;
-- do not treat the dashboard update commit as the canonical publication HEAD.
+The implementation and database state remain uncommitted. No staging, commit, amendment or push has occurred.
 
 ---
 
-# 29. REMAINING PWI-001 ROADMAP
+# 29. PWI-001 ROADMAP AND CURRENT COMPLETION STATE
 
 ## 29.1 Step 187D — Tenant persistence and query-contract integration
 
-Expected concerns:
+Status:
 
-- required workspace identifiers on tenant records;
-- workspace-scoped repository methods;
-- query isolation;
-- non-disclosing record denial;
-- legacy backfill verification.
+```text
+Technical implementation and governed database validation complete
+Canonical closure recorded
+Pre-staging validation pending
+```
+
+Delivered:
+
+- required workspace identifiers on eleven tenant models;
+- workspace-bound producer and parent-inheritance contracts;
+- authenticated route workspace propagation;
+- workspace-scoped ORM, primary-key, raw-SQL and vector-search access;
+- non-disclosing missing-record and cross-workspace denial;
+- registered tenant-persistence migration;
+- governed PostgreSQL execution and ledger validation;
+- idempotence validation;
+- complete focused and full regression validation.
 
 ## 29.2 Step 187E — Active browser workspace switching
 
-Approved endpoint:
+Approved architectural endpoint:
 
 ```text
 POST /workspace/context
 ```
 
-Required properties:
+Step 187E has not started and is not authorised by the Step 187D canonical closure.
+
+Required properties remain:
 
 - browser transport;
 - CSRF protection;
@@ -1546,21 +1608,18 @@ Required properties:
 
 ## 29.3 Step 187F — Cross-workspace isolation and integrated closure
 
-Expected concerns:
+Step 187F has not started and is not authorised by the Step 187D canonical closure.
 
-- cross-workspace reads;
-- cross-workspace writes;
-- API denial;
-- dashboard denial;
-- browser-session separation;
-- Bearer-token separation;
-- migration integrity;
-- full regression;
-- live database validation;
-- documentation update;
-- commit and push.
+Expected concerns remain:
 
-Do not begin Step 187D, Step 187E or Step 187F before Step 187C is fully validated and committed.
+- integrated cross-workspace reads and writes;
+- API and dashboard denial;
+- browser-session and Bearer-token separation;
+- end-to-end migration integrity;
+- full regression and live validation;
+- final programme documentation and publication.
+
+Do not begin Step 187E or Step 187F without separate EG-001 approval.
 
 ---
 
@@ -1574,7 +1633,7 @@ Git may report:
 LF will be replaced by CRLF the next time Git touches it
 ```
 
-These are informational in the current Windows environment when:
+These notices are informational in the current Windows environment when:
 
 ```text
 git diff --check
@@ -1584,16 +1643,20 @@ returns exit code zero.
 
 ## 30.2 Framework deprecation warnings
 
-Known pre-existing warnings include:
+The current complete regression reports 37 known, non-blocking warnings:
 
 - FastAPI `on_event` deprecation;
 - Starlette `TemplateResponse` parameter-order deprecation.
 
-Future migration to lifespan handlers and updated template invocation may be appropriate.
+These warnings predate Step 187D and did not block the 633-test regression.
 
-These warnings are outside the current Step 187C scope unless they block validation.
+Do not introduce unrelated warning-remediation changes without separate approval.
 
-Do not introduce unrelated warning-remediation changes without approval.
+## 30.3 Empty governed tenant tables
+
+At migration validation time, all eleven tenant tables contained zero records. Therefore no legacy rows required default-workspace backfill in the governed local database.
+
+The migration backfill contract remains covered by focused migration tests and will apply to null or blank legacy ownership when such records exist.
 
 ---
 
@@ -1603,54 +1666,48 @@ The next chat must not:
 
 - work in another repository;
 - switch to `main`;
-- restart Step 187C discovery or implementation;
-- represent Step 187D implementation as started;
-- begin Step 187E or Step 187F;
-- reset, restore, clean, stash or amend published commits;
+- reset, restore, clean or stash the working tree;
+- alter or remove any of the 59 expected closure paths;
+- stage any path without separate staging approval;
+- commit, amend or push without separate publication approval;
 - modify `manual_test_db.py`;
+- modify the published Step 187A migration;
 - force-push;
-- change Product Readiness CAP-003 status as part of Step 187D discovery;
-- introduce workspace switching, reserved for Step 187E;
-- introduce integrated cross-workspace closure, reserved for Step 187F;
+- perform further Step 187D production-code changes without a new approved boundary;
+- begin Step 187E or Step 187F;
+- change Product Readiness CAP-003 status as part of Step 187D closure;
 - overwrite or remove the Historical Delivery Record;
 - treat historical next-action statements as controlling authority.
 
-Dashboard update commit:
-
-```text
-6a422b0a269581d2e86b4f9e5081e552479b3c35
-```
-
-Step 187D discovery must remain read-only until its exact implementation inventory, migration boundary, repository contracts, exclusions and validation plan are reviewed.
+The accepted Step 187D implementation evidence and governed database ledger must be preserved.
 
 ---
 
 # 32. EXACT NEXT AUTHORISED ACTION
 
 ```text
-PWI-001 Step 187D — Controlled Implementation Discovery and Boundary Validation
+PWI-001 Step 187D — Canonical Closure Review and Exact 59-Path Pre-Staging Validation
 ```
 
 This action is read-only and must:
 
-- inventory tenant-scoped persistent models and tables;
-- distinguish tenant-scoped records from genuinely global records;
-- inventory repository and query methods that access tenant records;
-- identify workspace-neutral reads, lists, updates and deletes;
-- identify legacy records requiring default-workspace backfill;
-- identify migration-ordering and idempotence requirements;
-- identify all callers that will require workspace context;
-- define the exact Step 187D production and test path inventory;
-- define explicit exclusions and protected files;
-- define focused and complete validation gates;
-- produce an EG-001 implementation boundary for review before mutation.
+- verify branch `cgms-v2-roadmap`;
+- verify local HEAD, upstream HEAD and direct remote HEAD remain `d39adc7234ce8af56f3a7e8263e5d757ebd5d5ab`;
+- verify exactly 59 changed paths: the accepted 58 Step 187D implementation paths plus this canonical document;
+- verify staged paths remain zero;
+- verify every accepted implementation hash remains exact;
+- verify the canonical diff contains only the approved closure record and current-state updates;
+- verify `manual_test_db.py` and the published Step 187A migration remain unchanged;
+- verify the PostgreSQL ledger contains the foundation and tenant-persistence migrations with accepted checksums;
+- verify no Step 187E or Step 187F path or behaviour is present;
+- produce the exact proposed staging inventory and commit subject for separate approval.
 
-This action does not authorise file modification, migration creation, repository-contract changes, staging, commit or push.
+This action does not authorise staging, commit, amendment or push.
 
-Canonical publication subject:
+Proposed future commit subject, subject to separate approval:
 
 ```text
-docs(governance): record PWI-001 dashboard currency and Step 187D approval
+docs(governance): close PWI-001 Step 187D
 ```
 
 ---
@@ -1665,59 +1722,57 @@ The CGMS continuation state is loaded.
 Branch:
 cgms-v2-roadmap
 
-Dashboard update commit:
-6a422b0a269581d2e86b4f9e5081e552479b3c35
+Published baseline HEAD:
+d39adc7234ce8af56f3a7e8263e5d757ebd5d5ab
 
-Canonical publication commit:
-Resolve from the repository HEAD containing this file.
+PWI-001 Step 187C is complete, published, reconciled and formally closed.
 
-PWI-001 Step 187C is complete, validated, published, reconciled and formally closed.
+PWI-001 Step 187D technical implementation, migration registration, governed PostgreSQL execution, idempotence validation and complete regression are complete.
 
-The Programme Progress Dashboard is current through the published dashboard update commit.
+Current complete regression:
+633 passed, 37 warnings
 
-PWI-001 Step 187D — Tenant Persistence and Query-Contract Integration — is approved as Planned Work within the existing approved PWI-001 Mandatory Architectural Intervention.
+Current route surface:
+116 contracts; normalized SHA-256 d11f3c1fd30c9e42eb6e028fee77f0d3119aa5c97be808aa7abeb2dc972f2d4f
 
-Step 187D implementation has not started.
+Expected closure working tree:
+59 changed paths, 0 staged paths
 
-Step 187E and Step 187F remain unauthorised.
+manual_test_db.py and the published Step 187A migration remain unchanged.
 
-The working tree was clean, staged paths were zero, local and remote references matched, and manual_test_db.py remained unchanged.
+Step 187E and Step 187F have not started and are not authorised.
 
 The next governed action is:
-PWI-001 Step 187D — Controlled Implementation Discovery and Boundary Validation
+PWI-001 Step 187D — Canonical Closure Review and Exact 59-Path Pre-Staging Validation
 ```
 
-The assistant must not provide mutation commands until the discovery output and exact Step 187D implementation boundary are reviewed.
+The assistant must not provide staging or publication commands before the exact pre-staging review is complete and separately approved.
 
 ---
 
 # 34. NEW-CHAT STARTER MESSAGE
 
-Upload this updated file in the new chat and paste:
+Upload this updated file together with the final Step 187D migration-continuation evidence and paste:
 
 ```text
-Continue the Contextual Group Memory System project from the attached canonical continuation prompt.
+Continue the Contextual Group Memory System project from the attached canonical continuation prompt and Step 187D final evidence.
 
-Read the complete file before proposing or executing any action.
+Read the complete canonical file before proposing or executing any action.
 
-Treat the controlling current-state, repository-state and PWI-001 sections as authoritative. Treat the Historical Delivery Record as evidence and programme history only.
+Treat Sections 23, 24, 28, 29, 31, 32, 33, 35, 37 and 38 as the controlling current state. Treat the Historical Delivery Record as evidence and programme history only.
 
-Dashboard update commit:
-6a422b0a269581d2e86b4f9e5081e552479b3c35
+Published baseline HEAD:
+d39adc7234ce8af56f3a7e8263e5d757ebd5d5ab
 
-Canonical publication commit:
-Resolve from the repository HEAD containing this file.
+PWI-001 Step 187D technical implementation and governed PostgreSQL validation are complete.
 
-PWI-001 Step 187C is complete, published, reconciled and formally closed.
+Expected current working tree:
+59 changed paths and 0 staged paths.
 
-PWI-001 Step 187D — Tenant Persistence and Query-Contract Integration — is approved as Planned Work, but implementation has not started.
+Do not reset, restore, clean or stash the repository. Do not modify manual_test_db.py or the published Step 187A migration. Do not begin Step 187E or Step 187F. Do not stage, commit, amend or push without separate approval.
 
-Do not restart Step 187C, begin Step 187E or Step 187F, reset the repository, modify manual_test_db.py, force-push, or change Product Readiness CAP-003 status.
-
-First confirm the branch, dashboard update commit, canonical publication commit, remote synchronization, clean working tree, validation results and Step 187D approval.
-
-Then perform only:
-PWI-001 Step 187D — Controlled Implementation Discovery and Boundary Validation.
+First perform only:
+PWI-001 Step 187D — Canonical Closure Review and Exact 59-Path Pre-Staging Validation.
 ```
 
 ---
@@ -1732,68 +1787,64 @@ Sprint:
 Sprint 22
 
 Active intervention:
-PWI-001
+PWI-001 — Persistent Workspace Isolation Foundation
 
 Current stage:
-Step 187D approved as Planned Work; implementation not started
-
-Step 187D title:
-Tenant Persistence and Query-Contract Integration
+Step 187D technical implementation and governed database validation complete; canonical closure recorded; pre-staging validation pending
 
 Branch:
 cgms-v2-roadmap
 
-Pre-Step-187C parent:
-ae8ffca9f23663a38b3310f087673ca70035f2e7
+Published baseline HEAD:
+d39adc7234ce8af56f3a7e8263e5d757ebd5d5ab
 
-Step 187C implementation commit:
-05dcb2d0feba9bd0ad7c08fd8455302c183cec5a
+Local/upstream/direct remote synchronization:
+VERIFIED at the published baseline
 
-Step 187C canonical closure commit:
-4624bf8c4c2944c3a8d05232b4565f3d5ed77e00
+Step 187D migration order:
+20260728_001_pwi_workspace_foundation
+20260802_002_pwi_tenant_persistence
 
-Step 187C final reconciliation commit:
-595de8fcd5c645a26c4c020028a750a6ee36bffc
+Foundation migration checksum:
+3ffa0c714c6e4e947423996f5bddf0c8e88808ec9593e1df8543109a3c5f5225
 
-Dashboard currency update commit:
-6a422b0a269581d2e86b4f9e5081e552479b3c35
+Tenant-persistence migration checksum:
+f4c0e72a5364e0befaf40a62f45eaf31cf45ec2de99bf21e7c14beed3347bb17
 
-Dashboard currency update subject:
-feat(dashboard): update PWI-001 programme progress currency
+Tenant-persistence migration applied at:
+2026-08-04T22:20:29.448518+00:00
 
-Dashboard deviation:
-PWI-001 Dashboard Currency Update — Step 187C Closure and Step 187D Approval
+Tenant tables validated:
+11
 
-Dashboard deviation classification:
-Approved Recommended Deviation within PWI-001 governance support
+Null/blank tenant ownership after migration:
+0
 
-Step 187D classification:
-Planned Work within the existing approved PWI-001 Mandatory Architectural Intervention
+Orphan tenant ownership after migration:
+0
 
-Step 187C authentication-focused regression:
-218 passed
-30 warnings
+Focused tenant-isolation validation:
+37 passed
 
-Step 187C complete regression:
-596 passed
-37 warnings
+Focused migration validation:
+10 passed
 
-Dashboard focused regression:
-17 passed
-5 warnings
+Authentication/workspace regression:
+84 passed
 
 Current complete CGMS regression:
-597 passed
+633 passed
 37 warnings
 
-Runtime-contract validation:
-PASS
+Route surface:
+116 contracts
+Normalized SHA-256: d11f3c1fd30c9e42eb6e028fee77f0d3119aa5c97be808aa7abeb2dc972f2d4f
 
-Local/remote synchronization:
-VERIFIED
+Implementation paths before canonical closure:
+58
 
-Working tree:
-CLEAN
+Expected changed paths after canonical closure:
+59
 
 Staged paths:
 0
@@ -1801,26 +1852,20 @@ Staged paths:
 Protected file:
 manual_test_db.py unchanged
 
-Product Readiness CAP-003:
-Partial / in progress; unchanged
+Published Step 187A migration:
+unchanged
 
-Step 187D production implementation started:
-No
+Canonical document:
+updated by approved document-only closure; uncommitted
 
 Step 187E/187F authorised:
 No
 
 Next governed action:
-PWI-001 Step 187D — Controlled Implementation Discovery and Boundary Validation
+PWI-001 Step 187D — Canonical Closure Review and Exact 59-Path Pre-Staging Validation
 
-Canonical dashboard-state record:
-This controlling document records the authoritative dashboard and Step 187D approval state.
-
-Canonical publication commit:
-Resolve from the repository HEAD containing this file.
-
-Canonical publication subject:
-docs(governance): record PWI-001 dashboard currency and Step 187D approval
+Proposed future commit subject, subject to separate approval:
+docs(governance): close PWI-001 Step 187D
 ```
 
 ---
@@ -1868,46 +1913,179 @@ Architectural decision:
 - Production implementation files are now created directly rather than through generator scripts.
 - Existing manual_test_db.py remains unchanged and is unrelated to PRE-005.
 
-# 37. FINAL CONTINUATION AUTHORITY
+# 37. PWI-001 STEP 187D — CANONICAL CLOSURE RECORD
+
+## 37.1 Scope completed
+
+Step 187D completed the tenant persistence and query-contract integration scope approved within PWI-001.
+
+The implementation establishes required workspace ownership across these eleven tenant tables:
+
+```text
+candidate_memory
+decision_lineage
+goal
+insight
+learning
+learning_log
+memory
+memory_access
+memory_relationship
+memoryscore
+message
+```
+
+The implementation also delivers:
+
+- explicit workspace binding for tenant-record producers;
+- authoritative parent-workspace inheritance for child records;
+- authenticated-principal workspace propagation through tenant-facing routes;
+- workspace-scoped ORM queries and primary-key loads;
+- workspace predicates for raw SQL and vector search;
+- non-disclosing missing-record and cross-workspace denial;
+- an import-safe central tenant-scope utility;
+- no RBAC redesign and no process-global workspace fallback.
+
+## 37.2 Migration registration and governed execution
+
+The migration runner now orders:
+
+```text
+20260728_001_pwi_workspace_foundation
+20260802_002_pwi_tenant_persistence
+```
+
+The tenant-persistence migration was executed against:
+
+```text
+postgresql+psycopg://postgres:***@127.0.0.1:5432/cgms
+```
+
+Migration ledger evidence:
+
+```text
+Foundation applied: 2026-07-29T07:35:51.838739+00:00
+Foundation checksum: 3ffa0c714c6e4e947423996f5bddf0c8e88808ec9593e1df8543109a3c5f5225
+Tenant persistence applied: 2026-08-04T22:20:29.448518+00:00
+Tenant persistence checksum: f4c0e72a5364e0befaf40a62f45eaf31cf45ec2de99bf21e7c14beed3347bb17
+```
+
+The first governed run applied only the tenant-persistence migration and skipped the already-applied foundation migration.
+
+The second governed run applied nothing and skipped both migrations, proving idempotence.
+
+## 37.3 Database invariants validated
+
+Across all eleven tenant tables, final validation confirmed:
+
+- null or blank workspace ownership: 0;
+- orphan workspace ownership: 0;
+- non-null workspace columns: 11;
+- workspace indexes: 11;
+- workspace foreign keys: 11;
+- nonblank workspace check constraints: 11.
+
+All eleven tables were empty in the governed local database at execution time. No live legacy rows required backfill. Backfill behaviour remains covered by focused migration tests.
+
+## 37.4 Validation evidence
+
+Accepted final validation:
+
+- import-smoke checks: 7 passed;
+- focused tenant-isolation tests: 37 passed;
+- focused migration tests: 10 passed;
+- authentication/workspace regression: 84 passed;
+- complete CGMS regression: 633 passed;
+- complete regression warnings: 37;
+- failures: 0;
+- collection errors: 0;
+- route contracts: 116;
+- route additions or removals: 0;
+- normalized route SHA-256: `d11f3c1fd30c9e42eb6e028fee77f0d3119aa5c97be808aa7abeb2dc972f2d4f`;
+- `git diff --check`: PASS.
+
+The 37 warnings are the known FastAPI `on_event` and Starlette `TemplateResponse` deprecation notices. They are non-blocking and outside this closure boundary.
+
+## 37.5 Controlled repair record
+
+During Step 187D, narrowly controlled repairs addressed:
+
+- a focused migration-test fixture that intentionally created an orphan record;
+- an import cycle caused by the tenant-scope utility importing migration and authentication modules during model initialization;
+- a validator count that initially treated two decorated `next_action` functions as one logical name;
+- a final validation script import-path issue when executed from Downloads;
+- a dynamic-module loader registration issue in the continuation harness.
+
+Each repair remained inside the approved path or validation-script boundary. No automatic repository reset or restoration was performed.
+
+## 37.6 Governance integrity
+
+Final accepted state before this canonical update:
+
+```text
+Branch: cgms-v2-roadmap
+Published baseline HEAD: d39adc7234ce8af56f3a7e8263e5d757ebd5d5ab
+Implementation changed paths: 58
+Staged paths: 0
+Commit created or amended: no
+Push performed: no
+manual_test_db.py: unchanged
+Published Step 187A migration: unchanged
+Step 187E: not started
+Step 187F: not started
+```
+
+This canonical closure adds only:
+
+```text
+docs/CGMS_MASTER_CONTINUATION_PROMPT_v2.0.md
+```
+
+Expected closure working tree:
+
+```text
+Changed paths: 59
+Staged paths: 0
+```
+
+## 37.7 Closure status
+
+The technical implementation and governed database-validation scope of Step 187D is complete.
+
+This document records canonical closure but does not authorise staging, commit, amendment or push.
+
+The next action is the read-only exact 59-path pre-staging validation defined in Section 32.
+
+---
+
+# 38. FINAL CONTINUATION AUTHORITY
 
 This complete document replaces all earlier versions of the master continuation prompt.
+
+Where historical statements conflict with Sections 23, 24, 28, 29, 31, 32, 33, 35, 37 or this section, these controlling current-state sections prevail.
 
 The controlling current state is:
 
 ```text
-Programme: CGMS Productisation Programme
-Sprint: Sprint 22
-Intervention: PWI-001
-Current stage: Step 187D approved as Planned Work; implementation not started
-Step 187D title: Tenant Persistence and Query-Contract Integration
 Branch: cgms-v2-roadmap
-Pre-Step-187C parent: ae8ffca9f23663a38b3310f087673ca70035f2e7
-Step 187C implementation commit: 05dcb2d0feba9bd0ad7c08fd8455302c183cec5a
-Step 187C canonical closure commit: 4624bf8c4c2944c3a8d05232b4565f3d5ed77e00
-Step 187C final reconciliation commit: 595de8fcd5c645a26c4c020028a750a6ee36bffc
-Dashboard update commit: 6a422b0a269581d2e86b4f9e5081e552479b3c35
-Dashboard update subject: feat(dashboard): update PWI-001 programme progress currency
-Dashboard update classification: Approved Recommended Deviation within PWI-001 governance support
-Step 187D classification: Planned Work within the existing approved PWI-001 Mandatory Architectural Intervention
-Step 187C authentication validation: 218 passed, 30 warnings
-Step 187C complete regression: 596 passed, 37 warnings
-Dashboard focused regression: 17 passed, 5 warnings
-Current complete regression: 597 passed, 37 warnings
-Runtime-contract validation: PASS
-Local/remote synchronization: VERIFIED
-Working tree: CLEAN
+Published baseline HEAD: d39adc7234ce8af56f3a7e8263e5d757ebd5d5ab
+Active intervention: PWI-001
+Active sub-stage: Step 187D canonical closure recorded; exact pre-staging validation pending
+Technical implementation: complete
+Governed PostgreSQL migration: applied and idempotence validated
+Tenant tables validated: 11
+Complete regression: 633 passed, 37 warnings
+Route contracts: 116
+Expected changed paths after this document update: 59
 Staged paths: 0
 Protected file: manual_test_db.py unchanged
-Product Readiness CAP-003: partial/in progress and unchanged
-Step 187D production implementation started: no
-Step 187E/187F authorised: no
-Canonical dashboard-state record: this document is the authoritative controlling state
-Canonical publication commit: resolve from the repository HEAD containing this file
-Canonical publication subject: docs(governance): record PWI-001 dashboard currency and Step 187D approval
-Next governed action: PWI-001 Step 187D — Controlled Implementation Discovery and Boundary Validation
+Published Step 187A migration: unchanged
+Step 187E: not started and not authorised
+Step 187F: not started and not authorised
+Next authorised action: PWI-001 Step 187D — Canonical Closure Review and Exact 59-Path Pre-Staging Validation
 ```
 
-Do not mutate Step 187D production code until controlled discovery and boundary validation are complete and the exact implementation inventory is explicitly approved.
+Do not stage, commit, amend or push until the exact pre-staging validation has completed and separate approval has been granted.
 
 END OF CGMS MASTER CONTINUATION PROMPT v2.0
 

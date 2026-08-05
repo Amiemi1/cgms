@@ -4,6 +4,10 @@ from datetime import datetime
 
 from app.db.models.memory import Memory
 from app.db.models.goal import Goal
+from app.services.workspace.tenant_scope import (
+    load_scoped_record,
+    normalize_workspace_id,
+)
 
 
 # ------------------------------------------------
@@ -15,7 +19,12 @@ def goal_score(session: Session, memory: Memory) -> int:
         if not memory.goal_id:
             return 0
 
-        goal = session.get(Goal, memory.goal_id)
+        goal = load_scoped_record(
+            session,
+            Goal,
+            memory.goal_id,
+            memory.workspace_id,
+        )
 
         if goal and goal.status == "active":
             return 25
@@ -128,7 +137,7 @@ def compute_score(session: Session, memory: Memory, all_tasks) -> Tuple[int, Lis
 
         if "review" in text:
             score += 8
-            reasons.append("review:+8")        
+            reasons.append("review:+8")
 
 
         # ---------------------------------
@@ -175,7 +184,7 @@ def compute_score(session: Session, memory: Memory, all_tasks) -> Tuple[int, Lis
         text = (memory.summary or "").lower()
 
         # Meeting requires preparation first (only if NOT a blocker)
-        is_blocker = "confirm" in text or "venue" in text 
+        is_blocker = "confirm" in text or "venue" in text
 
         if "meeting" in text and memory.reminder_time and not is_blocked:
             score -= 5
@@ -248,12 +257,20 @@ def compute_score(session: Session, memory: Memory, all_tasks) -> Tuple[int, Lis
 def get_prioritized_tasks(
     session: Session,
     chat_id: int,
+    workspace_id: str,
     limit: int = 10
 ) -> List[Dict]:
 
     try:
+        resolved_workspace_id = normalize_workspace_id(
+            workspace_id
+        )
+
         memories = session.exec(
-            select(Memory).where(Memory.chat_id == chat_id)
+            select(Memory).where(
+                Memory.workspace_id == resolved_workspace_id,
+                Memory.chat_id == chat_id,
+            )
         ).all()
 
         print("DEBUG: MEMORIES COUNT =", len(memories))
@@ -291,7 +308,7 @@ def get_prioritized_tasks(
                 all_tasks
             )
 
-            print("DEBUG: BLOCKED =", blocked, "| reason =", reason)   # ✅ ADD         
+            print("DEBUG: BLOCKED =", blocked, "| reason =", reason)   # ✅ ADD
 
             # ❗ DO NOT penalize blockers
             is_blocker = any("blocker" in str(r).lower() for r in reasons)
@@ -418,12 +435,21 @@ def is_blocked(task, all_tasks):
 # ------------------------------------------------
 # GET NEXT ACTION
 # ------------------------------------------------
-def get_next_action(session, chat_id: int):
+def get_next_action(
+    session,
+    chat_id: int,
+    workspace_id: str,
+):
 
     try:
         print("---- NEXT ACTION START ----")
 
-        tasks = get_prioritized_tasks(session, chat_id, limit=50)
+        tasks = get_prioritized_tasks(
+            session,
+            chat_id,
+            workspace_id,
+            limit=50,
+        )
 
         if not tasks:
             return {
