@@ -11,12 +11,13 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
             "Authoritative delivery, validation, governance, "
             "dashboard-access and startup register."
         ),
-        "as_of": "1 August 2026",
+        "as_of": "5 August 2026",
         "current_sprint": "Sprint 22",
-        "current_work": "PWI-001 Step 187D",
+        "current_work": "PWI-001 Step 187E",
         "status": (
-            "Step 187C complete, published and reconciled; "
-            "Step 187D approved and not started"
+            "Step 187D technically implemented, database-validated, "
+            "canonically closed, committed and published; "
+            "Step 187E exact implementation boundary refined"
         ),
         "branch": "cgms-v2-roadmap",
         "canonical_record": (
@@ -26,42 +27,42 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
     "summary": [
         {
             "label": "Current milestone",
-            "value": "PWI-001 Step 187D",
+            "value": "PWI-001 Step 187E",
             "detail": (
-                "Tenant Persistence and Query-Contract Integration; "
-                "approved and not started"
+                "Active Browser Workspace Switching; exact six-path "
+                "implementation boundary refined, implementation not started"
             ),
         },
         {
             "label": "Current regression suite",
-            "value": "596 passed",
+            "value": "633 passed",
             "detail": (
-                "Step 187C complete regression with "
+                "Step 187D complete regression with "
                 "37 known deprecation warnings"
             ),
         },
         {
             "label": "Latest published implementation",
-            "value": "05dcb2d",
+            "value": "cc366ed",
             "detail": (
-                "PWI-001 Step 187C — Workspace-Bound "
-                "Authentication Principals"
+                "PWI-001 Step 187D — Tenant Persistence and "
+                "Query-Contract Integration"
             ),
         },
         {
             "label": "Runtime contracts",
             "value": "PASS",
             "detail": (
-                "No routes added or removed and no "
-                "Step 187D, 187E or 187F behaviour introduced"
+                "116-route governed surface preserved through "
+                "published Step 187D"
             ),
         },
         {
             "label": "Pilot readiness",
             "value": "NOT READY",
             "detail": (
-                "CAP-003 remains partial while persistence and "
-                "cross-workspace closure continue"
+                "CAP-003 remains partial while browser workspace "
+                "switching and integrated isolation closure continue"
             ),
         },
     ],
@@ -168,13 +169,13 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
         },
     ],
     "current_focus": [
-        "PWI-001 Step 187D controlled implementation planning",
-        "Tenant persistence and workspace ownership contracts",
-        "Workspace-scoped repository and query isolation",
+        "PWI-001 Step 187E exact six-path implementation boundary",
+        "Persistent browser-session workspace switching",
+        "Authenticated dashboard workspace selector",
     ],
     "upcoming": [
-        "PWI-001 Step 187D implementation and validation",
-        "PWI-001 Step 187E active workspace switching",
+        "PWI-001 Step 187E controlled implementation and validation",
+        "PWI-001 Step 187E canonical closure and publication",
         "PWI-001 Step 187F integrated isolation closure",
     ],
     "sprints": [
@@ -477,15 +478,16 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
                 "Isolation Foundation"
             ),
             "status": (
-                "Step 187C complete; Step 187D approved "
-                "and not started"
+                "Step 187D complete and published; "
+                "Step 187E implementation not started"
             ),
             "status_class": "active",
             "summary": (
-                "PWI-001 Step 187C established workspace-bound "
-                "authentication principals and was validated, "
-                "published and reconciled. Step 187D is approved "
-                "as Planned Work within the existing intervention."
+                "PWI-001 Step 187D delivered tenant persistence, "
+                "workspace ownership, query isolation and "
+                "non-disclosing denial; it was validated, committed "
+                "and published. Step 187E has an exact six-path "
+                "implementation boundary but implementation has not started."
             ),
             "milestones": [
                 {
@@ -503,13 +505,34 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
                         "Tenant Persistence and "
                         "Query-Contract Integration"
                     ),
-                    "status": "Approved as Planned Work; not started",
+                    "status": (
+                        "Complete, database-validated, canonically "
+                        "closed, committed and published"
+                    ),
+                    "status_class": "complete",
+                },
+                {
+                    "id": "PWI-001-187E",
+                    "title": "Active Browser Workspace Switching",
+                    "status": (
+                        "Exact six-path boundary refined; "
+                        "implementation not started"
+                    ),
                     "status_class": "active",
                 },
             ],
         },
     ],
     "validation": [
+        {
+            "title": "PWI-001 Step 187D controlled publication",
+            "result": "Complete — published",
+            "detail": (
+                "Commit cc366edd5d707ccebba065f46414a751b1e4b1e6; "
+                "633 passed, 37 warnings; 59 committed paths; "
+                "116-route governed surface preserved"
+            ),
+        },
         {
             "title": "PWI-001 Step 187D governance approval",
             "result": "Approved — not started",
@@ -688,6 +711,14 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
         },
     ],
     "commits": [
+        {
+            "hash": "cc366ed",
+            "title": (
+                "feat(pwi-001): complete Step 187D "
+                "tenant persistence"
+            ),
+            "status": "Published",
+        },
         {
             "hash": "595de8f",
             "title": (
@@ -891,19 +922,23 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
     ],
     "governance": {
         "rule": "Engineering Governance Rule EG-001",
-        "classification": "Approved Recommended Deviation — PWI-001 Dashboard Currency Update",
-        "approval_date": "1 August 2026",
+        "classification": (
+            "Approved Governance Currency Correction — "
+            "PWI-001 Step 187D Publication"
+        ),
+        "approval_date": "5 August 2026",
         "canonical_record": (
             "docs/CGMS_MASTER_CONTINUATION_PROMPT_v2.0.md"
         ),
         "scope": (
-            "Programme Progress currency update for Step 187C "
-            "closure evidence and Step 187D approval."
+            "Programme Progress currency correction for the "
+            "published Step 187D state and approved Step 187E "
+            "planning boundary."
         ),
         "boundaries": (
-            "No Product Readiness status change, authentication "
-            "or RBAC redesign, persistence implementation, "
-            "route redesign or Step 187D production work."
+            "No Product Readiness status change, database mutation, "
+            "Step 187E implementation, route/template redesign, "
+            "staging, commit or push."
         ),
     },
 }

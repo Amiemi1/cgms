@@ -77,24 +77,26 @@ def test_registry_contains_governed_progress() -> None:
         "CRG-001",
         "PWI-001-187C",
         "PWI-001-187D",
+        "PWI-001-187E",
     }.issubset(milestone_ids)
 
     assert any(
         item["label"] == "Current regression suite"
-        and item["value"] == "596 passed"
+        and item["value"] == "633 passed"
         for item in dashboard["summary"]
     )
 
     assert any(
         item["label"] == "Latest published implementation"
-        and item["value"] == "05dcb2d"
+        and item["value"] == "cc366ed"
         for item in dashboard["summary"]
     )
 
     assert any(
-        item["title"] == "PWI-001 Step 187C repository publication"
-        and item["result"] == "Synchronized"
-        and "595de8fcd5c645a26c4c020028a750a6ee36bffc" in item["detail"]
+        item["title"] == "PWI-001 Step 187D controlled publication"
+        and item["result"] == "Complete — published"
+        and "cc366edd5d707ccebba065f46414a751b1e4b1e6"
+        in item["detail"]
         for item in dashboard["validation"]
     )
 
@@ -104,24 +106,23 @@ def test_registry_contains_governed_progress() -> None:
         for item in dashboard["validation"]
     )
 
-    assert any(
-        item["title"] == "PWI-001 Step 187D governance approval"
-        and item["result"] == "Approved — not started"
-        and "Planned Work" in item["detail"]
-        for item in dashboard["validation"]
-    )
-
-    assert [item["hash"] for item in dashboard["commits"][:3]] == [
+    assert [item["hash"] for item in dashboard["commits"][:4]] == [
+        "cc366ed",
         "595de8f",
         "4624bf8",
         "05dcb2d",
     ]
 
     assert dashboard["page"]["status"] == (
-        "Step 187C complete, published and reconciled; "
-        "Step 187D approved and not started"
+        "Step 187D technically implemented, database-validated, "
+        "canonically closed, committed and published; "
+        "Step 187E exact implementation boundary refined"
     )
     assert dashboard["page"]["branch"] == "cgms-v2-roadmap"
+    assert dashboard["governance"]["classification"] == (
+        "Approved Governance Currency Correction — "
+        "PWI-001 Step 187D Publication"
+    )
 
 
 def test_registry_contains_all_html_interfaces() -> None:
@@ -193,10 +194,12 @@ def test_authorized_viewer_can_open_progress() -> None:
     body = response.text
 
     assert "CGMS Programme Progress Dashboard" in body
-    assert "596 passed" in body
+    assert "633 passed" in body
     assert "PWI-001-187D" in body
-    assert "595de8f" in body
-    assert "Step 187C complete, published and reconciled" in body
+    assert "PWI-001-187E" in body
+    assert "cc366ed" in body
+    assert "Step 187D complete and published" in body
+    assert "Step 187E implementation not started" in body
     assert "/patent-readiness/dashboard" in body
     assert "docker compose up -d db" in body
 
@@ -330,9 +333,9 @@ def test_registry_contains_pwi001_current_state() -> None:
         .build_view()
     )
 
-    assert dashboard["page"]["as_of"] == "1 August 2026"
+    assert dashboard["page"]["as_of"] == "5 August 2026"
     assert dashboard["page"]["current_sprint"] == "Sprint 22"
-    assert dashboard["page"]["current_work"] == "PWI-001 Step 187D"
+    assert dashboard["page"]["current_work"] == "PWI-001 Step 187E"
 
     sprint_22 = next(
         sprint
@@ -340,7 +343,12 @@ def test_registry_contains_pwi001_current_state() -> None:
         if sprint["id"] == "SPRINT-22"
     )
 
+    assert sprint_22["status"] == (
+        "Step 187D complete and published; "
+        "Step 187E implementation not started"
+    )
     assert sprint_22["status_class"] == "active"
+
     assert sprint_22["milestones"] == [
         {
             "id": "PWI-001-187C",
@@ -357,26 +365,25 @@ def test_registry_contains_pwi001_current_state() -> None:
                 "Tenant Persistence and "
                 "Query-Contract Integration"
             ),
-            "status": "Approved as Planned Work; not started",
+            "status": (
+                "Complete, database-validated, canonically "
+                "closed, committed and published"
+            ),
+            "status_class": "complete",
+        },
+        {
+            "id": "PWI-001-187E",
+            "title": "Active Browser Workspace Switching",
+            "status": (
+                "Exact six-path boundary refined; "
+                "implementation not started"
+            ),
             "status_class": "active",
         },
     ]
 
     assert any(
-        item["title"] == "PWI-001 Step 187C authentication suite"
-        and item["result"] == "218 passed"
-        and "30 warnings" in item["detail"]
+        item["title"] == "PWI-001 Step 187D controlled publication"
+        and item["result"] == "Complete — published"
         for item in dashboard["validation"]
-    )
-
-    assert any(
-        item["title"] == "PWI-001 Step 187C complete regression"
-        and item["result"] == "596 passed"
-        and "37 warnings" in item["detail"]
-        for item in dashboard["validation"]
-    )
-
-    assert dashboard["governance"]["classification"] == (
-        "Approved Recommended Deviation — "
-        "PWI-001 Dashboard Currency Update"
     )
