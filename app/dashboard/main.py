@@ -1,5 +1,6 @@
 from contextlib import asynccontextmanager
 import logging
+from typing import Annotated
 
 from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -19,6 +20,16 @@ from app.services.product_readiness.bootstrap import (
 
 from app.services.auth.application_authorization import (
     enforce_application_authorization,
+)
+from app.services.auth.auth_dependency import (
+    AuthenticatedPrincipal,
+)
+from app.services.auth.browser_session_dependency import (
+    get_current_browser_principal,
+)
+from app.services.workspace.repository import (
+    WorkspaceRepository,
+    get_workspace_repository,
 )
 from app.services.workspace.tenant_scope import (
     get_current_workspace_id,
@@ -207,10 +218,66 @@ app.add_middleware(
 
 
 @app.get("/dashboard", response_class=HTMLResponse)
-def dashboard(request: Request):
+def dashboard(
+    request: Request,
+    principal: Annotated[
+        AuthenticatedPrincipal,
+        Depends(
+            get_current_browser_principal
+        ),
+    ],
+    workspace_repository: Annotated[
+        WorkspaceRepository,
+        Depends(
+            get_workspace_repository
+        ),
+    ],
+):
+    memberships = (
+        workspace_repository
+        .list_user_memberships(
+            principal.user_id,
+            active_only=True,
+        )
+    )
+
+    authorised_workspace_ids = {
+        membership.workspace_id
+        for membership in memberships
+    }
+
+    active_workspaces = (
+        workspace_repository
+        .list_workspaces(
+            include_suspended=False,
+        )
+    )
+
+    workspace_options = [
+        {
+            "id": workspace.id,
+            "name": workspace.name,
+        }
+        for workspace in active_workspaces
+        if workspace.id
+        in authorised_workspace_ids
+    ]
+
+    current_workspace_id = (
+        principal.workspace_id
+    )
+
     return templates.TemplateResponse(
         "dashboard.html",
-        {"request": request},
+        {
+            "request": request,
+            "current_workspace_id": (
+                current_workspace_id
+            ),
+            "workspace_options": (
+                workspace_options
+            ),
+        },
     )
 
 

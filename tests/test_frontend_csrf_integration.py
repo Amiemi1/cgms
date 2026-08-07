@@ -30,6 +30,7 @@ UNSAFE_METHODS = {
 EXPECTED_DASHBOARD_UNSAFE = Counter(
     {
         ("POST", "/runtime/event"): 1,
+        ("POST", "/workspace/context"): 1,
         (
             "PATCH",
             "/dashboard/memory/${id}/complete",
@@ -367,7 +368,7 @@ def test_dashboard_unsafe_requests_use_authenticated_fetch(
         DASHBOARD_PATH
     )
 
-    assert len(records) == 13
+    assert len(records) == 14
 
     assert all(
         name == HELPER_NAME

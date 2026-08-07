@@ -1654,6 +1654,45 @@ button.small {
     outline: none;
 }
 
+
+/* =========================================
+   AUTHENTICATED WORKSPACE SELECTOR
+========================================= */
+
+.cgms-workspace-control {
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+    margin:12px 0;
+    padding:10px 12px;
+    border:1px solid #dbe5ef;
+    border-radius:10px;
+    background:#ffffff;
+    box-shadow:0 2px 6px rgba(0,0,0,0.05);
+}
+
+.cgms-workspace-control label {
+    font-size:12px;
+    font-weight:700;
+    color:#24384f;
+}
+
+#cgms-workspace-selector {
+    min-width:220px;
+    max-width:100%;
+    padding:7px 10px;
+    border:1px solid #b8c7d6;
+    border-radius:7px;
+    background:#ffffff;
+    color:#10243a;
+}
+
+.cgms-current-workspace {
+    color:#5a6b7d;
+    font-size:11px;
+}
+
 </style>
 
 
@@ -1683,6 +1722,35 @@ button.small {
         Patent and IP
     </a>
 </nav>
+
+<section
+    class="cgms-workspace-control"
+    aria-label="Current workspace"
+>
+    <label for="cgms-workspace-selector">
+        Workspace
+    </label>
+
+    <select
+        id="cgms-workspace-selector"
+        name="workspace_id"
+        data-current-workspace-id="{{ current_workspace_id }}"
+        onchange="cgmsSwitchWorkspace(this.value)"
+    >
+        {% for workspace in workspace_options %}
+        <option
+            value="{{ workspace.id }}"
+            {% if workspace.id == current_workspace_id %}selected{% endif %}
+        >
+            {{ workspace.name }}
+        </option>
+        {% endfor %}
+    </select>
+
+    <span class="cgms-current-workspace">
+        Current: {{ current_workspace_id }}
+    </span>
+</section>
 
 <!-- FILTERS -->
 <div class="panel">
@@ -18397,6 +18465,83 @@ async function init(){
                 }
             );
         }
+
+
+async function cgmsSwitchWorkspace(
+    requestedWorkspaceId
+){
+    const selector = document.getElementById(
+        "cgms-workspace-selector"
+    );
+
+    const workspaceId = (
+        typeof requestedWorkspaceId === "string"
+    )
+        ? requestedWorkspaceId.trim()
+        : "";
+
+    if (!selector || !workspaceId){
+        return;
+    }
+
+    selector.disabled = true;
+
+    try {
+        const response =
+            await cgmsAuthenticatedFetch(
+                "/workspace/context",
+                {
+                    method: "POST",
+                    cache: "no-store",
+                    headers: {
+                        "Accept": "application/json",
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        workspace_id: workspaceId,
+                        redirect_to: (
+                            window.location.pathname
+                            + window.location.search
+                        )
+                    })
+                }
+            );
+
+        if (!response.ok){
+            throw new Error(
+                "Workspace selection was not accepted."
+            );
+        }
+
+        const payload = await response.json();
+
+        const redirectTarget = (
+            payload
+            && typeof payload.redirect_to === "string"
+            && payload.redirect_to.startsWith("/")
+        )
+            ? payload.redirect_to
+            : "/dashboard";
+
+        window.location.assign(
+            redirectTarget
+        );
+
+    } catch (error) {
+        selector.value = (
+            selector.dataset.currentWorkspaceId
+            || ""
+        );
+
+        showToast(
+            "Workspace selection could not be changed."
+        );
+
+    } finally {
+        selector.disabled = false;
+    }
+}
+
 // ---------- START APP ----------
 
 init();
