@@ -343,17 +343,18 @@ def test_registry_contains_pwi001_current_state() -> None:
         .build_view()
     )
 
-    assert dashboard["page"]["as_of"] == "7 August 2026"
+    assert dashboard["page"]["as_of"] == "11 August 2026"
     assert dashboard["page"]["current_sprint"] == "Sprint 22"
     assert dashboard["page"]["current_work"] == "PWI-001 Step 187E"
     assert dashboard["current_focus"][0] == (
-        "PWI-001 Step 187E governance-currency publication readiness"
+        "PWI-001 Step 187E governance-currency publication complete"
     )
-    assert dashboard["upcoming"][:2] == [
-        "PWI-001 Step 187E governance-currency controlled publication decision",
-        "PWI-001 Step 187E governance-currency controlled publication",
+    assert dashboard["upcoming"] == [
+        "PWI-001 next governed action requires separate approval",
+        "PWI-001 Step 187F boundary definition only after separate approval",
+        "PWI-001 Step 187F implementation not authorised",
     ]
-    assert "index expansion" in dashboard["governance"]["boundaries"]
+    assert "unrelated repository mutation" in dashboard["governance"]["boundaries"]
 
     sprint_22 = next(
         sprint

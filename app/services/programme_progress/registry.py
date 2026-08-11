@@ -11,7 +11,7 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
             "Authoritative delivery, validation, governance, "
             "dashboard-access and startup register."
         ),
-        "as_of": "7 August 2026",
+        "as_of": "11 August 2026",
         "current_sprint": "Sprint 22",
         "current_work": "PWI-001 Step 187E",
         "status": (
@@ -177,14 +177,14 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
         },
     ],
     "current_focus": [
-        "PWI-001 Step 187E governance-currency publication readiness",
+        "PWI-001 Step 187E governance-currency publication complete",
         "Published persistent browser-session workspace switching",
         "Step 187F separate approval boundary",
     ],
     "upcoming": [
-        "PWI-001 Step 187E governance-currency controlled publication decision",
-        "PWI-001 Step 187E governance-currency controlled publication",
-        "PWI-001 Step 187F read-only boundary definition",
+        "PWI-001 next governed action requires separate approval",
+        "PWI-001 Step 187F boundary definition only after separate approval",
+        "PWI-001 Step 187F implementation not authorised",
     ],
     "sprints": [
         {
@@ -967,8 +967,8 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
         ),
         "boundaries": (
             "No Product Readiness status change, database mutation, "
-            "Step 187F work, route/template redesign, index expansion, "
-            "commit or push."
+            "Step 187F work, route/template redesign or unrelated "
+            "repository mutation."
         ),
     },
 }

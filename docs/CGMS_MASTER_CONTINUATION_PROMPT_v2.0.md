@@ -23,7 +23,7 @@ docs/CGMS_MASTER_CONTINUATION_PROMPT_v2.0.md
 **Comprehensive handoff date**
 
 ```text
-7 August 2026
+11 August 2026
 ```
 
 **Current programme**
@@ -47,13 +47,13 @@ PWI-001 — Persistent Workspace Isolation Foundation
 **Current sub-stage**
 
 ```text
-Step 187E — Complete and Published; Governance-Currency Correction Publication-Ready
+Step 187E — Complete and Published; Governance-Currency Publication Complete
 ```
 
 **Exact next authorised action**
 
 ```text
-PWI-001 Step 187E Governance-Currency Correction — Controlled Publication Decision
+No subsequent PWI-001 action authorised — Step 187F requires separate EG-001 approval
 ```
 
 ---
@@ -649,7 +649,7 @@ Step 187E Active Browser Workspace Switching was validated, canonically closed, 
 
 The published Step 187E scope contains exactly seven committed paths: five modified paths and two added focused tests. Validation recorded 18 focused Step 187E contracts and 52 selected non-database regressions green while preserving the 116-route governed surface. No migration or database action was required.
 
-The present Step 187E governance-currency correction is limited to the Programme Progress registry, its focused dashboard test and this canonical controlling record. It has passed exact-diff review and controlled staging and is publication-ready, but remains uncommitted and unpublished pending separate explicit controlled-publication approval.
+The Step 187E governance-currency correction was published at `d497ba825f1aabdec325519d675d5bb43c16fef3`. It changed only the Programme Progress registry, its focused dashboard test and this canonical controlling record. This post-publication reconciliation is limited to durable current-state governance wording; it does not reopen Step 187E technical scope and does not authorise Step 187F.
 
 Step 187F has not started and requires separate approval.
 
@@ -1697,12 +1697,12 @@ The accepted Step 187E publication evidence must be preserved.
 # 32. EXACT NEXT AUTHORISED ACTION
 
 ```text
-PWI-001 Step 187E Governance-Currency Correction — Controlled Publication Decision
+No subsequent PWI-001 action authorised — Step 187F requires separate EG-001 approval
 ```
 
-This action must review the exact staged three-path governance-currency diff, the 10-test Programme Progress validation, the 18 focused Step 187E contracts, the 52 selected non-database regressions, canonical Historical Delivery Record preservation, fixed route/template hashes, the 116-route contract and protected-file hashes, then decide whether controlled publication may proceed.
+No subsequent PWI-001 action is authorised by this canonical state. Any Step 187F boundary definition, implementation, database work or other intervention requires separate explicit EG-001 approval.
 
-It must not commit, amend or push until separate explicit publication approval is recorded.
+Repository HEAD, index and working-tree state must be resolved live from Git; this canonical record must not be used to infer a transient repository state.
 
 # 33. REQUIRED FIRST RESPONSE IN THE NEW CHAT
 
@@ -1714,10 +1714,11 @@ The CGMS continuation state is loaded.
 Branch:
 cgms-v2-roadmap
 
-Published baseline HEAD:
+Published Step 187E implementation checkpoint:
 0140d4a26d2e814879c7e5c4a74451cf18f85d92
 
 PWI-001 Step 187E is complete, validated, canonically closed, committed and published.
+Step 187E governance-currency publication checkpoint: d497ba825f1aabdec325519d675d5bb43c16fef3.
 
 Step 187E validation:
 18 focused contracts and 52 selected non-database regressions green
@@ -1729,17 +1730,17 @@ Current route surface:
 116 contracts; normalized SHA-256 d11f3c1fd30c9e42eb6e028fee77f0d3119aa5c97be808aa7abeb2dc972f2d4f
 
 Expected current working tree:
-exactly 3 staged governance-currency paths, 0 unstaged paths and 0 untracked paths
+Resolve staged, unstaged and untracked state live from Git; do not infer repository cleanliness from this document
 
 manual_test_db.py and both published PWI-001 migrations remain unchanged.
 
 Step 187F has not started and requires separate approval.
 
 The next governed action is:
-PWI-001 Step 187E Governance-Currency Correction — Controlled Publication Decision
+No subsequent PWI-001 action authorised — Step 187F requires separate EG-001 approval
 ```
 
-The assistant must not provide commit or push commands before the staged-diff review is complete and separate explicit publication approval is recorded.
+No subsequent repository mutation or publication is authorised by this document; obtain separate explicit approval for any next PWI-001 action.
 
 ---
 
@@ -1754,18 +1755,19 @@ Read the complete canonical file before proposing or executing any action.
 
 Treat Sections 14.4, 15.6, 29.2, 29.3, 31, 32, 33, 35 and 37 as the controlling current state. Treat the Historical Delivery Record as evidence and programme history only.
 
-Published baseline HEAD:
+Published Step 187E implementation checkpoint:
 0140d4a26d2e814879c7e5c4a74451cf18f85d92
 
 PWI-001 Step 187E is complete, validated, canonically closed, committed and published.
+Step 187E governance-currency publication checkpoint: d497ba825f1aabdec325519d675d5bb43c16fef3.
 
 Expected current working tree:
-exactly 3 staged governance-currency paths, 0 unstaged paths and 0 untracked paths.
+Resolve staged, unstaged and untracked state live from Git; do not infer repository cleanliness from this document.
 
-Do not reset, restore, clean or stash the repository. Do not modify manual_test_db.py or either published PWI-001 migration. Do not begin Step 187F. Do not alter the exact three-path staged envelope, commit, amend or push without separate publication approval.
+Do not reset, restore, clean or stash the repository. Do not modify manual_test_db.py or either published PWI-001 migration. Do not begin Step 187F or perform any repository mutation without separate explicit approval.
 
-First perform only:
-PWI-001 Step 187E Governance-Currency Correction — Controlled Publication Decision.
+Before any subsequently approved PWI-001 action:
+No subsequent PWI-001 action authorised — Step 187F requires separate EG-001 approval.
 ```
 
 ---
@@ -1777,20 +1779,21 @@ Programme: CGMS Productisation Programme
 Sprint: Sprint 22
 Active intervention: PWI-001
 Branch: cgms-v2-roadmap
-Published Step 187E commit: 0140d4a26d2e814879c7e5c4a74451cf18f85d92
+Published Step 187E implementation commit: 0140d4a26d2e814879c7e5c4a74451cf18f85d92
+Step 187E governance-currency publication commit: d497ba825f1aabdec325519d675d5bb43c16fef3
 Step 187E status: complete, validated, canonically closed, committed and published
 Step 187E committed paths: 7
 Step 187E focused contracts: 18 green
 Step 187E selected non-database regressions: 52 green
 Latest complete regression: 633 passed, 37 warnings from Step 187D
 Governed runtime route surface: 116 contracts
-Current governance-currency index: exactly 3 authorised staged paths
-Unstaged/untracked paths: 0/0
+Repository HEAD / index / working-tree state: resolve live from Git
+Do not infer transient repository state from this canonical record
 Protected file: manual_test_db.py unchanged
 Published PWI-001 migrations: unchanged
 Programme Progress route/template: unchanged
 Step 187F: not started; separate approval required
-Next authorised action: PWI-001 Step 187E Governance-Currency Correction — Controlled Publication Decision
+Next authorised action: No subsequent PWI-001 action authorised — Step 187F requires separate EG-001 approval
 ```
 
 # 36. HISTORICAL DELIVERY RECORD
