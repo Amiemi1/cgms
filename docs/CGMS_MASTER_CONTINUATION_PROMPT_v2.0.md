@@ -23,7 +23,7 @@ docs/CGMS_MASTER_CONTINUATION_PROMPT_v2.0.md
 **Comprehensive handoff date**
 
 ```text
-4 August 2026
+7 August 2026
 ```
 
 **Current programme**
@@ -47,13 +47,13 @@ PWI-001 — Persistent Workspace Isolation Foundation
 **Current sub-stage**
 
 ```text
-Step 187E — Exact Six-Path Implementation Boundary Refined; Implementation Not Started
+Step 187E — Complete and Published; Governance-Currency Correction Publication-Ready
 ```
 
 **Exact next authorised action**
 
 ```text
-PWI-001 Step 187D Governance-Currency Correction — Exact Three-Path Diff Review and Controlled Staging Decision
+PWI-001 Step 187E Governance-Currency Correction — Controlled Publication Decision
 ```
 
 ---
@@ -74,7 +74,7 @@ The next assistant must not:
 - reset, clean, restore, stash or discard the working tree;
 - stage, commit or push files without a separately approved governance boundary;
 - modify `manual_test_db.py`;
-- begin Step 187E or Step 187F without separate approval;
+- begin Step 187F without separate approval;
 - treat historical “next action” statements as current instructions.
 
 Where an older historical statement conflicts with the current-state sections in this document, the current-state sections control.
@@ -639,21 +639,19 @@ Do not introduce excluded work without a separately approved intervention.
 
 ## 14.4 Current intervention state
 
-Steps 187A, 187B, 187C and Step 187D are complete.
+Steps 187A, 187B, 187C, 187D and 187E are complete.
 
-Step 187D was technically implemented, database-validated, canonically closed, committed and published at:
+Step 187E Active Browser Workspace Switching was validated, canonically closed, committed and published at:
 
 ```text
-cc366edd5d707ccebba065f46414a751b1e4b1e6
+0140d4a26d2e814879c7e5c4a74451cf18f85d92
 ```
 
-The published Step 187D scope contains 59 committed paths. Final validation recorded 633 passed with 37 warnings, preserved the 116-route governed surface and retained non-disclosing tenant isolation.
+The published Step 187E scope contains exactly seven committed paths: five modified paths and two added focused tests. Validation recorded 18 focused Step 187E contracts and 52 selected non-database regressions green while preserving the 116-route governed surface. No migration or database action was required.
 
-Step 187E design discovery and exact-boundary refinement are complete. The corrected proposed implementation boundary contains four production mutations and two new focused test paths. No database migration is required. Step 187E implementation has not started.
+The present Step 187E governance-currency correction is limited to the Programme Progress registry, its focused dashboard test and this canonical controlling record. It has passed exact-diff review and controlled staging and is publication-ready, but remains uncommitted and unpublished pending separate explicit controlled-publication approval.
 
-The present Step 187D governance-currency correction is limited to the Programme Progress registry, its focused dashboard test and this canonical controlling record. It remains unstaged and uncommitted until separate review and approval.
-
-Step 187F has not started.
+Step 187F has not started and requires separate approval.
 
 # 15. CONTROLLING PWI-001 ARCHITECTURE
 
@@ -708,7 +706,7 @@ POST /workspace/context
 
 It must update only the selected persistent browser session.
 
-This route belongs to Step 187E and is not implemented yet.
+This Step 187E route is implemented, validated and published at `0140d4a26d2e814879c7e5c4a74451cf18f85d92`.
 
 ## 15.7 Tenant isolation
 
@@ -1595,28 +1593,33 @@ Delivered:
 
 ## 29.2 Step 187E — Active browser workspace switching
 
-Approved architectural endpoint:
+Implemented architectural endpoint:
 
 ```text
 POST /workspace/context
 ```
 
-Step 187E has not started and is not authorised by the Step 187D canonical closure.
+Step 187E is complete, validated, canonically closed, committed and published at `0140d4a26d2e814879c7e5c4a74451cf18f85d92`.
 
-Required properties remain:
+Delivered properties:
 
-- browser transport;
+- authenticated browser transport;
 - CSRF protection;
 - active-membership validation;
 - persistent session-specific update;
+- workspace-neutral browser-session JWT;
 - no process-global state;
 - no modification of other sessions;
 - non-disclosing denial;
-- session-isolation tests.
+- safe local redirects;
+- full-navigation invalidation of workspace-sensitive client state;
+- session-isolation and dashboard-selector tests.
+
+Validation recorded 18 focused contracts and 52 selected non-database regressions green. The governed runtime surface remains 116 routes. No migration or database action was required.
 
 ## 29.3 Step 187F — Cross-workspace isolation and integrated closure
 
-Step 187F has not started and is not authorised by the Step 187D canonical closure.
+Step 187F has not started and is not authorised by the Step 187E canonical closure.
 
 Expected concerns remain:
 
@@ -1627,7 +1630,7 @@ Expected concerns remain:
 - full regression and live validation;
 - final programme documentation and publication.
 
-Do not begin Step 187E or Step 187F without separate EG-001 approval.
+Do not begin Step 187F without separate EG-001 approval.
 
 ---
 
@@ -1675,31 +1678,31 @@ The next chat must not:
 - work in another repository;
 - switch to `main`;
 - reset, restore, clean or stash the working tree;
-- alter or remove any of the 59 expected closure paths;
+- alter or remove any of the seven published Step 187E paths;
 - stage any path without separate staging approval;
 - commit, amend or push without separate publication approval;
 - modify `manual_test_db.py`;
-- modify the published Step 187A migration;
+- modify either published PWI-001 migration;
+- modify the Programme Progress route or template;
 - force-push;
-- perform further Step 187D production-code changes without a new approved boundary;
-- begin Step 187E or Step 187F;
-- change Product Readiness CAP-003 status as part of Step 187D closure;
+- begin Step 187F;
+- change Product Readiness CAP-003 status as part of this currency correction;
 - overwrite or remove the Historical Delivery Record;
 - treat historical next-action statements as controlling authority.
 
-The accepted Step 187D implementation evidence and governed database ledger must be preserved.
+The accepted Step 187E publication evidence must be preserved.
 
 ---
 
 # 32. EXACT NEXT AUTHORISED ACTION
 
 ```text
-PWI-001 Step 187D Governance-Currency Correction — Exact Three-Path Diff Review and Controlled Staging Decision
+PWI-001 Step 187E Governance-Currency Correction — Controlled Publication Decision
 ```
 
-This action must review the exact three-path governance-currency diff, focused dashboard validation, canonical historical-record preservation, fixed route/template hashes and protected-file hashes.
+This action must review the exact staged three-path governance-currency diff, the 10-test Programme Progress validation, the 18 focused Step 187E contracts, the 52 selected non-database regressions, canonical Historical Delivery Record preservation, fixed route/template hashes, the 116-route contract and protected-file hashes, then decide whether controlled publication may proceed.
 
-It must not stage, commit, amend or push until separate explicit approval is recorded.
+It must not commit, amend or push until separate explicit publication approval is recorded.
 
 # 33. REQUIRED FIRST RESPONSE IN THE NEW CHAT
 
@@ -1712,56 +1715,57 @@ Branch:
 cgms-v2-roadmap
 
 Published baseline HEAD:
-d39adc7234ce8af56f3a7e8263e5d757ebd5d5ab
+0140d4a26d2e814879c7e5c4a74451cf18f85d92
 
-PWI-001 Step 187C is complete, published, reconciled and formally closed.
+PWI-001 Step 187E is complete, validated, canonically closed, committed and published.
 
-PWI-001 Step 187D technical implementation, migration registration, governed PostgreSQL execution, idempotence validation and complete regression are complete.
+Step 187E validation:
+18 focused contracts and 52 selected non-database regressions green
 
-Current complete regression:
-633 passed, 37 warnings
+Latest complete regression:
+633 passed, 37 warnings from Step 187D
 
 Current route surface:
 116 contracts; normalized SHA-256 d11f3c1fd30c9e42eb6e028fee77f0d3119aa5c97be808aa7abeb2dc972f2d4f
 
-Expected closure working tree:
-59 changed paths, 0 staged paths
+Expected current working tree:
+exactly 3 staged governance-currency paths, 0 unstaged paths and 0 untracked paths
 
-manual_test_db.py and the published Step 187A migration remain unchanged.
+manual_test_db.py and both published PWI-001 migrations remain unchanged.
 
-Step 187E and Step 187F have not started and are not authorised.
+Step 187F has not started and requires separate approval.
 
 The next governed action is:
-PWI-001 Step 187D — Canonical Closure Review and Exact 59-Path Pre-Staging Validation
+PWI-001 Step 187E Governance-Currency Correction — Controlled Publication Decision
 ```
 
-The assistant must not provide staging or publication commands before the exact pre-staging review is complete and separately approved.
+The assistant must not provide commit or push commands before the staged-diff review is complete and separate explicit publication approval is recorded.
 
 ---
 
 # 34. NEW-CHAT STARTER MESSAGE
 
-Upload this updated file together with the final Step 187D migration-continuation evidence and paste:
+Upload this updated file together with the Step 187E governance-currency correction evidence and paste:
 
 ```text
-Continue the Contextual Group Memory System project from the attached canonical continuation prompt and Step 187D final evidence.
+Continue the Contextual Group Memory System project from the attached canonical continuation prompt and Step 187E evidence.
 
 Read the complete canonical file before proposing or executing any action.
 
-Treat Sections 23, 24, 28, 29, 31, 32, 33, 35, 37 and 38 as the controlling current state. Treat the Historical Delivery Record as evidence and programme history only.
+Treat Sections 14.4, 15.6, 29.2, 29.3, 31, 32, 33, 35 and 37 as the controlling current state. Treat the Historical Delivery Record as evidence and programme history only.
 
 Published baseline HEAD:
-d39adc7234ce8af56f3a7e8263e5d757ebd5d5ab
+0140d4a26d2e814879c7e5c4a74451cf18f85d92
 
-PWI-001 Step 187D technical implementation and governed PostgreSQL validation are complete.
+PWI-001 Step 187E is complete, validated, canonically closed, committed and published.
 
 Expected current working tree:
-59 changed paths and 0 staged paths.
+exactly 3 staged governance-currency paths, 0 unstaged paths and 0 untracked paths.
 
-Do not reset, restore, clean or stash the repository. Do not modify manual_test_db.py or the published Step 187A migration. Do not begin Step 187E or Step 187F. Do not stage, commit, amend or push without separate approval.
+Do not reset, restore, clean or stash the repository. Do not modify manual_test_db.py or either published PWI-001 migration. Do not begin Step 187F. Do not alter the exact three-path staged envelope, commit, amend or push without separate publication approval.
 
 First perform only:
-PWI-001 Step 187D — Canonical Closure Review and Exact 59-Path Pre-Staging Validation.
+PWI-001 Step 187E Governance-Currency Correction — Controlled Publication Decision.
 ```
 
 ---
@@ -1773,21 +1777,20 @@ Programme: CGMS Productisation Programme
 Sprint: Sprint 22
 Active intervention: PWI-001
 Branch: cgms-v2-roadmap
-Published Step 187D commit: cc366edd5d707ccebba065f46414a751b1e4b1e6
-Step 187D status: technically implemented, database-validated, canonically closed, committed and published
-Step 187D committed paths: 59
-Step 187D complete regression: 633 passed, 37 warnings
+Published Step 187E commit: 0140d4a26d2e814879c7e5c4a74451cf18f85d92
+Step 187E status: complete, validated, canonically closed, committed and published
+Step 187E committed paths: 7
+Step 187E focused contracts: 18 green
+Step 187E selected non-database regressions: 52 green
+Latest complete regression: 633 passed, 37 warnings from Step 187D
 Governed runtime route surface: 116 contracts
-Step 187E state: exact six-path implementation boundary refined; implementation not started
-Step 187E production mutation paths: 4
-Step 187E new focused test paths: 2
-Step 187E migration requirement: none
-Current governance-currency worktree: exactly 3 authorised changed paths
-Staged paths: 0
+Current governance-currency index: exactly 3 authorised staged paths
+Unstaged/untracked paths: 0/0
 Protected file: manual_test_db.py unchanged
-Dashboard route/template: unchanged
-Step 187F: not started
-Next authorised action: PWI-001 Step 187D Governance-Currency Correction — Exact Three-Path Diff Review and Controlled Staging Decision
+Published PWI-001 migrations: unchanged
+Programme Progress route/template: unchanged
+Step 187F: not started; separate approval required
+Next authorised action: PWI-001 Step 187E Governance-Currency Correction — Controlled Publication Decision
 ```
 
 # 36. HISTORICAL DELIVERY RECORD
@@ -4226,17 +4229,20 @@ Programme: CGMS Productisation Programme
 Sprint: Sprint 22
 Intervention: PWI-001
 Branch: cgms-v2-roadmap
-Published baseline: cc366edd5d707ccebba065f46414a751b1e4b1e6
-Current sub-stage: Step 187E — Exact Six-Path Implementation Boundary Refined; Implementation Not Started
+Published baseline: 0140d4a26d2e814879c7e5c4a74451cf18f85d92
+Current sub-stage: Step 187E Complete and Published; Governance-Currency Correction Awaiting Exact-Diff Review
 Step 187D: complete, validated, committed and published
-Step 187E: exact six-path boundary refined; implementation not started
-Step 187F: not started
-Current authorised worktree: 3 governance-currency paths
+Step 187E: complete, validated, canonically closed, committed and published
+Step 187E validation: 18 focused and 52 selected non-database tests green
+Governed route surface: 116 contracts
+Step 187F: not started; separate approval required
+Current authorised worktree: exactly 3 governance-currency paths
 Staged paths: 0
 Protected file: manual_test_db.py unchanged
-Next authorised action: PWI-001 Step 187D Governance-Currency Correction — Exact Three-Path Diff Review and Controlled Staging Decision
+Published PWI-001 migrations: unchanged
+Next authorised action: PWI-001 Step 187E Governance-Currency Correction — Exact Three-Path Diff Review and Controlled Staging Decision
 ```
 
-Do not begin Step 187E implementation, stage the governance-currency changes, commit, amend or push until the exact three-path correction evidence has been reviewed and separately approved.
+Do not begin Step 187F, stage the governance-currency changes, commit, amend or push until the exact three-path correction evidence has been reviewed and separately approved.
 
 # END OF CGMS MASTER CONTINUATION PROMPT v2.0
