@@ -1,33 +1,40 @@
 from fastapi.testclient import TestClient
 
+import app.services.connectors.event_ingestion as event_ingestion
+import app.services.workspace.quotas as workspace_quota_state
 from app.dashboard.main import app
 
 
 client = TestClient(app)
 
 
-def test_workspace_quota_blocks_events():
+def test_workspace_quota_blocks_events(
+    monkeypatch,
+):
 
-    client.post(
-        "/workspaces",
-        json={
-            "id": "quota-test",
-            "name": "Quota Test"
-        }
+    monkeypatch.setattr(
+        event_ingestion,
+        "INGESTED_EVENTS",
+        [],
     )
 
-    client.post(
-        "/workspace/context",
-        json={
-            "workspace": "quota-test"
-        }
+    monkeypatch.setattr(
+        workspace_quota_state,
+        "workspace_quotas",
+        {},
     )
 
-    client.post(
-        "/workspace/quotas/quota-test",
+    quota_response = client.post(
+        "/workspace/quotas/default",
         json={
             "maxEvents": 1
-        }
+        },
+    )
+
+    assert (
+        quota_response.status_code
+        ==
+        200
     )
 
     first = client.post(
@@ -44,22 +51,34 @@ def test_workspace_quota_blocks_events():
         }
     )
 
+    first_event = first.json()[
+        "event"
+    ]
+
+    second_event = second.json()[
+        "event"
+    ]
+
     assert (
-        first.json()[
-            "event"
-        ][
-            "status"
-        ]
+        first_event["workspace"]
+        ==
+        "default"
+    )
+
+    assert (
+        second_event["workspace"]
+        ==
+        "default"
+    )
+
+    assert (
+        first_event["status"]
         ==
         "received"
     )
 
     assert (
-        second.json()[
-            "event"
-        ][
-            "status"
-        ]
+        second_event["status"]
         ==
         "blocked"
     )

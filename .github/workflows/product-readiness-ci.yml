@@ -38,7 +38,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:16
+        image: pgvector/pgvector:pg16
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
@@ -59,6 +59,9 @@ jobs:
         123456789:ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi
 
       OPENAI_API_KEY: test-openai-api-key
+
+      CGMS_JWT_SECRET: >-
+        N7q4V2m8K6r1P9x5T3c7B4d8F2h6J9s1
 
       DATABASE_URL: >-
         postgresql+psycopg://postgres:postgres@localhost:5432/cgms_test
@@ -93,9 +96,60 @@ jobs:
       - name: Install test dependencies
         run: |
           python -m pip install \
-            pytest \
-            pytest-asyncio \
-            httpx
+            pytest==9.1.1 \
+            pytest-asyncio==1.4.0 \
+            httpx==0.28.1
+
+      - name: Initialize isolated test database schema
+        run: |
+          python - <<'PY'
+          from sqlalchemy import inspect, text
+          from sqlmodel import SQLModel
+
+          # Import the production dashboard model surface so every
+          # governed SQLModel table is registered in metadata.
+          import app.dashboard.main  # noqa: F401
+          from app.db.session import engine
+
+          with engine.begin() as connection:
+              connection.execute(
+                  text(
+                      "CREATE EXTENSION IF NOT EXISTS vector"
+                  )
+              )
+
+          SQLModel.metadata.create_all(
+              engine
+          )
+
+          expected_tables = set(
+              SQLModel.metadata.tables
+          )
+
+          actual_tables = set(
+              inspect(
+                  engine
+              ).get_table_names()
+          )
+
+          missing_tables = sorted(
+              expected_tables
+              - actual_tables
+          )
+
+          if missing_tables:
+              raise RuntimeError(
+                  "CI test schema initialization "
+                  "is incomplete. Missing tables: "
+                  f"{missing_tables}"
+              )
+
+          print(
+              "CI test schema initialized:",
+              len(actual_tables),
+              "tables",
+          )
+          PY
 
       - name: Create evidence directories
         run: |

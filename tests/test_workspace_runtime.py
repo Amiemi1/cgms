@@ -1,6 +1,9 @@
 from fastapi.testclient import TestClient
 
 from app.dashboard.main import app
+from app.services.workspace.context import (
+    get_workspace,
+)
 
 
 client = TestClient(
@@ -42,29 +45,14 @@ def test_workspace_creation():
     )
 
 
-def test_workspace_context():
+def test_legacy_connector_workspace_is_governed_default():
 
-    response = client.post(
-
-        "/workspace/context",
-
-        json={
-
-            "workspace":
-                "test"
+    assert (
+        get_workspace()
+        ==
+        {
+            "id": "default"
         }
-    )
-
-    assert (
-        response.status_code
-        ==
-        200
-    )
-
-    assert (
-        response.json()["id"]
-        ==
-        "test"
     )
 
 
@@ -92,7 +80,7 @@ def test_workspace_ingestion():
     assert (
         event["workspace"]
         ==
-        "test"
+        "default"
     )
 
 
