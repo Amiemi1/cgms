@@ -11,13 +11,14 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
             "Authoritative delivery, validation, governance, "
             "dashboard-access and startup register."
         ),
-        "as_of": "11 August 2026",
+        "as_of": "12 August 2026",
         "current_sprint": "Sprint 22",
-        "current_work": "PWI-001 Step 187E",
+        "current_work": "PWI-001 Step 187E / CI Recovery Closure",
         "status": (
             "Step 187E complete, validated, canonically closed, "
-            "committed and published; Step 187F not started and "
-            "requires separate approval"
+            "committed and published; Product Readiness CI recovery "
+            "closed, validated and published; Step 187F not started "
+            "and requires separate approval"
         ),
         "branch": "cgms-v2-roadmap",
         "canonical_record": (
@@ -35,10 +36,11 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
         },
         {
             "label": "Current regression suite",
-            "value": "633 passed",
+            "value": "651 passed",
             "detail": (
-                "Latest complete regression from Step 187D with "
-                "37 known deprecation warnings"
+                "Latest complete CI-equivalent regression passed "
+                "against PostgreSQL 16 / pgvector with 37 known "
+                "deprecation warnings"
             ),
         },
         {
@@ -50,11 +52,20 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
             ),
         },
         {
-            "label": "Latest published implementation",
-            "value": "0140d4a",
+            "label": "Latest published checkpoint",
+            "value": "6b8a00d",
             "detail": (
-                "PWI-001 Step 187E — Active Browser "
-                "Workspace Switching"
+                "Product Readiness CI recovery closure: dependency "
+                "stabilisation, CI JWT configuration, PostgreSQL/"
+                "pgvector schema bootstrap and legacy-test alignment"
+            ),
+        },
+        {
+            "label": "GitHub Actions",
+            "value": "Run #34 — Success",
+            "detail": (
+                "CGMS Product Readiness CI completed successfully "
+                "for published recovery commit 6b8a00d"
             ),
         },
         {
@@ -177,8 +188,8 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
         },
     ],
     "current_focus": [
-        "PWI-001 Step 187E governance-currency publication complete",
-        "Published persistent browser-session workspace switching",
+        "Product Readiness CI recovery closure published at 6b8a00d",
+        "GitHub Actions run #34 and 651-test CI-equivalent regression green",
         "Step 187F separate approval boundary",
     ],
     "upcoming": [
@@ -190,12 +201,12 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
         {
             "id": "SPRINT-16",
             "title": "Sprint 16 - Product Readiness Engine",
-            "status": "Substantially complete",
-            "status_class": "pending",
+            "status": "Complete and remotely validated",
+            "status_class": "complete",
             "summary": (
-                "The Product Readiness Engine, dashboard "
-                "and production capability bootstrap are "
-                "implemented. Remote CI validation remains."
+                "The Product Readiness Engine, dashboard, production "
+                "capability bootstrap and repository-managed CI gate "
+                "are implemented and remotely validated."
             ),
             "milestones": [
                 {
@@ -248,9 +259,9 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
                         "Product Readiness CI/CD Integration"
                     ),
                     "status": (
-                        "Implemented - remote validation pending"
+                        "Complete — remote validation passed"
                     ),
-                    "status_class": "pending",
+                    "status_class": "complete",
                 },
             ],
         },
@@ -541,6 +552,28 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
     ],
     "validation": [
         {
+            "title": "Product Readiness CI recovery closure",
+            "result": "PASS — GitHub Actions",
+            "detail": (
+                "Recovery commit "
+                "6b8a00dcc9ad597038a423591dd8aaf731593fa5; "
+                "GitHub Actions run #34 succeeded in 7m 21s; "
+                "local CI-equivalent regression recorded 651 passed "
+                "with 37 warnings, JUnit recorded zero failures, "
+                "zero errors and zero skipped, and the Product "
+                "Readiness gate passed"
+            ),
+        },
+        {
+            "title": "CI database bootstrap",
+            "result": "PASS",
+            "detail": (
+                "pgvector/pgvector:pg16 enabled the vector extension "
+                "and created all 16 registered SQLModel tables before "
+                "regression execution"
+            ),
+        },
+        {
             "title": "PWI-001 Step 187E controlled publication",
             "result": "Complete — published",
             "detail": (
@@ -737,6 +770,22 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
         },
     ],
     "commits": [
+        {
+            "hash": "6b8a00d",
+            "title": (
+                "fix(ci): stabilize product readiness "
+                "regression environment"
+            ),
+            "status": "Published",
+        },
+        {
+            "hash": "4a43f40",
+            "title": (
+                "chore(pwi-001): finalize Step 187E "
+                "governance currency"
+            ),
+            "status": "Published",
+        },
         {
             "hash": "0140d4a",
             "title": "feat: add authenticated workspace switching",
@@ -955,20 +1004,21 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
         "rule": "Engineering Governance Rule EG-001",
         "classification": (
             "Approved Governance Currency Correction — "
-            "PWI-001 Step 187E Publication"
+            "Product Readiness CI Recovery Closure"
         ),
-        "approval_date": "7 August 2026",
+        "approval_date": "12 August 2026",
         "canonical_record": (
             "docs/CGMS_MASTER_CONTINUATION_PROMPT_v2.0.md"
         ),
         "scope": (
-            "Programme Progress currency correction for the "
-            "published and canonically closed Step 187E state."
+            "Programme Progress currency correction recording the "
+            "published Step 187E state and the subsequently closed "
+            "Product Readiness CI recovery incident."
         ),
         "boundaries": (
-            "No Product Readiness status change, database mutation, "
-            "Step 187F work, route/template redesign or unrelated "
-            "repository mutation."
+            "No Product Readiness capability-status change, database "
+            "mutation, Step 187F work, route/template redesign or "
+            "unrelated repository mutation."
         ),
     },
 }

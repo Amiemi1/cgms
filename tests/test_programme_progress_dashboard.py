@@ -83,7 +83,7 @@ def test_registry_contains_governed_progress() -> None:
 
     assert any(
         item["label"] == "Current regression suite"
-        and item["value"] == "633 passed"
+        and item["value"] == "651 passed"
         for item in dashboard["summary"]
     )
 
@@ -94,8 +94,8 @@ def test_registry_contains_governed_progress() -> None:
     )
 
     assert any(
-        item["label"] == "Latest published implementation"
-        and item["value"] == "0140d4a"
+        item["label"] == "Latest published checkpoint"
+        and item["value"] == "6b8a00d"
         for item in dashboard["summary"]
     )
 
@@ -117,21 +117,22 @@ def test_registry_contains_governed_progress() -> None:
     )
 
     assert [item["hash"] for item in dashboard["commits"][:4]] == [
+        "6b8a00d",
+        "4a43f40",
         "0140d4a",
         "cc366ed",
-        "595de8f",
-        "4624bf8",
     ]
 
     assert dashboard["page"]["status"] == (
         "Step 187E complete, validated, canonically closed, "
-        "committed and published; Step 187F not started and "
-        "requires separate approval"
+        "committed and published; Product Readiness CI recovery "
+        "closed, validated and published; Step 187F not started "
+        "and requires separate approval"
     )
     assert dashboard["page"]["branch"] == "cgms-v2-roadmap"
     assert dashboard["governance"]["classification"] == (
         "Approved Governance Currency Correction — "
-        "PWI-001 Step 187E Publication"
+        "Product Readiness CI Recovery Closure"
     )
 
 
@@ -204,10 +205,12 @@ def test_authorized_viewer_can_open_progress() -> None:
     body = response.text
 
     assert "CGMS Programme Progress Dashboard" in body
-    assert "633 passed" in body
+    assert "651 passed" in body
     assert "PWI-001-187D" in body
     assert "PWI-001-187E" in body
+    assert "6b8a00d" in body
     assert "0140d4a" in body
+    assert "Run #34" in body
     assert "Step 187E complete" in body
     assert "Step 187F not started" in body
     assert "/patent-readiness/dashboard" in body
@@ -343,11 +346,13 @@ def test_registry_contains_pwi001_current_state() -> None:
         .build_view()
     )
 
-    assert dashboard["page"]["as_of"] == "11 August 2026"
+    assert dashboard["page"]["as_of"] == "12 August 2026"
     assert dashboard["page"]["current_sprint"] == "Sprint 22"
-    assert dashboard["page"]["current_work"] == "PWI-001 Step 187E"
+    assert dashboard["page"]["current_work"] == (
+        "PWI-001 Step 187E / CI Recovery Closure"
+    )
     assert dashboard["current_focus"][0] == (
-        "PWI-001 Step 187E governance-currency publication complete"
+        "Product Readiness CI recovery closure published at 6b8a00d"
     )
     assert dashboard["upcoming"] == [
         "PWI-001 next governed action requires separate approval",
@@ -413,5 +418,15 @@ def test_registry_contains_pwi001_current_state() -> None:
     assert any(
         item["title"] == "PWI-001 Step 187E controlled publication"
         and item["result"] == "Complete — published"
+        for item in dashboard["validation"]
+    )
+
+    assert any(
+        item["title"] == "Product Readiness CI recovery closure"
+        and item["result"] == "PASS — GitHub Actions"
+        and "6b8a00dcc9ad597038a423591dd8aaf731593fa5"
+        in item["detail"]
+        and "run #34" in item["detail"]
+        and "651 passed" in item["detail"]
         for item in dashboard["validation"]
     )

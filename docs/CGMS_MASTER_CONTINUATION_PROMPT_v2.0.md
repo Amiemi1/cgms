@@ -47,7 +47,7 @@ PWI-001 — Persistent Workspace Isolation Foundation
 **Current sub-stage**
 
 ```text
-Step 187E — Complete and Published; Governance-Currency Publication Complete
+Step 187E — Complete and Published; CI Recovery Closed and Published
 ```
 
 **Exact next authorised action**
@@ -649,7 +649,11 @@ Step 187E Active Browser Workspace Switching was validated, canonically closed, 
 
 The published Step 187E scope contains exactly seven committed paths: five modified paths and two added focused tests. Validation recorded 18 focused Step 187E contracts and 52 selected non-database regressions green while preserving the 116-route governed surface. No migration or database action was required.
 
-The Step 187E governance-currency correction was published at `d497ba825f1aabdec325519d675d5bb43c16fef3`. It changed only the Programme Progress registry, its focused dashboard test and this canonical controlling record. This post-publication reconciliation is limited to durable current-state governance wording; it does not reopen Step 187E technical scope and does not authorise Step 187F.
+The final Step 187E governance-currency publication was completed at `4a43f40e7af6b8665bd497938e0af940ec3c2ad7`. It changed only the Programme Progress registry, its focused dashboard test and this canonical controlling record. The publication did not reopen Step 187E technical scope and did not authorise Step 187F.
+
+A subsequent Product Readiness CI recovery was validated, committed and published at `6b8a00dcc9ad597038a423591dd8aaf731593fa5` on 12 August 2026. The recovery stabilised the CI/Render dependency surface, supplied a CI-only JWT signing value, added deterministic PostgreSQL 16 / pgvector schema bootstrap and aligned two legacy workspace tests with the already-published governed workspace architecture. Local CI-equivalent validation recorded 651 passed with 37 known deprecation warnings, zero JUnit failures, zero errors and zero skipped. GitHub Actions CGMS Product Readiness CI run #34 completed successfully in 7m 21s and the Product Readiness gate passed.
+
+The Product Readiness gate remains a programme-readiness assessment rather than a CI-failure signal. Overall readiness remains 23%, pilot-scope readiness 29%, registered capabilities 38, unresolved P0 commercial blockers 5, pilot-scope gaps 25 and open recommendations 29. No Product Readiness capability status was changed by the CI recovery.
 
 Step 187F has not started and requires separate approval.
 
@@ -1718,13 +1722,19 @@ Published Step 187E implementation checkpoint:
 0140d4a26d2e814879c7e5c4a74451cf18f85d92
 
 PWI-001 Step 187E is complete, validated, canonically closed, committed and published.
-Step 187E governance-currency publication checkpoint: d497ba825f1aabdec325519d675d5bb43c16fef3.
+Step 187E governance-currency publication checkpoint: 4a43f40e7af6b8665bd497938e0af940ec3c2ad7.
+
+Product Readiness CI recovery checkpoint:
+6b8a00dcc9ad597038a423591dd8aaf731593fa5
 
 Step 187E validation:
 18 focused contracts and 52 selected non-database regressions green
 
 Latest complete regression:
-633 passed, 37 warnings from Step 187D
+651 passed, 37 warnings in CI-equivalent PostgreSQL 16 / pgvector validation
+
+Remote CI:
+CGMS Product Readiness CI run #34 — Success
 
 Current route surface:
 116 contracts; normalized SHA-256 d11f3c1fd30c9e42eb6e028fee77f0d3119aa5c97be808aa7abeb2dc972f2d4f
@@ -1759,7 +1769,13 @@ Published Step 187E implementation checkpoint:
 0140d4a26d2e814879c7e5c4a74451cf18f85d92
 
 PWI-001 Step 187E is complete, validated, canonically closed, committed and published.
-Step 187E governance-currency publication checkpoint: d497ba825f1aabdec325519d675d5bb43c16fef3.
+Step 187E governance-currency publication checkpoint: 4a43f40e7af6b8665bd497938e0af940ec3c2ad7.
+
+Product Readiness CI recovery checkpoint:
+6b8a00dcc9ad597038a423591dd8aaf731593fa5
+
+Remote CI:
+CGMS Product Readiness CI run #34 — Success
 
 Expected current working tree:
 Resolve staged, unstaged and untracked state live from Git; do not infer repository cleanliness from this document.
@@ -1780,12 +1796,15 @@ Sprint: Sprint 22
 Active intervention: PWI-001
 Branch: cgms-v2-roadmap
 Published Step 187E implementation commit: 0140d4a26d2e814879c7e5c4a74451cf18f85d92
-Step 187E governance-currency publication commit: d497ba825f1aabdec325519d675d5bb43c16fef3
+Step 187E governance-currency publication commit: 4a43f40e7af6b8665bd497938e0af940ec3c2ad7
+CI recovery publication commit: 6b8a00dcc9ad597038a423591dd8aaf731593fa5
+CI recovery GitHub Actions: CGMS Product Readiness CI #34 — Success
 Step 187E status: complete, validated, canonically closed, committed and published
 Step 187E committed paths: 7
 Step 187E focused contracts: 18 green
 Step 187E selected non-database regressions: 52 green
-Latest complete regression: 633 passed, 37 warnings from Step 187D
+Latest complete regression: 651 passed, 37 warnings
+Product Readiness gate: PASSED; overall 23%; pilot-scope 29%; capabilities 38
 Governed runtime route surface: 116 contracts
 Repository HEAD / index / working-tree state: resolve live from Git
 Do not infer transient repository state from this canonical record
@@ -4232,20 +4251,26 @@ Programme: CGMS Productisation Programme
 Sprint: Sprint 22
 Intervention: PWI-001
 Branch: cgms-v2-roadmap
-Published baseline: 0140d4a26d2e814879c7e5c4a74451cf18f85d92
-Current sub-stage: Step 187E Complete and Published; Governance-Currency Correction Awaiting Exact-Diff Review
+Published baseline: 6b8a00dcc9ad597038a423591dd8aaf731593fa5
+Published Step 187E implementation checkpoint: 0140d4a26d2e814879c7e5c4a74451cf18f85d92
+Step 187E governance-currency publication checkpoint: 4a43f40e7af6b8665bd497938e0af940ec3c2ad7
+Published CI recovery checkpoint: 6b8a00dcc9ad597038a423591dd8aaf731593fa5
+Current sub-stage: Step 187E complete and published; Product Readiness CI recovery closed and published
 Step 187D: complete, validated, committed and published
 Step 187E: complete, validated, canonically closed, committed and published
 Step 187E validation: 18 focused and 52 selected non-database tests green
+Latest complete regression: 651 passed, 37 warnings
+GitHub Actions: CGMS Product Readiness CI #34 — Success
+Product Readiness Gate: PASSED; overall readiness 23%; pilot-scope readiness 29%; capabilities 38
+P0 commercial blockers: 5 programme/product-readiness gaps; not CI failures
 Governed route surface: 116 contracts
 Step 187F: not started; separate approval required
-Current authorised worktree: exactly 3 governance-currency paths
-Staged paths: 0
+Repository HEAD / index / working-tree state: resolve live from Git
 Protected file: manual_test_db.py unchanged
 Published PWI-001 migrations: unchanged
-Next authorised action: PWI-001 Step 187E Governance-Currency Correction — Exact Three-Path Diff Review and Controlled Staging Decision
+Next authorised action: No subsequent PWI-001 action authorised — Step 187F requires separate EG-001 approval
 ```
 
-Do not begin Step 187F, stage the governance-currency changes, commit, amend or push until the exact three-path correction evidence has been reviewed and separately approved.
+Do not begin Step 187F or perform any subsequent repository mutation without separate explicit approval. Repository HEAD, index and working-tree state must be resolved live from Git and must not be inferred from this canonical record.
 
 # END OF CGMS MASTER CONTINUATION PROMPT v2.0
