@@ -576,6 +576,8 @@
             aria-label="Programme dashboard sections"
         >
             <a href="#overview">Overview</a>
+            <a href="#executive-value">Executive Value</a>
+            <a href="#value-story">Value Story</a>
             <a href="#roadmap">Roadmap</a>
             <a href="#dashboards">Dashboards</a>
             <a href="#startup">Startup</a>
@@ -604,6 +606,288 @@
                 </div>
             </article>
             {% endfor %}
+        </section>
+
+        <section
+            class="section"
+            id="executive-value"
+        >
+            <div class="section-heading">
+                <div>
+                    <h2>Executive Product &amp; Value</h2>
+                    <p>
+                        Governed view of overall completion, product readiness,
+                        economic value and the value unlocked across the
+                        build-to-scale journey.
+                    </p>
+                </div>
+            </div>
+
+            <div class="summary-grid">
+                <article class="card">
+                    <div class="metric-label">Overall CGMS Completion</div>
+                    <div class="metric-value">
+                        {{ dashboard.executive_value.completion.overall_percent }}%
+                    </div>
+                    <div class="metric-detail">
+                        Weighted build-to-scale completion; separate from
+                        Product Readiness.
+                    </div>
+                </article>
+
+                <article class="card">
+                    <div class="metric-label">Product Readiness</div>
+                    <div class="metric-value">
+                        {{ dashboard.executive_value.completion.product_readiness_percent }}%
+                    </div>
+                    <div class="metric-detail">
+                        Governed 38-capability Product Readiness assessment.
+                    </div>
+                </article>
+
+                <article class="card">
+                    <div class="metric-label">Pilot Readiness</div>
+                    <div class="metric-value">
+                        {{ dashboard.executive_value.completion.pilot_readiness_percent }}%
+                    </div>
+                    <div class="metric-detail">
+                        Current pilot-scope readiness; not overall completion.
+                    </div>
+                </article>
+
+                <article class="card">
+                    <div class="metric-label">As-Is Base Value</div>
+                    <div class="metric-value">
+                        ${{ dashboard.executive_value.headline.as_is_base_usd_m }}m
+                    </div>
+                    <div class="metric-detail">
+                        ≈ ₦{{ dashboard.executive_value.headline.as_is_base_ngn_bn }}bn
+                        management planning estimate.
+                    </div>
+                </article>
+
+                <article class="card">
+                    <div class="metric-label">Next Value Gate</div>
+                    <div class="metric-value">
+                        {{ dashboard.executive_value.headline.next_gate }}
+                    </div>
+                    <div class="metric-detail">
+                        Base value at gate:
+                        ${{ dashboard.executive_value.headline.next_gate_base_usd_m }}m
+                        / ₦{{ dashboard.executive_value.headline.next_gate_base_ngn_bn }}bn.
+                    </div>
+                </article>
+
+                <article class="card">
+                    <div class="metric-label">Valuation Confidence</div>
+                    <div class="metric-value">
+                        {{ dashboard.executive_value.headline.confidence }}
+                    </div>
+                    <div class="metric-detail">
+                        As-Is confidence; forward-gate scenarios have lower
+                        confidence until customer evidence exists.
+                    </div>
+                </article>
+            </div>
+
+            <div class="section-heading" style="margin-top: 24px">
+                <div>
+                    <h3>Potential Value by Development Gate</h3>
+                    <p>
+                        Low / Base / High indicative economic-value scenarios.
+                        Development gates reduce execution risk; later values
+                        also require commercial evidence.
+                    </p>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                {% for gate in dashboard.executive_value.value_gates %}
+                <article class="list-card">
+                    <h3>{{ gate.gate }}</h3>
+                    <div class="metric-value">
+                        ${{ gate.base_usd_m }}m
+                    </div>
+                    <p class="description">
+                        Low ${{ gate.low_usd_m }}m ·
+                        Base ${{ gate.base_usd_m }}m ·
+                        High ${{ gate.high_usd_m }}m
+                    </p>
+                    <p class="description">
+                        NGN range:
+                        ₦{{ gate.low_ngn_bn }}bn –
+                        ₦{{ gate.high_ngn_bn }}bn
+                    </p>
+                    <p class="description">
+                        {{ gate.basis }}
+                    </p>
+                    <div class="access">
+                        Confidence: {{ gate.confidence }}
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+
+            <div class="three-column" style="margin-top: 18px">
+                <article class="list-card">
+                    <h3>Value Drivers</h3>
+                    <ul class="plain-list">
+                        {% for item in dashboard.executive_value.value_drivers %}
+                        <li>{{ item }}</li>
+                        {% endfor %}
+                    </ul>
+                </article>
+
+                <article class="list-card">
+                    <h3>Value Risks</h3>
+                    <ul class="plain-list">
+                        {% for item in dashboard.executive_value.value_risks %}
+                        <li>{{ item }}</li>
+                        {% endfor %}
+                    </ul>
+                </article>
+
+                <article class="list-card">
+                    <h3>Valuation Basis</h3>
+                    <ul class="plain-list">
+                        {% for item in dashboard.executive_value.valuation_methodology %}
+                        <li>
+                            <strong>{{ item.component }}</strong>
+                            &mdash; {{ item.description }}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </article>
+            </div>
+        </section>
+
+        <section
+            class="section"
+            id="value-story"
+        >
+            <div class="section-heading">
+                <div>
+                    <h2>CGMS Value Story</h2>
+                    <p>
+                        How CGMS capabilities respond to industry needs and
+                        translate into customer and economic value.
+                    </p>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                {% for item in dashboard.executive_value.value_story %}
+                <article class="list-card">
+                    <div class="milestone-id">Industry Need</div>
+                    <p class="description">
+                        {{ item.industry_need }}
+                    </p>
+
+                    <div class="milestone-id">CGMS Feature</div>
+                    <h3>{{ item.feature }}</h3>
+
+                    <div class="milestone-id">Customer Benefit</div>
+                    <p class="description">
+                        {{ item.benefit }}
+                    </p>
+
+                    <div class="milestone-id">Economic Value</div>
+                    <p class="description">
+                        {{ item.value_mechanism }}
+                    </p>
+                </article>
+                {% endfor %}
+            </div>
+
+            <div class="section-heading" style="margin-top: 24px">
+                <div>
+                    <h3>Market Position</h3>
+                    <p>
+                        CGMS relative strengths and productization gaps against
+                        the current enterprise AI and knowledge-platform market.
+                    </p>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                {% for item in dashboard.executive_value.market_position %}
+                <article class="list-card">
+                    <h3>{{ item.dimension }}</h3>
+                    <div class="access">
+                        CGMS: {{ item.cgms }}
+                    </div>
+                    <p class="description">
+                        {{ item.market_context }}
+                    </p>
+                </article>
+                {% endfor %}
+            </div>
+
+            <div class="section-heading" style="margin-top: 24px">
+                <div>
+                    <h3>Competitor Comparison</h3>
+                    <p>
+                        Side-by-side product-position snapshot against the
+                        approved enterprise AI and knowledge-platform
+                        benchmark set.
+                    </p>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                {% for item in dashboard.executive_value.competitor_comparison %}
+                <article class="list-card">
+                    <h3>{{ item.dimension }}</h3>
+
+                    <ul class="plain-list">
+                        <li>
+                            <strong>CGMS</strong>
+                            &mdash; {{ item.cgms }}
+                        </li>
+                        <li>
+                            <strong>Glean</strong>
+                            &mdash; {{ item.glean }}
+                        </li>
+                        <li>
+                            <strong>Microsoft 365 Copilot</strong>
+                            &mdash; {{ item.microsoft_365_copilot }}
+                        </li>
+                        <li>
+                            <strong>Notion AI</strong>
+                            &mdash; {{ item.notion_ai }}
+                        </li>
+                        <li>
+                            <strong>Slack AI / Enterprise</strong>
+                            &mdash; {{ item.slack_ai }}
+                        </li>
+                    </ul>
+                </article>
+                {% endfor %}
+            </div>
+
+            <article
+                class="list-card"
+                style="margin-top: 18px"
+            >
+                <h3>Market Intelligence Snapshot</h3>
+                <p class="description">
+                    As of
+                    {{ dashboard.executive_value.market_intelligence.as_of }}.
+                    Benchmark set:
+                    {{ dashboard.executive_value.market_intelligence.benchmark_set | join(", ") }}.
+                </p>
+                <p class="description">
+                    {{ dashboard.executive_value.market_intelligence.principle }}
+                </p>
+                <p class="description">
+                    FX translation assumption:
+                    ₦{{ dashboard.executive_value.model.currency.usd_ngn_assumption }}
+                    per US$1.
+                </p>
+                <div class="access">
+                    {{ dashboard.executive_value.model.classification }}
+                </div>
+            </article>
         </section>
 
         <section class="section">

@@ -1815,6 +1815,66 @@ Step 187F: not started; separate approval required
 Next authorised action: No subsequent PWI-001 action authorised — Step 187F requires separate EG-001 approval
 ```
 
+## Executive Product Value Dashboard — Valuation Model v1.0
+
+Approved on 12 August 2026 as a governed management-planning layer of the
+Programme Progress Dashboard. This intervention is separate from PWI-001
+Step 187F and does not change Product Readiness capability statuses.
+
+Approved executive metrics:
+
+- Overall CGMS Completion: 44%, using the governed weighted
+  build-to-scale completion model.
+- Product Readiness: 23%.
+- Pilot Readiness: 29%.
+- As-Is indicative value: USD 0.8m / 1.5m / 2.5m Low / Base / High.
+- Pilot Ready: USD 1.5m / 3.0m / 5.0m.
+- Commercial Ready: USD 4.0m / 8.0m / 14.0m.
+- Enterprise Ready: USD 12.0m / 25.0m / 45.0m.
+- Scale Ready: USD 40.0m / 80.0m / 150.0m.
+- Working FX translation assumption: NGN 1,360 per USD 1.
+- The values are governed management planning estimates and are not a
+  formal investment valuation.
+
+Valuation Model v1.0 triangulates replacement-cost/software-asset value,
+risk-adjusted commercial value and strategic/IP option value. Later-gate
+values require commercial evidence and must not be treated as automatically
+earned through engineering completion alone.
+
+The dashboard also includes the approved CGMS Value Story. Each value-story
+entry explicitly links:
+
+Industry Need -> CGMS Feature/Capability -> Customer Benefit ->
+Economic Value Mechanism.
+
+The Value Story covers institutional knowledge loss, fragmented enterprise
+information, signal/event overload, AI explainability and governance,
+enterprise access control, decision-to-execution continuity, executive
+knowledge-risk visibility and cross-platform cognitive integration.
+
+The approved benchmark set is Glean, Microsoft 365 Copilot, Notion AI and
+Slack AI / Enterprise. The executive dashboard carries an explicit
+dimension-by-dimension comparison covering core market position,
+cross-system search/connectors, permission-aware governance, agentic
+workflows/action and the primary knowledge/context surface. External
+benchmark claims are maintained as a dated market-intelligence snapshot
+using official product documentation. Benchmark information establishes
+category context only and must not be treated as a direct CGMS valuation
+multiple.
+
+Implementation boundary:
+
+1. app/services/programme_progress/commercial_value.py
+2. app/services/programme_progress/registry.py
+3. app/dashboard/templates/programme_progress_dashboard.html
+4. tests/test_programme_progress_dashboard.py
+5. tests/test_programme_progress_commercial_value.py
+6. docs/CGMS_MASTER_CONTINUATION_PROMPT_v2.0.md
+
+No Product Readiness scoring logic, database model, migration, protected
+authentication file, manual_test_db.py, CI workflow or Step 187F scope is
+authorised by this intervention.
+
 # 36. HISTORICAL DELIVERY RECORD
 
 The following milestone record preserves the programme’s detailed historical evidence.

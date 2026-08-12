@@ -3,6 +3,10 @@ from __future__ import annotations
 from copy import deepcopy
 from typing import Any, Final
 
+from app.services.programme_progress.commercial_value import (
+    build_commercial_value_view,
+)
+
 
 _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
     "page": {
@@ -85,6 +89,7 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
             ),
         },
     ],
+    "executive_value": build_commercial_value_view(),
     "navigation": [
         {
             "title": "Programme Progress",

@@ -430,3 +430,54 @@ def test_registry_contains_pwi001_current_state() -> None:
         and "651 passed" in item["detail"]
         for item in dashboard["validation"]
     )
+
+
+def test_registry_contains_approved_executive_value_model() -> None:
+    dashboard = ProgrammeProgressRegistry().build_view()
+    value = dashboard["executive_value"]
+
+    assert value["completion"]["overall_percent"] == 44
+    assert value["completion"]["product_readiness_percent"] == 23
+    assert value["completion"]["pilot_readiness_percent"] == 29
+
+    assert value["headline"]["as_is_base_usd_m"] == 1.5
+    assert value["headline"]["as_is_base_ngn_bn"] == 2.04
+    assert value["headline"]["next_gate"] == "Pilot Ready"
+
+    assert len(value["value_gates"]) == 5
+    assert len(value["value_story"]) == 8
+
+    assert value["model"]["classification"] == (
+        "Governed management planning estimate — "
+        "not a formal investment valuation"
+    )
+
+
+def test_progress_renders_executive_value_and_value_story() -> None:
+    with build_client(
+        frozenset({VIEW_DASHBOARD})
+    ) as client:
+        response = client.get("/progress")
+
+    assert response.status_code == 200
+
+    body = response.text
+
+    assert "Executive Product &amp; Value" in body
+    assert "Overall CGMS Completion" in body
+    assert "44%" in body
+    assert "As-Is Base Value" in body
+    assert "$1.5m" in body
+    assert "CGMS Value Story" in body
+    assert "Industry Need" in body
+    assert "Customer Benefit" in body
+    assert "Economic Value" in body
+    assert "Persistent organizational memory" in body
+    assert "Market Position" in body
+    assert "Competitor Comparison" in body
+    assert "Glean" in body
+    assert "Microsoft 365 Copilot" in body
+    assert "Notion AI" in body
+    assert "Slack AI / Enterprise" in body
+    assert "Cross-system search and connectors" in body
+    assert "not a formal investment valuation" in body
