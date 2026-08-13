@@ -1875,6 +1875,32 @@ No Product Readiness scoring logic, database model, migration, protected
 authentication file, manual_test_db.py, CI workflow or Step 187F scope is
 authorised by this intervention.
 
+## Executive Value Dashboard — Visual Polish v1.1
+
+Approved post-publication visual inspection identified a narrowly scoped
+Executive Value Dashboard presentation enhancement.
+
+The approved v1.0 economic values and readiness scores remain unchanged.
+
+Visual Polish v1.1 adds:
+
+- a dedicated responsive Executive KPI grid;
+- commercial emphasis for As-Is Base Value and Next Value Gate;
+- an explicit Base-value development story from USD 1.5m As-Is to
+  USD 80m Scale Ready;
+- a 53.3x As-Is-to-Scale scenario multiple;
+- incremental Base value unlocked by gate:
+  Pilot +USD 1.5m, Commercial +USD 5.0m,
+  Enterprise +USD 17.0m and Scale +USD 55.0m;
+- compact confidence indicators;
+- tighter valuation-basis language; and
+- responsive 6/3/2/1 KPI and 5/3/2/1 value-gate layouts.
+
+This visual-polish intervention does not change Product Readiness scoring,
+the 44% Overall CGMS Completion measure, the approved Low/Base/High
+valuation ranges, database state, authentication behaviour, market
+benchmark assumptions or any PWI-001 Step 187F scope.
+
 # 36. HISTORICAL DELIVERY RECORD
 
 The following milestone record preserves the programme’s detailed historical evidence.

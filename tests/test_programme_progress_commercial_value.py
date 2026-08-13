@@ -132,3 +132,44 @@ def test_market_comparison_is_explicit_and_product_by_product() -> None:
     assert "100+" in connector_row["microsoft_365_copilot"]
     assert "Permission-aware" in connector_row["notion_ai"]
     assert "Enterprise+" in connector_row["slack_ai"]
+
+
+def test_value_curve_exposes_incremental_base_value_unlock() -> None:
+    model = build_commercial_value_view()
+
+    assert model["headline"]["scale_multiple_vs_as_is"] == 53.3
+
+    gates = {
+        item["gate"]: item
+        for item in model["value_gates"]
+    }
+
+    assert gates["As-Is"]["incremental_base_usd_m"] == 0.0
+    assert gates["Pilot Ready"]["incremental_base_usd_m"] == 1.5
+    assert gates["Commercial Ready"]["incremental_base_usd_m"] == 5.0
+    assert gates["Enterprise Ready"]["incremental_base_usd_m"] == 17.0
+    assert gates["Scale Ready"]["incremental_base_usd_m"] == 55.0
+
+    assert gates["Pilot Ready"]["unlock_label"] == (
+        "Value unlocked +$1.5m"
+    )
+    assert gates["Scale Ready"]["unlock_label"] == (
+        "Value unlocked +$55.0m"
+    )
+
+
+def test_value_curve_preserves_approved_base_values() -> None:
+    model = build_commercial_value_view()
+
+    gates = {
+        item["gate"]: item["base_usd_m"]
+        for item in model["value_gates"]
+    }
+
+    assert gates == {
+        "As-Is": 1.5,
+        "Pilot Ready": 3.0,
+        "Commercial Ready": 8.0,
+        "Enterprise Ready": 25.0,
+        "Scale Ready": 80.0,
+    }

@@ -481,3 +481,25 @@ def test_progress_renders_executive_value_and_value_story() -> None:
     assert "Slack AI / Enterprise" in body
     assert "Cross-system search and connectors" in body
     assert "not a formal investment valuation" in body
+
+
+def test_progress_renders_visual_value_unlock_story() -> None:
+    with build_client(
+        frozenset({VIEW_DASHBOARD})
+    ) as client:
+        response = client.get("/progress")
+
+    assert response.status_code == 200
+
+    body = response.text
+
+    assert "53.3×" in body
+    assert "As-Is → Scale" in body
+    assert "Value unlocked +$1.5m" in body
+    assert "Value unlocked +$5.0m" in body
+    assert "Value unlocked +$17.0m" in body
+    assert "Value unlocked +$55.0m" in body
+    assert 'class="executive-summary-grid"' in body
+    assert 'class="value-gate-grid"' in body
+    assert "commercial-highlight" in body
+    assert "confidence-pill" in body

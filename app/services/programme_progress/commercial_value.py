@@ -64,6 +64,12 @@ _EXECUTIVE_VALUE_MODEL: Final[dict[str, Any]] = {
         "next_gate_base_usd_m": 3.0,
         "next_gate_base_ngn_bn": 4.08,
         "confidence": "Medium",
+        "value_curve_summary": (
+            "Base indicative value expands from $1.5m As-Is to $80m "
+            "at Scale Ready as technical, commercial and market risk "
+            "is progressively retired."
+        ),
+        "scale_multiple_vs_as_is": 53.3,
     },
     "value_gates": [
         {
@@ -75,6 +81,9 @@ _EXECUTIVE_VALUE_MODEL: Final[dict[str, Any]] = {
             "base_ngn_bn": 2.04,
             "high_ngn_bn": 3.40,
             "confidence": "Medium",
+            "confidence_class": "medium",
+            "unlock_label": "Current base",
+            "incremental_base_usd_m": 0.0,
             "basis": (
                 "Replacement cost, architecture/IP, engineering evidence "
                 "and current productization risk"
@@ -89,6 +98,9 @@ _EXECUTIVE_VALUE_MODEL: Final[dict[str, Any]] = {
             "base_ngn_bn": 4.08,
             "high_ngn_bn": 6.80,
             "confidence": "Low–Medium",
+            "confidence_class": "low-medium",
+            "unlock_label": "Value unlocked +$1.5m",
+            "incremental_base_usd_m": 1.5,
             "basis": (
                 "Paid-pilot evidence, enterprise validation and reduced "
                 "technical/product adoption risk"
@@ -103,6 +115,9 @@ _EXECUTIVE_VALUE_MODEL: Final[dict[str, Any]] = {
             "base_ngn_bn": 10.88,
             "high_ngn_bn": 19.04,
             "confidence": "Low",
+            "confidence_class": "low",
+            "unlock_label": "Value unlocked +$5.0m",
+            "incremental_base_usd_m": 5.0,
             "basis": (
                 "Commercial packaging plus approximately $1.5m base-case "
                 "credible ARR and retention evidence"
@@ -117,6 +132,9 @@ _EXECUTIVE_VALUE_MODEL: Final[dict[str, Any]] = {
             "base_ngn_bn": 34.00,
             "high_ngn_bn": 61.20,
             "confidence": "Low",
+            "confidence_class": "low",
+            "unlock_label": "Value unlocked +$17.0m",
+            "incremental_base_usd_m": 17.0,
             "basis": (
                 "Approximately $5m base-case ARR with enterprise security, "
                 "reliability, integration and evidence gates satisfied"
@@ -131,6 +149,9 @@ _EXECUTIVE_VALUE_MODEL: Final[dict[str, Any]] = {
             "base_ngn_bn": 108.80,
             "high_ngn_bn": 204.00,
             "confidence": "Scenario",
+            "confidence_class": "scenario",
+            "unlock_label": "Value unlocked +$55.0m",
+            "incremental_base_usd_m": 55.0,
             "basis": (
                 "Approximately $15m base-case ARR plus validated growth, "
                 "retention, distribution and scale economics"
@@ -141,22 +162,22 @@ _EXECUTIVE_VALUE_MODEL: Final[dict[str, Any]] = {
         {
             "component": "Replacement-cost / software-asset value",
             "description": (
-                "Current code, tests, architecture, governance evidence "
+                "Validated software estate, architecture, governance "
                 "and equivalent rebuild effort"
             ),
         },
         {
             "component": "Risk-adjusted commercial value",
             "description": (
-                "Commercial maturity, enterprise adoption, credible ARR, "
-                "retention and productization evidence"
+                "Commercial maturity, credible ARR, retention and "
+                "enterprise-adoption evidence"
             ),
         },
         {
             "component": "Strategic / IP option value",
             "description": (
-                "Differentiated organizational-memory architecture, "
-                "explainability, event intelligence and IP position"
+                "Organizational memory, explainability, event intelligence "
+                "and IP differentiation"
             ),
         },
     ],

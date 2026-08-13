@@ -196,6 +196,87 @@
             margin: 18px 0;
         }
 
+        .executive-summary-grid {
+            display: grid;
+            grid-template-columns:
+                repeat(
+                    6,
+                    minmax(0, 1fr)
+                );
+            gap: 14px;
+            margin: 18px 0;
+        }
+
+        .commercial-highlight {
+            border-color:
+                rgba(98, 173, 255, 0.62);
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(98, 173, 255, 0.10),
+                    transparent 62%
+                ),
+                var(--surface);
+        }
+
+        .value-storyline {
+            display: flex;
+            justify-content: space-between;
+            gap: 18px;
+            align-items: center;
+            margin: -4px 0 18px;
+            padding: 14px 16px;
+            border: 1px solid
+                rgba(98, 173, 255, 0.42);
+            border-radius: 11px;
+            background:
+                rgba(98, 173, 255, 0.07);
+            color: var(--muted);
+            font-size: 0.88rem;
+        }
+
+        .value-storyline strong {
+            flex: 0 0 auto;
+            color: var(--text);
+            font-size: 1rem;
+        }
+
+        .value-gate-grid {
+            display: grid;
+            grid-template-columns:
+                repeat(
+                    5,
+                    minmax(0, 1fr)
+                );
+            gap: 13px;
+        }
+
+        .value-gate-card {
+            min-width: 0;
+        }
+
+        .value-unlock {
+            margin: 2px 0 10px;
+            color: var(--accent);
+            font-size: 0.78rem;
+            font-weight: 850;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+        }
+
+        .confidence-pill {
+            display: inline-flex;
+            align-items: center;
+            margin-top: 12px;
+            padding: 5px 9px;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            color: var(--text);
+            background: var(--surface-soft);
+            font-size: 0.74rem;
+            font-weight: 800;
+        }
+
         .card,
         .section {
             border: 1px solid var(--border);
@@ -499,6 +580,24 @@
             font-size: 0.82rem;
         }
 
+        @media (max-width: 1200px) {
+            .executive-summary-grid {
+                grid-template-columns:
+                    repeat(
+                        3,
+                        minmax(0, 1fr)
+                    );
+            }
+
+            .value-gate-grid {
+                grid-template-columns:
+                    repeat(
+                        3,
+                        minmax(0, 1fr)
+                    );
+            }
+        }
+
         @media (max-width: 900px) {
             .hero,
             .sprint-header {
@@ -511,6 +610,20 @@
 
             .three-column {
                 grid-template-columns: 1fr;
+            }
+
+            .executive-summary-grid,
+            .value-gate-grid {
+                grid-template-columns:
+                    repeat(
+                        2,
+                        minmax(0, 1fr)
+                    );
+            }
+
+            .value-storyline {
+                align-items: flex-start;
+                flex-direction: column;
             }
         }
 
@@ -530,6 +643,11 @@
             .commit {
                 grid-template-columns: 1fr;
                 gap: 4px;
+            }
+
+            .executive-summary-grid,
+            .value-gate-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -623,7 +741,7 @@
                 </div>
             </div>
 
-            <div class="summary-grid">
+            <div class="executive-summary-grid">
                 <article class="card">
                     <div class="metric-label">Overall CGMS Completion</div>
                     <div class="metric-value">
@@ -655,7 +773,7 @@
                     </div>
                 </article>
 
-                <article class="card">
+                <article class="card commercial-highlight">
                     <div class="metric-label">As-Is Base Value</div>
                     <div class="metric-value">
                         ${{ dashboard.executive_value.headline.as_is_base_usd_m }}m
@@ -666,7 +784,7 @@
                     </div>
                 </article>
 
-                <article class="card">
+                <article class="card commercial-highlight">
                     <div class="metric-label">Next Value Gate</div>
                     <div class="metric-value">
                         {{ dashboard.executive_value.headline.next_gate }}
@@ -701,13 +819,28 @@
                 </div>
             </div>
 
-            <div class="dashboard-grid">
+            <div class="value-storyline">
+                <span>
+                    {{ dashboard.executive_value.headline.value_curve_summary }}
+                </span>
+                <strong>
+                    {{ dashboard.executive_value.headline.scale_multiple_vs_as_is }}×
+                    As-Is → Scale
+                </strong>
+            </div>
+
+            <div class="value-gate-grid">
                 {% for gate in dashboard.executive_value.value_gates %}
-                <article class="list-card">
+                <article class="list-card value-gate-card">
                     <h3>{{ gate.gate }}</h3>
                     <div class="metric-value">
                         ${{ gate.base_usd_m }}m
                     </div>
+
+                    <div class="value-unlock">
+                        {{ gate.unlock_label }}
+                    </div>
+
                     <p class="description">
                         Low ${{ gate.low_usd_m }}m ·
                         Base ${{ gate.base_usd_m }}m ·
@@ -721,7 +854,10 @@
                     <p class="description">
                         {{ gate.basis }}
                     </p>
-                    <div class="access">
+                    <div
+                        class="confidence-pill"
+                        data-confidence="{{ gate.confidence_class }}"
+                    >
                         Confidence: {{ gate.confidence }}
                     </div>
                 </article>
