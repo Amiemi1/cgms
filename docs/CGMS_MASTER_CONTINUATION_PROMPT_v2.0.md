@@ -1901,6 +1901,70 @@ the 44% Overall CGMS Completion measure, the approved Low/Base/High
 valuation ranges, database state, authentication behaviour, market
 benchmark assumptions or any PWI-001 Step 187F scope.
 
+## Executive Value Dashboard — Buyer Intelligence v1.0
+
+A separately approved pre-Step-187F commercial-intelligence enhancement
+extends the Executive Value Dashboard with a governed named-account buyer
+and strategic-platform opportunity layer.
+
+Buyer Intelligence v1.0 is evidence-dated 13 August 2026 and introduces:
+
+- Buyer Universe Unlocked across all five development gates;
+- a 100-point Strategic Fit Score using:
+  - Industry Need Intensity — 25%;
+  - Complementarity with Existing Stack — 25%;
+  - Digital / AI Maturity — 20%;
+  - Economic & Operational Scale — 20%;
+  - Commercial Accessibility / Partnership Propensity — 10%;
+- six enterprise-client / design-partner hypotheses:
+  MTN Group, Standard Bank Group, Access Bank, NNPC Ltd,
+  Airtel Africa and Dangote Cement;
+- two separately classified strategic-platform opportunities:
+  ServiceNow and Microsoft;
+- current-state evidence summaries;
+- strategic-gap hypotheses;
+- CGMS strategic-fit narratives;
+- initial use-case / strategic-path hypotheses;
+- entry-gate classification;
+- evidence confidence and evidence date; and
+- explicit governance language preventing named-account inclusion from
+  being interpreted as customer status, engagement, expressed interest,
+  partnership discussion or acquisition intent.
+
+The Strategic Fit Score measures management-assessed fit and addressability.
+It does not measure purchase probability or transaction probability.
+
+Buyer Intelligence is a static governed market-intelligence snapshot.
+The runtime application performs no live external lookup.
+
+The intervention does not change the approved Low/Base/High valuation curve,
+44% Overall CGMS Completion, Product Readiness scoring, Pilot Readiness,
+database state, migrations, authentication, CI workflow, protected files,
+manual_test_db.py or any Step 187F scope.
+
+### Buyer Intelligence v1.0 pre-publication scoring correction
+
+Before staging or publication, the Buyer Intelligence v1.0 scoring model was
+strengthened so every named-account Strategic Fit Score is reproducible from
+the five approved weighted dimensions.
+
+Each account now carries five 0–100 component scores:
+
+- Industry Need Intensity;
+- Complementarity with Existing Stack;
+- Digital / AI Maturity;
+- Economic & Operational Scale; and
+- Commercial Accessibility / Partnership Propensity.
+
+The displayed Strategic Fit Score is required by contract to equal the exact
+weighted sum of those components using the governed 25% / 25% / 20% / 20% /
+10% weights.
+
+The correction does not alter the previously approved headline account
+scores. It also exposes each account's component-score breakdown and
+evidence-basis description in the Executive Value Dashboard so that the
+management hypothesis is auditable rather than editorial.
+
 # 36. HISTORICAL DELIVERY RECORD
 
 The following milestone record preserves the programme’s detailed historical evidence.

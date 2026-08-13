@@ -84,6 +84,12 @@ _EXECUTIVE_VALUE_MODEL: Final[dict[str, Any]] = {
             "confidence_class": "medium",
             "unlock_label": "Current base",
             "incremental_base_usd_m": 0.0,
+            "buyer_universe": (
+                "Design partners / structured discovery"
+            ),
+            "illustrative_accounts": (
+                "Access Bank · Dangote Cement"
+            ),
             "basis": (
                 "Replacement cost, architecture/IP, engineering evidence "
                 "and current productization risk"
@@ -101,6 +107,12 @@ _EXECUTIVE_VALUE_MODEL: Final[dict[str, Any]] = {
             "confidence_class": "low-medium",
             "unlock_label": "Value unlocked +$1.5m",
             "incremental_base_usd_m": 1.5,
+            "buyer_universe": (
+                "Paid enterprise pilots"
+            ),
+            "illustrative_accounts": (
+                "MTN · Access Bank · NNPC · Dangote Cement"
+            ),
             "basis": (
                 "Paid-pilot evidence, enterprise validation and reduced "
                 "technical/product adoption risk"
@@ -118,6 +130,12 @@ _EXECUTIVE_VALUE_MODEL: Final[dict[str, Any]] = {
             "confidence_class": "low",
             "unlock_label": "Value unlocked +$5.0m",
             "incremental_base_usd_m": 5.0,
+            "buyer_universe": (
+                "Enterprise procurement"
+            ),
+            "illustrative_accounts": (
+                "MTN · Standard Bank · Airtel Africa · Access Bank"
+            ),
             "basis": (
                 "Commercial packaging plus approximately $1.5m base-case "
                 "credible ARR and retention evidence"
@@ -135,6 +153,12 @@ _EXECUTIVE_VALUE_MODEL: Final[dict[str, Any]] = {
             "confidence_class": "low",
             "unlock_label": "Value unlocked +$17.0m",
             "incremental_base_usd_m": 17.0,
+            "buyer_universe": (
+                "Regulated / multi-country enterprise deployment"
+            ),
+            "illustrative_accounts": (
+                "Standard Bank · MTN · Airtel Africa · NNPC"
+            ),
             "basis": (
                 "Approximately $5m base-case ARR with enterprise security, "
                 "reliability, integration and evidence gates satisfied"
@@ -152,6 +176,12 @@ _EXECUTIVE_VALUE_MODEL: Final[dict[str, Any]] = {
             "confidence_class": "scenario",
             "unlock_label": "Value unlocked +$55.0m",
             "incremental_base_usd_m": 55.0,
+            "buyer_universe": (
+                "Platform distribution / OEM / strategic transaction"
+            ),
+            "illustrative_accounts": (
+                "ServiceNow · Microsoft"
+            ),
             "basis": (
                 "Approximately $15m base-case ARR plus validated growth, "
                 "retention, distribution and scale economics"
@@ -501,6 +531,604 @@ _EXECUTIVE_VALUE_MODEL: Final[dict[str, Any]] = {
             ),
         },
     ],
+    "buyer_intelligence": {
+        "name": "CGMS Buyer Intelligence",
+        "version": "1.0",
+        "as_of": "13 August 2026",
+        "classification": (
+            "Management strategic-fit hypotheses based on public evidence; "
+            "not customer, engagement or transaction evidence"
+        ),
+        "scoring_model": {
+            "scale": 100,
+            "dimensions": [
+                {
+                    "dimension": "Industry Need Intensity",
+                    "weight_percent": 25,
+                },
+                {
+                    "dimension": "Complementarity with Existing Stack",
+                    "weight_percent": 25,
+                },
+                {
+                    "dimension": "Digital / AI Maturity",
+                    "weight_percent": 20,
+                },
+                {
+                    "dimension": "Economic & Operational Scale",
+                    "weight_percent": 20,
+                },
+                {
+                    "dimension": (
+                        "Commercial Accessibility / Partnership Propensity"
+                    ),
+                    "weight_percent": 10,
+                },
+            ],
+            "principle": (
+                "The score measures strategic fit and addressability, not "
+                "purchase probability, customer intent or acquisition intent."
+            ),
+            "calculation": (
+                "Strategic Fit Score = sum(component score × dimension "
+                "weight). All component scores use a 0–100 scale."
+            ),
+        },
+        "buyer_universe_by_gate": [
+            {
+                "gate": "As-Is",
+                "universe": "Design partners / structured discovery",
+                "accounts": [
+                    "Access Bank",
+                    "Dangote Cement",
+                ],
+            },
+            {
+                "gate": "Pilot Ready",
+                "universe": "Paid enterprise pilots",
+                "accounts": [
+                    "MTN Group",
+                    "Access Bank",
+                    "NNPC Ltd",
+                    "Dangote Cement",
+                ],
+            },
+            {
+                "gate": "Commercial Ready",
+                "universe": "Enterprise procurement",
+                "accounts": [
+                    "MTN Group",
+                    "Standard Bank Group",
+                    "Airtel Africa",
+                    "Access Bank",
+                ],
+            },
+            {
+                "gate": "Enterprise Ready",
+                "universe": (
+                    "Regulated / multi-country enterprise deployment"
+                ),
+                "accounts": [
+                    "Standard Bank Group",
+                    "MTN Group",
+                    "Airtel Africa",
+                    "NNPC Ltd",
+                ],
+            },
+            {
+                "gate": "Scale Ready",
+                "universe": (
+                    "Platform distribution / OEM / strategic transaction"
+                ),
+                "accounts": [
+                    "ServiceNow",
+                    "Microsoft",
+                ],
+            },
+        ],
+        "enterprise_clients": [
+            {
+                "organization": "MTN Group",
+                "opportunity_type": "Enterprise Client",
+                "best_entry_gate": "Pilot Ready",
+                "strategic_fit_score": 95,
+                "score_components": [
+                    {
+                        "dimension": "Industry Need Intensity",
+                        "label": "Need",
+                        "score": 98,
+                    },
+                    {
+                        "dimension": "Complementarity with Existing Stack",
+                        "label": "Stack",
+                        "score": 92,
+                    },
+                    {
+                        "dimension": "Digital / AI Maturity",
+                        "label": "AI",
+                        "score": 98,
+                    },
+                    {
+                        "dimension": "Economic & Operational Scale",
+                        "label": "Scale",
+                        "score": 99,
+                    },
+                    {
+                        "dimension": (
+                            "Commercial Accessibility / Partnership Propensity"
+                        ),
+                        "label": "Access",
+                        "score": 81,
+                    },
+                ],
+                "fit_band": "Very High",
+                "evidence_confidence": "High",
+                "evidence_as_of": "13 August 2026",
+                "current_state": (
+                    "Large multi-market telecom estate with established AI "
+                    "and Cloud Centres of Excellence, substantial internal "
+                    "software engineering capability and high-volume "
+                    "analytics / operational-AI infrastructure."
+                ),
+                "strategic_gap_hypothesis": (
+                    "Durable organizational context can remain fragmented "
+                    "across applications, analytics, teams, interventions "
+                    "and historical decisions."
+                ),
+                "cgms_fit": (
+                    "Persistent organizational memory, event intelligence, "
+                    "decision lineage, explainability and contextual recall "
+                    "across existing systems rather than replacement of them."
+                ),
+                "initial_use_case": (
+                    "Reconstruct and retain the complete context surrounding "
+                    "network or commercial interventions, decisions and "
+                    "downstream outcomes."
+                ),
+                "evidence_basis": (
+                    "Official MTN investor, Genova AI and Azure partnership "
+                    "materials reviewed for the dated intelligence snapshot."
+                ),
+            },
+            {
+                "organization": "Standard Bank Group",
+                "opportunity_type": "Enterprise Client",
+                "best_entry_gate": "Commercial Ready",
+                "strategic_fit_score": 94,
+                "score_components": [
+                    {
+                        "dimension": "Industry Need Intensity",
+                        "label": "Need",
+                        "score": 97,
+                    },
+                    {
+                        "dimension": "Complementarity with Existing Stack",
+                        "label": "Stack",
+                        "score": 93,
+                    },
+                    {
+                        "dimension": "Digital / AI Maturity",
+                        "label": "AI",
+                        "score": 95,
+                    },
+                    {
+                        "dimension": "Economic & Operational Scale",
+                        "label": "Scale",
+                        "score": 98,
+                    },
+                    {
+                        "dimension": (
+                            "Commercial Accessibility / Partnership Propensity"
+                        ),
+                        "label": "Access",
+                        "score": 79,
+                    },
+                ],
+                "fit_band": "Very High",
+                "evidence_confidence": "High",
+                "evidence_as_of": "13 August 2026",
+                "current_state": (
+                    "Large regulated African banking group with substantial "
+                    "multi-country scale and a strategy in which technology "
+                    "and AI are foundational capabilities."
+                ),
+                "strategic_gap_hypothesis": (
+                    "Cross-country institutional context, governance evidence "
+                    "and decision history can be difficult to preserve and "
+                    "retrieve consistently across complex regulated estates."
+                ),
+                "cgms_fit": (
+                    "Governed institutional memory, regulated decision "
+                    "lineage, contextual retrieval and multi-entity knowledge "
+                    "continuity."
+                ),
+                "initial_use_case": (
+                    "Preserve strategic and governance decision context across "
+                    "multi-country transformation programmes."
+                ),
+                "evidence_basis": (
+                    "Official Standard Bank investor and strategy materials "
+                    "reviewed for the dated intelligence snapshot."
+                ),
+            },
+            {
+                "organization": "Access Bank",
+                "opportunity_type": "Enterprise Client / Design Partner",
+                "best_entry_gate": "Pilot Ready",
+                "strategic_fit_score": 91,
+                "score_components": [
+                    {
+                        "dimension": "Industry Need Intensity",
+                        "label": "Need",
+                        "score": 94,
+                    },
+                    {
+                        "dimension": "Complementarity with Existing Stack",
+                        "label": "Stack",
+                        "score": 92,
+                    },
+                    {
+                        "dimension": "Digital / AI Maturity",
+                        "label": "AI",
+                        "score": 93,
+                    },
+                    {
+                        "dimension": "Economic & Operational Scale",
+                        "label": "Scale",
+                        "score": 88,
+                    },
+                    {
+                        "dimension": (
+                            "Commercial Accessibility / Partnership Propensity"
+                        ),
+                        "label": "Access",
+                        "score": 83,
+                    },
+                ],
+                "fit_band": "Very High",
+                "evidence_confidence": "High",
+                "evidence_as_of": "13 August 2026",
+                "current_state": (
+                    "Digital-capability and partnership orientation combining "
+                    "digital platforms, data analytics, AI and technology "
+                    "co-innovation."
+                ),
+                "strategic_gap_hypothesis": (
+                    "Strategic initiatives and cross-functional digital "
+                    "programmes can lose decision context, institutional "
+                    "knowledge and traceability over time."
+                ),
+                "cgms_fit": (
+                    "Governed memory, decision traceability, cross-functional "
+                    "context and explainable institutional intelligence."
+                ),
+                "initial_use_case": (
+                    "Controlled institutional-memory pilot around strategic "
+                    "initiatives, governance decisions or digital programmes."
+                ),
+                "evidence_basis": (
+                    "Official Access Bank Partnerships & Digital Capabilities "
+                    "materials reviewed for the dated intelligence snapshot."
+                ),
+            },
+            {
+                "organization": "NNPC Ltd",
+                "opportunity_type": "Enterprise Client",
+                "best_entry_gate": "Pilot Ready",
+                "strategic_fit_score": 90,
+                "score_components": [
+                    {
+                        "dimension": "Industry Need Intensity",
+                        "label": "Need",
+                        "score": 96,
+                    },
+                    {
+                        "dimension": "Complementarity with Existing Stack",
+                        "label": "Stack",
+                        "score": 90,
+                    },
+                    {
+                        "dimension": "Digital / AI Maturity",
+                        "label": "AI",
+                        "score": 82,
+                    },
+                    {
+                        "dimension": "Economic & Operational Scale",
+                        "label": "Scale",
+                        "score": 99,
+                    },
+                    {
+                        "dimension": (
+                            "Commercial Accessibility / Partnership Propensity"
+                        ),
+                        "label": "Access",
+                        "score": 73,
+                    },
+                ],
+                "fit_band": "Very High",
+                "evidence_confidence": "High",
+                "evidence_as_of": "13 August 2026",
+                "current_state": (
+                    "Large integrated energy organisation managing complex "
+                    "operational, technical and investment programmes while "
+                    "publicly advancing integrated data, AI and engineering "
+                    "modernisation."
+                ),
+                "strategic_gap_hypothesis": (
+                    "Long-duration programmes and operational decisions can "
+                    "lose assumptions, stakeholder context, technical history "
+                    "and lessons across teams and time."
+                ),
+                "cgms_fit": (
+                    "Operational and programme memory, technical knowledge "
+                    "continuity, event lineage and governance evidence."
+                ),
+                "initial_use_case": (
+                    "Create persistent context around a bounded strategic "
+                    "programme, major operational event or technical decision "
+                    "chain."
+                ),
+                "evidence_basis": (
+                    "Official NNPC financial, research, innovation and AI "
+                    "materials reviewed for the dated intelligence snapshot."
+                ),
+            },
+            {
+                "organization": "Airtel Africa",
+                "opportunity_type": "Enterprise Client",
+                "best_entry_gate": "Commercial Ready",
+                "strategic_fit_score": 86,
+                "score_components": [
+                    {
+                        "dimension": "Industry Need Intensity",
+                        "label": "Need",
+                        "score": 90,
+                    },
+                    {
+                        "dimension": "Complementarity with Existing Stack",
+                        "label": "Stack",
+                        "score": 84,
+                    },
+                    {
+                        "dimension": "Digital / AI Maturity",
+                        "label": "AI",
+                        "score": 87,
+                    },
+                    {
+                        "dimension": "Economic & Operational Scale",
+                        "label": "Scale",
+                        "score": 95,
+                    },
+                    {
+                        "dimension": (
+                            "Commercial Accessibility / Partnership Propensity"
+                        ),
+                        "label": "Access",
+                        "score": 61,
+                    },
+                ],
+                "fit_band": "High",
+                "evidence_confidence": "Medium–High",
+                "evidence_as_of": "13 August 2026",
+                "current_state": (
+                    "Large multi-market telecom and digital-services estate "
+                    "with extensive mobile, data, mobile-money, fibre, data "
+                    "centre and network-modernisation activity."
+                ),
+                "strategic_gap_hypothesis": (
+                    "Cross-market decisions, network context and operational "
+                    "learning can remain distributed across markets, teams "
+                    "and technology surfaces."
+                ),
+                "cgms_fit": (
+                    "Cross-market contextual intelligence, operational memory "
+                    "and durable decision/event lineage."
+                ),
+                "initial_use_case": (
+                    "Preserve and retrieve context around network, customer or "
+                    "commercial interventions across multiple operating markets."
+                ),
+                "evidence_basis": (
+                    "Official Airtel Africa corporate, operating and strategy "
+                    "materials reviewed for the dated intelligence snapshot."
+                ),
+            },
+            {
+                "organization": "Dangote Cement",
+                "opportunity_type": "Enterprise Client / Design Partner",
+                "best_entry_gate": "Pilot Ready",
+                "strategic_fit_score": 83,
+                "score_components": [
+                    {
+                        "dimension": "Industry Need Intensity",
+                        "label": "Need",
+                        "score": 90,
+                    },
+                    {
+                        "dimension": "Complementarity with Existing Stack",
+                        "label": "Stack",
+                        "score": 86,
+                    },
+                    {
+                        "dimension": "Digital / AI Maturity",
+                        "label": "AI",
+                        "score": 75,
+                    },
+                    {
+                        "dimension": "Economic & Operational Scale",
+                        "label": "Scale",
+                        "score": 92,
+                    },
+                    {
+                        "dimension": (
+                            "Commercial Accessibility / Partnership Propensity"
+                        ),
+                        "label": "Access",
+                        "score": 56,
+                    },
+                ],
+                "fit_band": "High",
+                "evidence_confidence": "Medium–High",
+                "evidence_as_of": "13 August 2026",
+                "current_state": (
+                    "Large multi-country industrial and logistics estate with "
+                    "increasing use of AI-driven monitoring, automated "
+                    "inspection and transport telematics."
+                ),
+                "strategic_gap_hypothesis": (
+                    "Operational incidents, safety learning, plant knowledge "
+                    "and logistics decisions can become fragmented across "
+                    "sites, shifts and operating teams."
+                ),
+                "cgms_fit": (
+                    "Operational-event memory, safety and incident lineage, "
+                    "cross-plant knowledge retention and contextual learning."
+                ),
+                "initial_use_case": (
+                    "Bounded operational-memory pilot around fleet safety, "
+                    "plant incidents or recurring operational interventions."
+                ),
+                "evidence_basis": (
+                    "Official Dangote Cement operations and AI-telematics "
+                    "materials reviewed for the dated intelligence snapshot."
+                ),
+            },
+        ],
+        "strategic_platform_opportunities": [
+            {
+                "organization": "ServiceNow",
+                "opportunity_type": "Strategic Platform Partner",
+                "best_entry_gate": "Enterprise / Scale Ready",
+                "strategic_fit_score": 91,
+                "score_components": [
+                    {
+                        "dimension": "Industry Need Intensity",
+                        "label": "Need",
+                        "score": 92,
+                    },
+                    {
+                        "dimension": "Complementarity with Existing Stack",
+                        "label": "Stack",
+                        "score": 88,
+                    },
+                    {
+                        "dimension": "Digital / AI Maturity",
+                        "label": "AI",
+                        "score": 98,
+                    },
+                    {
+                        "dimension": "Economic & Operational Scale",
+                        "label": "Scale",
+                        "score": 97,
+                    },
+                    {
+                        "dimension": (
+                            "Commercial Accessibility / Partnership Propensity"
+                        ),
+                        "label": "Access",
+                        "score": 70,
+                    },
+                ],
+                "fit_band": "Very High Adjacency",
+                "evidence_confidence": "High",
+                "evidence_as_of": "13 August 2026",
+                "current_state": (
+                    "Enterprise workflow and AI platform with Enterprise "
+                    "Graph, AI governance / orchestration capabilities and a "
+                    "large partner ecosystem for apps, agents and connectors."
+                ),
+                "strategic_gap_hypothesis": (
+                    "Workflow and graph context do not eliminate the distinct "
+                    "need for durable longitudinal organizational memory, "
+                    "event history and decision lineage across systems."
+                ),
+                "cgms_fit": (
+                    "Differentiated persistent memory and event-intelligence "
+                    "extension that could complement workflow orchestration."
+                ),
+                "initial_use_case": (
+                    "Integration or partner-built memory capability connecting "
+                    "ServiceNow workflows with durable organizational context."
+                ),
+                "evidence_basis": (
+                    "Official ServiceNow Enterprise Graph and partner-programme "
+                    "materials reviewed for the dated intelligence snapshot."
+                ),
+            },
+            {
+                "organization": "Microsoft",
+                "opportunity_type": (
+                    "Strategic Platform / Distribution Partner"
+                ),
+                "best_entry_gate": "Enterprise / Scale Ready",
+                "strategic_fit_score": 87,
+                "score_components": [
+                    {
+                        "dimension": "Industry Need Intensity",
+                        "label": "Need",
+                        "score": 90,
+                    },
+                    {
+                        "dimension": "Complementarity with Existing Stack",
+                        "label": "Stack",
+                        "score": 74,
+                    },
+                    {
+                        "dimension": "Digital / AI Maturity",
+                        "label": "AI",
+                        "score": 100,
+                    },
+                    {
+                        "dimension": "Economic & Operational Scale",
+                        "label": "Scale",
+                        "score": 100,
+                    },
+                    {
+                        "dimension": (
+                            "Commercial Accessibility / Partnership Propensity"
+                        ),
+                        "label": "Access",
+                        "score": 60,
+                    },
+                ],
+                "fit_band": "High Adjacency",
+                "evidence_confidence": "High",
+                "evidence_as_of": "13 August 2026",
+                "current_state": (
+                    "Large enterprise AI and productivity ecosystem built "
+                    "around Microsoft Graph, Copilot, agents, connectors, "
+                    "Azure and partner / marketplace distribution."
+                ),
+                "strategic_gap_hypothesis": (
+                    "Broad search, graph and agent capabilities create overlap, "
+                    "but durable cross-system organizational memory and "
+                    "longitudinal event/decision lineage remain a distinct "
+                    "architectural proposition."
+                ),
+                "cgms_fit": (
+                    "Connector, Marketplace, co-sell or platform integration "
+                    "path for a vendor-neutral cognitive-memory and "
+                    "event-intelligence layer."
+                ),
+                "initial_use_case": (
+                    "Package CGMS as an enterprise memory / event-intelligence "
+                    "integration that complements Microsoft AI and data estates."
+                ),
+                "evidence_basis": (
+                    "Official Microsoft Copilot connector, Graph, agent and "
+                    "partner-distribution materials reviewed for the dated "
+                    "intelligence snapshot."
+                ),
+            },
+        ],
+        "disclaimer": (
+            "Named organizations are potential-client or strategic-fit "
+            "hypotheses based solely on public information. Inclusion does "
+            "not imply customer status, engagement, expressed interest, "
+            "partnership discussions or acquisition intent."
+        ),
+    },
+
     "value_drivers": [
         "Persistent organizational-memory architecture",
         "40-service-domain software estate",

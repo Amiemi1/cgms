@@ -503,3 +503,87 @@ def test_progress_renders_visual_value_unlock_story() -> None:
     assert 'class="value-gate-grid"' in body
     assert "commercial-highlight" in body
     assert "confidence-pill" in body
+
+
+def test_progress_renders_buyer_intelligence_opportunity_layer() -> None:
+    with build_client(
+        frozenset({VIEW_DASHBOARD})
+    ) as client:
+        response = client.get("/progress")
+
+    assert response.status_code == 200
+
+    body = response.text
+
+    assert "Client &amp; Strategic Buyer Opportunity" in body
+    assert "Buyer Universe Unlocked" in body
+    assert "Enterprise Client Opportunity" in body
+    assert "Strategic Platform Opportunity" in body
+    assert "Strategic Fit Score" in body
+
+    assert "MTN Group" in body
+    assert "Standard Bank Group" in body
+    assert "Access Bank" in body
+    assert "NNPC Ltd" in body
+    assert "Airtel Africa" in body
+    assert "Dangote Cement" in body
+    assert "ServiceNow" in body
+    assert "Microsoft" in body
+
+    assert "95/100" in body
+    assert "94/100" in body
+    assert "91/100" in body
+    assert "90/100" in body
+    assert "86/100" in body
+    assert "83/100" in body
+    assert "87/100" in body
+
+    assert "What They Have Today" in body
+    assert "Strategic Gap Hypothesis" in body
+    assert "Why CGMS Fits" in body
+    assert "Initial Use Case" in body
+    assert "Governance note:" in body
+
+    assert (
+        "does not imply customer status"
+        in body
+    )
+
+    assert 'id="buyer-opportunity"' in body
+    assert 'href="#buyer-opportunity"' in body
+
+
+def test_progress_renders_auditable_buyer_scores_and_evidence_basis() -> None:
+    with build_client(
+        frozenset({VIEW_DASHBOARD})
+    ) as client:
+        response = client.get("/progress")
+
+    assert response.status_code == 200
+
+    body = response.text
+
+    assert "Evidence basis:" in body
+    assert "buyer-score-components" in body
+    assert "buyer-score-component" in body
+
+    assert "Need" in body
+    assert "Stack" in body
+    assert "AI" in body
+    assert "Scale" in body
+    assert "Access" in body
+
+    assert (
+        "Official MTN investor, Genova AI and Azure partnership"
+        in body
+    )
+
+    assert (
+        "Official ServiceNow Enterprise Graph and partner-programme"
+        in body
+    )
+
+    assert (
+        "Official Microsoft Copilot connector, Graph, agent and"
+        in body
+    )

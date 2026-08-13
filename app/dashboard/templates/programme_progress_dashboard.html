@@ -277,6 +277,187 @@
             font-weight: 800;
         }
 
+        .buyer-universe {
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top:
+                1px solid rgba(41, 69, 99, 0.72);
+            color: var(--muted);
+            font-size: 0.78rem;
+        }
+
+        .buyer-universe strong {
+            display: block;
+            margin-bottom: 3px;
+            color: var(--text);
+        }
+
+        .buyer-intro {
+            display: grid;
+            grid-template-columns:
+                minmax(0, 1.35fr)
+                minmax(300px, 0.65fr);
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .buyer-score-model {
+            display: grid;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .buyer-score-row {
+            display: grid;
+            grid-template-columns:
+                minmax(0, 1fr)
+                auto;
+            gap: 14px;
+            padding-bottom: 8px;
+            border-bottom:
+                1px solid rgba(41, 69, 99, 0.68);
+            color: var(--muted);
+            font-size: 0.82rem;
+        }
+
+        .buyer-score-row:last-child {
+            border-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .buyer-score-row strong {
+            color: var(--text);
+        }
+
+        .buyer-grid {
+            display: grid;
+            grid-template-columns:
+                repeat(
+                    2,
+                    minmax(0, 1fr)
+                );
+            gap: 14px;
+        }
+
+        .buyer-card {
+            min-width: 0;
+        }
+
+        .buyer-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 14px;
+            margin-bottom: 12px;
+        }
+
+        .buyer-card-header h3 {
+            margin: 0 0 5px;
+            font-size: 1.08rem;
+        }
+
+        .buyer-type {
+            color: var(--accent);
+            font-size: 0.76rem;
+            font-weight: 800;
+        }
+
+        .buyer-fit-score {
+            flex: 0 0 auto;
+            text-align: right;
+        }
+
+        .buyer-fit-score strong {
+            display: block;
+            color: var(--success);
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+
+        .buyer-fit-score span {
+            color: var(--muted);
+            font-size: 0.72rem;
+            font-weight: 750;
+        }
+
+        .buyer-detail-grid {
+            display: grid;
+            gap: 11px;
+        }
+
+        .buyer-detail {
+            padding-top: 9px;
+            border-top:
+                1px solid rgba(41, 69, 99, 0.65);
+        }
+
+        .buyer-detail:first-child {
+            padding-top: 0;
+            border-top: 0;
+        }
+
+        .buyer-detail-label {
+            margin-bottom: 3px;
+            color: var(--accent);
+            font-size: 0.72rem;
+            font-weight: 850;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .buyer-score-components {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .buyer-score-component {
+            padding: 5px 8px;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            background: rgba(98, 173, 255, 0.06);
+            color: var(--muted);
+            font-size: 0.72rem;
+            font-weight: 750;
+        }
+
+        .buyer-score-component strong {
+            color: var(--text);
+        }
+
+        .buyer-evidence {
+            margin-top: 10px;
+            padding-top: 9px;
+            border-top:
+                1px solid rgba(41, 69, 99, 0.65);
+            color: var(--muted);
+            font-size: 0.76rem;
+        }
+
+        .buyer-evidence strong {
+            color: var(--text);
+        }
+
+        .buyer-meta {
+            display: flex;
+            gap: 7px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .buyer-disclaimer {
+            margin-top: 16px;
+            padding: 13px 15px;
+            border:
+                1px solid rgba(255, 193, 92, 0.42);
+            border-radius: 10px;
+            background:
+                rgba(255, 193, 92, 0.06);
+            color: var(--muted);
+            font-size: 0.82rem;
+        }
+
         .card,
         .section {
             border: 1px solid var(--border);
@@ -625,6 +806,11 @@
                 align-items: flex-start;
                 flex-direction: column;
             }
+
+            .buyer-intro,
+            .buyer-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 620px) {
@@ -696,6 +882,7 @@
             <a href="#overview">Overview</a>
             <a href="#executive-value">Executive Value</a>
             <a href="#value-story">Value Story</a>
+            <a href="#buyer-opportunity">Buyer Opportunity</a>
             <a href="#roadmap">Roadmap</a>
             <a href="#dashboards">Dashboards</a>
             <a href="#startup">Startup</a>
@@ -854,6 +1041,15 @@
                     <p class="description">
                         {{ gate.basis }}
                     </p>
+                    <div class="buyer-universe">
+                        <strong>Buyer Universe Unlocked</strong>
+                        {{ gate.buyer_universe }}
+                        <br>
+                        <span>
+                            {{ gate.illustrative_accounts }}
+                        </span>
+                    </div>
+
                     <div
                         class="confidence-pill"
                         data-confidence="{{ gate.confidence_class }}"
@@ -933,6 +1129,266 @@
                     </p>
                 </article>
                 {% endfor %}
+            </div>
+
+            <div
+                class="section-heading"
+                id="buyer-opportunity"
+                style="margin-top: 28px"
+            >
+                <div>
+                    <h3>Client &amp; Strategic Buyer Opportunity</h3>
+                    <p>
+                        Named-account strategic-fit hypotheses connecting
+                        CGMS maturity to enterprise demand, platform
+                        adjacency and commercial optionality.
+                    </p>
+                </div>
+            </div>
+
+            <div class="buyer-intro">
+                <article class="list-card">
+                    <h3>Buyer Universe by Development Gate</h3>
+
+                    <ul class="plain-list">
+                        {% for item in dashboard.executive_value.buyer_intelligence.buyer_universe_by_gate %}
+                        <li>
+                            <strong>{{ item.gate }}</strong>
+                            &mdash; {{ item.universe }}
+                            <br>
+                            {{ item.accounts | join(" · ") }}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </article>
+
+                <article class="list-card">
+                    <h3>Strategic Fit Score</h3>
+
+                    <p class="description">
+                        100-point management scoring model. Each account score
+                        is reproducible from the five weighted component
+                        scores; it measures strategic fit and addressability,
+                        not purchase probability.
+                    </p>
+
+                    <div class="buyer-score-model">
+                        {% for item in dashboard.executive_value.buyer_intelligence.scoring_model.dimensions %}
+                        <div class="buyer-score-row">
+                            <span>{{ item.dimension }}</span>
+                            <strong>{{ item.weight_percent }}%</strong>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </article>
+            </div>
+
+            <div class="section-heading">
+                <div>
+                    <h3>Enterprise Client Opportunity</h3>
+                    <p>
+                        Potential enterprise customers and design partners
+                        whose current estates create plausible CGMS
+                        deployment use cases.
+                    </p>
+                </div>
+            </div>
+
+            <div class="buyer-grid">
+                {% for buyer in dashboard.executive_value.buyer_intelligence.enterprise_clients %}
+                <article class="list-card buyer-card">
+                    <div class="buyer-card-header">
+                        <div>
+                            <h3>{{ buyer.organization }}</h3>
+                            <div class="buyer-type">
+                                {{ buyer.opportunity_type }}
+                            </div>
+                        </div>
+
+                        <div class="buyer-fit-score">
+                            <strong>
+                                {{ buyer.strategic_fit_score }}/100
+                            </strong>
+                            <span>{{ buyer.fit_band }}</span>
+                        </div>
+                    </div>
+
+                    <div class="buyer-detail-grid">
+                        <div class="buyer-detail">
+                            <div class="buyer-detail-label">
+                                What They Have Today
+                            </div>
+                            <p class="description">
+                                {{ buyer.current_state }}
+                            </p>
+                        </div>
+
+                        <div class="buyer-detail">
+                            <div class="buyer-detail-label">
+                                Strategic Gap Hypothesis
+                            </div>
+                            <p class="description">
+                                {{ buyer.strategic_gap_hypothesis }}
+                            </p>
+                        </div>
+
+                        <div class="buyer-detail">
+                            <div class="buyer-detail-label">
+                                Why CGMS Fits
+                            </div>
+                            <p class="description">
+                                {{ buyer.cgms_fit }}
+                            </p>
+                        </div>
+
+                        <div class="buyer-detail">
+                            <div class="buyer-detail-label">
+                                Initial Use Case
+                            </div>
+                            <p class="description">
+                                {{ buyer.initial_use_case }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="buyer-score-components">
+                        {% for component in buyer.score_components %}
+                        <span
+                            class="buyer-score-component"
+                            title="{{ component.dimension }}"
+                        >
+                            {{ component.label }}
+                            <strong>{{ component.score }}</strong>
+                        </span>
+                        {% endfor %}
+                    </div>
+
+                    <div class="buyer-evidence">
+                        <strong>Evidence basis:</strong>
+                        {{ buyer.evidence_basis }}
+                    </div>
+
+                    <div class="buyer-meta">
+                        <span class="badge">
+                            Gate: {{ buyer.best_entry_gate }}
+                        </span>
+                        <span class="badge">
+                            Evidence: {{ buyer.evidence_confidence }}
+                        </span>
+                        <span class="badge">
+                            As of {{ buyer.evidence_as_of }}
+                        </span>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+
+            <div
+                class="section-heading"
+                style="margin-top: 24px"
+            >
+                <div>
+                    <h3>Strategic Platform Opportunity</h3>
+                    <p>
+                        Platform, distribution and integration adjacency.
+                        These organizations are deliberately separated from
+                        ordinary enterprise-client hypotheses.
+                    </p>
+                </div>
+            </div>
+
+            <div class="buyer-grid">
+                {% for buyer in dashboard.executive_value.buyer_intelligence.strategic_platform_opportunities %}
+                <article class="list-card buyer-card">
+                    <div class="buyer-card-header">
+                        <div>
+                            <h3>{{ buyer.organization }}</h3>
+                            <div class="buyer-type">
+                                {{ buyer.opportunity_type }}
+                            </div>
+                        </div>
+
+                        <div class="buyer-fit-score">
+                            <strong>
+                                {{ buyer.strategic_fit_score }}/100
+                            </strong>
+                            <span>{{ buyer.fit_band }}</span>
+                        </div>
+                    </div>
+
+                    <div class="buyer-detail-grid">
+                        <div class="buyer-detail">
+                            <div class="buyer-detail-label">
+                                What They Have Today
+                            </div>
+                            <p class="description">
+                                {{ buyer.current_state }}
+                            </p>
+                        </div>
+
+                        <div class="buyer-detail">
+                            <div class="buyer-detail-label">
+                                Strategic Gap Hypothesis
+                            </div>
+                            <p class="description">
+                                {{ buyer.strategic_gap_hypothesis }}
+                            </p>
+                        </div>
+
+                        <div class="buyer-detail">
+                            <div class="buyer-detail-label">
+                                Why CGMS Fits
+                            </div>
+                            <p class="description">
+                                {{ buyer.cgms_fit }}
+                            </p>
+                        </div>
+
+                        <div class="buyer-detail">
+                            <div class="buyer-detail-label">
+                                Initial Strategic Path
+                            </div>
+                            <p class="description">
+                                {{ buyer.initial_use_case }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="buyer-score-components">
+                        {% for component in buyer.score_components %}
+                        <span
+                            class="buyer-score-component"
+                            title="{{ component.dimension }}"
+                        >
+                            {{ component.label }}
+                            <strong>{{ component.score }}</strong>
+                        </span>
+                        {% endfor %}
+                    </div>
+
+                    <div class="buyer-evidence">
+                        <strong>Evidence basis:</strong>
+                        {{ buyer.evidence_basis }}
+                    </div>
+
+                    <div class="buyer-meta">
+                        <span class="badge">
+                            Gate: {{ buyer.best_entry_gate }}
+                        </span>
+                        <span class="badge">
+                            Evidence: {{ buyer.evidence_confidence }}
+                        </span>
+                        <span class="badge">
+                            As of {{ buyer.evidence_as_of }}
+                        </span>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+
+            <div class="buyer-disclaimer">
+                <strong>Governance note:</strong>
+                {{ dashboard.executive_value.buyer_intelligence.disclaimer }}
             </div>
 
             <div class="section-heading" style="margin-top: 24px">
