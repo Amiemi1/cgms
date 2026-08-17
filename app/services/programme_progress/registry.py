@@ -15,14 +15,13 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
             "Authoritative delivery, validation, governance, "
             "dashboard-access and startup register."
         ),
-        "as_of": "12 August 2026",
+        "as_of": "13 August 2026",
         "current_sprint": "Sprint 22",
-        "current_work": "PWI-001 Step 187E / CI Recovery Closure",
+        "current_work": "PWI-001 Step 187F / Governance-Currency Closure",
         "status": (
-            "Step 187E complete, validated, canonically closed, "
-            "committed and published; Product Readiness CI recovery "
-            "closed, validated and published; Step 187F not started "
-            "and requires separate approval"
+            "Step 187F technical closure complete and validated; "
+            "governance currency recorded; publication pending "
+            "separate explicit approval"
         ),
         "branch": "cgms-v2-roadmap",
         "canonical_record": (
@@ -32,27 +31,29 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
     "summary": [
         {
             "label": "Current milestone",
-            "value": "PWI-001 Step 187E",
+            "value": "PWI-001 Step 187F",
             "detail": (
-                "Active Browser Workspace Switching complete, validated, "
-                "canonically closed, committed and published"
+                "Cross-workspace isolation technical closure complete "
+                "and validated; governance currency recorded; "
+                "publication pending separate approval"
             ),
         },
         {
             "label": "Current regression suite",
-            "value": "651 passed",
+            "value": "679 passed",
             "detail": (
-                "Latest complete CI-equivalent regression passed "
-                "against PostgreSQL 16 / pgvector with 37 known "
+                "Complete Step 187F isolated PostgreSQL 16 / pgvector "
+                "regression passed with 37 known non-blocking "
                 "deprecation warnings"
             ),
         },
         {
-            "label": "Step 187E validation",
-            "value": "18 + 52 passed",
+            "label": "Step 187F technical validation",
+            "value": "679 + live PASS",
             "detail": (
-                "18 focused workspace-switching contracts and "
-                "52 selected non-database regressions green"
+                "59 focused closure tests passed; complete regression "
+                "679 passed; migrations validated idempotently; live "
+                "Browser/Bearer cross-workspace separation passed"
             ),
         },
         {
@@ -76,16 +77,18 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
             "label": "Runtime contracts",
             "value": "PASS",
             "detail": (
-                "116-route governed surface preserved through "
-                "published Step 187E"
+                "Effective /dashboard/next-action/{chat_id} GET route "
+                "is unique and authorization inventory is aligned to "
+                "the corrected production route surface"
             ),
         },
         {
             "label": "Pilot readiness",
             "value": "NOT READY",
             "detail": (
-                "CAP-003 remains partial pending separately "
-                "approved Step 187F integrated isolation closure"
+                "Step 187F technical closure is complete; Product "
+                "Readiness capability status remains unchanged pending "
+                "a separately governed readiness reassessment"
             ),
         },
     ],
@@ -193,14 +196,15 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
         },
     ],
     "current_focus": [
-        "Product Readiness CI recovery closure published at 6b8a00d",
-        "GitHub Actions run #34 and 651-test CI-equivalent regression green",
-        "Step 187F separate approval boundary",
+        "PWI-001 Step 187F integrated isolation technical closure complete",
+        "679-test PostgreSQL 16 / pgvector regression green",
+        "Live Browser/Bearer cross-workspace separation validated",
+        "Governance currency recorded; publication not yet authorised",
     ],
     "upcoming": [
-        "PWI-001 next governed action requires separate approval",
-        "PWI-001 Step 187F boundary definition only after separate approval",
-        "PWI-001 Step 187F implementation not authorised",
+        "Separate approval required before controlled staging",
+        "Separate approval required before commit or push",
+        "Post-publication CI verification only after publication",
     ],
     "sprints": [
         {
@@ -502,15 +506,16 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
                 "Isolation Foundation"
             ),
             "status": (
-                "Steps 187D and 187E complete and published; "
-                "Step 187F not started"
+                "Steps 187D and 187E published; Step 187F technical "
+                "closure complete and governance currency recorded"
             ),
             "status_class": "active",
             "summary": (
-                "PWI-001 Steps 187D and 187E delivered tenant persistence, "
-                "query isolation and authenticated persistent browser "
-                "workspace switching. Step 187F integrated isolation "
-                "closure requires separate approval."
+                "PWI-001 Step 187F completed integrated cross-workspace "
+                "isolation validation across Bearer and persistent browser "
+                "transports, migration integrity, complete regression and "
+                "effective route uniqueness. Publication remains pending "
+                "separate explicit approval."
             ),
             "milestones": [
                 {
@@ -549,13 +554,31 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
                         "Cross-Workspace Isolation and "
                         "Integrated Closure"
                     ),
-                    "status": "Not started; separate approval required",
-                    "status_class": "pending",
+                    "status": (
+                        "Technical closure complete and validated; "
+                        "governance currency recorded; publication pending"
+                    ),
+                    "status_class": "active",
                 },
             ],
         },
     ],
     "validation": [
+        {
+            "title": "PWI-001 Step 187F integrated technical closure",
+            "result": "PASS — publication pending",
+            "detail": (
+                "Duplicate next-action route corrected; authorization "
+                "inventory aligned; CI schema bootstrap registers all 18 "
+                "governed SQLModel tables; 59 focused closure tests passed; "
+                "full isolated PostgreSQL 16 / pgvector regression recorded "
+                "679 passed with 37 warnings; both PWI migrations applied "
+                "in order and validated idempotently; live Bearer and "
+                "persistent-browser cross-workspace separation passed; "
+                "effective /dashboard/next-action/{chat_id} GET "
+                "registration count is one"
+            ),
+        },
         {
             "title": "Product Readiness CI recovery closure",
             "result": "PASS — GitHub Actions",
@@ -573,9 +596,10 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
             "title": "CI database bootstrap",
             "result": "PASS",
             "detail": (
-                "pgvector/pgvector:pg16 enabled the vector extension "
-                "and created all 16 registered SQLModel tables before "
-                "regression execution"
+                "pgvector/pgvector:pg16 enabled the vector extension; "
+                "Step 187F corrected CI model registration for learning "
+                "and message, producing all 18 governed SQLModel tables "
+                "before regression execution"
             ),
         },
         {
@@ -1008,22 +1032,24 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
     "governance": {
         "rule": "Engineering Governance Rule EG-001",
         "classification": (
-            "Approved Governance Currency Correction — "
-            "Product Readiness CI Recovery Closure"
+            "Approved Governance Currency Closure — "
+            "PWI-001 Step 187F Integrated Isolation"
         ),
-        "approval_date": "12 August 2026",
+        "approval_date": "13 August 2026",
         "canonical_record": (
             "docs/CGMS_MASTER_CONTINUATION_PROMPT_v2.0.md"
         ),
         "scope": (
-            "Programme Progress currency correction recording the "
-            "published Step 187E state and the subsequently closed "
-            "Product Readiness CI recovery incident."
+            "Programme Progress governance currency recording the "
+            "validated Step 187F integrated isolation technical closure, "
+            "CI schema-registration correction, migration evidence and "
+            "live Browser/Bearer separation evidence."
         ),
         "boundaries": (
-            "No Product Readiness capability-status change, database "
-            "mutation, Step 187F work, route/template redesign or "
-            "unrelated repository mutation."
+            "No Product Readiness capability-status change, migration "
+            "mutation, browser-auth/session-registry change, dashboard "
+            "template redesign, staging, commit, push or unrelated "
+            "repository mutation."
         ),
     },
 }

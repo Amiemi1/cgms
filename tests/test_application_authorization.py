@@ -163,7 +163,7 @@ def test_production_route_permission_mapping_is_complete(
                 protected_count += 1
 
     assert public_count == 4
-    assert protected_count == 102
+    assert protected_count == 101
 
 
 def test_sensitive_read_permission_exceptions(
@@ -706,7 +706,7 @@ def test_production_routes_inherit_global_guard(
 
         protected_route_count += 1
 
-    assert protected_route_count == 106
+    assert protected_route_count == 105
 
 
 def test_production_public_root_remains_anonymous(

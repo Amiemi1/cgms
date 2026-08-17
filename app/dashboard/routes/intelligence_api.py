@@ -59,14 +59,6 @@ def next_action(
         session.close()
 
 
-@router.get("/next-action/{chat_id}")
-def next_action(
-    chat_id: int,
-    workspace_id: str = Depends(
-        _get_workspace_id
-    ),
-):
-    ...
 
 
 # 🔥 NEW ENDPOINT

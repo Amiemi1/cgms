@@ -23,7 +23,7 @@ docs/CGMS_MASTER_CONTINUATION_PROMPT_v2.0.md
 **Comprehensive handoff date**
 
 ```text
-11 August 2026
+13 August 2026
 ```
 
 **Current programme**
@@ -47,13 +47,13 @@ PWI-001 — Persistent Workspace Isolation Foundation
 **Current sub-stage**
 
 ```text
-Step 187E — Complete and Published; CI Recovery Closed and Published
+Step 187F — Technical Closure Complete and Validated; Governance Currency Recorded; Publication Pending
 ```
 
 **Exact next authorised action**
 
 ```text
-No subsequent PWI-001 action authorised — Step 187F requires separate EG-001 approval
+Controlled staging of the exact seven-path Step 187F closure requires separate explicit approval
 ```
 
 ---
@@ -655,7 +655,7 @@ A subsequent Product Readiness CI recovery was validated, committed and publishe
 
 The Product Readiness gate remains a programme-readiness assessment rather than a CI-failure signal. Overall readiness remains 23%, pilot-scope readiness 29%, registered capabilities 38, unresolved P0 commercial blockers 5, pilot-scope gaps 25 and open recommendations 29. No Product Readiness capability status was changed by the CI recovery.
 
-Step 187F has not started and requires separate approval.
+Step 187F technical closure is complete and validated. Governance currency is being closed under the approved Step 187F governance boundary; publication remains pending.
 
 # 15. CONTROLLING PWI-001 ARCHITECTURE
 
@@ -1623,20 +1623,44 @@ Validation recorded 18 focused contracts and 52 selected non-database regression
 
 ## 29.3 Step 187F — Cross-workspace isolation and integrated closure
 
-Step 187F has not started and is not authorised by the Step 187E canonical closure.
+Step 187F technical closure is complete and validated.
 
-Expected concerns remain:
+The accepted technical boundary is limited to four paths:
 
-- integrated cross-workspace reads and writes;
-- API and dashboard denial;
-- browser-session and Bearer-token separation;
-- end-to-end migration integrity;
-- full regression and live validation;
-- final programme documentation and publication.
+1. `.github/workflows/product-readiness-ci.yml`
+2. `app/dashboard/routes/intelligence_api.py`
+3. `tests/test_application_authorization.py`
+4. `tests/test_pwi_001_cross_workspace_integrated_closure.py`
 
-Do not begin Step 187F without separate EG-001 approval.
+Validated Step 187F evidence:
 
----
+- CI schema bootstrap explicitly registers the learning and message SQLModel modules and produces all 18 governed SQLModel tables.
+- The duplicate next-action GET registration was corrected; the effective route is `/dashboard/next-action/{chat_id}` and its effective GET registration count is one.
+- Protected application-authorization route-count expectations were aligned to the corrected production route surface without weakening authorization policy.
+- Focused Step 187F closure validation recorded 59 passed.
+- Full isolated PostgreSQL 16 / pgvector regression recorded 679 passed with 37 known non-blocking deprecation warnings.
+- Both published PWI-001 migrations applied in governed order on first execution and were skipped idempotently on second execution.
+- Live Bearer and persistent-browser validation confirmed cross-workspace separation, browser-session independence, workspace-neutral browser JWTs, explicit Bearer precedence and no invalid-Bearer fallback to browser authentication.
+
+Protected boundaries remain unchanged:
+
+- `manual_test_db.py`
+- `app/db/migrations/pwi_001_workspace_foundation.py`
+- `app/db/migrations/pwi_001_tenant_persistence.py`
+- browser-auth implementation
+- browser session-registry implementation
+
+The Product Readiness capability-status assessment remains unchanged. Any capability/readiness reassessment is separately governed.
+
+The Step 187F governance-currency closure is limited to:
+
+1. `app/services/programme_progress/registry.py`
+2. `tests/test_programme_progress_dashboard.py`
+3. `docs/CGMS_MASTER_CONTINUATION_PROMPT_v2.0.md`
+
+The Programme Progress dashboard governance test records 15 passed.
+
+Step 187F is not yet published. No staging, commit or push is authorised by this canonical update.
 
 # 30. KNOWN NON-BLOCKING NOTICES
 
@@ -1677,142 +1701,180 @@ The migration backfill contract remains covered by focused migration tests and w
 
 # 31. CRITICAL DO-NOT-DO LIST
 
-The next chat must not:
+Until separately approved:
 
-- work in another repository;
-- switch to `main`;
-- reset, restore, clean or stash the working tree;
-- alter or remove any of the seven published Step 187E paths;
-- stage any path without separate staging approval;
-- commit, amend or push without separate publication approval;
-- modify `manual_test_db.py`;
-- modify either published PWI-001 migration;
-- modify the Programme Progress route or template;
-- force-push;
-- begin Step 187F;
-- change Product Readiness CAP-003 status as part of this currency correction;
-- overwrite or remove the Historical Delivery Record;
-- treat historical next-action statements as controlling authority.
+1. Do not reset, restore, clean or stash the repository.
+2. Do not amend or force-push.
+3. Do not stage, commit or push the Step 187F closure.
+4. Do not modify `manual_test_db.py`.
+5. Do not modify either published PWI-001 migration.
+6. Do not modify the protected browser-auth or browser session-registry contracts outside a separately approved intervention.
+7. Do not access or mutate an existing application database.
+8. Do not change Product Readiness capability status as part of Step 187F governance currency.
+9. Do not broaden the validated seven-path closure boundary.
+10. Do not create recursive governance mutations merely to record later CI verification.
 
-The accepted Step 187E publication evidence must be preserved.
-
----
+Repository HEAD, upstream, direct remote, index and working-tree state must be resolved live before any separately approved publication action.
 
 # 32. EXACT NEXT AUTHORISED ACTION
 
 ```text
-No subsequent PWI-001 action authorised — Step 187F requires separate EG-001 approval
+Controlled staging of the exact seven-path Step 187F closure requires separate explicit approval.
 ```
 
-No subsequent PWI-001 action is authorised by this canonical state. Any Step 187F boundary definition, implementation, database work or other intervention requires separate explicit EG-001 approval.
+The validated closure boundary comprises four technical paths and three governance-currency paths.
 
-Repository HEAD, index and working-tree state must be resolved live from Git; this canonical record must not be used to infer a transient repository state.
+No staging, commit or push is authorised by this document itself.
+
+After separately approved staging, the staged patch must be proven identical to the accepted unstaged closure before any separately approved commit.
+
+Commit and push remain separate governance gates.
 
 # 33. REQUIRED FIRST RESPONSE IN THE NEW CHAT
 
-After reading the complete file, the next assistant should confirm:
+The first continuation response must confirm:
 
 ```text
-The CGMS continuation state is loaded.
+Programme: CGMS Productisation Programme
+Intervention: PWI-001 — Persistent Workspace Isolation Foundation
+Repository: C:\Users\MurphyPersonal\OneDrive\Desktop\Contextual_Group_Memory_System\05_Prototype_and_Testing\cgms\cgms
+Branch: cgms-v2-roadmap
 
-Branch:
-cgms-v2-roadmap
+Published baseline / current local HEAD before Step 187F publication:
+27b9e8bf0f7b3fa1dbaec7a5c901533175605dfb
 
-Published Step 187E implementation checkpoint:
-0140d4a26d2e814879c7e5c4a74451cf18f85d92
+Step 187D:
+complete, validated, committed and published
 
-PWI-001 Step 187E is complete, validated, canonically closed, committed and published.
-Step 187E governance-currency publication checkpoint: 4a43f40e7af6b8665bd497938e0af940ec3c2ad7.
+Step 187E:
+complete, validated, canonically closed, committed and published
 
-Product Readiness CI recovery checkpoint:
-6b8a00dcc9ad597038a423591dd8aaf731593fa5
+Step 187F:
+technical closure complete and validated
+governance currency recorded
+publication pending
 
-Step 187E validation:
-18 focused contracts and 52 selected non-database regressions green
+Step 187F focused closure validation:
+59 passed
 
-Latest complete regression:
-651 passed, 37 warnings in CI-equivalent PostgreSQL 16 / pgvector validation
+Latest complete isolated PostgreSQL 16 / pgvector regression:
+679 passed, 37 warnings
 
-Remote CI:
-CGMS Product Readiness CI run #34 — Success
+Focused Programme Progress dashboard validation:
+15 passed
 
-Current route surface:
-116 contracts; normalized SHA-256 d11f3c1fd30c9e42eb6e028fee77f0d3119aa5c97be808aa7abeb2dc972f2d4f
+Ordered/idempotent migration validation:
+PASS
 
-Expected current working tree:
-Resolve staged, unstaged and untracked state live from Git; do not infer repository cleanliness from this document
+Live Browser/Bearer cross-workspace validation:
+PASS
 
-manual_test_db.py and both published PWI-001 migrations remain unchanged.
+Effective /dashboard/next-action/{chat_id} GET uniqueness:
+PASS
 
-Step 187F has not started and requires separate approval.
+Product Readiness capability status:
+unchanged; any reassessment is separately governed
 
-The next governed action is:
-No subsequent PWI-001 action authorised — Step 187F requires separate EG-001 approval
+Next governed action:
+Controlled staging of the exact seven-path Step 187F closure requires separate explicit approval.
 ```
 
-No subsequent repository mutation or publication is authorised by this document; obtain separate explicit approval for any next PWI-001 action.
-
----
+Repository HEAD, upstream, direct remote, index and working-tree state must be resolved live before the next governed action.
 
 # 34. NEW-CHAT STARTER MESSAGE
 
-Upload this updated file together with the Step 187E governance-currency correction evidence and paste:
-
 ```text
-Continue the Contextual Group Memory System project from the attached canonical continuation prompt and Step 187E evidence.
+Resume CGMS PWI-001 from the validated Step 187F governance-currency closure state.
 
-Read the complete canonical file before proposing or executing any action.
+First resolve live repository root, branch, HEAD, upstream, direct remote, staged state, changed-path inventory and protected-path blobs.
 
-Treat Sections 14.4, 15.6, 29.2, 29.3, 31, 32, 33, 35 and 37 as the controlling current state. Treat the Historical Delivery Record as evidence and programme history only.
+The accepted Step 187F technical closure has already passed:
 
-Published Step 187E implementation checkpoint:
-0140d4a26d2e814879c7e5c4a74451cf18f85d92
+- 59 focused closure tests
+- 679 full isolated PostgreSQL 16 / pgvector regressions with 37 warnings
+- ordered and idempotent PWI migration validation
+- live Bearer and persistent-browser cross-workspace separation
+- explicit Bearer precedence and no invalid-Bearer browser fallback
+- effective /dashboard/next-action/{chat_id} GET uniqueness
 
-PWI-001 Step 187E is complete, validated, canonically closed, committed and published.
-Step 187E governance-currency publication checkpoint: 4a43f40e7af6b8665bd497938e0af940ec3c2ad7.
+The Programme Progress registry and dashboard test have been updated for Step 187F governance currency, with 15 focused dashboard tests passing.
 
-Product Readiness CI recovery checkpoint:
-6b8a00dcc9ad597038a423591dd8aaf731593fa5
+The canonical continuation record has been updated while preserving the Historical Delivery Record byte-for-byte.
 
-Remote CI:
-CGMS Product Readiness CI run #34 — Success
+Do not stage, commit or push unless separately and explicitly approved.
 
-Expected current working tree:
-Resolve staged, unstaged and untracked state live from Git; do not infer repository cleanliness from this document.
-
-Do not reset, restore, clean or stash the repository. Do not modify manual_test_db.py or either published PWI-001 migration. Do not begin Step 187F or perform any repository mutation without separate explicit approval.
-
-Before any subsequently approved PWI-001 action:
-No subsequent PWI-001 action authorised — Step 187F requires separate EG-001 approval.
+Next governed action:
+Controlled staging of the exact seven-path Step 187F closure requires separate explicit approval.
 ```
 
----
+Continue under the one-controlled-action discipline and preserve all protected-file and database boundaries.
 
 # 35. CURRENT HANDOFF SUMMARY
 
 ```text
 Programme: CGMS Productisation Programme
-Sprint: Sprint 22
-Active intervention: PWI-001
-Branch: cgms-v2-roadmap
-Published Step 187E implementation commit: 0140d4a26d2e814879c7e5c4a74451cf18f85d92
-Step 187E governance-currency publication commit: 4a43f40e7af6b8665bd497938e0af940ec3c2ad7
-CI recovery publication commit: 6b8a00dcc9ad597038a423591dd8aaf731593fa5
-CI recovery GitHub Actions: CGMS Product Readiness CI #34 — Success
-Step 187E status: complete, validated, canonically closed, committed and published
-Step 187E committed paths: 7
-Step 187E focused contracts: 18 green
-Step 187E selected non-database regressions: 52 green
-Latest complete regression: 651 passed, 37 warnings
-Product Readiness gate: PASSED; overall 23%; pilot-scope 29%; capabilities 38
-Governed runtime route surface: 116 contracts
-Repository HEAD / index / working-tree state: resolve live from Git
-Do not infer transient repository state from this canonical record
-Protected file: manual_test_db.py unchanged
-Published PWI-001 migrations: unchanged
-Programme Progress route/template: unchanged
-Step 187F: not started; separate approval required
-Next authorised action: No subsequent PWI-001 action authorised — Step 187F requires separate EG-001 approval
+Intervention: PWI-001 — Persistent Workspace Isolation Foundation
+Current sprint: Sprint 22
+Current sub-stage: Step 187F technical closure complete and validated; governance currency recorded; publication pending
+
+Published baseline / current local HEAD before Step 187F publication:
+27b9e8bf0f7b3fa1dbaec7a5c901533175605dfb
+
+Step 187F technical boundary:
+M .github/workflows/product-readiness-ci.yml
+M app/dashboard/routes/intelligence_api.py
+M tests/test_application_authorization.py
+A tests/test_pwi_001_cross_workspace_integrated_closure.py
+
+Step 187F governance-currency boundary:
+M app/services/programme_progress/registry.py
+M tests/test_programme_progress_dashboard.py
+M docs/CGMS_MASTER_CONTINUATION_PROMPT_v2.0.md
+
+Total Step 187F closure boundary:
+7 paths
+
+Step 187F focused closure validation:
+59 passed
+
+Latest complete isolated PostgreSQL 16 / pgvector regression:
+679 passed, 37 warnings
+
+Focused Programme Progress dashboard validation:
+15 passed
+
+Migration first-run / idempotent second-run validation:
+PASS
+
+Live Browser/Bearer cross-workspace isolation:
+PASS
+
+Explicit Bearer precedence / no browser fallback:
+PASS
+
+Effective /dashboard/next-action/{chat_id} GET uniqueness:
+PASS
+
+Protected manual_test_db.py:
+unchanged
+
+Published PWI-001 migrations:
+unchanged
+
+Product Readiness capability status:
+unchanged; separately governed reassessment required
+
+Staging:
+none
+
+Commit:
+none
+
+Push:
+none
+
+Next authorised action:
+Controlled staging of the exact seven-path Step 187F closure requires separate explicit approval.
 ```
 
 ## Executive Product Value Dashboard — Valuation Model v1.0
@@ -2155,32 +2217,77 @@ The next action is the read-only exact 59-path pre-staging validation defined in
 
 # 38. FINAL CONTINUATION AUTHORITY
 
-This complete document replaces all earlier versions of the master continuation prompt.
-
-Where historical statements conflict with Sections 23, 24, 28, 29, 31, 32, 33, 35, 37 or this section, these controlling current-state sections prevail.
-
-The controlling current state is:
+This section records the controlling PWI-001 state at Step 187F governance-currency closure.
 
 ```text
+Programme: CGMS Productisation Programme
+Intervention: PWI-001 — Persistent Workspace Isolation Foundation
 Branch: cgms-v2-roadmap
-Published baseline HEAD: d39adc7234ce8af56f3a7e8263e5d757ebd5d5ab
-Active intervention: PWI-001
-Active sub-stage: Step 187D canonical closure recorded; exact pre-staging validation pending
-Technical implementation: complete
-Governed PostgreSQL migration: applied and idempotence validated
-Tenant tables validated: 11
-Complete regression: 633 passed, 37 warnings
-Route contracts: 116
-Expected changed paths after this document update: 59
-Staged paths: 0
-Protected file: manual_test_db.py unchanged
-Published Step 187A migration: unchanged
-Step 187E: not started and not authorised
-Step 187F: not started and not authorised
-Next authorised action: PWI-001 Step 187D — Canonical Closure Review and Exact 59-Path Pre-Staging Validation
+
+Published baseline / current local HEAD before Step 187F publication:
+27b9e8bf0f7b3fa1dbaec7a5c901533175605dfb
+
+Step 187D:
+complete, validated, committed and published
+
+Step 187E:
+complete, validated, canonically closed, committed and published
+
+Step 187F:
+technical closure complete and validated
+governance currency recorded
+publication pending
+
+Step 187F technical paths:
+4
+
+Step 187F governance paths:
+3
+
+Total closure boundary:
+7 paths
+
+Step 187F focused closure validation:
+59 passed
+
+Latest complete isolated PostgreSQL 16 / pgvector regression:
+679 passed, 37 warnings
+
+Focused Programme Progress dashboard validation:
+15 passed
+
+Ordered/idempotent PWI migration validation:
+PASS
+
+Live Browser/Bearer cross-workspace validation:
+PASS
+
+Effective /dashboard/next-action/{chat_id} GET uniqueness:
+PASS
+
+Protected manual_test_db.py:
+unchanged
+
+Published PWI-001 migrations:
+unchanged
+
+Product Readiness capability status:
+unchanged
+
+Staging:
+none
+
+Commit:
+none
+
+Push:
+none
+
+Next authorised action:
+Controlled staging of the exact seven-path Step 187F closure requires separate explicit approval.
 ```
 
-Do not stage, commit, amend or push until the exact pre-staging validation has completed and separate approval has been granted.
+Repository state must be resolved live from Git before any subsequent governed action.
 
 END OF CGMS MASTER CONTINUATION PROMPT v2.0
 
@@ -4392,35 +4499,91 @@ The next dependency-driven remediation milestone is Persistent Workspace Isolati
 
 # 37. FINAL CONTINUATION AUTHORITY
 
-This complete document replaces all earlier versions of the master continuation prompt.
-
-The controlling current state is:
+This is the current final continuation authority for the complete canonical document.
 
 ```text
 Programme: CGMS Productisation Programme
-Sprint: Sprint 22
-Intervention: PWI-001
+Intervention: PWI-001 — Persistent Workspace Isolation Foundation
 Branch: cgms-v2-roadmap
-Published baseline: 6b8a00dcc9ad597038a423591dd8aaf731593fa5
-Published Step 187E implementation checkpoint: 0140d4a26d2e814879c7e5c4a74451cf18f85d92
-Step 187E governance-currency publication checkpoint: 4a43f40e7af6b8665bd497938e0af940ec3c2ad7
-Published CI recovery checkpoint: 6b8a00dcc9ad597038a423591dd8aaf731593fa5
-Current sub-stage: Step 187E complete and published; Product Readiness CI recovery closed and published
-Step 187D: complete, validated, committed and published
-Step 187E: complete, validated, canonically closed, committed and published
-Step 187E validation: 18 focused and 52 selected non-database tests green
-Latest complete regression: 651 passed, 37 warnings
-GitHub Actions: CGMS Product Readiness CI #34 — Success
-Product Readiness Gate: PASSED; overall readiness 23%; pilot-scope readiness 29%; capabilities 38
-P0 commercial blockers: 5 programme/product-readiness gaps; not CI failures
-Governed route surface: 116 contracts
-Step 187F: not started; separate approval required
-Repository HEAD / index / working-tree state: resolve live from Git
-Protected file: manual_test_db.py unchanged
-Published PWI-001 migrations: unchanged
-Next authorised action: No subsequent PWI-001 action authorised — Step 187F requires separate EG-001 approval
+
+Published repository baseline / current local HEAD before Step 187F publication:
+27b9e8bf0f7b3fa1dbaec7a5c901533175605dfb
+
+Published Step 187E implementation checkpoint:
+0140d4a26d2e814879c7e5c4a74451cf18f85d92
+
+Step 187E governance-currency publication checkpoint:
+4a43f40e7af6b8665bd497938e0af940ec3c2ad7
+
+Published CI recovery checkpoint:
+6b8a00dcc9ad597038a423591dd8aaf731593fa5
+
+Step 187D:
+complete, validated, committed and published
+
+Step 187E:
+complete, validated, canonically closed, committed and published
+
+Step 187F:
+technical closure complete and validated
+governance currency recorded
+publication pending
+
+Step 187F focused closure validation:
+59 passed
+
+Latest complete isolated PostgreSQL 16 / pgvector regression:
+679 passed, 37 warnings
+
+Focused Programme Progress dashboard validation:
+15 passed
+
+Ordered/idempotent migration validation:
+PASS
+
+Live Browser/Bearer cross-workspace validation:
+PASS
+
+Effective /dashboard/next-action/{chat_id} GET registration:
+one
+
+Product Readiness gate status:
+unchanged by Step 187F governance currency
+
+Overall readiness:
+23%
+
+Pilot-scope readiness:
+29%
+
+Registered capabilities:
+38
+
+P0 commercial blockers:
+5 programme/product-readiness gaps; not CI failures
+
+Protected manual_test_db.py:
+unchanged
+
+Published PWI-001 migrations:
+unchanged
+
+Browser-auth/session-registry protected boundary:
+unchanged
+
+Staging:
+none
+
+Commit:
+none
+
+Push:
+none
+
+Next authorised action:
+Controlled staging of the exact seven-path Step 187F closure requires separate explicit approval.
 ```
 
-Do not begin Step 187F or perform any subsequent repository mutation without separate explicit approval. Repository HEAD, index and working-tree state must be resolved live from Git and must not be inferred from this canonical record.
+Do not stage, commit or push from this canonical record alone. Resolve live repository state and obtain the applicable separate approval first.
 
 # END OF CGMS MASTER CONTINUATION PROMPT v2.0

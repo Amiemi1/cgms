@@ -109,6 +109,8 @@ jobs:
           # Import the production dashboard model surface so every
           # governed SQLModel table is registered in metadata.
           import app.dashboard.main  # noqa: F401
+          import app.db.models.learning  # noqa: F401
+          import app.db.models.message  # noqa: F401
           from app.db.session import engine
 
           with engine.begin() as connection:

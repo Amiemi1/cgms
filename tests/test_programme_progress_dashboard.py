@@ -83,13 +83,13 @@ def test_registry_contains_governed_progress() -> None:
 
     assert any(
         item["label"] == "Current regression suite"
-        and item["value"] == "651 passed"
+        and item["value"] == "679 passed"
         for item in dashboard["summary"]
     )
 
     assert any(
-        item["label"] == "Step 187E validation"
-        and item["value"] == "18 + 52 passed"
+        item["label"] == "Step 187F technical validation"
+        and item["value"] == "679 + live PASS"
         for item in dashboard["summary"]
     )
 
@@ -124,15 +124,14 @@ def test_registry_contains_governed_progress() -> None:
     ]
 
     assert dashboard["page"]["status"] == (
-        "Step 187E complete, validated, canonically closed, "
-        "committed and published; Product Readiness CI recovery "
-        "closed, validated and published; Step 187F not started "
-        "and requires separate approval"
+        "Step 187F technical closure complete and validated; "
+        "governance currency recorded; publication pending "
+        "separate explicit approval"
     )
     assert dashboard["page"]["branch"] == "cgms-v2-roadmap"
     assert dashboard["governance"]["classification"] == (
-        "Approved Governance Currency Correction — "
-        "Product Readiness CI Recovery Closure"
+        "Approved Governance Currency Closure — "
+        "PWI-001 Step 187F Integrated Isolation"
     )
 
 
@@ -205,14 +204,14 @@ def test_authorized_viewer_can_open_progress() -> None:
     body = response.text
 
     assert "CGMS Programme Progress Dashboard" in body
-    assert "651 passed" in body
+    assert "679 passed" in body
     assert "PWI-001-187D" in body
     assert "PWI-001-187E" in body
     assert "6b8a00d" in body
     assert "0140d4a" in body
     assert "Run #34" in body
-    assert "Step 187E complete" in body
-    assert "Step 187F not started" in body
+    assert "Step 187F technical closure complete and validated" in body
+    assert "publication pending separate explicit approval" in body
     assert "/patent-readiness/dashboard" in body
     assert "docker compose up -d db" in body
 
@@ -346,18 +345,18 @@ def test_registry_contains_pwi001_current_state() -> None:
         .build_view()
     )
 
-    assert dashboard["page"]["as_of"] == "12 August 2026"
+    assert dashboard["page"]["as_of"] == "13 August 2026"
     assert dashboard["page"]["current_sprint"] == "Sprint 22"
     assert dashboard["page"]["current_work"] == (
-        "PWI-001 Step 187E / CI Recovery Closure"
+        "PWI-001 Step 187F / Governance-Currency Closure"
     )
     assert dashboard["current_focus"][0] == (
-        "Product Readiness CI recovery closure published at 6b8a00d"
+        "PWI-001 Step 187F integrated isolation technical closure complete"
     )
     assert dashboard["upcoming"] == [
-        "PWI-001 next governed action requires separate approval",
-        "PWI-001 Step 187F boundary definition only after separate approval",
-        "PWI-001 Step 187F implementation not authorised",
+        "Separate approval required before controlled staging",
+        "Separate approval required before commit or push",
+        "Post-publication CI verification only after publication",
     ]
     assert "unrelated repository mutation" in dashboard["governance"]["boundaries"]
 
@@ -368,8 +367,8 @@ def test_registry_contains_pwi001_current_state() -> None:
     )
 
     assert sprint_22["status"] == (
-        "Steps 187D and 187E complete and published; "
-        "Step 187F not started"
+        "Steps 187D and 187E published; Step 187F technical "
+        "closure complete and governance currency recorded"
     )
     assert sprint_22["status_class"] == "active"
 
@@ -410,8 +409,11 @@ def test_registry_contains_pwi001_current_state() -> None:
                 "Cross-Workspace Isolation and "
                 "Integrated Closure"
             ),
-            "status": "Not started; separate approval required",
-            "status_class": "pending",
+            "status": (
+                "Technical closure complete and validated; "
+                "governance currency recorded; publication pending"
+            ),
+            "status_class": "active",
         },
     ]
 
