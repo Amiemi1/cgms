@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from app.services.product_readiness.ci_gate import (
     EXPECTED_CAPABILITY_IDS,
     GateMode,
@@ -39,6 +41,15 @@ def test_standard_gate_passes_at_approved_baseline() -> None:
         check.passed
         for check in report.checks
     )
+
+
+def test_ci_workflow_protects_current_approved_baseline() -> None:
+    workflow = Path(
+        ".github/workflows/product-readiness-ci.yml"
+    ).read_text(encoding="utf-8")
+
+    assert "--minimum-overall-score 25" in workflow
+    assert "--minimum-overall-score 23" not in workflow
 
 
 def test_strict_gate_reports_release_blockers() -> None:

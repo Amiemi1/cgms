@@ -181,7 +181,7 @@ jobs:
         run: |
           python scripts/ci/product_readiness_gate.py \
             --mode "${{ steps.gate-mode.outputs.mode }}" \
-            --minimum-overall-score 23 \
+            --minimum-overall-score 25 \
             --expected-capability-count 38 \
             --output-directory artifacts/product-readiness
 
