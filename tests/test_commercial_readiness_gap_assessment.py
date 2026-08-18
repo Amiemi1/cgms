@@ -183,3 +183,25 @@ def test_crg001_report_preserves_governance_boundary() -> None:
         "`origin/cgms-v2-roadmap`"
         in source
     )
+
+
+def test_cap003_remediation_delta_preserves_history_and_updates_currency() -> None:
+    source = report_source()
+
+    assert (
+        "## 16. Post-Assessment Remediation Update — CAP-003"
+        in source
+    )
+    assert (
+        "CAP-003 — Workspace Isolation | Partial | "
+        "Validated / PILOT_READY | Resolved"
+        in source
+    )
+    assert "P0 commercial blockers: **3 to 2**" in source
+    assert "total commercial blockers: **9 to 8**" in source
+    assert "CAP-004 — Persistent Audit Store" in source
+    assert "CAP-005 — Backup and Restore" in source
+    assert (
+        "**Current pilot-readiness verdict: NOT READY.**"
+        in source
+    )

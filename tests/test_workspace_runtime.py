@@ -99,6 +99,6 @@ def test_workspace_metrics():
     metrics = response.json()
 
     assert (
-        "test"
+        "default"
         in metrics
     )

@@ -121,7 +121,7 @@ def _pilot_scope_score(
 
 def run_product_readiness_gate(
     mode: GateMode = GateMode.STANDARD,
-    minimum_overall_score: int = 23,
+    minimum_overall_score: int = 25,
     expected_capability_count: int = 38,
 ) -> ProductReadinessGateReport:
     """

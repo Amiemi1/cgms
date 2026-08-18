@@ -18,6 +18,9 @@ from app.db.models.workspace import (
     WorkspaceMembership,
     utc_now,
 )
+from app.db.models.workspace_control import (
+    WorkspaceControl,
+)
 from app.db.session import SessionLocal
 from app.services.auth.account_authorization import (
     InvalidAccountIdentifierError,
@@ -390,6 +393,9 @@ class WorkspaceRepository:
         created_by_user_id: (
             str | int | None
         ) = None,
+        owner_user_id: (
+            str | int | None
+        ) = None,
         status: str = "active",
     ) -> WorkspaceRecord:
         normalized_id = (
@@ -419,6 +425,15 @@ class WorkspaceRepository:
             else None
         )
 
+        normalized_owner = (
+            normalize_workspace_user_id(
+                owner_user_id
+            )
+            if owner_user_id
+            is not None
+            else None
+        )
+
         session = self._session_factory()
 
         try:
@@ -442,6 +457,16 @@ class WorkspaceRepository:
                     normalized_creator,
                 )
 
+            if (
+                normalized_owner is not None
+                and normalized_owner
+                != normalized_creator
+            ):
+                self._load_account(
+                    session,
+                    normalized_owner,
+                )
+
             now = utc_now()
 
             workspace = Workspace(
@@ -458,6 +483,26 @@ class WorkspaceRepository:
             session.add(
                 workspace
             )
+
+            session.add(
+                WorkspaceControl(
+                    workspace_id=normalized_id,
+                    created_at=now,
+                    updated_at=now,
+                )
+            )
+
+            if normalized_owner is not None:
+                session.add(
+                    WorkspaceMembership(
+                        workspace_id=normalized_id,
+                        user_id=normalized_owner,
+                        status="active",
+                        is_default=False,
+                        created_at=now,
+                        updated_at=now,
+                    )
+                )
 
             try:
                 session.commit()

@@ -140,6 +140,19 @@ READ_PERMISSION_EXCEPTIONS: Final = {
     ),
 }
 
+READ_PERMISSION_RULES: Final = (
+    (
+        MANAGE_USERS,
+        (
+            "/admin/summary",
+            "/connectors",
+            "/workspace/admin",
+            "/workspace/quotas",
+            "/workspaces",
+        ),
+    ),
+)
+
 MUTATION_PERMISSION_RULES: Final = (
     (
         MANAGE_BROWSER_SESSIONS,
@@ -261,6 +274,16 @@ def required_permission_for_route(
             "Unsafe application route has no governed "
             "permission mapping."
         )
+
+    for permission, prefixes in READ_PERMISSION_RULES:
+        if any(
+            normalized_path == prefix
+            or normalized_path.startswith(
+                prefix + "/"
+            )
+            for prefix in prefixes
+        ):
+            return permission
 
     return READ_PERMISSION_EXCEPTIONS.get(
         normalized_path,

@@ -438,9 +438,9 @@ def test_registry_contains_approved_executive_value_model() -> None:
     dashboard = ProgrammeProgressRegistry().build_view()
     value = dashboard["executive_value"]
 
-    assert value["completion"]["overall_percent"] == 44
-    assert value["completion"]["product_readiness_percent"] == 23
-    assert value["completion"]["pilot_readiness_percent"] == 29
+    assert value["completion"]["overall_percent"] == 45
+    assert value["completion"]["product_readiness_percent"] == 25
+    assert value["completion"]["pilot_readiness_percent"] == 32
 
     assert value["headline"]["as_is_base_usd_m"] == 1.5
     assert value["headline"]["as_is_base_ngn_bn"] == 2.04
@@ -467,7 +467,7 @@ def test_progress_renders_executive_value_and_value_story() -> None:
 
     assert "Executive Product &amp; Value" in body
     assert "Overall CGMS Completion" in body
-    assert "44%" in body
+    assert "45%" in body
     assert "As-Is Base Value" in body
     assert "$1.5m" in body
     assert "CGMS Value Story" in body

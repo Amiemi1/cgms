@@ -4,7 +4,9 @@ from app.services.connectors.event_ingestion import (
 
 
 def process_calendar_event(
-    payload: dict
+    payload: dict,
+    workspace_id: str,
+    quota_repository=None,
 ):
 
     return {
@@ -18,6 +20,10 @@ def process_calendar_event(
 
                 "calendar",
 
-                payload
+                payload,
+
+                workspace_id,
+
+                quota_repository,
             )
     }

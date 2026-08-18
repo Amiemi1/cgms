@@ -4497,17 +4497,297 @@ The next dependency-driven remediation milestone is Persistent Workspace Isolati
 
 ---
 
-# 37. FINAL CONTINUATION AUTHORITY
+# 39. STEP 264I — CAP-003 READINESS REASSESSMENT
+
+Step 264I completed a separately approved read-only CAP-003 reassessment against the published Step 187F evidence.
+
+The controlled decision was:
+
+- core tenant data and authentication isolation: **VALIDATED**;
+- CAP-003 overall status: **Partial**;
+- CAP-003 commercial blocker: **open**;
+- CAP-003 P0 classification: **unchanged**;
+- commercial pilot verdict: **NOT READY**.
+
+Step 187F closed the principal tenant-persistence and query-isolation boundary. It did not close the broader CRG-001 control-plane findings involving legacy workspace administration, quota authority and connector configuration.
+
+No Product Readiness registry or capability status was changed by Step 264I.
+
+---
+
+# 40. STEP 264J — CAP-003 RESIDUAL-GAP AND CAPABILITY BOUNDARY
+
+Step 264J completed a separately approved read-only residual-gap determination.
+
+The assessment confirmed:
+
+- `/workspaces` remained backed by `data/workspaces.json` rather than the persistent `Workspace` authority;
+- `/workspace/admin` combined that legacy registry with process-local suspension state;
+- workspace suspension did not update authoritative `Workspace.status` and therefore did not drive authentication revalidation;
+- workspace quota authority remained process-local;
+- workspace metrics combined the legacy registry with process-local connector-ingestion events;
+- connector configuration remained a global prototype with no workspace binding;
+- legacy connector ingress used an explicit fixed `default` workspace rather than the authenticated principal workspace.
+
+Capability ownership was fixed as follows:
+
+- CAP-003 owns persistent workspace identity, lifecycle, membership, workspace-bound access and cross-workspace denial for every exposed surface;
+- CAP-018 owns durable connector-health history and operational health completeness;
+- CAP-019 owns persistent workspace-bound connector configuration, governed credentials and production connector completion;
+- CAP-023 owns durable workspace-metrics completeness;
+- CAP-003 still requires CAP-018/CAP-019/CAP-023 surfaces to remain tenant-safe while those separate capabilities remain incomplete.
+
+CAP-003 remained **Partial** after Step 264J.
+
+---
+
+# 41. STEP 264K — WORKSPACE CONTROL-PLANE CONVERGENCE
+
+Step 264K was explicitly approved as a controlled implementation and canonical-currency update with these restrictions:
+
+- no production or existing application database access;
+- no modification of either published PWI-001 migration;
+- no modification of `manual_test_db.py`;
+- no staging, commit or push without separate approval.
+
+## 41.1 Implemented boundary
+
+The implementation now provides:
+
+- persistent `/workspaces` listing and creation through `WorkspaceRepository`;
+- atomic workspace creation with owner membership and a required workspace-control record;
+- persistent workspace activation and suspension through authoritative `Workspace.status`;
+- persistent suspension metadata and quota limits in a new workspace-owned `workspace_control` table;
+- a new ordered migration, `20260818_003_cap_003_workspace_control`;
+- deterministic workspace-control backfill for every persistent workspace;
+- non-negative quota constraints and persistent updated-by/timestamp evidence;
+- administrator-only reads for workspace catalogue, workspace administration, quotas and global connector prototype state;
+- explicit authenticated-principal workspace propagation through connector adapter and ingestion routes;
+- workspace-scoped ingestion history and workspace metrics;
+- retirement of the JSON workspace registry, module-level administration dictionary and module-level quota dictionary as runtime authorities.
+
+Connector configuration persistence, credentials, retries, idempotency, durable health history and production-pilot evidence remain outside Step 264K and governed by CAP-018/CAP-019.
+
+## 41.2 Validation evidence
+
+Validation used only disposable in-memory SQLite repositories and an isolated test database path outside the repository. No existing application database was opened or mutated.
+
+Accepted validation:
+
+- focused Step 264K closure tests: **6 passed**;
+- complete affected workspace, tenant, connector, authorization and migration regression: **126 passed**;
+- known non-blocking deprecation warnings: **4**;
+- Step 187F integrated cross-workspace closure test: **PASS** within the affected regression;
+- ordered migration inventory: **PASS**;
+- new migration backfill/idempotence: **PASS**;
+- changed Python AST parse: **PASS**;
+- `git diff --check`: **PASS**;
+- staged paths: **0**;
+- commit or push: **none**.
+
+An isolated PostgreSQL 16 / pgvector runtime was not available in the continuation environment. PostgreSQL execution of the new migration and a complete PostgreSQL regression remain required before technical closure or CAP-003 readiness reassessment.
+
+## 41.3 Protected invariants
+
+The following committed blobs remain unchanged:
+
+- `manual_test_db.py`: `379699656e3d0164817203c180b098344d11b942`;
+- `app/db/migrations/pwi_001_workspace_foundation.py`: `3c4e76d3357a60fe1460195f55d027db483ae8de`;
+- `app/db/migrations/pwi_001_tenant_persistence.py`: `25372576aa79fd9d3223543b68ad1065bec59224`.
+
+Product Readiness CAP-003 remains **Partial / in progress**. Step 264K implementation and focused validation do not independently authorize `PILOT_READY`, blocker-count changes, staging, commit or publication.
+
+---
+
+# 42. STEP 264L — ISOLATED POSTGRESQL MIGRATION AND COMPLETE REGRESSION
+
+Step 264L was explicitly approved as isolated PostgreSQL 16 / pgvector migration and complete regression validation with these restrictions:
+
+- no production or existing application database access;
+- no staging, commit or push;
+- no Product Readiness status change.
+
+## 42.1 Isolation boundary
+
+Validation used the locally cached `pgvector/pgvector:pg16` image in a uniquely named disposable container:
+
+- container: `cgms-step264l-isolated-20260818`;
+- database: `cgms_step264l`;
+- binding: `127.0.0.1:55439` only;
+- PostgreSQL: **16.14**;
+- pgvector: **0.8.6**;
+- persistent Docker volume: **none**;
+- existing application or production database connection: **none**.
+
+The container identity, Step 264L label, image and localhost-only binding were verified before use and again before removal. After validation, only that disposable container was removed. Its host port was released, while both pre-existing containers remained running.
+
+## 42.2 Ordered migration validation
+
+The production SQLModel surface registered **19 tables** and the isolated database contained all **19** expected tables.
+
+The first governed migration run applied, in order:
+
+1. `20260728_001_pwi_workspace_foundation`;
+2. `20260802_002_pwi_tenant_persistence`;
+3. `20260818_003_cap_003_workspace_control`.
+
+The immediate second run applied no migration and skipped all three in the same governed order.
+
+Accepted database evidence:
+
+- migration-ledger rows: **3**;
+- checksum length and identity validation: **PASS**;
+- tenant-scoped tables validated: **11**;
+- required non-null workspace ownership: **PASS**;
+- required workspace foreign keys: **PASS**;
+- workspace-control quota constraints: **3 of 3 present**;
+- persistent workspaces: **1**;
+- persistent workspace-control records: **1**;
+- workspaces missing a control record: **0**;
+- ordered migration result: **PASS**;
+- idempotent rerun result: **PASS**.
+
+## 42.3 Complete regression validation
+
+The complete repository regression suite executed against the isolated PostgreSQL 16 / pgvector database and completed with:
+
+- **685 passed**;
+- **53 known non-blocking deprecation warnings**;
+- **0 failures**;
+- **0 collection errors**;
+- duration: **12.79 seconds**.
+
+The temporary Windows test environment initially lacked a usable `libpq` wrapper. The matching `psycopg-binary` package was added only to the task-local dependency folder; no repository dependency or source file was changed for that runtime prerequisite.
+
+## 42.4 Governance result
+
+Step 264L closes the PostgreSQL execution and complete-regression validation condition left pending by Step 264K. It does not itself make a CAP-003 readiness determination.
+
+Product Readiness CAP-003 remains **Partial / in progress**. The commercial blocker, P0 count, total blocker count, overall readiness, pilot-scope readiness and `NOT READY` verdict remain unchanged pending a separately approved read-only reassessment.
+
+No repository path was staged. No commit or push occurred.
+
+---
+
+# 43. STEP 264M — READ-ONLY CAP-003 READINESS REASSESSMENT
+
+Step 264M was separately approved as a read-only reassessment. It made no source, database, Product Readiness, canonical, staging or remote mutation.
+
+The reassessment tested every CAP-003-owned finding against the cumulative Step 187F, 264K and 264L evidence.
+
+The controlled decision was:
+
+- persistent workspace identity and membership: **VALIDATED**;
+- tenant-owned persistence across 11 governed tables: **VALIDATED**;
+- authenticated workspace resolution and lifecycle revalidation: **VALIDATED**;
+- ORM, raw-SQL, route and integrated cross-workspace denial: **VALIDATED**;
+- persistent workspace administration and quotas: **VALIDATED**;
+- tenant-safe connector ingestion and workspace metrics access: **VALIDATED**;
+- CAP-003 overall technical boundary: **VALIDATED**;
+- CAP-003 commercial blocker: **eligible for resolution**.
+
+Persistent connector configuration and credentials, durable connector-health history and durable workspace-metrics history remain governed by CAP-019, CAP-018 and CAP-023 respectively. Those incomplete capabilities must preserve the validated tenant boundary but do not reopen CAP-003.
+
+Step 264M did not itself change the Product Readiness catalogue or blocker totals.
+
+---
+
+# 44. STEP 264N — CAP-003 PRODUCT READINESS AND CANONICAL CURRENCY
+
+Step 264N was separately approved to apply the Step 264M determination to the authoritative Product Readiness and governance records. It did not authorize staging, commit or push.
+
+## 44.1 Authoritative readiness transition
+
+The approved transition is:
+
+- capability: `CAP-003` — Workspace Isolation;
+- prioritization-matrix technical readiness: **Partial → Implemented**;
+- Product Readiness status: **IN_PROGRESS → PILOT_READY**;
+- tests passing: **true**;
+- security reviewed: **true**;
+- workspace-isolation UX complete: **true**;
+- documented: **true**;
+- CRG-001 commercial-blocker effect: **resolved**.
+
+`PILOT_READY` is the first Product Readiness status that resolves a pilot-required P0 capability in the authoritative gate. `PRODUCTION_READY` was not selected because it would exceed the approved evidence.
+
+## 44.2 Readiness metrics
+
+Direct execution of the authoritative Product Readiness engine produced:
+
+- registered capabilities: **38**;
+- overall Product Readiness: **25%**;
+- pilot-scope readiness: **32%**;
+- pilot-ready capabilities: **1**;
+- implemented capabilities: **9**;
+- in-progress capabilities: **18**;
+- not-started capabilities: **10**;
+- Product Readiness engine P0 gaps: **4**;
+- pilot-scope gaps: **24**;
+- open engineering recommendations: **28**;
+- standard Product Readiness gate: **PASS**;
+- strict Product Readiness gate: **NOT READY**.
+
+The engine-level P0 list and CRG-001 commercial-blocker register are separate governed views. The engine still contains four catalogue-level P0 gaps because the older CAP-001 and CAP-002 catalogue rows remain outside this CAP-003-only currency step. The current CRG-001 position, which already records the CAP-002 remediation delta, changes to:
+
+- unresolved P0 commercial blockers: **3 → 2**;
+- total unresolved commercial blockers: **9 → 8**;
+- remaining unresolved P0 commercial blockers: **CAP-004 and CAP-005**;
+- commercial pilot verdict: **NOT READY**.
+
+The governed Executive Value model now reports:
+
+- overall completion: **45%**;
+- Product Readiness: **25%**;
+- pilot-scope readiness: **32%**;
+- one pilot-ready capability.
+
+## 44.3 Governance records updated
+
+Step 264N updated:
+
+- the authoritative Product Readiness catalogue and standard-gate baseline;
+- the living Product Capability and Feature Prioritization Matrix;
+- an append-only CAP-003 remediation delta in the Commercial Readiness Gap Assessment;
+- the Programme Progress executive metrics and current risk statement;
+- focused regression contracts for the promoted status and metrics;
+- this canonical continuation authority.
+
+The immutable original CRG-001 assessment rows, distributions and Critical Gap Register remain historical evidence and were not rewritten.
+
+## 44.4 Validation evidence
+
+The first focused run correctly exposed one dashboard assertion still pinned to the former 44% completion metric. That assertion was updated to 45%.
+
+Accepted validation:
+
+- focused Step 264N Product Readiness, governance, programme and CAP-003 regression: **59 passed**;
+- focused warnings: **4 known non-blocking deprecation warnings**;
+- complete Step 264N regression: **686 passed**;
+- complete warnings: **53 known non-blocking deprecation warnings**;
+- complete failures: **0**;
+- complete collection errors: **0**;
+- complete skipped tests: **0**;
+- complete duration: **14.95 seconds**;
+- `git diff --check`: **PASS** after removing documentation-only trailing whitespace;
+- staged paths: **0**;
+- commit or push: **none**.
+
+Step 264N regression used only a task-local isolated SQLite database. Step 264L remains the accepted PostgreSQL 16.14 / pgvector 0.8.6 migration and complete-regression evidence for the underlying CAP-003 implementation. No production or existing application database was accessed.
+
+---
+
+# 45. FINAL CONTINUATION AUTHORITY
 
 This is the current final continuation authority for the complete canonical document.
 
 ```text
 Programme: CGMS Productisation Programme
-Intervention: PWI-001 — Persistent Workspace Isolation Foundation
+Intervention: CAP-003 Workspace Control-Plane Convergence
 Branch: cgms-v2-roadmap
 
-Published repository baseline / current local HEAD before Step 187F publication:
-27b9e8bf0f7b3fa1dbaec7a5c901533175605dfb
+Published Step 187F closure / Step 264K baseline HEAD:
+6efbc798ec8c0af72ad2770efd3113d7bd606c4e
 
 Published Step 187E implementation checkpoint:
 0140d4a26d2e814879c7e5c4a74451cf18f85d92
@@ -4525,15 +4805,16 @@ Step 187E:
 complete, validated, canonically closed, committed and published
 
 Step 187F:
-technical closure complete and validated
-governance currency recorded
-publication pending
+complete, validated, canonically closed, committed and published
+
+Step 187F publication CI:
+CGMS Product Readiness CI #39 PASS
 
 Step 187F focused closure validation:
 59 passed
 
 Latest complete isolated PostgreSQL 16 / pgvector regression:
-679 passed, 37 warnings
+685 passed, 53 warnings
 
 Focused Programme Progress dashboard validation:
 15 passed
@@ -4544,23 +4825,80 @@ PASS
 Live Browser/Bearer cross-workspace validation:
 PASS
 
+Step 264I CAP-003 reassessment:
+complete; CAP-003 remains Partial
+
+Step 264J residual-gap boundary determination:
+complete
+
+Step 264K implementation:
+complete within the approved source boundary
+
+Step 264K isolated affected regression:
+126 passed, 4 known warnings
+
+Step 264K isolated PostgreSQL validation:
+completed by Step 264L
+
+Step 264L isolated PostgreSQL migration validation:
+PASS on PostgreSQL 16.14 / pgvector 0.8.6
+
+Step 264L ordered migration result:
+3 applied in order; immediate rerun skipped all 3
+
+Step 264L complete regression:
+685 passed, 53 known warnings, 0 failures, 0 collection errors
+
+Step 264L disposable runtime:
+removed; localhost port released; pre-existing containers unchanged
+
+Step 264M CAP-003 readiness reassessment:
+complete; CAP-003 technical boundary validated
+
+Step 264N Product Readiness status:
+CAP-003 PILOT_READY
+
+Step 264N focused validation:
+59 passed, 4 known warnings
+
+Step 264N complete regression:
+686 passed, 53 known warnings, 0 failures, 0 collection errors, 0 skipped
+
 Effective /dashboard/next-action/{chat_id} GET registration:
 one
 
 Product Readiness gate status:
-unchanged by Step 187F governance currency
+standard PASS; strict NOT READY
 
 Overall readiness:
-23%
+25%
 
 Pilot-scope readiness:
-29%
+32%
+
+Overall completion:
+45%
+
+Pilot-ready capabilities:
+1
+
+Product Readiness engine P0 gaps:
+4
+
+Pilot-scope gaps:
+24
+
+Open engineering recommendations:
+28
 
 Registered capabilities:
 38
 
 P0 commercial blockers:
-5 programme/product-readiness gaps; not CI failures
+2 unresolved CRG-001 P0 blockers: CAP-004 and CAP-005
+
+Total unresolved commercial blockers:
+8
 
 Protected manual_test_db.py:
 unchanged
@@ -4581,7 +4919,7 @@ Push:
 none
 
 Next authorised action:
-Controlled staging of the exact seven-path Step 187F closure requires separate explicit approval.
+Step 264O controlled staging, commit and publication of the complete CAP-003 closure requires separate explicit approval.
 ```
 
 Do not stage, commit or push from this canonical record alone. Resolve live repository state and obtain the applicable separate approval first.

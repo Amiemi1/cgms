@@ -4,14 +4,20 @@ from app.services.connectors.event_ingestion import (
 
 
 def process_slack_event(
-    payload: dict
+    payload: dict,
+    workspace_id: str,
+    quota_repository=None,
 ):
 
     event = ingest_external_event(
 
         "slack",
 
-        payload
+        payload,
+
+        workspace_id,
+
+        quota_repository,
     )
 
     return {

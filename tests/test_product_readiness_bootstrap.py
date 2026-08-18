@@ -65,6 +65,7 @@ def test_bootstrap_preserves_priority_and_scope_metadata() -> None:
     bootstrap_product_capabilities()
 
     secure_authentication = get("CAP-001")
+    workspace_isolation = get("CAP-003")
     organizational_memory = get("CAP-006")
     connector_marketplace = get("CAP-038")
 
@@ -72,6 +73,13 @@ def test_bootstrap_preserves_priority_and_scope_metadata() -> None:
     assert secure_authentication.priority.value == "P0"
     assert secure_authentication.required_for_mlp is True
     assert secure_authentication.required_for_pilot is True
+
+    assert workspace_isolation is not None
+    assert workspace_isolation.status.value == "pilot_ready"
+    assert workspace_isolation.tests_passing is True
+    assert workspace_isolation.security_reviewed is True
+    assert workspace_isolation.ux_complete is True
+    assert workspace_isolation.documented is True
 
     assert organizational_memory is not None
     assert organizational_memory.status.value == "implemented"

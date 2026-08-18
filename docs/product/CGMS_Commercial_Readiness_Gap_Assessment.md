@@ -715,3 +715,74 @@ The AAE-001 security intervention materially improves the CGMS commercial-readin
 The system nevertheless remains outside controlled commercial pilot entry because persistent workspace isolation, unified auditability and recoverability are unresolved.
 
 **Current pilot-readiness verdict: NOT READY.**
+
+## 16. Post-Assessment Remediation Update — CAP-003
+
+**Update date:** 18 August 2026
+
+**Remediation sequence:** PWI-001 Steps 187D-187F and CAP-003 Steps 264I-264N
+
+**Status:** Implemented, PostgreSQL-validated and readiness-reassessed; publication pending separate approval
+
+### 16.1 Historical-assessment boundary
+
+Sections 1–14 retain the immutable CRG-001 assessment snapshot from 27 July 2026. Section 15 retains the AAE-001 remediation delta. This section records the subsequent CAP-003 remediation delta and supersedes only the Workspace Isolation finding and its current blocker effect.
+
+### 16.2 CAP-003 remediation result
+
+The governed remediation established:
+
+- persistent Workspace and workspace-membership models;
+- persistent browser-session workspace binding and active-membership revalidation;
+- non-null workspace ownership and workspace foreign keys across all 11 tenant-scoped tables;
+- tenant-scoped ORM, raw-SQL, route and integrated denial contracts;
+- persistent workspace lifecycle, suspension metadata and quotas;
+- persistent workspace creation with owner membership and a required control record;
+- workspace-scoped connector ingestion, quota enforcement and metrics access;
+- administrator-only access to global prototype connector-control surfaces;
+- retirement of JSON workspace authority and process-local workspace administration and quota authority.
+
+Step 264L validated all three governed migrations in order on PostgreSQL 16.14 / pgvector 0.8.6. The immediate rerun skipped all three migrations, and the complete isolated regression recorded **685 passed**, **53 known non-blocking deprecation warnings**, **0 failures** and **0 collection errors**.
+
+### 16.3 Readiness-status transition
+
+| Capability | Previous Current Position | Post-Step-264M Position | Commercial-Blocker Effect |
+|---|---|---|---|
+| CAP-003 — Workspace Isolation | Partial | Validated / PILOT_READY | Resolved |
+| CAP-018 — Connector Health | Partial | Partial | Tenant-safe surface established; durable health history remains incomplete |
+| CAP-019 — First Production Connector | Not Ready | Not Ready | Tenant-safe ingestion established; configuration, credentials and production controls remain incomplete |
+| CAP-023 — Workspace Metrics | Partial | Partial | Tenant-safe access established; durable metrics history remains incomplete |
+
+CAP-003 is validated within the persistent tenant-isolation boundary fixed by Step 264J. CAP-018, CAP-019 and CAP-023 remain independently governed and must preserve that boundary as their remaining persistence and productization work proceeds.
+
+### 16.4 Current blocker position
+
+Resolving CAP-003 changes the post-AAE-001 unresolved blocker position from:
+
+- P0 commercial blockers: **3 to 2**;
+- total commercial blockers: **9 to 8**.
+
+The remaining unresolved P0 commercial blockers are:
+
+1. CAP-004 — Persistent Audit Store;
+2. CAP-005 — Backup and Restore.
+
+The original CRG-001 distribution and Critical Gap Register remain the historical assessment snapshot and have not been rewritten.
+
+### 16.5 Preserved limitations
+
+CAP-003 closure does not establish:
+
+- a unified persistent enterprise audit boundary;
+- governed backup, retention, restore or recovery controls;
+- persistent connector configuration or governed credential storage;
+- durable connector-health or workspace-metrics history;
+- a production connector pilot;
+- guided onboarding;
+- commercial pilot authorization.
+
+### 16.6 Pilot-readiness verdict
+
+The CAP-003 intervention removes persistent workspace isolation as a commercial blocker. Unified auditability and recoverability remain unresolved P0 conditions, and additional P1 commercial blockers remain open.
+
+**Current pilot-readiness verdict: NOT READY.**

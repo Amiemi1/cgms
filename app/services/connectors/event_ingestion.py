@@ -3,8 +3,13 @@ import inspect
 from datetime import datetime, timezone
 
 from app.services.orchestration.event_router import route_memory_update
-from app.services.workspace.context import get_workspace
 from app.services.workspace.quotas import get_workspace_quota
+from app.services.workspace.control_repository import (
+    WorkspaceControlRepository,
+)
+from app.services.workspace.tenant_scope import (
+    normalize_workspace_id,
+)
 
 
 INGESTED_EVENTS = []
@@ -30,16 +35,27 @@ def _run_orchestration(result) -> None:
     loop.create_task(result)
 
 
-def ingest_external_event(source: str, payload: dict):
+def ingest_external_event(
+    source: str,
+    payload: dict,
+    workspace_id: str,
+    quota_repository: WorkspaceControlRepository | None = None,
+):
+    resolved_workspace_id = normalize_workspace_id(
+        workspace_id
+    )
     record = {
-        "workspace": get_workspace()["id"],
+        "workspace": resolved_workspace_id,
         "source": source,
         "payload": payload,
         "status": "received",
         "receivedAt": datetime.now(timezone.utc).isoformat(),
     }
 
-    quota = enforce_event_quota(record["workspace"])
+    quota = enforce_event_quota(
+        resolved_workspace_id,
+        quota_repository,
+    )
 
     if not quota["allowed"]:
         record["status"] = "blocked"
@@ -55,6 +71,7 @@ def ingest_external_event(source: str, payload: dict):
                 "source": source,
                 "external": True,
                 "payload": payload,
+                "workspace_id": resolved_workspace_id,
             }
         )
 
@@ -71,24 +88,39 @@ def ingest_external_event(source: str, payload: dict):
     return record
 
 
-def get_ingested_events(limit: int = 100):
-    workspace = get_workspace()["id"]
-
+def get_ingested_events(
+    workspace_id: str,
+    limit: int = 100,
+):
+    resolved_workspace_id = normalize_workspace_id(
+        workspace_id
+    )
     return [
         event
         for event in INGESTED_EVENTS
-        if event.get("workspace") == workspace
+        if event.get("workspace")
+        == resolved_workspace_id
     ][:limit]
 
 
-def enforce_event_quota(workspace_id: str):
-    quota = get_workspace_quota(workspace_id)
+def enforce_event_quota(
+    workspace_id: str,
+    quota_repository: WorkspaceControlRepository | None = None,
+):
+    resolved_workspace_id = normalize_workspace_id(
+        workspace_id
+    )
+    quota = get_workspace_quota(
+        resolved_workspace_id,
+        quota_repository,
+    )
 
     count = len(
         [
             event
             for event in INGESTED_EVENTS
-            if event.get("workspace") == workspace_id
+            if event.get("workspace")
+            == resolved_workspace_id
         ]
     )
 

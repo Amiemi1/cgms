@@ -96,7 +96,7 @@ Part of the long-term platform vision.
 |---|---|---|---|---:|---:|---|---|---|---|---|
 | CAP-001 | Secure Authentication | Governance | P0 | Yes | Yes | Partial | Critical | High | Critical | Pre-Pilot |
 | CAP-002 | Role-Based Access Control | Governance | P0 | Yes | Yes | Partial | Critical | High | Critical | Pre-Pilot |
-| CAP-003 | Workspace Isolation | Governance / Memory | P0 | Yes | Yes | Partial | Critical | High | Critical | Pre-Pilot |
+| CAP-003 | Workspace Isolation | Governance / Memory | P0 | Yes | Yes | Implemented | Critical | High | Critical | Pre-Pilot |
 | CAP-004 | Persistent Audit Store | Governance | P0 | Yes | Yes | Partial | Critical | High | Critical | Pre-Pilot |
 | CAP-005 | Backup and Restore | Operations | P0 | Yes | Yes | Planned | High | High | Critical | Pre-Pilot |
 | CAP-006 | Structured Organizational Memory | Memory | P1 | Yes | Yes | Implemented | Medium | Critical | Critical | MLP |
@@ -462,3 +462,32 @@ It will assess the current codebase and product against:
 CGMS will prioritize commercial credibility over broad feature expansion.
 
 No P3 or P4 capability should displace unresolved P0 commercial blockers or P1 MLP requirements without explicit approval under EG-001.
+
+---
+
+# 21. CAP-003 Readiness Currency Update
+
+**Update date:** 18 August 2026
+
+**Decision:** Step 264M read-only readiness reassessment
+
+**Currency action:** Step 264N controlled Product Readiness update
+
+The CAP-003 technical-readiness row is updated from **Partial** to **Implemented**. The authoritative Product Readiness catalogue advances CAP-003 to **PILOT_READY** within the assessed Workspace Isolation boundary.
+
+The promotion is supported by:
+
+- persistent Workspace, membership and workspace-control models;
+- PostgreSQL-enforced ownership across all 11 tenant-scoped tables;
+- authenticated browser and Bearer workspace resolution;
+- cross-workspace record, raw-SQL and route denial contracts;
+- persistent lifecycle and quota authority;
+- workspace-scoped connector ingestion and metrics access;
+- ordered and idempotent PostgreSQL 16 / pgvector migrations;
+- a complete isolated PostgreSQL regression with 685 passed tests.
+
+CAP-003 does not claim durable connector-health history, persistent connector configuration and credentials, production connector completion or durable workspace-metrics history. Those remain governed by CAP-018, CAP-019 and CAP-023.
+
+The Product Readiness gate retains four catalogue-level P0 gaps. The CRG-001 commercial-readiness position retains two unresolved P0 blockers, CAP-004 and CAP-005, and eight total commercial blockers.
+
+The commercial pilot verdict remains **NOT READY**.

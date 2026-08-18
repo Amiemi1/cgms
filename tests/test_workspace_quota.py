@@ -1,7 +1,6 @@
 from fastapi.testclient import TestClient
 
 import app.services.connectors.event_ingestion as event_ingestion
-import app.services.workspace.quotas as workspace_quota_state
 from app.dashboard.main import app
 
 
@@ -16,12 +15,6 @@ def test_workspace_quota_blocks_events(
         event_ingestion,
         "INGESTED_EVENTS",
         [],
-    )
-
-    monkeypatch.setattr(
-        workspace_quota_state,
-        "workspace_quotas",
-        {},
     )
 
     quota_response = client.post(

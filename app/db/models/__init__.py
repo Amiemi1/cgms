@@ -19,3 +19,6 @@ from app.db.models.workspace import (
     Workspace,
     WorkspaceMembership,
 )
+from app.db.models.workspace_control import (
+    WorkspaceControl,
+)

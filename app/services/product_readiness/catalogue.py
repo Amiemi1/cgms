@@ -27,6 +27,13 @@ def _capability(
     customer_value: str,
     commercial_importance: str,
     target: str,
+    *,
+    status_override: CapabilityStatus | None = None,
+    security_reviewed: bool = False,
+    ux_complete: bool = False,
+    tests_passing: bool | None = None,
+    documented: bool = False,
+    evidence_note: str | None = None,
 ) -> Capability:
     """
     Build a capability from the approved product-prioritization matrix.
@@ -41,27 +48,42 @@ def _capability(
             f"Unsupported source readiness: {source_readiness}"
         ) from exc
 
+    resolved_status = (
+        status_override
+        if status_override is not None
+        else status
+    )
+    resolved_tests_passing = (
+        tests_passing
+        if tests_passing is not None
+        else source_readiness == "Implemented"
+    )
+    notes = (
+        f"Source readiness: {source_readiness}; "
+        f"MLP classification: {mlp}; "
+        f"Pilot classification: {pilot}; "
+        f"Security dependency: {security_dependency}; "
+        f"Customer value: {customer_value}; "
+        f"Commercial importance: {commercial_importance}; "
+        f"Target: {target}."
+    )
+
+    if evidence_note:
+        notes += f" Evidence: {evidence_note}"
+
     return Capability(
         id=capability_id,
         name=name,
         category=category,
         priority=priority,
-        status=status,
+        status=resolved_status,
         required_for_mlp=mlp == "Yes",
         required_for_pilot=pilot == "Yes",
-        security_reviewed=False,
-        ux_complete=False,
-        tests_passing=source_readiness == "Implemented",
-        documented=False,
-        notes=(
-            f"Source readiness: {source_readiness}; "
-            f"MLP classification: {mlp}; "
-            f"Pilot classification: {pilot}; "
-            f"Security dependency: {security_dependency}; "
-            f"Customer value: {customer_value}; "
-            f"Commercial importance: {commercial_importance}; "
-            f"Target: {target}."
-        ),
+        security_reviewed=security_reviewed,
+        ux_complete=ux_complete,
+        tests_passing=resolved_tests_passing,
+        documented=documented,
+        notes=notes,
     )
 
 
@@ -99,11 +121,22 @@ PRODUCT_CAPABILITIES: tuple[Capability, ...] = (
         CapabilityPriority.P0,
         "Yes",
         "Yes",
-        "Partial",
+        "Implemented",
         "Critical",
         "High",
         "Critical",
         "Pre-Pilot",
+        status_override=CapabilityStatus.PILOT_READY,
+        security_reviewed=True,
+        ux_complete=True,
+        tests_passing=True,
+        documented=True,
+        evidence_note=(
+            "Steps 187F and 264K-264M validated persistent "
+            "workspace isolation, workspace-bound authorization, "
+            "control-plane persistence and cross-workspace denial "
+            "on PostgreSQL 16 / pgvector."
+        ),
     ),
     _capability(
         "CAP-004",

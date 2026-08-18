@@ -12,6 +12,9 @@ from app.db.models.workspace import (
     Workspace,
     WorkspaceMembership,
 )
+from app.db.models.workspace_control import (
+    WorkspaceControl,
+)
 from app.services.workspace.repository import (
     WorkspaceInactiveError,
     WorkspaceMembershipInactiveError,
@@ -44,6 +47,11 @@ def resolver():
     )
 
     WorkspaceMembership.__table__.create(
+        engine,
+        checkfirst=True,
+    )
+
+    WorkspaceControl.__table__.create(
         engine,
         checkfirst=True,
     )

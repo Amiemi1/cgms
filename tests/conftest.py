@@ -156,6 +156,75 @@ class _AAELegacyAdminAuthorizationService:
         )
 
 
+def _aae_create_workspace_control_repositories():
+    from sqlalchemy.pool import StaticPool
+    from sqlmodel import Session, create_engine
+
+    from app.db.models.user import User
+    from app.db.models.workspace import (
+        Workspace,
+        WorkspaceMembership,
+    )
+    from app.db.models.workspace_control import (
+        WorkspaceControl,
+    )
+    from app.services.workspace.control_repository import (
+        WorkspaceControlRepository,
+    )
+    from app.services.workspace.repository import (
+        WorkspaceRepository,
+    )
+
+    engine = create_engine(
+        "sqlite://",
+        connect_args={
+            "check_same_thread": False,
+        },
+        poolclass=StaticPool,
+    )
+    User.__table__.create(engine, checkfirst=True)
+    Workspace.__table__.create(
+        engine,
+        checkfirst=True,
+    )
+    WorkspaceMembership.__table__.create(
+        engine,
+        checkfirst=True,
+    )
+    WorkspaceControl.__table__.create(
+        engine,
+        checkfirst=True,
+    )
+
+    with Session(engine) as session:
+        session.add(
+            User(
+                id=int(_AAE_ADMIN_USER_ID),
+                email="aae-legacy-admin@example.com",
+                password_hash="test-only",
+            )
+        )
+        session.commit()
+
+    session_factory = lambda: Session(engine)
+    workspace_repository = WorkspaceRepository(
+        session_factory
+    )
+    workspace_repository.create_workspace(
+        workspace_id="default",
+        name="Default Workspace",
+        created_by_user_id=_AAE_ADMIN_USER_ID,
+        owner_user_id=_AAE_ADMIN_USER_ID,
+    )
+
+    return (
+        workspace_repository,
+        WorkspaceControlRepository(
+            session_factory
+        ),
+    )
+
+
 def _aae_restore_header(
     headers,
     name: str,
@@ -222,6 +291,31 @@ def _aae_authenticate_legacy_application_test(
         from app.services.workspace.resolution import (
             get_workspace_context_resolver,
         )
+        from app.services.workspace.repository import (
+            get_workspace_repository,
+        )
+        from app.services.workspace.control_repository import (
+            get_workspace_control_repository,
+        )
+
+        (
+            workspace_repository,
+            workspace_control_repository,
+        ) = _aae_create_workspace_control_repositories()
+
+        import app.services.workspace.metrics as workspace_metrics_service
+        import app.services.workspace.registry as workspace_registry_service
+
+        monkeypatch.setattr(
+            workspace_registry_service,
+            "get_workspace_repository",
+            lambda: workspace_repository,
+        )
+        monkeypatch.setattr(
+            workspace_metrics_service,
+            "get_workspace_repository",
+            lambda: workspace_repository,
+        )
 
         monkeypatch.setitem(
             app.dependency_overrides,
@@ -235,6 +329,18 @@ def _aae_authenticate_legacy_application_test(
             get_workspace_context_resolver,
             lambda:
             _AAELegacyWorkspaceContextResolver(),
+        )
+
+        monkeypatch.setitem(
+            app.dependency_overrides,
+            get_workspace_repository,
+            lambda: workspace_repository,
+        )
+
+        monkeypatch.setitem(
+            app.dependency_overrides,
+            get_workspace_control_repository,
+            lambda: workspace_control_repository,
         )
 
     if (
