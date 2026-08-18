@@ -4777,7 +4777,93 @@ Step 264N regression used only a task-local isolated SQLite database. Step 264L 
 
 ---
 
-# 45. FINAL CONTINUATION AUTHORITY
+# 45. STEP 264O — CAP-003 CONTROLLED PUBLICATION
+
+Step 264O was separately approved for controlled staging, commit and publication of the complete CAP-003 closure.
+
+## 45.1 Publication prerequisites and scope
+
+GitHub CLI 2.97.0 was installed as the required publication prerequisite and authenticated to GitHub as `Amiemi1` through the device authorization flow.
+
+Before staging:
+
+- branch: `cgms-v2-roadmap`;
+- local HEAD: `6efbc798ec8c0af72ad2770efd3113d7bd606c4e`;
+- tracked upstream: `6efbc798ec8c0af72ad2770efd3113d7bd606c4e`;
+- fetched direct remote: `6efbc798ec8c0af72ad2770efd3113d7bd606c4e`;
+- ahead/behind: **0 / 0**;
+- reviewed CAP-003 closure paths: **40**;
+- staged paths: **0**.
+
+After a fresh exact-scope approval, only the 40 reviewed Step 264K-264N implementation, migration, test, Product Readiness and governance paths were staged. The staged diff passed `git diff --cached --check`, and no tracked change remained unstaged.
+
+## 45.2 Primary closure publication
+
+The complete CAP-003 closure was committed and published as:
+
+- commit: `4e5bec36b4b003a2ebe749d102ce55209f9ae967`;
+- subject: `feat(cap-003): complete workspace isolation closure`;
+- parent: `6efbc798ec8c0af72ad2770efd3113d7bd606c4e`;
+- paths: **40**;
+- diff: **2,468 insertions, 378 deletions**;
+- remote branch: `origin/cgms-v2-roadmap`.
+
+Product Readiness CI run **#40**, run ID `32185921259`, completed successfully against the primary closure commit:
+
+- PostgreSQL 16 / pgvector schema initialization: **PASS**;
+- complete regression: **686 passed**, **37 warnings**;
+- standard Product Readiness gate: **PASS**;
+- reported overall readiness: **25%**;
+- reported pilot-scope readiness: **32%**.
+
+The successful run log also exposed that the workflow still supplied the historical explicit 23% minimum, overriding the new 25% code default. Publication was therefore not treated as finally closed at that checkpoint.
+
+## 45.3 CI baseline correction publication
+
+The workflow minimum was corrected from 23% to 25%, and a regression assertion was added to prevent workflow/default drift.
+
+Focused correction validation completed with **7 passed**.
+
+The correction was committed and published as:
+
+- commit: `fe3136211bd61739d050b4df59377df8b23fe3b0`;
+- subject: `ci(product-readiness): protect 25 percent baseline`;
+- parent: `4e5bec36b4b003a2ebe749d102ce55209f9ae967`;
+- paths: **2**;
+- diff: **13 insertions, 2 deletions**;
+- remote branch: `origin/cgms-v2-roadmap`.
+
+Replacement Product Readiness CI run **#41**, run ID `32186305545`, completed successfully against the correction commit:
+
+- PostgreSQL 16 / pgvector schema initialization: **PASS**;
+- complete regression: **687 passed**, **37 warnings**;
+- failed tests: **0**;
+- Product Readiness workflow minimum: **25%**;
+- standard Product Readiness gate: **PASS**;
+- overall readiness: **25%**;
+- pilot-scope readiness: **32%**;
+- registered capabilities: **38**;
+- Product Readiness engine P0 gaps: **4**;
+- pilot-scope gaps: **24**;
+- open recommendations: **28**.
+
+## 45.4 Publication closure state
+
+After replacement CI completion, local HEAD, tracked upstream and fetched direct remote all matched `fe3136211bd61739d050b4df59377df8b23fe3b0`, and the repository was clean before preparation of this canonical closure record.
+
+Protected committed blobs remained unchanged:
+
+- `manual_test_db.py`: `379699656e3d0164817203c180b098344d11b942`;
+- `app/db/migrations/pwi_001_workspace_foundation.py`: `3c4e76d3357a60fe1460195f55d027db483ae8de`;
+- `app/db/migrations/pwi_001_tenant_persistence.py`: `25372576aa79fd9d3223543b68ad1065bec59224`.
+
+CAP-003 Workspace Isolation is implemented, PostgreSQL-validated, Product Readiness promoted, committed and published. Product Readiness CI protects the new 25% minimum and passes.
+
+The commercial pilot verdict remains **NOT READY** because CAP-004 and CAP-005 remain unresolved P0 commercial blockers and additional P1 blockers remain open.
+
+---
+
+# 46. FINAL CONTINUATION AUTHORITY
 
 This is the current final continuation authority for the complete canonical document.
 
@@ -4864,6 +4950,21 @@ Step 264N focused validation:
 Step 264N complete regression:
 686 passed, 53 known warnings, 0 failures, 0 collection errors, 0 skipped
 
+Step 264O primary closure commit:
+4e5bec36b4b003a2ebe749d102ce55209f9ae967
+
+Step 264O CI baseline correction commit:
+fe3136211bd61739d050b4df59377df8b23fe3b0
+
+Step 264O primary publication CI:
+CGMS Product Readiness CI #40 PASS; 686 passed, 37 warnings
+
+Step 264O replacement publication CI:
+CGMS Product Readiness CI #41 PASS; 687 passed, 37 warnings
+
+Published Product Readiness workflow minimum:
+25%
+
 Effective /dashboard/next-action/{chat_id} GET registration:
 one
 
@@ -4913,13 +5014,13 @@ Staging:
 none
 
 Commit:
-none
+CAP-003 closure and CI baseline correction published
 
 Push:
-none
+complete on origin/cgms-v2-roadmap
 
 Next authorised action:
-Step 264O controlled staging, commit and publication of the complete CAP-003 closure requires separate explicit approval.
+Step 264P read-only CAP-004 Persistent Audit Store readiness and residual-gap reassessment requires separate explicit approval.
 ```
 
 Do not stage, commit or push from this canonical record alone. Resolve live repository state and obtain the applicable separate approval first.
