@@ -17,6 +17,9 @@ from app.db.session import SessionLocal, engine
 from app.services.product_readiness.bootstrap import (
     bootstrap_product_capabilities,
 )
+from app.services.orchestration.bootstrap import (
+    bootstrap_event_bus,
+)
 
 from app.services.auth.application_authorization import (
     enforce_application_authorization,
@@ -159,6 +162,8 @@ async def lifespan(app: FastAPI):
             logger=startup_logger,
         )
     )
+
+    bootstrap_event_bus()
 
     app.state.runtime_environment = (
         runtime_environment

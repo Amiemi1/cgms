@@ -24,6 +24,10 @@ from app.services.auth.auth_dependency import (
 from app.services.security.rbac_policy import (
     MANAGE_BROWSER_SESSIONS,
 )
+from app.services.persistence.audit_store import (
+    SECURITY_AUDIT,
+    add_audit_record,
+)
 
 
 session_administration_logger = logging.getLogger(
@@ -316,15 +320,45 @@ class SessionAdministrationService:
                 )
             )
 
+            security_log = SecurityLog(
+                user_id=actor_user_id,
+                workspace_id=(
+                    actor.workspace_id
+                ),
+                action=(
+                    ADMIN_SESSION_REVOCATION_ACTION
+                ),
+                details=audit_details,
+                created_at=revoked_at,
+            )
             session.add(
-                SecurityLog(
-                    user_id=actor_user_id,
-                    action=(
-                        ADMIN_SESSION_REVOCATION_ACTION
-                    ),
-                    details=audit_details,
-                    created_at=revoked_at,
-                )
+                security_log
+            )
+            session.flush()
+            add_audit_record(
+                session,
+                category=SECURITY_AUDIT,
+                action=(
+                    ADMIN_SESSION_REVOCATION_ACTION
+                ),
+                source="session_administration",
+                workspace_id=(
+                    actor.workspace_id
+                ),
+                actor_id=actor_user_id,
+                subject_type="account_sessions",
+                subject_id=(
+                    normalized_target_user_id
+                ),
+                outcome="revoked",
+                details=json.loads(
+                    audit_details
+                ),
+                occurred_at=revoked_at,
+                origin_id=(
+                    "legacy.security_log:"
+                    f"{security_log.id}"
+                ),
             )
 
             session.commit()

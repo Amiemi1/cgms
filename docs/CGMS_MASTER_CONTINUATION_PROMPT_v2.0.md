@@ -23,7 +23,7 @@ docs/CGMS_MASTER_CONTINUATION_PROMPT_v2.0.md
 **Comprehensive handoff date**
 
 ```text
-13 August 2026
+19 August 2026
 ```
 
 **Current programme**
@@ -41,19 +41,19 @@ Sprint 22
 **Current intervention**
 
 ```text
-PWI-001 — Persistent Workspace Isolation Foundation
+CAP-004 — Unified Persistent Enterprise Audit
 ```
 
 **Current sub-stage**
 
 ```text
-Step 187F — Technical Closure Complete and Validated; Governance Currency Recorded; Publication Pending
+Step 264T — Controlled CAP-004 readiness and governance-currency update complete; CAP-004 Implemented / PILOT_READY, P0 retained, commercial blocker closed; publication separately governed
 ```
 
 **Exact next authorised action**
 
 ```text
-Controlled staging of the exact seven-path Step 187F closure requires separate explicit approval
+Step 264U controlled CAP-004 closure publication requires separate explicit approval
 ```
 
 ---
@@ -74,7 +74,7 @@ The next assistant must not:
 - reset, clean, restore, stash or discard the working tree;
 - stage, commit or push files without a separately approved governance boundary;
 - modify `manual_test_db.py`;
-- begin Step 187F without separate approval;
+- begin Step 264U or any later CAP-004 action without separate approval;
 - treat historical “next action” statements as current instructions.
 
 Where an older historical statement conflicts with the current-state sections in this document, the current-state sections control.
@@ -4863,14 +4863,387 @@ The commercial pilot verdict remains **NOT READY** because CAP-004 and CAP-005 r
 
 ---
 
-# 46. FINAL CONTINUATION AUTHORITY
+# 46. STEP 264P — CAP-004 READINESS AND RESIDUAL-GAP REASSESSMENT
+
+Step 264P completed a separately approved read-only CAP-004 Persistent Audit Store readiness and residual-gap reassessment against the published `6a51c0954638990df23e345a0e5c730015efcb67` baseline.
+
+No source, database, Product Readiness, canonical, staging or remote mutation was authorised or performed by the reassessment.
+
+## 46.1 Evidence determination
+
+The reassessment confirmed that CGMS already possessed a validated database-backed `SecurityLog` subsystem, including login outcomes, browser-session revocation and authorised security-audit reads. That subsystem was durable but represented only one audit domain.
+
+The residual enterprise boundary remained incomplete because:
+
+- the general Event Bus audit subscriber retained records in process memory;
+- the explainability audit store retained records in process memory;
+- the dashboard audit console consumed the process-local Event Bus audit list rather than one durable enterprise authority;
+- governance activity did not converge on the validated security-audit authority;
+- no single persistent schema covered security, domain-event, explainability and governance evidence;
+- no unified workspace-scoped read contract prevented cross-workspace disclosure across every audit category;
+- no common append-only, origin-idempotent, correlation/causation and restart-durability contract governed the complete audit trail.
+
+## 46.2 Controlled decision
+
+The Step 264P decision was:
+
+- CAP-004 technical readiness: **Partial**;
+- CAP-004 Product Readiness status: **unchanged**;
+- CAP-004 commercial blocker: **open**;
+- CAP-004 P0 classification: **unchanged**;
+- unresolved CRG-001 P0 commercial blockers: **2** — CAP-004 and CAP-005;
+- total unresolved commercial blockers: **8**;
+- commercial pilot verdict: **NOT READY**.
+
+The smallest governed closure boundary was defined as an additive Unified Persistent Enterprise Audit implementation: one persistent audit model and repository, a new ordered migration, deterministic legacy-security backfill, append-only enforcement, workspace-scoped reads, explicit privileged global reads, transactional producer convergence, Event Bus and explainability durability, and isolated regression evidence.
+
+Step 264P did not authorise implementation. That implementation required and subsequently received separate approval as Step 264Q.
+
+---
+
+# 47. STEP 264Q — UNIFIED PERSISTENT ENTERPRISE AUDIT IMPLEMENTATION
+
+Step 264Q was explicitly approved as a controlled CAP-004 implementation and focused isolated validation with these restrictions:
+
+- no production or existing application database access;
+- no modification of either published PWI-001 migration;
+- no modification of `manual_test_db.py`;
+- no Product Readiness capability-status change;
+- no staging, commit or push without separate approval.
+
+## 47.1 Implemented persistence boundary
+
+The implementation now provides:
+
+- a canonical `AuditRecord` model backed by `enterprise_audit_record`;
+- security, domain-event, explainability and governance audit categories;
+- UUID record identity, optional unique origin identity, workspace, actor, subject, source, action, outcome, correlation, causation, JSON-safe details and occurrence/storage timestamps;
+- a new additive ordered migration, `20260819_004_cap_004_unified_audit`;
+- deterministic backfill of every legacy `SecurityLog` record using `legacy.security_log:{id}` origin identities;
+- preservation of valid workspace ownership and safe handling of invalid transitional legacy workspace values;
+- migration validation for required columns, required data, indexes, uniqueness, allowed categories, workspace foreign keys, orphan denial, complete legacy backfill and append-only controls;
+- database-level update/delete rejection for SQLite and PostgreSQL;
+- a transaction-aware persistent audit repository with validation, JSON normalisation, origin idempotence and workspace-scoped reads;
+- explicit inclusion of workspace-independent records only through an authorised global-read request;
+- Event Bus global subscription so present and future event types converge on the persistent audit boundary;
+- durable explainability records and authenticated workspace/actor/correlation propagation;
+- a persistent `/audit/records` read surface scoped to the authenticated workspace;
+- administrator-only global audit access through the existing `manage_users` permission;
+- compatibility dual-write for legacy `SecurityLog` producers with unified `origin_id` linkage;
+- transactional convergence of login outcomes, administrative session revocation, governance role and administration changes, Event Bus activity and explanations.
+
+The published PWI-001 migrations were not edited. `manual_test_db.py` was not edited.
+
+## 47.2 Test and validation coverage
+
+New and updated regression coverage verifies:
+
+- all four enterprise audit categories;
+- restart and separate-process durability;
+- origin idempotence;
+- JSON fail-closed behaviour;
+- migration order, deterministic backfill and rerun idempotence;
+- database-enforced append-only behaviour;
+- post-migration runtime dual-write consistency;
+- workspace-to-workspace read denial;
+- administrator-only global reads without disclosure of other workspace records;
+- common audit-console and explainability boundaries;
+- transactional governance rollback and commit behaviour;
+- security login and session-administration compatibility;
+- Event Bus registration and future non-memory event coverage;
+- CAP-003 workspace-foundation compatibility;
+- browser authentication and session-registry compatibility.
+
+Accepted final isolated validation:
+
+- CAP-004, security, orchestration, authorization and browser-focused regression: **142 passed**;
+- focused warnings: **34 known non-blocking deprecation warnings**;
+- dashboard runtime, metrics, policy and workspace-runtime regression: **35 passed**;
+- runtime warnings: **6 known non-blocking deprecation warnings**;
+- changed and new Python Ruff validation: **PASS**;
+- `git diff --check`: **PASS**;
+- failures and collection errors in the accepted gates: **0**.
+
+Validation used a task-local Python environment and only disposable in-memory or task-temporary SQLite databases. No production or existing application database was opened or mutated.
+
+PostgreSQL execution of the new migration and a complete repository regression remain deliberately pending for a separately governed next step.
+
+## 47.3 Repository and protected state
+
+Before this canonical-currency update, the Step 264Q implementation consisted of **30 modified tracked paths and 3 new untracked paths**. This canonical update adds one modified documentation path, leaving **34 unstaged working-tree paths** in total.
+
+Repository identity at canonical update:
+
+- branch: `cgms-v2-roadmap`;
+- local HEAD: `6a51c0954638990df23e345a0e5c730015efcb67`;
+- tracked upstream: `6a51c0954638990df23e345a0e5c730015efcb67`;
+- staged paths: **0**;
+- Step 264Q commit: **none**;
+- Step 264Q push: **none**.
+
+Protected committed blobs remain unchanged:
+
+- `manual_test_db.py`: `379699656e3d0164817203c180b098344d11b942`;
+- `app/db/migrations/pwi_001_workspace_foundation.py`: `3c4e76d3357a60fe1460195f55d027db483ae8de`;
+- `app/db/migrations/pwi_001_tenant_persistence.py`: `25372576aa79fd9d3223543b68ad1065bec59224`.
+
+## 47.4 Governance result
+
+Step 264Q completes the approved implementation and focused isolated-validation boundary. It does not by itself authorise CAP-004 readiness promotion, blocker-count mutation, PostgreSQL claims, complete-regression claims, staging, commit or publication.
+
+The authoritative readiness position therefore remains:
+
+- CAP-004 technical readiness: **Partial**;
+- CAP-004 Product Readiness status: **unchanged**;
+- overall Product Readiness: **25%**;
+- pilot-scope readiness: **32%**;
+- unresolved CRG-001 P0 commercial blockers: **2** — CAP-004 and CAP-005;
+- total unresolved commercial blockers: **8**;
+- commercial pilot verdict: **NOT READY**.
+
+The next governed action is Step 264R isolated PostgreSQL 16 / pgvector migration and complete regression validation. It requires separate explicit approval and must retain the production-database, protected-file, readiness-status and publication restrictions unless the user expressly changes them.
+
+---
+
+# 48. STEP 264R — ISOLATED POSTGRESQL AND COMPLETE REGRESSION VALIDATION
+
+Step 264R was explicitly approved for isolated PostgreSQL 16 / pgvector migration and complete repository regression validation of the unstaged CAP-004 Step 264Q implementation.
+
+The approved restrictions remained in force:
+
+- no production or existing application database access;
+- no modification of either published PWI-001 migration;
+- no modification of `manual_test_db.py`;
+- no CAP-004 readiness/status promotion;
+- no blocker-count or readiness-metric change;
+- no Product Readiness catalogue or CRG-001 mutation;
+- no staging, commit or push.
+
+## 48.1 Disposable PostgreSQL boundary
+
+Validation used the uniquely governed disposable container `cgms-step264r-isolated-20260819`, using `pgvector/pgvector:pg16`, PostgreSQL **16.14**, pgvector **0.8.6**, localhost binding `127.0.0.1:55440`, a tmpfs PostgreSQL data directory and **zero persistent Docker volumes**.
+
+The migration-evidence database was `cgms_step264r`. A separate current-schema regression database, `cgms_step264r_regression`, was created inside the same disposable environment so complete runtime regression could execute without altering the frozen migration evidence.
+
+The pre-existing `cgms_db` and `nb_volume_risk_postgres` containers remained protected and untouched.
+
+## 48.2 Ordered migration and append-only evidence
+
+The migration database was built from the sanctioned fourteen-table pre-PWI legacy fixture.
+
+The governed runner applied exactly four migrations in order:
+
+1. `20260728_001_pwi_workspace_foundation`;
+2. `20260802_002_pwi_tenant_persistence`;
+3. `20260818_003_cap_003_workspace_control`;
+4. `20260819_004_cap_004_unified_audit`.
+
+The final ledger contained exactly four governed records with validated checksums.
+
+CAP-004 evidence confirmed:
+
+- legacy `SecurityLog` records: **1**;
+- deterministic unified-audit backfill: **1**;
+- deterministic origin: `legacy.security_log:1`;
+- physical append-only trigger count: **1**;
+- protected events: **UPDATE** and **DELETE**;
+- UPDATE rejection: **PASS**;
+- DELETE rejection: **PASS**;
+- orphaned audit workspace references: **0**;
+- ledger checksum integrity: **PASS**;
+- workspace referential integrity: **PASS**.
+
+An immediate rerun applied no migration and skipped all four governed migration identifiers. Ledger, enterprise-audit count and deterministic backfill remained unchanged. Migration idempotence therefore passed.
+
+## 48.3 Complete regression evidence
+
+The separate regression database satisfied all **18 required runtime metadata tables**.
+
+Final physical inspection recorded **22 tables**. The four additional empty auxiliary tables were `learning`, `message`, `pwi_001_tenant_denial_record` and `pwi_001_tenant_scope_example`. No required runtime table was missing.
+
+Accepted complete validation:
+
+- complete repository regression: **696 passed**;
+- known non-blocking warnings: **37**;
+- failures: **0**;
+- collection errors: **0**;
+- pytest exit code: **0**;
+- changed/new Python Ruff boundary: **33 files, PASS**;
+- `git diff --check`: **PASS**.
+
+The frozen migration-evidence database remained unchanged at `4|1|1` through complete regression.
+
+## 48.4 Controlled cleanup
+
+Final cleanup revalidated the disposable-container identity, tmpfs data directory and zero persistent-volume boundary.
+
+Only `cgms-step264r-isolated-20260819` was removed. Port `55440` was released.
+
+The protected `cgms_db` and `nb_volume_risk_postgres` containers retained their pre-cleanup identities and remained running.
+
+Repository state after cleanup remained on `cgms-v2-roadmap` at published HEAD/upstream `6a51c0954638990df23e345a0e5c730015efcb67`, ahead/behind `0 / 0`, with zero staged paths.
+
+Protected committed blobs remained unchanged:
+
+- `manual_test_db.py`: `379699656e3d0164817203c180b098344d11b942`;
+- `app/db/migrations/pwi_001_workspace_foundation.py`: `3c4e76d3357a60fe1460195f55d027db483ae8de`;
+- `app/db/migrations/pwi_001_tenant_persistence.py`: `25372576aa79fd9d3223543b68ad1065bec59224`.
+
+## 48.5 Governance result
+
+Step 264R closes the PostgreSQL execution, ordered-migration, append-only enforcement, idempotence and complete-regression validation conditions left pending by Step 264Q.
+
+It does **not** constitute a CAP-004 readiness reassessment and does not authorise readiness promotion.
+
+The authoritative position remains:
+
+- CAP-004 technical readiness: **Partial**;
+- CAP-004 Product Readiness status: **unchanged**;
+- CAP-004 commercial blocker: **open**;
+- CAP-004 P0 classification: **unchanged**;
+- overall Product Readiness: **25%**;
+- pilot-scope readiness: **32%**;
+- overall CGMS completion: **45%**;
+- unresolved CRG-001 P0 commercial blockers: **2 — CAP-004 and CAP-005**;
+- total unresolved commercial blockers: **8**;
+- commercial pilot verdict: **NOT READY**.
+
+This governance-currency update adds only the Programme Progress registry and its focused governance test to the existing 34-path Step 264Q working tree, producing **36 unstaged paths**.
+
+The next governed action is a separately approved **Step 264S read-only CAP-004 readiness reassessment**. No such reassessment is performed by Step 264R or this governance-currency update.
+
+---
+
+
+# 49. STEP 264S — CAP-004 READINESS REASSESSMENT
+
+Step 264S completed the separately approved read-only CAP-004 readiness reassessment against the cumulative Step 264P-264R evidence.
+
+No source, database, Product Readiness catalogue, CRG-001, prioritisation matrix, canonical, Programme Progress, staging, commit or push mutation occurred during Step 264S.
+
+## 49.1 Determination
+
+The reassessment mapped every residual condition recorded by Step 264P to the Step 264Q implementation and Step 264R validation evidence.
+
+The earlier residual conditions were closed by:
+
+- replacement of process-memory Event Bus audit evidence with persistent enterprise-audit convergence;
+- replacement of process-memory explainability audit evidence with durable persistent records;
+- migration of the audit console to the common persistent authority;
+- convergence of security, domain-event, explainability and governance evidence on one schema;
+- workspace-scoped reads and explicit privileged global reads;
+- append-only enforcement;
+- deterministic origin idempotence;
+- correlation and causation support;
+- restart and separate-process durability;
+- ordered PostgreSQL 16 / pgvector migration, backfill and rerun validation;
+- complete repository regression with **696 passed** tests and no failures.
+
+The Step 264S readiness determination was therefore **PASS for CAP-004 promotion eligibility**.
+
+Step 264S itself did not mutate readiness status or blocker counts. Those mutations required and subsequently received separate approval as Step 264T.
+
+---
+
+# 50. STEP 264T — CONTROLLED CAP-004 READINESS AND GOVERNANCE-CURRENCY UPDATE
+
+Step 264T was explicitly approved to record the Step 264S PASS determination in the authoritative Product Readiness and governance-currency surfaces.
+
+## 50.1 Controlled readiness transition
+
+The authoritative CAP-004 position is now:
+
+- CAP-004 technical readiness: **Implemented**;
+- CAP-004 Product Readiness status: **PILOT_READY**;
+- CAP-004 priority: **P0 — retained**;
+- CAP-004 commercial blocker: **closed**.
+
+The P0 priority remains unchanged because persistent enterprise audit remains mandatory for controlled pilot and production operation.
+
+## 50.2 Authoritative derived metrics
+
+The Product Readiness Engine was recalculated from the mutated catalogue rather than from a manually assumed percentage.
+
+The resulting current metrics are:
+
+- Product Readiness: **27%**;
+- pilot-scope readiness: **35%**;
+- Product Readiness catalogue-level P0 gaps: **3**;
+- pilot-scope gaps: **23**;
+- open Product Readiness recommendations: **27**;
+- overall CGMS completion: **46%**.
+
+The completion-state distribution is:
+
+- Implemented: **9**;
+- In Progress: **17**;
+- Not Started: **10**;
+- Pilot Ready: **2**;
+- Production Ready: **0**;
+- total capabilities: **38**.
+
+## 50.3 Commercial-readiness effect
+
+Closing CAP-004 changes the current CRG-001 blocker position to:
+
+- unresolved CRG-001 P0 commercial blockers: **1 — CAP-005**;
+- total unresolved commercial blockers: **7**.
+
+CAP-005 — Backup and Restore remains the sole unresolved P0 commercial blocker in the current CRG-001 position.
+
+Additional P1 commercial blockers remain unresolved.
+
+The commercial pilot verdict therefore remains **NOT READY**.
+
+## 50.4 Governance boundary
+
+Step 264T performs no database access or database mutation.
+
+It does not alter either published PWI-001 migration or manual_test_db.py.
+
+It does not stage, commit or push any file.
+
+The Product Readiness CI minimum floor remains a separately governed publication/control setting; Step 264T records the newly derived runtime score without silently changing the existing workflow floor.
+
+The next governed action is **Step 264U controlled CAP-004 closure publication**, requiring separate explicit approval.
+
+---
+
+# 51. FINAL CONTINUATION AUTHORITY
 
 This is the current final continuation authority for the complete canonical document.
 
+
+## 51.1 Current Step 264T readiness currency
+
+This subsection is the controlling current CAP-004 readiness authority. Any older CAP-004 readiness or blocker values retained later in this continuation record are historical evidence.
+
+- CAP-004 technical readiness: **Implemented**;
+- CAP-004 Product Readiness status: **PILOT_READY**;
+- CAP-004 priority: **P0 — retained**;
+- CAP-004 commercial blocker: **closed**;
+- Product Readiness: **27%**;
+- pilot-scope readiness: **35%**;
+- overall CGMS completion: **46%**;
+- Product Readiness catalogue-level P0 gaps: **3**;
+- pilot-scope gaps: **23**;
+- unresolved CRG-001 P0 commercial blockers: **1 — CAP-005**;
+- total unresolved commercial blockers: **7**;
+- commercial pilot verdict: **NOT READY**;
+- publication status: **not staged, committed or pushed by Step 264T**;
+- next governed action: **Step 264U controlled CAP-004 closure publication requires separate explicit approval**.
+
+
 ```text
 Programme: CGMS Productisation Programme
-Intervention: CAP-003 Workspace Control-Plane Convergence
+Intervention: CAP-004 Unified Persistent Enterprise Audit
 Branch: cgms-v2-roadmap
+
+Current published repository baseline HEAD and upstream:
+6a51c0954638990df23e345a0e5c730015efcb67
+
+Current published repository baseline subject:
+docs(governance): close Step 264O publication
 
 Published Step 187F closure / Step 264K baseline HEAD:
 6efbc798ec8c0af72ad2770efd3113d7bd606c4e
@@ -4900,7 +5273,7 @@ Step 187F focused closure validation:
 59 passed
 
 Latest complete isolated PostgreSQL 16 / pgvector regression:
-685 passed, 53 warnings
+696 passed, 37 warnings
 
 Focused Programme Progress dashboard validation:
 15 passed
@@ -4962,6 +5335,39 @@ CGMS Product Readiness CI #40 PASS; 686 passed, 37 warnings
 Step 264O replacement publication CI:
 CGMS Product Readiness CI #41 PASS; 687 passed, 37 warnings
 
+Step 264P CAP-004 reassessment:
+complete; historical Partial determination superseded by the Step 264S PASS reassessment and Step 264T readiness closure
+
+Step 264Q implementation:
+complete within the approved additive source boundary; unstaged and unpublished
+
+Step 264Q additive migration:
+20260819_004_cap_004_unified_audit
+
+Step 264Q focused CAP-004 regression:
+142 passed, 34 known warnings, 0 failures or collection errors
+
+Step 264Q runtime/workspace regression:
+35 passed, 6 known warnings, 0 failures or collection errors
+
+Step 264Q PostgreSQL and complete regression:
+completed by Step 264R
+
+Step 264R PostgreSQL validation:
+PASS on PostgreSQL 16.14 / pgvector 0.8.6
+
+Step 264R ordered migration result:
+4 applied in order; immediate rerun skipped all 4
+
+Step 264R append-only enforcement:
+PASS; UPDATE and DELETE rejected
+
+Step 264R complete regression:
+696 passed, 37 known warnings, 0 failures, 0 collection errors
+
+Step 264R disposable runtime:
+removed; localhost port 55440 released; protected containers unchanged
+
 Published Product Readiness workflow minimum:
 25%
 
@@ -4996,7 +5402,7 @@ Registered capabilities:
 38
 
 P0 commercial blockers:
-2 unresolved CRG-001 P0 blockers: CAP-004 and CAP-005
+1 unresolved CRG-001 P0 blocker: CAP-005
 
 Total unresolved commercial blockers:
 8
@@ -5008,19 +5414,22 @@ Published PWI-001 migrations:
 unchanged
 
 Browser-auth/session-registry protected boundary:
-unchanged
+preserved; Step 264Q only propagates resolved workspace identity into unified audit evidence
+
+Working tree:
+36 unstaged paths: existing Step 264Q implementation/test/canonical paths plus the Programme Progress registry and focused governance test
 
 Staging:
 none
 
 Commit:
-CAP-003 closure and CI baseline correction published
+CAP-003 closure and governance record published; Step 264Q/264R/264T work has no commit
 
 Push:
-complete on origin/cgms-v2-roadmap
+published baseline complete on origin/cgms-v2-roadmap; Step 264Q/264R/264T work has no push
 
 Next authorised action:
-Step 264P read-only CAP-004 Persistent Audit Store readiness and residual-gap reassessment requires separate explicit approval.
+Step 264U controlled CAP-004 closure publication requires separate explicit approval.
 ```
 
 Do not stage, commit or push from this canonical record alone. Resolve live repository state and obtain the applicable separate approval first.

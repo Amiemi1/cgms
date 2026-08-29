@@ -15,13 +15,13 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
             "Authoritative delivery, validation, governance, "
             "dashboard-access and startup register."
         ),
-        "as_of": "13 August 2026",
+        "as_of": "25 August 2026",
         "current_sprint": "Sprint 22",
-        "current_work": "PWI-001 Step 187F / Governance-Currency Closure",
+        "current_work": "CAP-004 Step 264T / Readiness-Currency Closure",
         "status": (
-            "Step 187F technical closure complete and validated; "
-            "governance currency recorded; publication pending "
-            "separate explicit approval"
+            "Step 264S readiness reassessment passed; Step 264T records "
+            "CAP-004 as Implemented / PILOT_READY with P0 priority "
+            "retained and the commercial blocker closed"
         ),
         "branch": "cgms-v2-roadmap",
         "canonical_record": (
@@ -31,46 +31,48 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
     "summary": [
         {
             "label": "Current milestone",
-            "value": "PWI-001 Step 187F",
+            "value": "CAP-004 Step 264T",
             "detail": (
-                "Cross-workspace isolation technical closure complete "
-                "and validated; governance currency recorded; "
-                "publication pending separate approval"
+                "Step 264S readiness reassessment passed and Step 264T "
+                "records CAP-004 as PILOT_READY, closes its commercial "
+                "blocker and preserves publication as a separate boundary"
             ),
         },
         {
             "label": "Current regression suite",
-            "value": "679 passed",
+            "value": "696 passed",
             "detail": (
-                "Complete Step 187F isolated PostgreSQL 16 / pgvector "
-                "regression passed with 37 known non-blocking "
-                "deprecation warnings"
+                "Complete Step 264R regression passed against isolated "
+                "PostgreSQL 16.14 / pgvector 0.8.6 with 37 known "
+                "non-blocking deprecation warnings"
             ),
         },
         {
-            "label": "Step 187F technical validation",
-            "value": "679 + live PASS",
+            "label": "Step 264R technical validation",
+            "value": "696 + PostgreSQL PASS",
             "detail": (
-                "59 focused closure tests passed; complete regression "
-                "679 passed; migrations validated idempotently; live "
-                "Browser/Bearer cross-workspace separation passed"
+                "Four governed migrations applied in order and skipped "
+                "idempotently on rerun; append-only UPDATE/DELETE "
+                "enforcement passed; complete regression recorded "
+                "696 passed with 37 warnings"
             ),
         },
         {
             "label": "Latest published checkpoint",
-            "value": "6b8a00d",
+            "value": "6a51c09",
             "detail": (
-                "Product Readiness CI recovery closure: dependency "
-                "stabilisation, CI JWT configuration, PostgreSQL/"
-                "pgvector schema bootstrap and legacy-test alignment"
+                "Published Step 264O governance closure baseline; "
+                "current CAP-004 Step 264Q-264T work remains "
+                "unstaged and unpublished"
             ),
         },
         {
             "label": "GitHub Actions",
-            "value": "Run #34 — Success",
+            "value": "Run #41 — Success",
             "detail": (
-                "CGMS Product Readiness CI completed successfully "
-                "for published recovery commit 6b8a00d"
+                "Latest published Product Readiness CI passed for "
+                "correction commit fe313621; published governance "
+                "baseline subsequently closed at 6a51c095"
             ),
         },
         {
@@ -86,9 +88,10 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
             "label": "Pilot readiness",
             "value": "NOT READY",
             "detail": (
-                "Step 187F technical closure is complete; Product "
-                "Readiness capability status remains unchanged pending "
-                "a separately governed readiness reassessment"
+                "CAP-004 commercial blocker is closed after the Step 264S "
+                "PASS determination and Step 264T promotion; CAP-005 "
+                "remains the unresolved P0 commercial blocker and the "
+                "pilot verdict remains NOT READY"
             ),
         },
     ],
@@ -196,15 +199,16 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
         },
     ],
     "current_focus": [
-        "PWI-001 Step 187F integrated isolation technical closure complete",
-        "679-test PostgreSQL 16 / pgvector regression green",
-        "Live Browser/Bearer cross-workspace separation validated",
-        "Governance currency recorded; publication not yet authorised",
+        "CAP-004 Step 264S readiness reassessment passed",
+        "CAP-004 Step 264T Implemented / PILOT_READY currency recorded",
+        "696-test PostgreSQL 16 / pgvector complete regression remains green",
+        "CRG-001 CAP-004 commercial blocker closed; CAP-005 remains P0",
+        "Product Readiness 27% / pilot-scope readiness 35%",
     ],
     "upcoming": [
-        "Separate approval required before controlled staging",
-        "Separate approval required before commit or push",
-        "Post-publication CI verification only after publication",
+        "Separate approval required before Step 264U CAP-004 closure publication",
+        "No staging, commit or push authorised by Step 264T",
+        "CAP-005 and remaining P1 commercial blockers remain separately governed",
     ],
     "sprints": [
         {
@@ -506,8 +510,8 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
                 "Isolation Foundation"
             ),
             "status": (
-                "Steps 187D and 187E published; Step 187F technical "
-                "closure complete and governance currency recorded"
+                "CAP-003 closure published; CAP-004 Step 264T readiness "
+                    "currency complete; publication pending separate approval"
             ),
             "status_class": "active",
             "summary": (
@@ -564,6 +568,30 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
         },
     ],
     "validation": [
+        {
+            "title": "CAP-004 Step 264T readiness-currency closure",
+            "result": "PASS — PILOT_READY",
+            "detail": (
+                "Step 264S reassessment determined CAP-004 eligible for "
+                "promotion; Step 264T records Implemented / PILOT_READY, "
+                "retains P0 priority, closes the CAP-004 CRG-001 commercial "
+                "blocker, recalculates Product Readiness to 27% and "
+                "pilot-scope readiness to 35%, and retains NOT READY "
+                "as the commercial pilot verdict"
+            ),
+        },
+        {
+            "title": "CAP-004 Step 264R isolated PostgreSQL validation",
+            "result": "PASS — 696 passed",
+            "detail": (
+                "PostgreSQL 16.14 / pgvector 0.8.6; four governed "
+                "migrations applied in order and skipped idempotently "
+                "on immediate rerun; append-only UPDATE/DELETE "
+                "enforcement passed; complete regression recorded "
+                "696 passed with 37 warnings; disposable container "
+                "removed and localhost port 55440 released"
+            ),
+        },
         {
             "title": "PWI-001 Step 187F integrated technical closure",
             "result": "PASS — publication pending",
@@ -1032,24 +1060,24 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
     "governance": {
         "rule": "Engineering Governance Rule EG-001",
         "classification": (
-            "Approved Governance Currency Closure — "
-            "PWI-001 Step 187F Integrated Isolation"
+            "Approved Readiness Currency Closure — "
+            "CAP-004 Step 264T"
         ),
-        "approval_date": "13 August 2026",
+        "approval_date": "23 August 2026",
         "canonical_record": (
             "docs/CGMS_MASTER_CONTINUATION_PROMPT_v2.0.md"
         ),
         "scope": (
-            "Programme Progress governance currency recording the "
-            "validated Step 187F integrated isolation technical closure, "
-            "CI schema-registration correction, migration evidence and "
-            "live Browser/Bearer separation evidence."
+            "Controlled CAP-004 readiness and governance-currency "
+            "update recording the Step 264S PASS determination, "
+            "PILOT_READY promotion, derived readiness recalculation "
+            "and CRG-001 commercial-blocker closure."
         ),
         "boundaries": (
-            "No Product Readiness capability-status change, migration "
-            "mutation, browser-auth/session-registry change, dashboard "
-            "template redesign, staging, commit, push or unrelated "
-            "repository mutation."
+            "CAP-004 P0 priority retained; CAP-005 remains the unresolved "
+            "P0 commercial blocker; pilot verdict remains NOT READY; "
+            "no database access, staging, commit, push, publication or "
+            "unrelated repository mutation."
         ),
     },
 }

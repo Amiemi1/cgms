@@ -145,11 +145,23 @@ PRODUCT_CAPABILITIES: tuple[Capability, ...] = (
         CapabilityPriority.P0,
         "Yes",
         "Yes",
-        "Partial",
+        "Implemented",
         "Critical",
         "High",
         "Critical",
         "Pre-Pilot",
+        status_override=CapabilityStatus.PILOT_READY,
+        security_reviewed=True,
+        ux_complete=True,
+        tests_passing=True,
+        documented=True,
+        evidence_note=(
+            "Steps 264P-264S validated unified persistent enterprise "
+            "audit across security, domain events, explainability and "
+            "governance, including PostgreSQL 16 / pgvector migration, "
+            "append-only enforcement, workspace-scoped reads, "
+            "idempotence and complete regression."
+        ),
     ),
     _capability(
         "CAP-005",

@@ -32,7 +32,13 @@ def register_security_handlers(dp):
                 await message.answer("Only admins can assign admin roles.")
                 return
 
-            success = add_admin(session, target_user_id)
+            success = add_admin(
+                session,
+                target_user_id,
+                actor_user_id=(
+                    message.from_user.id
+                ),
+            )
 
             if success:
                 await message.answer(
@@ -69,7 +75,13 @@ def register_security_handlers(dp):
                 await message.answer("Only admins can remove admin roles.")
                 return
 
-            success = remove_admin(session, target_user_id)
+            success = remove_admin(
+                session,
+                target_user_id,
+                actor_user_id=(
+                    message.from_user.id
+                ),
+            )
 
             if success:
                 await message.answer(

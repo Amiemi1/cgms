@@ -20,6 +20,7 @@ from app.db.models.security_models import (
     BrowserSessionRecord,
     SecurityLog,
 )
+from app.db.models.audit_record import AuditRecord
 from app.services.auth.auth_dependency import (
     AuthenticatedPrincipal,
 )
@@ -148,6 +149,22 @@ def load_security_logs(
             session.expunge(
                 record
             )
+
+        return list(records)
+
+
+def load_unified_audit_records(
+    engine,
+) -> list[AuditRecord]:
+    with Session(engine) as session:
+        records = session.exec(
+            select(AuditRecord).order_by(
+                AuditRecord.id
+            )
+        ).all()
+
+        for record in records:
+            session.expunge(record)
 
         return list(records)
 
@@ -407,6 +424,19 @@ def test_revocation_creates_actor_attributed_audit_log(
     assert "cookie" not in log.details
     assert "password" not in log.details
     assert "email" not in log.details
+
+    unified_records = (
+        load_unified_audit_records(
+            engine
+        )
+    )
+    assert len(unified_records) == 1
+    unified = unified_records[0]
+    assert unified.category == "security"
+    assert unified.workspace_id == "default"
+    assert unified.actor_id == "9001"
+    assert unified.subject_id == "1001"
+    assert unified.details == details
 
 
 def test_zero_result_still_creates_audit_record(

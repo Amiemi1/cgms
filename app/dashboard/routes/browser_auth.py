@@ -801,6 +801,9 @@ async def browser_login_submit(
                 network_identifier
             ),
             user_id=account.user_id,
+            workspace_id=(
+                workspace_context.workspace_id
+            ),
         )
     except (
         LoginThrottleConfigurationError,

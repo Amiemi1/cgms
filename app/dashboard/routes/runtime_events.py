@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from app.services.orchestration.event_router import (
     route_memory_update,
     route_runtime_state_change,
@@ -20,13 +20,22 @@ from app.services.orchestration.session_store import (
 from app.dashboard.routes.runtime_kill_switch import (
     kill_switch
 )
+from app.services.auth.application_authorization import (
+    enforce_application_authorization,
+)
+from app.services.auth.auth_dependency import (
+    AuthenticatedPrincipal,
+)
 
 router = APIRouter()
 
 
 @router.post("/runtime/event")
 async def runtime_event(
-    payload: dict
+    payload: dict,
+    principal: AuthenticatedPrincipal = Depends(
+        enforce_application_authorization
+    ),
 ):
 
     if kill_switch["enabled"]:
@@ -56,9 +65,14 @@ async def runtime_event(
     }
 
     explanation = explain_runtime_decision(
-    event,
-    data
-)
+        event,
+        data,
+        workspace_id=principal.workspace_id,
+        actor_id=principal.user_id,
+        correlation_id=payload.get(
+            "correlation_id"
+        ),
+    )
 
     data = {
         **data,

@@ -100,11 +100,15 @@ def _default_migrations() -> tuple[DatabaseMigration, ...]:
     from app.db.migrations.cap_003_workspace_control import (
         CAP_003_WORKSPACE_CONTROL,
     )
+    from app.db.migrations.cap_004_unified_audit import (
+        CAP_004_UNIFIED_AUDIT,
+    )
 
     return (
         PWI_001_WORKSPACE_FOUNDATION,
         PWI_001_TENANT_PERSISTENCE,
         CAP_003_WORKSPACE_CONTROL,
+        CAP_004_UNIFIED_AUDIT,
     )
 
 

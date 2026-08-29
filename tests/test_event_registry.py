@@ -45,6 +45,24 @@ def test_subscribe_prevents_duplicate_registration():
     assert registry.count("memory.created") == 1
 
 
+def test_global_subscriber_receives_every_event_without_duplicates():
+    registry = EventRegistry()
+
+    registry.subscribe_all(subscriber_one)
+    registry.subscribe_all(subscriber_one)
+    registry.subscribe(
+        "memory.created",
+        subscriber_one,
+    )
+
+    assert registry.get_subscribers(
+        "memory.created"
+    ) == [subscriber_one]
+    assert registry.get_subscribers(
+        "workspace.created"
+    ) == [subscriber_one]
+
+
 def test_unsubscribe_removes_subscriber():
     registry = EventRegistry()
 

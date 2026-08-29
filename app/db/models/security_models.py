@@ -63,6 +63,15 @@ class SecurityLog(SQLModel, table=True):
         )
     )
 
+    workspace_id: Optional[str] = Field(
+        default=None,
+        sa_column=Column(
+            String(64),
+            index=True,
+            nullable=True,
+        ),
+    )
+
     action: str
 
     details: Optional[str] = None

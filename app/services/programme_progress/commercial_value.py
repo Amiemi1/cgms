@@ -33,24 +33,24 @@ _EXECUTIVE_VALUE_MODEL: Final[dict[str, Any]] = {
         },
     },
     "completion": {
-        "overall_percent": 45,
+        "overall_percent": 46,
         "method": (
             "Weighted capability-completion index using the governed "
             "38-capability Product Readiness estate"
         ),
         "inputs": {
             "implemented": 9,
-            "in_progress": 18,
+            "in_progress": 17,
             "not_started": 10,
-            "pilot_ready": 1,
+            "pilot_ready": 2,
             "production_ready": 0,
             "total_capabilities": 38,
         },
         "weights": deepcopy(
             _OVERALL_COMPLETION_STATUS_WEIGHTS
         ),
-        "product_readiness_percent": 25,
-        "pilot_readiness_percent": 32,
+        "product_readiness_percent": 27,
+        "pilot_readiness_percent": 35,
         "interpretation": (
             "Overall Completion measures progress through the build-to-scale "
             "journey. Product Readiness and Pilot Readiness remain separate "
@@ -1139,8 +1139,8 @@ _EXECUTIVE_VALUE_MODEL: Final[dict[str, Any]] = {
         "Patent and IP evidence programme",
     ],
     "value_risks": [
-        "Four unresolved P0 Product Readiness blockers",
-        "One pilot-ready capability",
+        "Three unresolved P0 Product Readiness blockers",
+        "Two pilot-ready capabilities",
         "Zero production-ready capabilities",
         "Product Experience category score of 7%",
         "Integrations category score of 13%",

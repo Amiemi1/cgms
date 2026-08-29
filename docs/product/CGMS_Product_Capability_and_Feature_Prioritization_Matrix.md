@@ -97,7 +97,7 @@ Part of the long-term platform vision.
 | CAP-001 | Secure Authentication | Governance | P0 | Yes | Yes | Partial | Critical | High | Critical | Pre-Pilot |
 | CAP-002 | Role-Based Access Control | Governance | P0 | Yes | Yes | Partial | Critical | High | Critical | Pre-Pilot |
 | CAP-003 | Workspace Isolation | Governance / Memory | P0 | Yes | Yes | Implemented | Critical | High | Critical | Pre-Pilot |
-| CAP-004 | Persistent Audit Store | Governance | P0 | Yes | Yes | Partial | Critical | High | Critical | Pre-Pilot |
+| CAP-004 | Persistent Audit Store | Governance | P0 | Yes | Yes | Implemented | Critical | High | Critical | Pre-Pilot |
 | CAP-005 | Backup and Restore | Operations | P0 | Yes | Yes | Planned | High | High | Critical | Pre-Pilot |
 | CAP-006 | Structured Organizational Memory | Memory | P1 | Yes | Yes | Implemented | Medium | Critical | Critical | MLP |
 | CAP-007 | Memory Lifecycle Actions | Memory | P1 | Yes | Yes | Implemented | Medium | High | High | MLP |
@@ -489,5 +489,42 @@ The promotion is supported by:
 CAP-003 does not claim durable connector-health history, persistent connector configuration and credentials, production connector completion or durable workspace-metrics history. Those remain governed by CAP-018, CAP-019 and CAP-023.
 
 The Product Readiness gate retains four catalogue-level P0 gaps. The CRG-001 commercial-readiness position retains two unresolved P0 blockers, CAP-004 and CAP-005, and eight total commercial blockers.
+
+The commercial pilot verdict remains **NOT READY**.
+---
+
+# 22. CAP-004 Readiness Currency Update
+
+**Update date:** 25 August 2026
+
+**Decision:** Step 264S read-only CAP-004 readiness reassessment — PASS for promotion eligibility
+
+**Currency action:** Step 264T controlled Product Readiness and governance-currency update
+
+The CAP-004 technical-readiness row is updated from **Partial** to **Implemented**. The authoritative Product Readiness catalogue advances CAP-004 to **PILOT_READY** while retaining its **P0** priority.
+
+The promotion is supported by:
+
+- one unified persistent audit schema spanning security, domain events, explainability and governance;
+- deterministic legacy-security backfill and origin idempotence;
+- database-enforced append-only controls;
+- workspace-scoped reads and cross-workspace denial;
+- explicit privileged global reads;
+- persistent Event Bus and explainability convergence;
+- transactional producer convergence;
+- ordered and idempotent PostgreSQL 16 / pgvector migration validation;
+- a complete isolated regression with **696 passed** tests and no failures.
+
+The authoritative Product Readiness recalculation after CAP-004 promotion is:
+
+- overall Product Readiness: **27%**;
+- pilot-scope readiness: **35%**;
+- catalogue-level P0 gaps: **3**;
+- pilot-scope gaps: **23**;
+- open Product Readiness recommendations: **27**.
+
+The CRG-001 commercial-readiness position now retains **one unresolved P0 blocker, CAP-005**, and **seven total commercial blockers**.
+
+CAP-004 remains P0 because persistent enterprise audit continues to be mandatory for pilot and production governance.
 
 The commercial pilot verdict remains **NOT READY**.

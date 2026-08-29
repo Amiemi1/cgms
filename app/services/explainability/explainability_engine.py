@@ -5,7 +5,14 @@ from app.services.explainability.audit_store import (
 )
 
 
-def explain_runtime_decision(event_name: str, payload: dict):
+def explain_runtime_decision(
+    event_name: str,
+    payload: dict,
+    *,
+    workspace_id: str | None = None,
+    actor_id: str | None = None,
+    correlation_id: str | None = None,
+):
 
     impact = payload.get("impact", {})
 
@@ -20,7 +27,10 @@ def explain_runtime_decision(event_name: str, payload: dict):
     }
 
     store_audit_record(
-        explanation
+        explanation,
+        workspace_id=workspace_id,
+        actor_id=actor_id,
+        correlation_id=correlation_id,
     )
 
     print(

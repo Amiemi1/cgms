@@ -21,6 +21,7 @@ from app.db.models.security_models import (
     BrowserLoginThrottleRecord,
     SecurityLog,
 )
+from app.db.models.audit_record import AuditRecord
 from app.services.auth.login_throttle import (
     LOGIN_FAILURE_ACTION,
     LOGIN_SUCCESS_ACTION,
@@ -122,6 +123,22 @@ def load_security_logs(
         records = session.exec(
             select(SecurityLog).order_by(
                 SecurityLog.id
+            )
+        ).all()
+
+        for record in records:
+            session.expunge(record)
+
+        return list(records)
+
+
+def load_unified_audit_records(
+    engine,
+) -> list[AuditRecord]:
+    with Session(engine) as session:
+        records = session.exec(
+            select(AuditRecord).order_by(
+                AuditRecord.id
             )
         ).all()
 
@@ -420,6 +437,14 @@ def test_success_clears_pair_state_but_preserves_network_state(
         "network_key",
         "subject_key",
     }
+
+    unified = load_unified_audit_records(
+        engine
+    )[-1]
+    assert unified.category == "security"
+    assert unified.action == LOGIN_SUCCESS_ACTION
+    assert unified.actor_id == "1001"
+    assert unified.details == details
 
 
 def test_invalid_request_updates_only_network_scope(

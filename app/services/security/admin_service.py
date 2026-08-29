@@ -1,6 +1,10 @@
 from sqlmodel import select
 
 from app.db.models import UserRole, SecurityLog
+from app.services.persistence.audit_store import (
+    GOVERNANCE_AUDIT,
+    add_audit_record,
+)
 
 
 # ------------------------------------------------
@@ -45,6 +49,24 @@ def add_admin(session, user_id: int):
     )
 
     session.add(log)
+    session.flush()
+    add_audit_record(
+        session,
+        category=GOVERNANCE_AUDIT,
+        action="admin_added",
+        source="security_admin_service",
+        actor_id=user_id,
+        subject_type="account_role",
+        subject_id=user_id,
+        outcome="changed",
+        details={
+            "message": "User granted admin privileges",
+        },
+        origin_id=(
+            "legacy.security_log:"
+            f"{log.id}"
+        ),
+    )
     session.commit()
 
 
@@ -68,6 +90,24 @@ def remove_admin(session, user_id: int):
     )
 
     session.add(log)
+    session.flush()
+    add_audit_record(
+        session,
+        category=GOVERNANCE_AUDIT,
+        action="admin_removed",
+        source="security_admin_service",
+        actor_id=user_id,
+        subject_type="account_role",
+        subject_id=user_id,
+        outcome="changed",
+        details={
+            "message": "Admin privileges revoked",
+        },
+        origin_id=(
+            "legacy.security_log:"
+            f"{log.id}"
+        ),
+    )
     session.commit()
 
 

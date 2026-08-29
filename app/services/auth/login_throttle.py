@@ -28,6 +28,10 @@ from app.db.models.security_models import (
     SecurityLog,
 )
 from app.db.session import SessionLocal
+from app.services.persistence.audit_store import (
+    SECURITY_AUDIT,
+    add_audit_record,
+)
 
 
 login_security_logger = logging.getLogger(
@@ -928,20 +932,49 @@ class BrowserLoginSecurityService:
                 if decision.blocked
                 else LOGIN_FAILURE_ACTION
             )
+            audit_details = self._audit_details(
+                identity=identity,
+                reason=reason,
+                decision=decision,
+            )
 
+            security_log = SecurityLog(
+                user_id=(
+                    ANONYMOUS_SECURITY_ACTOR_ID
+                ),
+                action=action,
+                details=audit_details,
+                created_at=failed_at,
+            )
             session.add(
-                SecurityLog(
-                    user_id=(
-                        ANONYMOUS_SECURITY_ACTOR_ID
-                    ),
-                    action=action,
-                    details=self._audit_details(
-                        identity=identity,
-                        reason=reason,
-                        decision=decision,
-                    ),
-                    created_at=failed_at,
-                )
+                security_log
+            )
+            session.flush()
+            add_audit_record(
+                session,
+                category=SECURITY_AUDIT,
+                action=action,
+                source="browser_login_security",
+                actor_id=(
+                    ANONYMOUS_SECURITY_ACTOR_ID
+                ),
+                subject_type="login_identity",
+                subject_id=(
+                    identity.subject_audit_key
+                ),
+                outcome=(
+                    "blocked"
+                    if decision.blocked
+                    else "denied"
+                ),
+                details=json.loads(
+                    audit_details
+                ),
+                occurred_at=failed_at,
+                origin_id=(
+                    "legacy.security_log:"
+                    f"{security_log.id}"
+                ),
             )
 
             session.commit()
@@ -1052,6 +1085,7 @@ class BrowserLoginSecurityService:
         email: str,
         network_identifier: str,
         user_id: int,
+        workspace_id: str | None = None,
         now: datetime | None = None,
     ) -> None:
         succeeded_at = _current_time(
@@ -1099,13 +1133,35 @@ class BrowserLoginSecurityService:
                 ),
             )
 
+            security_log = SecurityLog(
+                user_id=user_id,
+                workspace_id=workspace_id,
+                action=LOGIN_SUCCESS_ACTION,
+                details=details,
+                created_at=succeeded_at,
+            )
             session.add(
-                SecurityLog(
-                    user_id=user_id,
-                    action=LOGIN_SUCCESS_ACTION,
-                    details=details,
-                    created_at=succeeded_at,
-                )
+                security_log
+            )
+            session.flush()
+            add_audit_record(
+                session,
+                category=SECURITY_AUDIT,
+                action=LOGIN_SUCCESS_ACTION,
+                source="browser_login_security",
+                workspace_id=workspace_id,
+                actor_id=user_id,
+                subject_type="account",
+                subject_id=user_id,
+                outcome="authenticated",
+                details=json.loads(
+                    details
+                ),
+                occurred_at=succeeded_at,
+                origin_id=(
+                    "legacy.security_log:"
+                    f"{security_log.id}"
+                ),
             )
 
             session.commit()

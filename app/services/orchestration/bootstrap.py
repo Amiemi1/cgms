@@ -59,9 +59,7 @@ def bootstrap_event_bus() -> None:
         MemoryEventName.PRIORITY_CHANGED,
         memory_intelligence_subscriber,
     )
-    for event_name in MemoryEventName:
-        DEFAULT_EVENT_REGISTRY.subscribe(
-            event_name,
-            audit_subscriber,
-        )
+    DEFAULT_EVENT_REGISTRY.subscribe_all(
+        audit_subscriber
+    )
     _BOOTSTRAPPED = True

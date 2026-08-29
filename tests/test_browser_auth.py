@@ -146,7 +146,7 @@ class StubLoginSecurityService:
             tuple[str, str]
         ] = []
         self.success_calls: list[
-            tuple[str, str, int]
+            tuple[str, str, int, str]
         ] = []
         self.invalid_request_calls: list[
             str
@@ -201,12 +201,14 @@ class StubLoginSecurityService:
         email: str,
         network_identifier: str,
         user_id: int,
+        workspace_id: str,
     ) -> None:
         self.success_calls.append(
             (
                 email,
                 network_identifier,
                 user_id,
+                workspace_id,
             )
         )
 
@@ -1300,6 +1302,7 @@ def test_successful_login_records_audited_success(
             " User@Example.com ",
             "203.0.113.90",
             4101,
+            "default",
         )
     ]
 

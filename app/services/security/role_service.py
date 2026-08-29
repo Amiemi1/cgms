@@ -33,7 +33,14 @@ def get_user_role(session, user_id):
 # ASSIGN ROLE
 # --------------------------------------------------------------
 
-def assign_role(session, user_id, role):
+def assign_role(
+    session,
+    user_id,
+    role,
+    *,
+    actor_user_id=None,
+    workspace_id=None,
+):
 
     # ----------------------------------------------------------
     # DEBUG
@@ -70,14 +77,22 @@ def assign_role(session, user_id, role):
         }
     )
 
-    session.commit()
-
     record_audit(
         session,
-        user_id,
+        (
+            actor_user_id
+            if actor_user_id is not None
+            else user_id
+        ),
         "role_change",
-        f"Role updated to {role}"
+        f"Role updated to {role}",
+        workspace_id=workspace_id,
+        subject_type="account_role",
+        subject_id=user_id,
+        commit=False,
     )
+
+    session.commit()
 
     print(f"[DEBUG] Governance | Role assigned | user={user_id} role={role}")
 

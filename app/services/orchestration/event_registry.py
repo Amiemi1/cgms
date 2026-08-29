@@ -36,6 +36,27 @@ class EventRegistry:
 
     def __init__(self) -> None:
         self._subscribers: dict[str, list[EventSubscriber]] = {}
+        self._global_subscribers: list[EventSubscriber] = []
+
+    def subscribe_all(
+        self,
+        subscriber: EventSubscriber,
+    ) -> None:
+        """Register a subscriber for every canonical domain event."""
+        if subscriber not in self._global_subscribers:
+            self._global_subscribers.append(
+                subscriber
+            )
+
+    def unsubscribe_all(
+        self,
+        subscriber: EventSubscriber,
+    ) -> None:
+        """Remove a subscriber from the global event boundary."""
+        if subscriber in self._global_subscribers:
+            self._global_subscribers.remove(
+                subscriber
+            )
 
     def subscribe(
         self,
@@ -91,7 +112,20 @@ class EventRegistry:
 
         self._validate_event_name(event_name)
 
-        return list(self._subscribers.get(event_name, []))
+        subscribers = list(
+            self._subscribers.get(
+                event_name,
+                [],
+            )
+        )
+
+        for subscriber in self._global_subscribers:
+            if subscriber not in subscribers:
+                subscribers.append(
+                    subscriber
+                )
+
+        return subscribers
 
     def clear(self) -> None:
         """
@@ -99,6 +133,7 @@ class EventRegistry:
         """
 
         self._subscribers.clear()
+        self._global_subscribers.clear()
 
     def count(
         self,
@@ -113,9 +148,19 @@ class EventRegistry:
 
         if event_name is not None:
             self._validate_event_name(event_name)
-            return len(self._subscribers.get(event_name, []))
+            return len(
+                self.get_subscribers(
+                    event_name
+                )
+            )
 
-        return sum(len(subscribers) for subscribers in self._subscribers.values())
+        return (
+            sum(
+                len(subscribers)
+                for subscribers in self._subscribers.values()
+            )
+            + len(self._global_subscribers)
+        )
 
     def registered_events(self) -> list[str]:
         """

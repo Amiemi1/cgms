@@ -786,3 +786,75 @@ CAP-003 closure does not establish:
 The CAP-003 intervention removes persistent workspace isolation as a commercial blocker. Unified auditability and recoverability remain unresolved P0 conditions, and additional P1 commercial blockers remain open.
 
 **Current pilot-readiness verdict: NOT READY.**
+---
+
+## 17. Post-Assessment Remediation Update — CAP-004
+
+**Update date:** 25 August 2026
+
+**Remediation sequence:** CAP-004 Steps 264P-264T
+
+**Status:** Implemented, PostgreSQL-validated, readiness-reassessed and promoted to PILOT_READY; publication pending separate approval
+
+### 17.1 Historical-assessment boundary
+
+Sections 1–14 retain the immutable CRG-001 assessment snapshot from 27 July 2026. Section 15 retains the AAE-001 remediation delta and Section 16 retains the CAP-003 remediation delta. This section records the subsequent CAP-004 remediation delta and supersedes only the current Persistent Audit Store finding and its current commercial-blocker effect.
+
+### 17.2 CAP-004 remediation result
+
+The governed Unified Persistent Enterprise Audit remediation established:
+
+- one canonical persistent nterprise_audit_record authority;
+- security, domain-event, explainability and governance audit categories;
+- deterministic legacy SecurityLog backfill with unique origin identities;
+- database-enforced append-only UPDATE/DELETE rejection;
+- origin idempotence, correlation and causation fields;
+- workspace-scoped audit reads with cross-workspace denial;
+- explicit administrator-only global audit reads;
+- transactional convergence of security and governance producers;
+- persistent Event Bus audit convergence;
+- durable explainability evidence;
+- a persistent authenticated audit-console read boundary.
+
+Step 264R validated the ordered migration on PostgreSQL 16.14 / pgvector 0.8.6, including deterministic backfill, checksum integrity, immediate-rerun idempotence, append-only enforcement and workspace referential integrity. The complete repository regression recorded **696 passed**, **37 known non-blocking warnings**, **0 failures** and **0 collection errors**.
+
+Step 264S then completed the separately approved read-only readiness reassessment. The cumulative Step 264P-264R evidence closed the residual enterprise-audit conditions identified by the earlier Partial determination and supported CAP-004 readiness promotion.
+
+### 17.3 Readiness-status transition
+
+| Capability | Previous Current Position | Post-Step-264T Position | Commercial-Blocker Effect |
+|---|---|---|---|
+| CAP-004 — Persistent Audit Store | Partial | Implemented / PILOT_READY | Resolved |
+
+CAP-004 remains a **P0** capability. The P0 priority is retained because persistent enterprise audit remains mandatory for governed pilot and production operation; closing the implementation gap does not reduce its architectural importance.
+
+The Product Readiness Engine now reports **3 catalogue-level P0 gaps**. That engine count is distinct from the CRG-001 commercial-blocker register because the two governance instruments apply different classification rules.
+
+### 17.4 Current blocker position
+
+Resolving CAP-004 changes the post-CAP-003 commercial-readiness position from:
+
+- unresolved CRG-001 P0 commercial blockers: **2 to 1**;
+- total commercial blockers: **8 to 7**.
+
+The remaining unresolved P0 commercial blocker is:
+
+1. CAP-005 — Backup and Restore.
+
+The original CRG-001 distribution and Critical Gap Register remain the historical assessment snapshot and have not been rewritten.
+
+### 17.5 Preserved limitations
+
+CAP-004 closure does not establish:
+
+- governed backup, retention, restore or recovery controls;
+- persistent production connector configuration and governed credential storage;
+- a production connector pilot;
+- durable completion of every P1 product-experience and operational gap;
+- commercial pilot authorization.
+
+### 17.6 Pilot-readiness verdict
+
+CAP-004 no longer blocks commercial pilot entry on enterprise-audit grounds. CAP-005 remains an unresolved P0 commercial blocker and additional P1 commercial blockers remain open.
+
+**Current pilot-readiness verdict: NOT READY.**

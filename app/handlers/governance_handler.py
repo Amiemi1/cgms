@@ -38,7 +38,14 @@ def register_governance_handlers(dp):
             role = parts[2]
 
             try:
-                assign_role(session, user_id, role)
+                assign_role(
+                    session,
+                    user_id,
+                    role,
+                    actor_user_id=(
+                        message.from_user.id
+                    ),
+                )
             except ValueError as e:
                 await message.answer(str(e))
                 return

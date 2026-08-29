@@ -19,6 +19,9 @@ from app.db.migrations.pwi_001_workspace_foundation import (
 from app.db.migrations.cap_003_workspace_control import (
     MIGRATION_ID as CAP_003_CONTROL_MIGRATION_ID,
 )
+from app.db.migrations.cap_004_unified_audit import (
+    MIGRATION_ID as CAP_004_AUDIT_MIGRATION_ID,
+)
 from app.db.migrations.runner import (
     _default_migrations,
 )
@@ -144,6 +147,7 @@ def test_default_migration_inventory_is_ordered():
         WORKSPACE_FOUNDATION_MIGRATION_ID,
         TENANT_PERSISTENCE_MIGRATION_ID,
         CAP_003_CONTROL_MIGRATION_ID,
+        CAP_004_AUDIT_MIGRATION_ID,
     )
 
 
@@ -159,6 +163,7 @@ def test_foundation_migration_seeds_and_backfills():
             WORKSPACE_FOUNDATION_MIGRATION_ID,
             TENANT_PERSISTENCE_MIGRATION_ID,
             CAP_003_CONTROL_MIGRATION_ID,
+            CAP_004_AUDIT_MIGRATION_ID,
         )
 
         inspector = inspect(
@@ -174,6 +179,7 @@ def test_foundation_migration_seeds_and_backfills():
             "workspace",
             "workspace_membership",
             "workspace_control",
+            "enterprise_audit_record",
         }.issubset(
             tables
         )
@@ -299,6 +305,7 @@ def test_foundation_migration_is_idempotent():
             WORKSPACE_FOUNDATION_MIGRATION_ID,
             TENANT_PERSISTENCE_MIGRATION_ID,
             CAP_003_CONTROL_MIGRATION_ID,
+            CAP_004_AUDIT_MIGRATION_ID,
         )
 
         assert second.applied_migrations == ()
@@ -306,6 +313,7 @@ def test_foundation_migration_is_idempotent():
             WORKSPACE_FOUNDATION_MIGRATION_ID,
             TENANT_PERSISTENCE_MIGRATION_ID,
             CAP_003_CONTROL_MIGRATION_ID,
+            CAP_004_AUDIT_MIGRATION_ID,
         )
 
         with engine.connect() as connection:
@@ -323,8 +331,9 @@ def test_foundation_migration_is_idempotent():
                 WORKSPACE_FOUNDATION_MIGRATION_ID,
                 TENANT_PERSISTENCE_MIGRATION_ID,
                 CAP_003_CONTROL_MIGRATION_ID,
+                CAP_004_AUDIT_MIGRATION_ID,
             }
-            assert len(ledger_rows) == 3
+            assert len(ledger_rows) == 4
 
     finally:
         engine.dispose()

@@ -155,6 +155,7 @@ class StubLoginSecurityService:
         email: str,
         network_identifier: str,
         user_id: int,
+        workspace_id: str,
     ) -> None:
         return None
 
