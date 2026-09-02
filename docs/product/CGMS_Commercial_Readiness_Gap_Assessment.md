@@ -794,7 +794,7 @@ The CAP-003 intervention removes persistent workspace isolation as a commercial 
 
 **Remediation sequence:** CAP-004 Steps 264P-264T
 
-**Status:** Implemented, PostgreSQL-validated, readiness-reassessed and promoted to PILOT_READY; publication pending separate approval
+**Status:** Implemented, PostgreSQL-validated, readiness-reassessed and promoted to PILOT_READY; published by Step 264U at `f1be3064604f4b4172561bd405710f0b491a0d25`
 
 ### 17.1 Historical-assessment boundary
 

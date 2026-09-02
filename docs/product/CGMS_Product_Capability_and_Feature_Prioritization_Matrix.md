@@ -503,6 +503,8 @@ The commercial pilot verdict remains **NOT READY**.
 
 The CAP-004 technical-readiness row is updated from **Partial** to **Implemented**. The authoritative Product Readiness catalogue advances CAP-004 to **PILOT_READY** while retaining its **P0** priority.
 
+Step 264U subsequently published the validated CAP-004 closure at `f1be3064604f4b4172561bd405710f0b491a0d25`; CAP-004 remains **P0**, its commercial blocker remains closed, and CAP-005 remains the unresolved P0 commercial blocker.
+
 The promotion is supported by:
 
 - one unified persistent audit schema spanning security, domain events, explainability and governance;

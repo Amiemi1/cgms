@@ -15,13 +15,14 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
             "Authoritative delivery, validation, governance, "
             "dashboard-access and startup register."
         ),
-        "as_of": "25 August 2026",
+        "as_of": "31 August 2026",
         "current_sprint": "Sprint 22",
-        "current_work": "CAP-004 Step 264T / Readiness-Currency Closure",
+        "current_work": "CAP-004 Step 264V / Post-Publication Governance-Currency Closure",
         "status": (
-            "Step 264S readiness reassessment passed; Step 264T records "
-            "CAP-004 as Implemented / PILOT_READY with P0 priority "
-            "retained and the commercial blocker closed"
+            "Step 264U closure publication completed at "
+            "f1be3064604f4b4172561bd405710f0b491a0d25; CAP-004 remains Implemented / "
+            "PILOT_READY with P0 priority retained and the "
+            "commercial blocker closed"
         ),
         "branch": "cgms-v2-roadmap",
         "canonical_record": (
@@ -199,15 +200,15 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
         },
     ],
     "current_focus": [
-        "CAP-004 Step 264S readiness reassessment passed",
-        "CAP-004 Step 264T Implemented / PILOT_READY currency recorded",
+        "CAP-004 Step 264U closure publication completed",
+        "CAP-004 remains Implemented / PILOT_READY; P0 retained",
         "696-test PostgreSQL 16 / pgvector complete regression remains green",
         "CRG-001 CAP-004 commercial blocker closed; CAP-005 remains P0",
-        "Product Readiness 27% / pilot-scope readiness 35%",
+        "Product Readiness 27% / pilot-scope readiness 35% / overall completion 46%",
     ],
     "upcoming": [
-        "Separate approval required before Step 264U CAP-004 closure publication",
-        "No staging, commit or push authorised by Step 264T",
+        "Step 264V governance-currency publication requires separate explicit approval",
+        "No staging, commit or push authorised by Step 264V",
         "CAP-005 and remaining P1 commercial blockers remain separately governed",
     ],
     "sprints": [
@@ -1060,24 +1061,25 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
     "governance": {
         "rule": "Engineering Governance Rule EG-001",
         "classification": (
-            "Approved Readiness Currency Closure — "
-            "CAP-004 Step 264T"
+            "Approved Post-Publication Governance-Currency Closure — "
+            "CAP-004 Step 264V"
         ),
-        "approval_date": "23 August 2026",
+        "approval_date": "31 August 2026",
+        "published_authority": "f1be3064604f4b4172561bd405710f0b491a0d25",
         "canonical_record": (
             "docs/CGMS_MASTER_CONTINUATION_PROMPT_v2.0.md"
         ),
         "scope": (
-            "Controlled CAP-004 readiness and governance-currency "
-            "update recording the Step 264S PASS determination, "
-            "PILOT_READY promotion, derived readiness recalculation "
-            "and CRG-001 commercial-blocker closure."
+            "Controlled post-publication governance-currency closure "
+            "recording Step 264U publication authority, CAP-004 "
+            "published closure, retained PILOT_READY/P0 status and "
+            "CAP-005 as the remaining unresolved P0 blocker."
         ),
         "boundaries": (
-            "CAP-004 P0 priority retained; CAP-005 remains the unresolved "
-            "P0 commercial blocker; pilot verdict remains NOT READY; "
-            "no database access, staging, commit, push, publication or "
-            "unrelated repository mutation."
+            "CAP-004 P0 priority retained and blocker closed; CAP-005 "
+            "remains the unresolved P0 commercial blocker; pilot verdict "
+            "remains NOT READY; no database access, staging, commit, "
+            "push, publication or unrelated repository mutation."
         ),
     },
 }

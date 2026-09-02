@@ -47,13 +47,13 @@ CAP-004 — Unified Persistent Enterprise Audit
 **Current sub-stage**
 
 ```text
-Step 264T — Controlled CAP-004 readiness and governance-currency update complete; CAP-004 Implemented / PILOT_READY, P0 retained, commercial blocker closed; publication separately governed
+Step 264V — Controlled post-publication governance-currency closure complete; CAP-004 published at `f1be3064604f4b4172561bd405710f0b491a0d25`; publication of Step 264V changes separately governed
 ```
 
 **Exact next authorised action**
 
 ```text
-Step 264U controlled CAP-004 closure publication requires separate explicit approval
+Step 264V governance-currency publication requires separate explicit approval
 ```
 
 ---
@@ -74,7 +74,7 @@ The next assistant must not:
 - reset, clean, restore, stash or discard the working tree;
 - stage, commit or push files without a separately approved governance boundary;
 - modify `manual_test_db.py`;
-- begin Step 264U or any later CAP-004 action without separate approval;
+- stage, commit or push Step 264V governance-currency changes without separate explicit approval;
 - treat historical “next action” statements as current instructions.
 
 Where an older historical statement conflicts with the current-state sections in this document, the current-state sections control.
@@ -5377,26 +5377,26 @@ one
 Product Readiness gate status:
 standard PASS; strict NOT READY
 
-Overall readiness:
-25%
+Product Readiness:
+27%
 
 Pilot-scope readiness:
-32%
+35%
 
 Overall completion:
-45%
+46%
 
 Pilot-ready capabilities:
-1
+2
 
 Product Readiness engine P0 gaps:
-4
+3
 
 Pilot-scope gaps:
-24
+23
 
-Open engineering recommendations:
-28
+Open Product Readiness recommendations:
+27
 
 Registered capabilities:
 38
@@ -5405,7 +5405,7 @@ P0 commercial blockers:
 1 unresolved CRG-001 P0 blocker: CAP-005
 
 Total unresolved commercial blockers:
-8
+7
 
 Protected manual_test_db.py:
 unchanged
@@ -5417,21 +5417,63 @@ Browser-auth/session-registry protected boundary:
 preserved; Step 264Q only propagates resolved workspace identity into unified audit evidence
 
 Working tree:
-36 unstaged paths: existing Step 264Q implementation/test/canonical paths plus the Programme Progress registry and focused governance test
+5 unstaged governance/current-state paths under Step 264V; no engineering paths changed
 
 Staging:
 none
 
 Commit:
-CAP-003 closure and governance record published; Step 264Q/264R/264T work has no commit
+Step 264U CAP-004 closure published at `f1be3064604f4b4172561bd405710f0b491a0d25`; Step 264V governance-currency work remains uncommitted
 
 Push:
-published baseline complete on origin/cgms-v2-roadmap; Step 264Q/264R/264T work has no push
+Step 264U published on origin/cgms-v2-roadmap; Step 264V governance-currency work remains unpushed
 
 Next authorised action:
-Step 264U controlled CAP-004 closure publication requires separate explicit approval.
+Step 264V governance-currency publication requires separate explicit approval.
 ```
 
 Do not stage, commit or push from this canonical record alone. Resolve live repository state and obtain the applicable separate approval first.
+
+
+# 52. STEP 264V — POST-PUBLICATION GOVERNANCE-CURRENCY CLOSURE
+
+Step 264V was approved and executed on 31 August 2026 to reconcile the authoritative governance/current-state surfaces after successful Step 264U CAP-004 publication.
+
+## 52.1 Published repository authority
+
+- branch: `cgms-v2-roadmap`;
+- published local HEAD: `f1be3064604f4b4172561bd405710f0b491a0d25`;
+- published upstream HEAD: `f1be3064604f4b4172561bd405710f0b491a0d25`;
+- published remote HEAD: `f1be3064604f4b4172561bd405710f0b491a0d25`;
+- Step 264U publication payload: **42 paths**;
+- Step 264U publication reconciliation: **PASS**.
+
+## 52.2 Current CAP-004 readiness currency
+
+- CAP-004 technical readiness: **IMPLEMENTED**;
+- CAP-004 Product Readiness status: **PILOT_READY**;
+- CAP-004 priority: **P0 — retained**;
+- CAP-004 commercial blocker: **closed**;
+- Product Readiness: **27%**;
+- pilot-scope readiness: **35%**;
+- overall CGMS completion: **46%**;
+- pilot-ready capabilities: **2**;
+- Product Readiness catalogue P0 gaps: **3**;
+- pilot-scope gaps: **23**;
+- open Product Readiness recommendations: **27**;
+- unresolved CRG-001 P0 commercial blockers: **1 — CAP-005**;
+- total unresolved commercial blockers: **7**;
+- commercial pilot verdict: **NOT READY**;
+- pilot authorization: **NO**.
+
+CAP-005 — Backup and Restore remains the sole unresolved P0 commercial blocker in the current CRG-001 position.
+
+## 52.3 Step 264V governance boundary
+
+Step 264V changes only governance/current-state currency. It does not alter the published CAP-004 engineering implementation, migration history, protected PWI-001 migrations or `manual_test_db.py`.
+
+No database access or database mutation is authorised or performed by Step 264V. No staging, commit or push is authorised by this closure step.
+
+Publication of the validated Step 264V five-path governance-currency update requires separate explicit approval.
 
 # END OF CGMS MASTER CONTINUATION PROMPT v2.0
