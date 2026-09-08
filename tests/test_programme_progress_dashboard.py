@@ -124,14 +124,14 @@ def test_registry_contains_governed_progress() -> None:
     ]
 
     assert dashboard["page"]["status"] == (
-        "Step 264U closure publication completed at "
-        "f1be3064604f4b4172561bd405710f0b491a0d25; CAP-004 remains Implemented / "
+        "Step 264V governance-currency publication completed at "
+        "f1980eb485fb8926e0628254cbc2fdb8b36c4008; CAP-004 remains Implemented / "
         "PILOT_READY with P0 priority retained and the "
         "commercial blocker closed"
     )
     assert dashboard["page"]["branch"] == "cgms-v2-roadmap"
     assert dashboard["governance"]["classification"] == (
-        "Approved Post-Publication Governance-Currency Closure — "
+        "Published Post-Publication Governance-Currency Closure — "
         "CAP-004 Step 264V"
     )
 
@@ -211,7 +211,7 @@ def test_authorized_viewer_can_open_progress() -> None:
     assert "6a51c09" in body
     assert "0140d4a" in body
     assert "Run #41" in body
-    assert "Step 264U closure publication completed" in body
+    assert "Step 264V governance-currency publication completed" in body
     assert "CAP-004 remains Implemented / PILOT_READY" in body
     assert "/patent-readiness/dashboard" in body
     assert "docker compose up -d db" in body
@@ -346,18 +346,18 @@ def test_registry_contains_pwi001_current_state() -> None:
         .build_view()
     )
 
-    assert dashboard["page"]["as_of"] == "31 August 2026"
+    assert dashboard["page"]["as_of"] == "2 September 2026"
     assert dashboard["page"]["current_sprint"] == "Sprint 22"
     assert dashboard["page"]["current_work"] == (
-        "CAP-004 Step 264V / Post-Publication Governance-Currency Closure"
+        "CAP-005 / Next Governed P0 Intervention Pending Approval"
     )
     assert dashboard["current_focus"][0] == (
-        "CAP-004 Step 264U closure publication completed"
+        "CAP-004 Step 264V governance-currency publication completed"
     )
     assert dashboard["upcoming"] == [
-        "Step 264V governance-currency publication requires separate explicit approval",
-        "No staging, commit or push authorised by Step 264V",
-        "CAP-005 and remaining P1 commercial blockers remain separately governed",
+        "CAP-005 remains the sole unresolved CRG-001 P0 commercial blocker",
+        "CAP-005 engineering action requires separate explicit approval",
+        "Remaining P1 commercial blockers remain separately governed",
     ]
     assert "unrelated repository mutation" in dashboard["governance"]["boundaries"]
 
@@ -595,7 +595,7 @@ def test_step_264t_readiness_currency_records_cap004_closure() -> None:
     dashboard = ProgrammeProgressRegistry().build_view()
 
     assert dashboard["page"]["current_work"] == (
-        "CAP-004 Step 264V / Post-Publication Governance-Currency Closure"
+        "CAP-005 / Next Governed P0 Intervention Pending Approval"
     )
 
     assert "PILOT_READY" in dashboard["page"]["status"]
@@ -628,7 +628,7 @@ def test_step_264t_readiness_currency_records_cap004_closure() -> None:
     )
 
     assert dashboard["governance"]["classification"] == (
-        "Approved Post-Publication Governance-Currency Closure — "
+        "Published Post-Publication Governance-Currency Closure — "
         "CAP-004 Step 264V"
     )
 

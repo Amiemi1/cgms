@@ -47,13 +47,13 @@ CAP-004 — Unified Persistent Enterprise Audit
 **Current sub-stage**
 
 ```text
-Step 264V — Controlled post-publication governance-currency closure complete; CAP-004 published at `f1be3064604f4b4172561bd405710f0b491a0d25`; publication of Step 264V changes separately governed
+Step 264V governance-currency publication complete at `f1980eb485fb8926e0628254cbc2fdb8b36c4008`; CAP-005 is the next governed P0 intervention and requires separate explicit approval
 ```
 
 **Exact next authorised action**
 
 ```text
-Step 264V governance-currency publication requires separate explicit approval
+CAP-005 engineering action requires separate explicit approval
 ```
 
 ---
@@ -74,7 +74,7 @@ The next assistant must not:
 - reset, clean, restore, stash or discard the working tree;
 - stage, commit or push files without a separately approved governance boundary;
 - modify `manual_test_db.py`;
-- stage, commit or push Step 264V governance-currency changes without separate explicit approval;
+- initiate CAP-005 engineering work without separate explicit approval;
 - treat historical “next action” statements as current instructions.
 
 Where an older historical statement conflicts with the current-state sections in this document, the current-state sections control.
@@ -5417,19 +5417,19 @@ Browser-auth/session-registry protected boundary:
 preserved; Step 264Q only propagates resolved workspace identity into unified audit evidence
 
 Working tree:
-5 unstaged governance/current-state paths under Step 264V; no engineering paths changed
+Resolve from live repository state; Step 264V governance-currency publication completed cleanly at `f1980eb485fb8926e0628254cbc2fdb8b36c4008`
 
 Staging:
-none
+Resolve from live repository state; this canonical record grants no standing staging authority
 
 Commit:
-Step 264U CAP-004 closure published at `f1be3064604f4b4172561bd405710f0b491a0d25`; Step 264V governance-currency work remains uncommitted
+Step 264V governance-currency publication commit: `f1980eb485fb8926e0628254cbc2fdb8b36c4008`; live Git HEAD controls current publication identity
 
 Push:
-Step 264U published on origin/cgms-v2-roadmap; Step 264V governance-currency work remains unpushed
+Step 264V published on `origin/cgms-v2-roadmap` at `f1980eb485fb8926e0628254cbc2fdb8b36c4008`; live remote ref controls current publication identity
 
 Next authorised action:
-Step 264V governance-currency publication requires separate explicit approval.
+CAP-005 engineering action requires separate explicit approval.
 ```
 
 Do not stage, commit or push from this canonical record alone. Resolve live repository state and obtain the applicable separate approval first.
@@ -5476,4 +5476,55 @@ No database access or database mutation is authorised or performed by Step 264V.
 
 Publication of the validated Step 264V five-path governance-currency update requires separate explicit approval.
 
+
+# 53. STEP 264W — STABLE POST-STEP264V PUBLICATION CURRENCY RECONCILIATION
+
+Step 264W was approved and executed on 2 September 2026 to reconcile the live governance/current-state surfaces after successful Step 264V publication.
+
+## 53.1 Step 264V published authority
+
+- branch: `cgms-v2-roadmap`;
+- Step 264V publication commit: `f1980eb485fb8926e0628254cbc2fdb8b36c4008`;
+- Step 264V publication parent: `f1be3064604f4b4172561bd405710f0b491a0d25`;
+- Step 264V publication payload: **5 manifest-locked governance/current-state paths**;
+- Step 264V publication reconciliation: **PASS**;
+- local, upstream and remote reconciled at publication: **PASS**;
+- worktree and index reconciled cleanly at publication: **PASS**;
+- history rewrite, force push, rebase and reset: **none**.
+
+## 53.2 Stable current programme currency
+
+- CAP-004 technical readiness: **IMPLEMENTED**;
+- CAP-004 Product Readiness status: **PILOT_READY**;
+- CAP-004 priority: **P0 — retained**;
+- CAP-004 commercial blocker: **closed**;
+- Product Readiness: **27%**;
+- pilot-scope readiness: **35%**;
+- overall CGMS completion: **46%**;
+- pilot-ready capabilities: **2**;
+- Product Readiness catalogue P0 gaps: **3**;
+- pilot-scope gaps: **23**;
+- open Product Readiness recommendations: **27**;
+- unresolved CRG-001 P0 commercial blockers: **1 — CAP-005**;
+- total unresolved commercial blockers: **7**;
+- commercial pilot verdict: **NOT READY**;
+- pilot authorization: **NO**.
+
+CAP-005 — Backup and Restore remains the sole unresolved P0 commercial blocker in the current CRG-001 position.
+
+## 53.3 Non-recursive publication-authority rule
+
+Current publication identity must be resolved from live Git repository state. Governance/current-state documents may record the last known published authority, but they do not require a subsequent governance commit solely to embed the SHA of their own publication commit.
+
+This rule prevents a recursive governance-currency cycle in which every publication would immediately make its own pre-publication commit, push or working-tree wording stale.
+
+Historical governance snapshots remain historical evidence and must not be rewritten to appear current. Where historical text conflicts with the live current-state sections, the live current-state sections and resolved Git authority control.
+
+## 53.4 Step 264W governance boundary
+
+Step 264W changes governance/current-state currency only. It does not modify CAP-004 engineering, migrations, protected PWI-001 migrations, `manual_test_db.py`, database state or unrelated repository content.
+
+Step 264W does not authorize CAP-005 engineering. CAP-005 implementation, validation and publication remain separately governed and require explicit approval.
+
+The canonical record itself grants no standing staging, commit or push authority. Any repository publication action must be governed by the applicable explicit approval and verified against live Git state.
 # END OF CGMS MASTER CONTINUATION PROMPT v2.0
