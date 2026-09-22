@@ -30,7 +30,7 @@ Before deployment:
 2. Confirm the repository is clean.
 3. Confirm the full regression suite is green.
 4. Complete `docs/deployment_checklist.md`.
-5. Provision the database and verify a current backup.
+5. Provision the database and verify a current governed CAP-005 backup.
 6. Supply secrets through the approved deployment secret mechanism.
 7. Configure HTTPS and reverse-proxy trust.
 8. Run the production preflight in the target runtime environment.
@@ -47,6 +47,9 @@ ENVIRONMENT=production
 CGMS_SQL_ECHO=false
 CGMS_DATABASE_STARTUP_POLICY=strict
 DATABASE_URL=<managed secret>
+CGMS_BACKUP_DATABASE_URL=<managed secret>
+CGMS_RESTORE_DATABASE_URL=<managed secret>
+CGMS_BACKUP_ENCRYPTION_KEY=<managed secret>
 CGMS_JWT_SECRET=<managed random secret>
 CGMS_SESSION_COOKIE_NAME=__Host-cgms_session
 CGMS_SESSION_EXPIRE_MINUTES=30
@@ -98,10 +101,33 @@ Before a release that changes models:
 
 1. compare model changes with the deployed schema;
 2. create and test an explicit database change and rollback procedure;
-3. capture a backup;
+3. create and verify a governed backup under the CAP-005 recovery runbook;
 4. obtain separate approval when a migration framework or schema redesign is
    required.
 
+## Database backup and recovery
+
+Use `docs/operations/database_backup_restore_runbook.md` as the
+authoritative CAP-005 operating procedure for backup, verification,
+recovery status, retention and restore validation.
+
+Before release continuation:
+
+- the latest governed backup must satisfy an RPO of no more than 24 hours;
+- SHA-256 integrity verification must pass;
+- AES-256-GCM authenticated encryption must be in force;
+- retention must preserve 7 daily, 4 weekly and 3 monthly recovery points;
+- a current isolated restore-validation record must exist within the
+  weekly cadence and before pilot authorization;
+- the restore target must be explicit and different from the backup source;
+- the tool-reported restore duration must satisfy the RTO of no more than
+  4 hours; and
+- retention deletion remains dry-run unless `--execute` is separately
+  authorized.
+
+Deployment approval does not by itself authorize a production restore.
+Do not include database URLs, credentials, encryption keys or plaintext
+backup content in deployment evidence.
 ## Application startup
 
 Example Uvicorn command behind an approved TLS-terminating platform:
@@ -221,7 +247,7 @@ Do not assume that application rollback reverses schema changes.
 When schema changes are involved:
 
 - stop deployment;
-- preserve a backup;
+- preserve the governed backup artifact and manifest;
 - use the release-specific approved database rollback procedure;
 - obtain separate architectural approval when no tested rollback exists.
 

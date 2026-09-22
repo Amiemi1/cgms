@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import base64
+import binascii
 import ipaddress
 import os
 import re
@@ -461,12 +463,244 @@ def _check_trusted_proxies(
     )
 
 
+
+
+def _recovery_database_identity(
+    value: str,
+) -> tuple[str, int, str] | None:
+    try:
+        parsed = urlsplit(value)
+        port = parsed.port or 5432
+    except ValueError:
+        return None
+
+    if parsed.scheme.casefold() not in {
+        "postgresql",
+        "postgresql+psycopg",
+    }:
+        return None
+
+    host = (
+        parsed.hostname
+        or ""
+    ).strip().casefold()
+
+    database = parsed.path.lstrip(
+        "/"
+    )
+
+    if not host or not database:
+        return None
+
+    return (
+        host,
+        port,
+        database,
+    )
+
+
+def _check_recovery_database_url(
+    environment: Mapping[str, str],
+    variable_name: str,
+) -> CheckResult:
+    value = environment.get(
+        variable_name,
+        "",
+    ).strip()
+
+    if not value:
+        return _result(
+            variable_name,
+            "FAIL",
+            "is required",
+        )
+
+    if _is_placeholder(value):
+        return _result(
+            variable_name,
+            "FAIL",
+            "must be a non-placeholder PostgreSQL URL",
+        )
+
+    identity = _recovery_database_identity(
+        value
+    )
+
+    if identity is None:
+        return _result(
+            variable_name,
+            "FAIL",
+            "must be a valid PostgreSQL URL",
+        )
+
+    return _result(
+        variable_name,
+        "PASS",
+        "is configured without displaying its value",
+    )
+
+
+def _check_backup_encryption_key(
+    environment: Mapping[str, str],
+) -> CheckResult:
+    variable_name = (
+        "CGMS_BACKUP_ENCRYPTION_KEY"
+    )
+
+    value = environment.get(
+        variable_name,
+        "",
+    ).strip()
+
+    if not value:
+        return _result(
+            variable_name,
+            "FAIL",
+            "is required",
+        )
+
+    try:
+        encoded = value.encode(
+            "ascii"
+        )
+
+        padded = (
+            encoded
+            + b"="
+            * (
+                -len(encoded)
+                % 4
+            )
+        )
+
+        decoded = base64.b64decode(
+            padded,
+            altchars=b"-_",
+            validate=True,
+        )
+
+    except (
+        UnicodeEncodeError,
+        binascii.Error,
+        ValueError,
+    ):
+        return _result(
+            variable_name,
+            "FAIL",
+            (
+                "must be URL-safe base64 "
+                "without displaying its value"
+            ),
+        )
+
+    if len(decoded) != 32:
+        return _result(
+            variable_name,
+            "FAIL",
+            "must decode to exactly 32 bytes",
+        )
+
+    return _result(
+        variable_name,
+        "PASS",
+        (
+            "is a structurally valid "
+            "32-byte encryption key"
+        ),
+    )
+
+
+def _check_recovery_configuration(
+    environment: Mapping[str, str],
+) -> list[CheckResult]:
+    backup_name = (
+        "CGMS_BACKUP_DATABASE_URL"
+    )
+    restore_name = (
+        "CGMS_RESTORE_DATABASE_URL"
+    )
+
+    backup_check = (
+        _check_recovery_database_url(
+            environment,
+            backup_name,
+        )
+    )
+
+    restore_check = (
+        _check_recovery_database_url(
+            environment,
+            restore_name,
+        )
+    )
+
+    results = [
+        backup_check,
+        restore_check,
+        _check_backup_encryption_key(
+            environment
+        ),
+    ]
+
+    if (
+        backup_check.status == "PASS"
+        and restore_check.status == "PASS"
+    ):
+        source_identity = (
+            _recovery_database_identity(
+                environment[
+                    backup_name
+                ].strip()
+            )
+        )
+
+        target_identity = (
+            _recovery_database_identity(
+                environment[
+                    restore_name
+                ].strip()
+            )
+        )
+
+        if source_identity == target_identity:
+            results.append(
+                _result(
+                    (
+                        "CGMS_RESTORE_DATABASE_URL "
+                        "topology"
+                    ),
+                    "FAIL",
+                    (
+                        "must identify a database "
+                        "different from "
+                        "CGMS_BACKUP_DATABASE_URL"
+                    ),
+                )
+            )
+        else:
+            results.append(
+                _result(
+                    (
+                        "CGMS_RESTORE_DATABASE_URL "
+                        "topology"
+                    ),
+                    "PASS",
+                    (
+                        "is distinct from the "
+                        "backup source database"
+                    ),
+                )
+            )
+
+    return results
+
 def run_preflight(
     environment: Mapping[str, str],
 ) -> list[CheckResult]:
     results: list[CheckResult] = [
         _check_environment(environment),
         *_check_database_url(environment),
+        *_check_recovery_configuration(environment),
         _check_secret(
             environment,
             "CGMS_JWT_SECRET",

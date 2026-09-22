@@ -100,6 +100,101 @@ jobs:
             pytest-asyncio==1.4.0 \
             httpx==0.28.1
 
+      - name: Validate CAP-005 recovery dependency and CLI
+        env:
+          DATABASE_URL: ""
+          CGMS_BACKUP_DATABASE_URL: ""
+          CGMS_RESTORE_DATABASE_URL: ""
+          CGMS_BACKUP_ENCRYPTION_KEY: ""
+        run: |
+          python - <<'PY'
+          import importlib.metadata
+          import pathlib
+          import subprocess
+          import sys
+          import tomllib
+
+          expected_runtime = "49.0.0"
+          expected_requirement = "cryptography==49.0.0"
+          expected_project = "cryptography>=49.0.0,<50.0.0"
+
+          requirements = pathlib.Path("requirements.txt").read_text(
+              encoding="utf-8"
+          ).splitlines()
+
+          if requirements.count(expected_requirement) != 1:
+              raise RuntimeError(
+                  "CAP-005 requires exactly one direct cryptography "
+                  "pin in requirements.txt"
+              )
+
+          project = tomllib.loads(
+              pathlib.Path("pyproject.toml").read_text(
+                  encoding="utf-8"
+              )
+          )
+
+          dependencies = project["project"]["dependencies"]
+
+          if dependencies.count(expected_project) != 1:
+              raise RuntimeError(
+                  "CAP-005 requires exactly one direct cryptography "
+                  "declaration in pyproject.toml"
+              )
+
+          runtime = importlib.metadata.version("cryptography")
+
+          if runtime != expected_runtime:
+              raise RuntimeError(
+                  "Unexpected cryptography runtime version: "
+                  f"{runtime}"
+              )
+
+          commands = [
+              ["--help"],
+              ["backup", "--help"],
+              ["verify", "--help"],
+              ["restore", "--help"],
+              ["prune", "--help"],
+              ["status", "--help"],
+          ]
+
+          for arguments in commands:
+              completed = subprocess.run(
+                  [
+                      sys.executable,
+                      "scripts/operations/database_recovery.py",
+                      *arguments,
+                  ],
+                  check=False,
+                  capture_output=True,
+                  text=True,
+              )
+
+              if completed.returncode != 0:
+                  raise RuntimeError(
+                      "CAP-005 CLI help failed for "
+                      f"{arguments}: {completed.stderr}"
+                  )
+
+          print(
+              "CAP-005 recovery dependency and CLI surface: PASS"
+          )
+          PY
+
+      - name: Run CAP-005 recovery safety tests
+        env:
+          DATABASE_URL: ""
+          CGMS_BACKUP_DATABASE_URL: ""
+          CGMS_RESTORE_DATABASE_URL: ""
+          CGMS_BACKUP_ENCRYPTION_KEY: ""
+        run: |
+          mkdir -p artifacts/test-results
+          python -m pytest \
+            -q \
+            tests/test_database_recovery.py \
+            tests/test_production_preflight.py \
+            --junitxml=artifacts/test-results/cap005-recovery-preflight.xml
       - name: Initialize isolated test database schema
         run: |
           python - <<'PY'
@@ -192,6 +287,7 @@ jobs:
           name: cgms-product-readiness-${{ github.run_number }}
           path: |
             artifacts/test-results/pytest.xml
+            artifacts/test-results/cap005-recovery-preflight.xml
             artifacts/product-readiness/product_readiness_report.json
             artifacts/product-readiness/product_readiness_summary.md
           if-no-files-found: warn

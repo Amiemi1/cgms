@@ -14,6 +14,20 @@ def _valid_environment() -> dict[str, str]:
             "user:strong-password@"
             "database.internal:5432/cgms"
         ),
+        "CGMS_BACKUP_DATABASE_URL": (
+            "postgresql+psycopg://"
+            "backup-user:backup-password@"
+            "database.internal:5432/cgms"
+        ),
+        "CGMS_RESTORE_DATABASE_URL": (
+            "postgresql+psycopg://"
+            "restore-user:restore-password@"
+            "restore.internal:5432/cgms_restore"
+        ),
+        "CGMS_BACKUP_ENCRYPTION_KEY": (
+            "MDEyMzQ1Njc4OWFiY2RlZjAxMjM0"
+            "NTY3ODlhYmNkZWY="
+        ),
         "CGMS_JWT_SECRET": (
             "jwt-secret-with-more-than-32-characters"
         ),
@@ -236,7 +250,99 @@ def test_rendered_output_never_contains_values(
         "CGMS_ALLOWED_ORIGINS"
     ] not in rendered
 
+    assert environment[
+        "CGMS_BACKUP_DATABASE_URL"
+    ] not in rendered
+
+    assert environment[
+        "CGMS_RESTORE_DATABASE_URL"
+    ] not in rendered
+
+    assert environment[
+        "CGMS_BACKUP_ENCRYPTION_KEY"
+    ] not in rendered
+
     assert (
         "No environment values are displayed."
         in rendered
+    )
+def test_missing_backup_database_url_fails(
+) -> None:
+    environment = _valid_environment()
+    environment[
+        "CGMS_BACKUP_DATABASE_URL"
+    ] = ""
+
+    assert (
+        _statuses(environment)[
+            "CGMS_BACKUP_DATABASE_URL"
+        ]
+        == "FAIL"
+    )
+
+
+def test_missing_restore_database_url_fails(
+) -> None:
+    environment = _valid_environment()
+    environment[
+        "CGMS_RESTORE_DATABASE_URL"
+    ] = ""
+
+    assert (
+        _statuses(environment)[
+            "CGMS_RESTORE_DATABASE_URL"
+        ]
+        == "FAIL"
+    )
+
+
+def test_restore_target_must_differ_from_backup_source(
+) -> None:
+    environment = _valid_environment()
+
+    environment[
+        "CGMS_RESTORE_DATABASE_URL"
+    ] = (
+        "postgresql+psycopg://"
+        "different-user:different-password@"
+        "database.internal:5432/cgms"
+    )
+
+    assert (
+        _statuses(environment)[
+            "CGMS_RESTORE_DATABASE_URL topology"
+        ]
+        == "FAIL"
+    )
+
+
+def test_invalid_backup_encryption_key_fails(
+) -> None:
+    environment = _valid_environment()
+
+    environment[
+        "CGMS_BACKUP_ENCRYPTION_KEY"
+    ] = "not-valid-@@"
+
+    assert (
+        _statuses(environment)[
+            "CGMS_BACKUP_ENCRYPTION_KEY"
+        ]
+        == "FAIL"
+    )
+
+
+def test_wrong_length_backup_encryption_key_fails(
+) -> None:
+    environment = _valid_environment()
+
+    environment[
+        "CGMS_BACKUP_ENCRYPTION_KEY"
+    ] = "YWJjZA=="
+
+    assert (
+        _statuses(environment)[
+            "CGMS_BACKUP_ENCRYPTION_KEY"
+        ]
+        == "FAIL"
     )

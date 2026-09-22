@@ -41,6 +41,12 @@ Approval reference:
 ## 3. Secrets and environment configuration
 
 - [ ] `DATABASE_URL` is supplied through the approved secret mechanism.
+- [ ] `CGMS_BACKUP_DATABASE_URL` is supplied through the approved secret
+      mechanism.
+- [ ] `CGMS_RESTORE_DATABASE_URL` identifies only an explicit approved
+      restore target and is distinct from the backup source.
+- [ ] `CGMS_BACKUP_ENCRYPTION_KEY` is supplied through the approved
+      secret mechanism and satisfies the 32-byte key contract.
 - [ ] `CGMS_JWT_SECRET` is random, at least 32 characters and not a
       placeholder.
 - [ ] A dedicated `CGMS_LOGIN_THROTTLE_SECRET` is configured or the
@@ -72,8 +78,23 @@ Approval reference:
 - [ ] Browser-session table availability is verified.
 - [ ] Browser-login throttle table availability is verified.
 - [ ] Security-log persistence is verified.
-- [ ] Backup completion and retention are verified.
-- [ ] Restore procedure has a current test record.
+- [ ] `docs/operations/database_backup_restore_runbook.md` is the
+      governing recovery procedure for this release.
+- [ ] Latest governed backup RPO is no more than 24 hours.
+- [ ] Backup SHA-256 integrity verification passed.
+- [ ] AES-256-GCM authenticated encryption is verified.
+- [ ] Retention is configured for 7 daily, 4 weekly and 3 monthly
+      recovery points.
+- [ ] Current isolated restore validation is within the weekly cadence.
+- [ ] A successful restore-validation record exists before pilot
+      authorization.
+- [ ] Restore target is explicit and different from the backup source.
+- [ ] Tool-reported restore duration satisfies the RTO of no more than
+      4 hours.
+- [ ] Retention deletion is dry-run unless `--execute` has explicit
+      authorization.
+- [ ] Recovery evidence excludes database URLs, credentials, encryption
+      keys and plaintext backup content.
 - [ ] Rollback implications of schema changes are reviewed.
 
 CGMS currently uses `SQLModel.metadata.create_all()` and does not have a
