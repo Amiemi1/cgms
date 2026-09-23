@@ -98,7 +98,7 @@ Part of the long-term platform vision.
 | CAP-002 | Role-Based Access Control | Governance | P0 | Yes | Yes | Partial | Critical | High | Critical | Pre-Pilot |
 | CAP-003 | Workspace Isolation | Governance / Memory | P0 | Yes | Yes | Implemented | Critical | High | Critical | Pre-Pilot |
 | CAP-004 | Persistent Audit Store | Governance | P0 | Yes | Yes | Implemented | Critical | High | Critical | Pre-Pilot |
-| CAP-005 | Backup and Restore | Operations | P0 | Yes | Yes | Planned | High | High | Critical | Pre-Pilot |
+| CAP-005 | Backup and Restore | Operations | P0 | Yes | Yes | Implemented | High | High | Critical | Pre-Pilot |
 | CAP-006 | Structured Organizational Memory | Memory | P1 | Yes | Yes | Implemented | Medium | Critical | Critical | MLP |
 | CAP-007 | Memory Lifecycle Actions | Memory | P1 | Yes | Yes | Implemented | Medium | High | High | MLP |
 | CAP-008 | Enterprise Memory Intelligence | Intelligence | P1 | Yes | Yes | Implemented | Medium | Critical | Critical | MLP |
@@ -528,5 +528,21 @@ The authoritative Product Readiness recalculation after CAP-004 promotion is:
 The CRG-001 commercial-readiness position now retains **one unresolved P0 blocker, CAP-005**, and **seven total commercial blockers**.
 
 CAP-004 remains P0 because persistent enterprise audit continues to be mandatory for pilot and production governance.
+
+The commercial pilot verdict remains **NOT READY**.
+
+---
+
+# 23. CAP-005 Readiness Currency Update
+
+**Update date:** 23 September 2026
+
+CAP-005 is **Implemented / PILOT_READY**, with **P0** priority retained.
+
+Published authority: `9c683d277f46eb2c6012759c3ff45e0221e84763`.
+
+Current metrics are **30% Product Readiness**, **39% pilot-scope readiness**, **2 catalogue P0 gaps**, **22 pilot-scope gaps**, **26 recommendations**, and **3 pilot-ready capabilities**.
+
+CRG-001 now has **zero unresolved P0 commercial blockers** and **six total unresolved commercial blockers**.
 
 The commercial pilot verdict remains **NOT READY**.

@@ -25,12 +25,12 @@ def test_standard_gate_passes_at_approved_baseline() -> None:
     assert report.mode == GateMode.STANDARD
 
     assert report.assessment.total_capabilities == 38
-    assert report.assessment.overall_score == 27
+    assert report.assessment.overall_score == 30
 
-    assert report.recommendation_count == 27
-    assert report.pilot_scope_score == 35
+    assert report.recommendation_count == 26
+    assert report.pilot_scope_score == 39
 
-    assert len(report.p0_blockers) == 3
+    assert len(report.p0_blockers) == 2
     assert "CAP-003" not in {
         gap.capability_id
         for gap in report.p0_blockers
@@ -39,11 +39,11 @@ def test_standard_gate_passes_at_approved_baseline() -> None:
         gap.capability_id
         for gap in report.p0_blockers
     }
-    assert "CAP-005" in {
+    assert "CAP-005" not in {
         gap.capability_id
         for gap in report.p0_blockers
     }
-    assert len(report.pilot_scope_gaps) == 23
+    assert len(report.pilot_scope_gaps) == 22
 
     assert all(
         check.passed
@@ -77,15 +77,15 @@ def test_strict_gate_reports_release_blockers() -> None:
     assert checks["pilot-scope-readiness"].passed is False
     assert checks["pilot-scope-score"].passed is False
 
-    assert len(report.p0_blockers) == 3
-    assert len(report.pilot_scope_gaps) > 0
+    assert len(report.p0_blockers) == 2
+    assert len(report.pilot_scope_gaps) == 22
     assert report.pilot_scope_score < 95
 
 
 def test_standard_gate_detects_readiness_regression() -> None:
     report = run_product_readiness_gate(
         mode=GateMode.STANDARD,
-        minimum_overall_score=28,
+        minimum_overall_score=31,
     )
 
     assert report.passed is False
@@ -100,8 +100,8 @@ def test_standard_gate_detects_readiness_regression() -> None:
     )
 
     assert baseline_check.passed is False
-    assert baseline_check.expected == ">= 28%"
-    assert baseline_check.actual == "27%"
+    assert baseline_check.expected == ">= 31%"
+    assert baseline_check.actual == "30%"
 
 
 def test_gate_detects_catalogue_count_mismatch() -> None:

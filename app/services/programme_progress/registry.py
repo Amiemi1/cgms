@@ -15,14 +15,17 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
             "Authoritative delivery, validation, governance, "
             "dashboard-access and startup register."
         ),
-        "as_of": "2 September 2026",
+        "as_of": "23 September 2026",
         "current_sprint": "Sprint 22",
-        "current_work": "CAP-005 / Next Governed P0 Intervention Pending Approval",
+        "current_work": (
+            "CAP-005 Published / Post-Publication Governance Currency"
+        ),
         "status": (
-            "Step 264V governance-currency publication completed at "
-            "f1980eb485fb8926e0628254cbc2fdb8b36c4008; CAP-004 remains Implemented / "
-            "PILOT_READY with P0 priority retained and the "
-            "commercial blocker closed"
+            "CAP-005 engineering published at "
+            "9c683d277f46eb2c6012759c3ff45e0221e84763; "
+            "Backup and Restore is Implemented / PILOT_READY, "
+            "its CRG-001 P0 commercial blocker is closed, and "
+            "the commercial pilot verdict remains NOT READY"
         ),
         "branch": "cgms-v2-roadmap",
         "canonical_record": (
@@ -32,20 +35,20 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
     "summary": [
         {
             "label": "Current milestone",
-            "value": "CAP-004 Step 264T",
+            "value": "CAP-005 Published",
             "detail": (
-                "Step 264S readiness reassessment passed and Step 264T "
-                "records CAP-004 as PILOT_READY, closes its commercial "
-                "blocker and preserves publication as a separate boundary"
+                "CAP-005 is published as Implemented / PILOT_READY; "
+                "P0 priority is retained and its CRG-001 commercial "
+                "blocker is closed"
             ),
         },
         {
             "label": "Current regression suite",
-            "value": "696 passed",
+            "value": "739 passed",
             "detail": (
-                "Complete Step 264R regression passed against isolated "
-                "PostgreSQL 16.14 / pgvector 0.8.6 with 37 known "
-                "non-blocking deprecation warnings"
+                "Product Readiness CI run #46 passed with 739 tests "
+                "and 38 known non-blocking warnings; CAP-005 focused "
+                "recovery/preflight validation recorded 55 passed"
             ),
         },
         {
@@ -60,20 +63,18 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
         },
         {
             "label": "Latest published checkpoint",
-            "value": "6a51c09",
+            "value": "9c683d2",
             "detail": (
-                "Published Step 264O governance closure baseline; "
-                "current CAP-004 Step 264Q-264T work remains "
-                "unstaged and unpublished"
+                "Published CAP-005 backup and recovery engineering "
+                "at 9c683d277f46eb2c6012759c3ff45e0221e84763"
             ),
         },
         {
             "label": "GitHub Actions",
-            "value": "Run #41 — Success",
+            "value": "Run #46 — Success",
             "detail": (
-                "Latest published Product Readiness CI passed for "
-                "correction commit fe313621; published governance "
-                "baseline subsequently closed at 6a51c095"
+                "Product Readiness CI run #46 passed for the "
+                "published CAP-005 engineering authority"
             ),
         },
         {
@@ -89,10 +90,10 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
             "label": "Pilot readiness",
             "value": "NOT READY",
             "detail": (
-                "CAP-004 commercial blocker is closed after the Step 264S "
-                "PASS determination and Step 264T promotion; CAP-005 "
-                "remains the unresolved P0 commercial blocker and the "
-                "pilot verdict remains NOT READY"
+                "CAP-005 closes the final unresolved CRG-001 P0 "
+                "commercial blocker. The pilot verdict remains NOT READY "
+                "because other Product Readiness, pilot-scope and P1 "
+                "commercial gaps remain open"
             ),
         },
     ],
@@ -200,16 +201,16 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
         },
     ],
     "current_focus": [
-        "CAP-004 Step 264V governance-currency publication completed",
-        "CAP-004 remains Implemented / PILOT_READY; P0 retained",
-        "696-test PostgreSQL 16 / pgvector complete regression remains green",
-        "CRG-001 CAP-004 commercial blocker closed; CAP-005 remains P0",
-        "Product Readiness 27% / pilot-scope readiness 35% / overall completion 46%",
+        "CAP-005 engineering published; Product Readiness CI run #46 passed",
+        "CAP-005 remains P0 and is now Implemented / PILOT_READY",
+        "Real PostgreSQL 16 / pgvector backup-and-restore validation passed",
+        "CRG-001 unresolved P0 commercial blockers reduced to zero",
+        "Product Readiness 30% / pilot-scope readiness 39% / overall completion 48%",
     ],
     "upcoming": [
-        "CAP-005 remains the sole unresolved CRG-001 P0 commercial blocker",
-        "CAP-005 engineering action requires separate explicit approval",
         "Remaining P1 commercial blockers remain separately governed",
+        "Two catalogue-level P0 Product Readiness gaps remain open",
+        "Commercial pilot verdict remains NOT READY pending remaining gates",
     ],
     "sprints": [
         {
@@ -511,16 +512,15 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
                 "Isolation Foundation"
             ),
             "status": (
-                "CAP-003 closure published; CAP-004 Step 264T readiness "
-                    "currency complete; publication pending separate approval"
+                "Complete — CAP-003 and CAP-004 closures published"
             ),
-            "status_class": "active",
+            "status_class": "complete",
             "summary": (
                 "PWI-001 Step 187F completed integrated cross-workspace "
                 "isolation validation across Bearer and persistent browser "
                 "transports, migration integrity, complete regression and "
-                "effective route uniqueness. Publication remains pending "
-                "separate explicit approval."
+                "effective route uniqueness. The governed workspace and "
+                "CAP-004 closure are published."
             ),
             "milestones": [
                 {
@@ -560,15 +560,34 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
                         "Integrated Closure"
                     ),
                     "status": (
-                        "Technical closure complete and validated; "
-                        "governance currency recorded; publication pending"
+                        "Complete, validated, governance-reconciled "
+                        "and published"
                     ),
-                    "status_class": "active",
+                    "status_class": "complete",
                 },
             ],
         },
     ],
     "validation": [
+        {
+            "title": "CAP-005 publication and readiness closure",
+            "result": "PASS — PILOT_READY",
+            "detail": (
+                "Published at 9c683d277f46eb2c6012759c3ff45e0221e84763; "
+                "Product Readiness CI run #46 passed; Product Readiness "
+                "is 30%, pilot-scope readiness is 39%, and the final "
+                "CRG-001 P0 commercial blocker is closed"
+            ),
+        },
+        {
+            "title": "CAP-005 real PostgreSQL recovery validation",
+            "result": "PASS — real backup/restore",
+            "detail": (
+                "PostgreSQL 16 / pgvector 0.8.6 encrypted manifest-v2 "
+                "backup, verification and explicit-target restore passed "
+                "with deterministic restored-state equality"
+            ),
+        },
         {
             "title": "CAP-004 Step 264T readiness-currency closure",
             "result": "PASS — PILOT_READY",
@@ -829,6 +848,14 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
     ],
     "commits": [
         {
+            "hash": "9c683d2",
+            "title": (
+                "feat(operations): add governed database "
+                "backup and recovery"
+            ),
+            "status": "Published",
+        },
+        {
             "hash": "6b8a00d",
             "title": (
                 "fix(ci): stabilize product readiness "
@@ -1061,25 +1088,27 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
     "governance": {
         "rule": "Engineering Governance Rule EG-001",
         "classification": (
-            "Published Post-Publication Governance-Currency Closure — "
-            "CAP-004 Step 264V"
+            "CAP-005 Post-Publication Governance-Currency Reconciliation"
         ),
-        "approval_date": "31 August 2026",
-        "published_authority": "f1980eb485fb8926e0628254cbc2fdb8b36c4008",
+        "approval_date": "23 September 2026",
+        "published_authority": (
+            "9c683d277f46eb2c6012759c3ff45e0221e84763"
+        ),
         "canonical_record": (
             "docs/CGMS_MASTER_CONTINUATION_PROMPT_v2.0.md"
         ),
         "scope": (
-            "Controlled post-publication governance-currency closure "
-            "recording Step 264V publication authority, CAP-004 "
-            "published closure, retained PILOT_READY/P0 status and "
-            "CAP-005 as the remaining unresolved P0 blocker."
+            "Controlled post-publication reconciliation recording "
+            "published CAP-005 recovery, PILOT_READY/P0 status and "
+            "current Product Readiness metrics."
         ),
         "boundaries": (
-            "CAP-004 P0 priority retained and blocker closed; CAP-005 "
-            "remains the unresolved P0 commercial blocker; pilot verdict "
-            "remains NOT READY; no database access or unrelated repository mutation "
-            "is authorised by this currency reconciliation; CAP-005 engineering requires separate explicit approval."
+            "CAP-005 P0 priority retained and commercial blocker closed; "
+            "zero unresolved CRG-001 P0 commercial blockers remain; "
+            "pilot verdict remains NOT READY because separate Product "
+            "Readiness and P1 gaps remain; no production database mutation "
+            "or unrelated engineering work is authorised; live Git state "
+            "controls publication identity."
         ),
     },
 }

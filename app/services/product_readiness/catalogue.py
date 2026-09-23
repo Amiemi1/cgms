@@ -170,11 +170,23 @@ PRODUCT_CAPABILITIES: tuple[Capability, ...] = (
         CapabilityPriority.P0,
         "Yes",
         "Yes",
-        "Planned",
+        "Implemented",
         "High",
         "High",
         "Critical",
         "Pre-Pilot",
+        status_override=CapabilityStatus.PILOT_READY,
+        security_reviewed=True,
+        tests_passing=True,
+        documented=True,
+        evidence_note=(
+            "Published at 9c683d277f46eb2c6012759c3ff45e0221e84763; "
+            "55 focused recovery/preflight tests passed; real PostgreSQL "
+            "16 / pgvector backup-and-restore validation passed; "
+            "manifest-v2 tamper controls, RPO/RTO, retention and cleanup "
+            "validated; Product Readiness CI run #46 passed with "
+            "739 tests and 38 known warnings."
+        ),
     ),
     _capability(
         "CAP-006",

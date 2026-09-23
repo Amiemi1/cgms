@@ -111,9 +111,9 @@ Part of the long-term platform vision.
 |---|---|---|---|---:|---:|---|---|---|---|---|
 | CAP-001 | Secure Authentication | Governance | P0 | Yes | Yes | Partial | Critical | High | Critical | Pre-Pilot |
 | CAP-002 | Role-Based Access Control | Governance | P0 | Yes | Yes | Partial | Critical | High | Critical | Pre-Pilot |
-| CAP-003 | Workspace Isolation | Governance / Memory | P0 | Yes | Yes | Partial | Critical | High | Critical | Pre-Pilot |
-| CAP-004 | Persistent Audit Store | Governance | P0 | Yes | Yes | Partial | Critical | High | Critical | Pre-Pilot |
-| CAP-005 | Backup and Restore | Operations | P0 | Yes | Yes | Planned | High | High | Critical | Pre-Pilot |
+| CAP-003 | Workspace Isolation | Governance / Memory | P0 | Yes | Yes | Implemented | Critical | High | Critical | Pre-Pilot |
+| CAP-004 | Persistent Audit Store | Governance | P0 | Yes | Yes | Implemented | Critical | High | Critical | Pre-Pilot |
+| CAP-005 | Backup and Restore | Operations | P0 | Yes | Yes | Implemented | High | High | Critical | Pre-Pilot |
 | CAP-006 | Structured Organizational Memory | Memory | P1 | Yes | Yes | Implemented | Medium | Critical | Critical | MLP |
 | CAP-007 | Memory Lifecycle Actions | Memory | P1 | Yes | Yes | Implemented | Medium | High | High | MLP |
 | CAP-008 | Enterprise Memory Intelligence | Intelligence | P1 | Yes | Yes | Implemented | Medium | Critical | Critical | MLP |
@@ -477,7 +477,90 @@ It will assess the current codebase and product against:
 CGMS will prioritize commercial credibility over broad feature expansion.
 
 No P3 or P4 capability should displace unresolved P0 commercial blockers or P1 MLP requirements without explicit approval under EG-001.
-"""
+
+---
+
+# 21. CAP-003 Readiness Currency Update
+
+**Update date:** 18 August 2026
+
+**Decision:** Step 264M read-only readiness reassessment
+
+**Currency action:** Step 264N controlled Product Readiness update
+
+The CAP-003 technical-readiness row is updated from **Partial** to **Implemented**. The authoritative Product Readiness catalogue advances CAP-003 to **PILOT_READY** within the assessed Workspace Isolation boundary.
+
+The promotion is supported by:
+
+- persistent Workspace, membership and workspace-control models;
+- PostgreSQL-enforced ownership across all 11 tenant-scoped tables;
+- authenticated browser and Bearer workspace resolution;
+- cross-workspace record, raw-SQL and route denial contracts;
+- persistent lifecycle and quota authority;
+- workspace-scoped connector ingestion and metrics access;
+- ordered and idempotent PostgreSQL 16 / pgvector migrations;
+- a complete isolated PostgreSQL regression with 685 passed tests.
+
+CAP-003 does not claim durable connector-health history, persistent connector configuration and credentials, production connector completion or durable workspace-metrics history. Those remain governed by CAP-018, CAP-019 and CAP-023.
+
+The Product Readiness gate retains four catalogue-level P0 gaps. The CRG-001 commercial-readiness position retains two unresolved P0 blockers, CAP-004 and CAP-005, and eight total commercial blockers.
+
+The commercial pilot verdict remains **NOT READY**.
+---
+
+# 22. CAP-004 Readiness Currency Update
+
+**Update date:** 25 August 2026
+
+**Decision:** Step 264S read-only CAP-004 readiness reassessment — PASS for promotion eligibility
+
+**Currency action:** Step 264T controlled Product Readiness and governance-currency update
+
+The CAP-004 technical-readiness row is updated from **Partial** to **Implemented**. The authoritative Product Readiness catalogue advances CAP-004 to **PILOT_READY** while retaining its **P0** priority.
+
+Step 264U subsequently published the validated CAP-004 closure at `f1be3064604f4b4172561bd405710f0b491a0d25`; CAP-004 remains **P0**, its commercial blocker remains closed, and CAP-005 remains the unresolved P0 commercial blocker.
+
+The promotion is supported by:
+
+- one unified persistent audit schema spanning security, domain events, explainability and governance;
+- deterministic legacy-security backfill and origin idempotence;
+- database-enforced append-only controls;
+- workspace-scoped reads and cross-workspace denial;
+- explicit privileged global reads;
+- persistent Event Bus and explainability convergence;
+- transactional producer convergence;
+- ordered and idempotent PostgreSQL 16 / pgvector migration validation;
+- a complete isolated regression with **696 passed** tests and no failures.
+
+The authoritative Product Readiness recalculation after CAP-004 promotion is:
+
+- overall Product Readiness: **27%**;
+- pilot-scope readiness: **35%**;
+- catalogue-level P0 gaps: **3**;
+- pilot-scope gaps: **23**;
+- open Product Readiness recommendations: **27**.
+
+The CRG-001 commercial-readiness position now retains **one unresolved P0 blocker, CAP-005**, and **seven total commercial blockers**.
+
+CAP-004 remains P0 because persistent enterprise audit continues to be mandatory for pilot and production governance.
+
+The commercial pilot verdict remains **NOT READY**.
+
+---
+
+# 23. CAP-005 Readiness Currency Update
+
+**Update date:** 23 September 2026
+
+CAP-005 is **Implemented / PILOT_READY**, with **P0** priority retained.
+
+Published authority: `9c683d277f46eb2c6012759c3ff45e0221e84763`.
+
+Current metrics are **30% Product Readiness**, **39% pilot-scope readiness**, **2 catalogue P0 gaps**, **22 pilot-scope gaps**, **26 recommendations**, and **3 pilot-ready capabilities**.
+
+CRG-001 now has **zero unresolved P0 commercial blockers** and **six total unresolved commercial blockers**.
+
+The commercial pilot verdict remains **NOT READY**."""
 
 
 def main() -> None:

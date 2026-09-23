@@ -9,15 +9,15 @@ def test_executive_value_model_contains_approved_completion_metrics() -> None:
     model = build_commercial_value_view()
 
     assert model["model"]["version"] == "1.0"
-    assert model["completion"]["overall_percent"] == 46
-    assert model["completion"]["product_readiness_percent"] == 27
-    assert model["completion"]["pilot_readiness_percent"] == 35
+    assert model["completion"]["overall_percent"] == 48
+    assert model["completion"]["product_readiness_percent"] == 30
+    assert model["completion"]["pilot_readiness_percent"] == 39
 
     assert model["completion"]["inputs"] == {
         "implemented": 9,
         "in_progress": 17,
-        "not_started": 10,
-        "pilot_ready": 2,
+        "not_started": 9,
+        "pilot_ready": 3,
         "production_ready": 0,
         "total_capabilities": 38,
     }
@@ -99,7 +99,7 @@ def test_executive_value_model_returns_isolated_copies() -> None:
 
     second = build_commercial_value_view()
 
-    assert second["completion"]["overall_percent"] == 46
+    assert second["completion"]["overall_percent"] == 48
 
 
 def test_market_comparison_is_explicit_and_product_by_product() -> None:

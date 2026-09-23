@@ -17,7 +17,7 @@ _EXECUTIVE_VALUE_MODEL: Final[dict[str, Any]] = {
     "model": {
         "name": "CGMS Executive Value Model",
         "version": "1.0",
-        "as_of": "18 August 2026",
+        "as_of": "23 September 2026",
         "classification": (
             "Governed management planning estimate — "
             "not a formal investment valuation"
@@ -33,7 +33,7 @@ _EXECUTIVE_VALUE_MODEL: Final[dict[str, Any]] = {
         },
     },
     "completion": {
-        "overall_percent": 46,
+        "overall_percent": 48,
         "method": (
             "Weighted capability-completion index using the governed "
             "38-capability Product Readiness estate"
@@ -41,16 +41,16 @@ _EXECUTIVE_VALUE_MODEL: Final[dict[str, Any]] = {
         "inputs": {
             "implemented": 9,
             "in_progress": 17,
-            "not_started": 10,
-            "pilot_ready": 2,
+            "not_started": 9,
+            "pilot_ready": 3,
             "production_ready": 0,
             "total_capabilities": 38,
         },
         "weights": deepcopy(
             _OVERALL_COMPLETION_STATUS_WEIGHTS
         ),
-        "product_readiness_percent": 27,
-        "pilot_readiness_percent": 35,
+        "product_readiness_percent": 30,
+        "pilot_readiness_percent": 39,
         "interpretation": (
             "Overall Completion measures progress through the build-to-scale "
             "journey. Product Readiness and Pilot Readiness remain separate "
@@ -1139,12 +1139,12 @@ _EXECUTIVE_VALUE_MODEL: Final[dict[str, Any]] = {
         "Patent and IP evidence programme",
     ],
     "value_risks": [
-        "Three unresolved P0 Product Readiness blockers",
-        "Two pilot-ready capabilities",
+        "Two unresolved P0 Product Readiness blockers",
+        "Three pilot-ready capabilities",
         "Zero production-ready capabilities",
         "Product Experience category score of 7%",
         "Integrations category score of 13%",
-        "Backup and Restore not started",
+        "Remaining pilot-scope gaps prevent pilot authorization",
         "No commercial traction assumed in the current valuation",
     ],
     "market_intelligence": {

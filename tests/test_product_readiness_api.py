@@ -75,7 +75,7 @@ def test_capabilities_include_calculated_scores() -> None:
         }
 
         assert capabilities["CAP-001"]["score"] == 20
-        assert capabilities["CAP-005"]["score"] == 0
+        assert capabilities["CAP-005"]["score"] == 100
         assert capabilities["CAP-006"]["score"] == 55
 
     finally:

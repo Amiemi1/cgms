@@ -858,3 +858,34 @@ CAP-004 closure does not establish:
 CAP-004 no longer blocks commercial pilot entry on enterprise-audit grounds. CAP-005 remains an unresolved P0 commercial blocker and additional P1 commercial blockers remain open.
 
 **Current pilot-readiness verdict: NOT READY.**
+
+---
+
+## 18. Post-Assessment Remediation Update — CAP-005
+
+**Update date:** 23 September 2026
+
+**Capability:** CAP-005 — Backup and Restore
+
+**Status:** Implemented / PILOT_READY; engineering published at `9c683d277f46eb2c6012759c3ff45e0221e84763`.
+
+Real PostgreSQL 16 / pgvector 0.8.6 encrypted backup, manifest-v2 verification and explicit-target restore validation passed. Product Readiness CI run #46 recorded **55 focused tests passed** and **739 passed with 38 known warnings** for the complete suite.
+
+### 18.1 Readiness transition
+
+| Capability | Previous Current Position | Post-CAP-005 Position | Commercial-Blocker Effect |
+|---|---|---|---|
+| CAP-005 — Backup and Restore | Planned / Not Ready | Implemented / PILOT_READY | Resolved |
+
+Current Product Readiness is **30%**, pilot-scope readiness is **39%**, catalogue P0 gaps are **2**, pilot-scope gaps are **22**, and open recommendations are **26**.
+
+### 18.2 Current commercial-blocker position
+
+- unresolved CRG-001 P0 commercial blockers: **1 to 0**;
+- total commercial blockers: **7 to 6**.
+
+There are now **zero unresolved CRG-001 P0 commercial blockers**.
+
+Other Product Readiness, pilot-scope and P1 gaps remain open.
+
+**Current pilot-readiness verdict: NOT READY.**

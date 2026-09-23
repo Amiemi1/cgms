@@ -23,7 +23,7 @@ docs/CGMS_MASTER_CONTINUATION_PROMPT_v2.0.md
 **Comprehensive handoff date**
 
 ```text
-19 August 2026
+23 September 2026
 ```
 
 **Current programme**
@@ -41,19 +41,19 @@ Sprint 22
 **Current intervention**
 
 ```text
-CAP-004 — Unified Persistent Enterprise Audit
+CAP-005 — Governed Backup and Restore Closure
 ```
 
 **Current sub-stage**
 
 ```text
-Step 264V governance-currency publication complete at `f1980eb485fb8926e0628254cbc2fdb8b36c4008`; CAP-005 is the next governed P0 intervention and requires separate explicit approval
+CAP-005 engineering published at `9c683d277f46eb2c6012759c3ff45e0221e84763`; Product Readiness CI run #46 passed; post-publication governance currency records CAP-005 as Implemented / PILOT_READY with its CRG-001 P0 commercial blocker closed
 ```
 
 **Exact next authorised action**
 
 ```text
-CAP-005 engineering action requires separate explicit approval
+Resolve live repository state and proceed only under the next separately approved governed intervention; this canonical record grants no standing staging, commit or push authority
 ```
 
 ---
@@ -74,7 +74,6 @@ The next assistant must not:
 - reset, clean, restore, stash or discard the working tree;
 - stage, commit or push files without a separately approved governance boundary;
 - modify `manual_test_db.py`;
-- initiate CAP-005 engineering work without separate explicit approval;
 - treat historical “next action” statements as current instructions.
 
 Where an older historical statement conflicts with the current-state sections in this document, the current-state sections control.
@@ -5378,34 +5377,34 @@ Product Readiness gate status:
 standard PASS; strict NOT READY
 
 Product Readiness:
-27%
+30%
 
 Pilot-scope readiness:
-35%
+39%
 
 Overall completion:
-46%
+48%
 
 Pilot-ready capabilities:
-2
-
-Product Readiness engine P0 gaps:
 3
 
+Product Readiness engine P0 gaps:
+2
+
 Pilot-scope gaps:
-23
+22
 
 Open Product Readiness recommendations:
-27
+26
 
 Registered capabilities:
 38
 
 P0 commercial blockers:
-1 unresolved CRG-001 P0 blocker: CAP-005
+0 unresolved CRG-001 P0 commercial blockers
 
 Total unresolved commercial blockers:
-7
+6
 
 Protected manual_test_db.py:
 unchanged
@@ -5416,20 +5415,32 @@ unchanged
 Browser-auth/session-registry protected boundary:
 preserved; Step 264Q only propagates resolved workspace identity into unified audit evidence
 
+CAP-005 Product Readiness status:
+Implemented / PILOT_READY; P0 priority retained
+
+CAP-005 engineering publication:
+`9c683d277f46eb2c6012759c3ff45e0221e84763`
+
+CAP-005 publication CI:
+Product Readiness CI run #46 PASS; 55 focused CAP-005 recovery/preflight tests passed; full regression 739 passed with 38 known warnings
+
+CAP-005 isolated PostgreSQL validation:
+PASS on PostgreSQL 16 / pgvector 0.8.6 with encrypted manifest-v2 backup, verification, explicit-target restore and deterministic restored-state equality
+
 Working tree:
-Resolve from live repository state; Step 264V governance-currency publication completed cleanly at `f1980eb485fb8926e0628254cbc2fdb8b36c4008`
+Resolve from live repository state; CAP-005 engineering publication completed cleanly at `9c683d277f46eb2c6012759c3ff45e0221e84763`
 
 Staging:
 Resolve from live repository state; this canonical record grants no standing staging authority
 
 Commit:
-Step 264V governance-currency publication commit: `f1980eb485fb8926e0628254cbc2fdb8b36c4008`; live Git HEAD controls current publication identity
+CAP-005 engineering publication commit: `9c683d277f46eb2c6012759c3ff45e0221e84763`; live Git HEAD controls current publication identity
 
 Push:
-Step 264V published on `origin/cgms-v2-roadmap` at `f1980eb485fb8926e0628254cbc2fdb8b36c4008`; live remote ref controls current publication identity
+CAP-005 engineering is published on `origin/cgms-v2-roadmap` at `9c683d277f46eb2c6012759c3ff45e0221e84763`; live remote ref controls current publication identity
 
 Next authorised action:
-CAP-005 engineering action requires separate explicit approval.
+Resolve live repository state and proceed only under a separately approved governed intervention.
 ```
 
 Do not stage, commit or push from this canonical record alone. Resolve live repository state and obtain the applicable separate approval first.
@@ -5527,4 +5538,45 @@ Step 264W changes governance/current-state currency only. It does not modify CAP
 Step 264W does not authorize CAP-005 engineering. CAP-005 implementation, validation and publication remain separately governed and require explicit approval.
 
 The canonical record itself grants no standing staging, commit or push authority. Any repository publication action must be governed by the applicable explicit approval and verified against live Git state.
+
+# 54. STEP 264X — CAP-005 POST-PUBLICATION GOVERNANCE-CURRENCY RECONCILIATION
+
+Step 264X was approved on 23 September 2026 following successful CAP-005 engineering publication on 22 September 2026.
+
+## 54.1 Published authority
+
+- branch: `cgms-v2-roadmap`;
+- CAP-005 engineering commit: `9c683d277f46eb2c6012759c3ff45e0221e84763`;
+- Product Readiness CI run #46: **PASS**;
+- focused CAP-005 recovery/preflight regression: **55 passed**;
+- complete CI regression: **739 passed, 38 known warnings**.
+
+## 54.2 Current CAP-005 position
+
+CAP-005 provides governed encrypted PostgreSQL backup and restore, authenticated manifest-v2 integrity, explicit restore targeting, RPO/RTO governance, retention controls, preflight validation and operator recovery documentation.
+
+Real PostgreSQL 16 / pgvector 0.8.6 validation passed encrypted backup, authentication, verification and explicit-target restore with deterministic source/restored-state equality.
+
+| Capability | Previous Position | Current Position | Commercial Effect |
+|---|---|---|---|
+| CAP-005 — Backup and Restore | Planned / Not Ready | Implemented / PILOT_READY | Resolved |
+
+CAP-005 remains **P0**.
+
+Current metrics:
+
+- Product Readiness: **30%**;
+- pilot-scope readiness: **39%**;
+- overall completion: **48%**;
+- pilot-ready capabilities: **3**;
+- Product Readiness P0 gaps: **2**;
+- pilot-scope gaps: **22**;
+- open recommendations: **26**.
+
+CRG-001 unresolved P0 commercial blockers are reduced from **1 to 0** and total unresolved commercial blockers from **7 to 6**.
+
+The commercial pilot verdict remains **NOT READY** because separate Product Readiness, pilot-scope and P1 gaps remain open.
+
+Historical programme evidence remains historical. This record grants no standing staging, commit, push, deployment or production-database authority.
+
 # END OF CGMS MASTER CONTINUATION PROMPT v2.0

@@ -205,3 +205,37 @@ def test_cap003_remediation_delta_preserves_history_and_updates_currency() -> No
         "**Current pilot-readiness verdict: NOT READY.**"
         in source
     )
+
+def test_cap005_remediation_delta_closes_final_crg001_p0_blocker() -> None:
+    source = report_source()
+
+    assert (
+        "## 18. Post-Assessment Remediation Update — CAP-005"
+        in source
+    )
+
+    assert (
+        "CAP-005 — Backup and Restore | Planned / Not Ready | "
+        "Implemented / PILOT_READY | Resolved"
+        in source
+    )
+
+    assert (
+        "unresolved CRG-001 P0 commercial blockers: **1 to 0**"
+        in source
+    )
+
+    assert (
+        "total commercial blockers: **7 to 6**"
+        in source
+    )
+
+    assert (
+        "zero unresolved CRG-001 P0 commercial blockers"
+        in source
+    )
+
+    assert (
+        "**Current pilot-readiness verdict: NOT READY.**"
+        in source
+    )
