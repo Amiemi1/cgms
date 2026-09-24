@@ -454,6 +454,84 @@ td {
     outline: none;
 }
 
+
+/* Dashboard usability: presentation only; full-dataset scores remain authoritative. */
+[hidden] { display: none !important; }
+.card, .content-grid > *, .header > *, .header-actions { min-width: 0; }
+.header { padding: 20px 28px; gap: 16px; }
+.title { font-size: clamp(1.45rem, 3vw, 1.85rem); }
+.page { padding: 22px 28px 32px; }
+.summary-grid { gap: 14px; }
+.card { padding: 18px; }
+.metric-value { font-size: 32px; margin-bottom: 5px; }
+.metric-detail { margin-top: 8px; line-height: 1.5; }
+.content-grid { grid-template-columns: minmax(235px, .7fr) minmax(0, 2.3fr); align-items: start; }
+.score-panel { min-height: 0; }
+.score-display { padding-bottom: 12px; }
+.score-ring { width: 150px; height: 150px; }
+.score-ring::before { width: 120px; height: 120px; }
+.score-number { font-size: 36px; }
+.ui-note { color: var(--muted); font-size: 13px; line-height: 1.5; margin: 8px 0 12px; }
+.ui-disclosure > summary { cursor: pointer; font-weight: 700; line-height: 1.5; }
+.ui-disclosure[open] > summary { margin-bottom: 14px; }
+.ui-disclosure > summary::marker { color: var(--accent); }
+.ui-disclosure { min-width: 0; }
+.category-list { max-height: 24rem; overflow-y: auto; padding-right: 8px; }
+.control-grid { display: grid; grid-template-columns: minmax(180px, 1.8fr) repeat(2, minmax(115px, 1fr)); gap: 10px; margin-bottom: 12px; }
+.control-grid label { display: grid; gap: 6px; min-width: 0; color: var(--muted); font-size: 12px; font-weight: 700; }
+.control-grid input, .control-grid select, .pager select { width: 100%; min-height: 40px; min-width: 0; padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--text); font: inherit; }
+.pager { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-top: 12px; color: var(--muted); font-size: 12px; }
+.pager-controls { display: flex; align-items: center; flex-wrap: wrap; gap: 7px; }
+.pager select { width: auto; min-height: 36px; }
+.ui-button { padding: 8px 12px; min-height: 36px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--text); font-size: 12px; cursor: pointer; }
+.ui-button:hover:not(:disabled) { background: var(--surface-hover); }
+.ui-button:disabled { opacity: .45; cursor: not-allowed; }
+:where(button, input, select, summary, a):focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.table-wrapper { max-height: 36rem; overflow: auto; border: 1px solid var(--border); border-radius: 10px; }
+table { min-width: 610px; }
+thead th { position: sticky; top: 0; z-index: 1; background: var(--surface); }
+th, td { padding: 11px 12px; }
+.capability-name, .recommendation-title, .recommendation-body { overflow-wrap: anywhere; }
+.badge.pilot_ready, .badge.pilot-ready { color: var(--success); border-color: rgba(67,209,125,.42); background: rgba(67,209,125,.1); }
+.recommendation-list { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+.recommendation-header { gap: 10px; }
+.recommendation { padding: 14px; min-width: 0; }
+.recommendation .badge { flex: 0 0 auto; }
+.recommendation-summary { display: inline; font-size: 19px; }
+.result-count { margin: 0; line-height: 1.5; }
+@media (max-width: 1100px) {
+    .content-grid { grid-template-columns: 1fr; }
+    .score-panel { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 22px; align-items: start; }
+    .score-panel > .section-heading { grid-column: 1 / -1; }
+    .score-panel .ui-disclosure { align-self: center; }
+    .category-list { max-height: 16rem; }
+}
+@media (max-width: 650px) {
+    .page { padding: 16px; }
+    .header { padding: 20px 16px; }
+    .summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .summary-grid .card { padding: 14px; }
+    .control-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .control-grid label:first-child { grid-column: 1 / -1; }
+    .recommendation-list { grid-template-columns: 1fr; }
+    .score-panel { column-gap: 14px; }
+    .score-ring { width: 120px; height: 120px; }
+    .score-ring::before { width: 96px; height: 96px; }
+    .metric-label { font-size: 12px; }
+    .pager-controls { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+@media print {
+    .header-actions, .control-grid, .pager-controls, .dashboard-nav { display: none !important; }
+    .table-wrapper, .category-list { max-height: none; overflow: visible; }
+    table { min-width: 0; }
+    thead { display: table-header-group; }
+    thead th { position: static; }
+    .content-grid { display: block; }
+    .recommendation-list { display: block; }
+    .card, .recommendation { box-shadow: none; break-inside: avoid; }
+}
+
 </style>
 </head>
 
@@ -514,7 +592,8 @@ td {
 </header>
 
 <main class="page" id="dashboard">
-    <div class="error-panel" id="errorPanel"></div>
+    <noscript><p class="ui-note">JavaScript is required to retrieve the readiness assessment and use filters.</p></noscript>
+    <div class="error-panel" id="errorPanel" role="alert"></div>
 
     <section class="summary-grid">
         <article class="card">
@@ -532,7 +611,7 @@ td {
         <article class="card">
             <div class="metric-value" id="readyCount">-</div>
             <div class="metric-label">Production-Ready Capabilities</div>
-            <div class="metric-detail">Capabilities at production-ready status</div>
+            <div class="metric-detail">Production status only. <span id="pilotReadyDetail">Pilot-ready count loads separately.</span></div>
         </article>
 
         <article class="card">
@@ -555,13 +634,34 @@ td {
                 </div>
             </div>
 
+            <details class="ui-disclosure" id="category-breakdown">
+                <summary>Category breakdown</summary>
             <div class="category-list" id="categoryList">
                 <div class="empty-state">Loading category scores...</div>
             </div>
+            </details>
         </article>
 
         <article class="card">
-            <h2 class="section-heading">Capability Register</h2>
+            <h2 class="section-heading" id="capability-register">Capability Register</h2>
+
+            <p class="ui-note">Search and filters change the rows below, not the overall readiness metrics.</p>
+            <div class="control-grid" role="search" aria-label="Filter capabilities">
+                <label for="capabilitySearch">Search capabilities
+                    <input id="capabilitySearch" type="search" autocomplete="off" placeholder="ID, name or category">
+                </label>
+                <label for="capabilityPriority">Priority
+                    <select id="capabilityPriority"><option value="">All priorities</option></select>
+                </label>
+                <label for="capabilityStatus">Status
+                    <select id="capabilityStatus"><option value="">All statuses</option></select>
+                </label>
+            </div>
+            <div class="pager" style="margin: 0 0 12px">
+                <p id="capabilityResults" class="result-count" role="status" aria-live="polite" aria-atomic="true">Loading capabilities...</p>
+                <button type="button" class="ui-button" id="clearCapabilityFilters">Clear filters</button>
+            </div>
+
 
             <div class="table-wrapper">
                 <table>
@@ -581,16 +681,51 @@ td {
                     </tbody>
                 </table>
             </div>
+
+            <div class="pager" aria-label="Capability pagination">
+                <span id="capabilityPage" aria-live="polite" aria-atomic="true">Page 1</span>
+                <div class="pager-controls">
+                    <label for="capabilityPageSize">Rows per page</label>
+                    <select id="capabilityPageSize"><option value="10">10</option><option value="20">20</option><option value="50">50</option></select>
+                    <button type="button" id="capabilityPrevious" class="ui-button" disabled>Previous</button>
+                    <button type="button" id="capabilityNext" class="ui-button" disabled>Next</button>
+                </div>
+            </div>
         </article>
     </section>
 
-    <section class="section card">
-        <h2 class="section-heading">Engineering Recommendations</h2>
+    <details class="section card ui-disclosure" id="engineering-recommendations">
+        <summary><span class="recommendation-summary">Engineering Recommendations</span> <span class="badge" id="recommendationTotal">Loading</span></summary>
+
+        <p class="ui-note">The headline recommendation count always includes the full dataset.</p>
+        <div class="control-grid" role="search" aria-label="Filter recommendations">
+            <label for="recommendationSearch">Search recommendations
+                <input id="recommendationSearch" type="search" autocomplete="off" placeholder="Capability, action or reason">
+            </label>
+            <label for="recommendationPriority">Priority
+                <select id="recommendationPriority"><option value="">All priorities</option></select>
+            </label>
+        </div>
+        <div class="pager" style="margin: 0 0 12px">
+            <p id="recommendationResults" class="result-count" role="status" aria-live="polite" aria-atomic="true">Loading recommendations...</p>
+            <button type="button" class="ui-button" id="clearRecommendationFilters">Clear filters</button>
+        </div>
+
 
         <div class="recommendation-list" id="recommendationList">
             <div class="empty-state">Loading recommendations...</div>
         </div>
-    </section>
+
+        <div class="pager" aria-label="Recommendation pagination">
+            <span id="recommendationPage" aria-live="polite" aria-atomic="true">Page 1</span>
+            <div class="pager-controls">
+                <label for="recommendationPageSize">Items per page</label>
+                <select id="recommendationPageSize"><option value="6">6</option><option value="12">12</option><option value="30">30</option></select>
+                <button type="button" id="recommendationPrevious" class="ui-button" disabled>Previous</button>
+                <button type="button" id="recommendationNext" class="ui-button" disabled>Next</button>
+            </div>
+        </div>
+    </details>
 
     <div class="footer" id="lastUpdated">
         Last refreshed: -
@@ -706,6 +841,8 @@ function renderSummary(
     elements.overallScore.textContent = `${score}%`;
     elements.capabilityCount.textContent = capabilities.length;
     elements.readyCount.textContent = ready;
+    const pilotReady = capabilities.filter(item => normalStatus(getCapabilityStatus(item)) === "pilot_ready").length;
+    control("pilotReadyDetail").textContent = `${pilotReady} pilot-ready capabilities.`;
     elements.recommendationCount.textContent =
         recommendations.length;
 
@@ -753,7 +890,7 @@ function renderCategories(categories) {
         .join("");
 }
 
-function renderCapabilities(capabilities) {
+function renderCapabilityRows(capabilities) {
     if (!capabilities.length) {
         elements.capabilityTable.innerHTML = `
             <tr>
@@ -831,7 +968,7 @@ function renderCapabilities(capabilities) {
         .join("");
 }
 
-function renderRecommendations(recommendations) {
+function renderRecommendationRows(recommendations) {
     if (!recommendations.length) {
         elements.recommendationList.innerHTML = `
             <div class="empty-state">
@@ -905,6 +1042,7 @@ async function fetchJson(url) {
 
 function setLoading(isLoading) {
     loading = isLoading;
+    elements.dashboard.setAttribute("aria-busy", String(isLoading));
     elements.dashboard.classList.toggle(
         "loading",
         isLoading
@@ -950,6 +1088,10 @@ async function loadDashboard() {
             fetchJson("/product-readiness/categories")
         ]);
 
+        if (!Array.isArray(capabilities) || !Array.isArray(recommendations)) {
+            throw new Error("Invalid readiness collection response");
+        }
+        uiState.loaded = true;
         renderSummary(
             assessment,
             capabilities,
@@ -975,6 +1117,160 @@ async function loadDashboard() {
         setLoading(false);
     }
 }
+
+
+// Local presentation state only. Never used to recompute the assessment.
+const uiState = {
+    capabilities: [], recommendations: [],
+    capabilityPage: 1, recommendationPage: 1,
+    loaded: false, printing: false
+};
+const control = id => document.getElementById(id);
+const normal = value => String(value ?? "").trim().toLowerCase();
+const normalStatus = value => normal(value).replace(/[\s-]+/g, "_");
+
+function populateOptions(id, values, format = displayName) {
+    const select = control(id);
+    const previous = select.value;
+    while (select.options.length > 1) select.remove(1);
+    [...new Set(values)].filter(Boolean).sort().forEach(value => {
+        select.add(new Option(format(value), value));
+    });
+    select.value = [...select.options].some(option => option.value === previous) ? previous : "";
+}
+
+function filteredCapabilities() {
+    const query = normal(control("capabilitySearch").value);
+    const priority = control("capabilityPriority").value;
+    const status = control("capabilityStatus").value;
+    return uiState.capabilities.filter(item => {
+        const searchable = [item.id, item.capability_id, item.capabilityId,
+            item.name, item.title, item.category].map(normal).join(" ");
+        return (!query || searchable.includes(query))
+            && (!priority || normal(item.priority) === priority)
+            && (!status || normalStatus(getCapabilityStatus(item)) === status);
+    });
+}
+
+function filteredRecommendations() {
+    const query = normal(control("recommendationSearch").value);
+    const priority = control("recommendationPriority").value;
+    return uiState.recommendations.filter(item => {
+        const searchable = [item.title, item.capability_id, item.capabilityId,
+            item.capability_name, item.capabilityName, item.reason, item.recommendation,
+            item.message, item.description, item.action].map(normal).join(" ");
+        return (!query || searchable.includes(query))
+            && (!priority || normal(item.priority) === priority);
+    });
+}
+
+function pageWindow(items, requestedPage, size) {
+    const pages = Math.max(1, Math.ceil(items.length / size));
+    const page = Math.min(Math.max(1, requestedPage), pages);
+    const start = (page - 1) * size;
+    return {page, pages, start, items: items.slice(start, start + size)};
+}
+
+function updatePager(prefix, view, filteredCount, totalCount, noun) {
+    const first = filteredCount ? view.start + 1 : 0;
+    const last = filteredCount ? view.start + view.items.length : 0;
+    control(prefix + "Results").textContent = filteredCount === 0
+        ? `No matching ${noun}. ${totalCount} total.`
+        : `Showing ${first}\u2013${last} of ${filteredCount} ${noun}`
+          + (filteredCount !== totalCount ? ` (${totalCount} total)` : "");
+    control(prefix + "Page").textContent = `Page ${view.page} of ${view.pages}`;
+    control(prefix + "Previous").disabled = view.page <= 1 || filteredCount === 0;
+    control(prefix + "Next").disabled = view.page >= view.pages || filteredCount === 0;
+}
+
+function updateCapabilityView() {
+    const matches = filteredCapabilities();
+    const size = Number(control("capabilityPageSize").value);
+    const view = pageWindow(matches, uiState.capabilityPage, size);
+    uiState.capabilityPage = view.page;
+    renderCapabilityRows(uiState.printing ? matches : view.items);
+    if (!matches.length && uiState.capabilities.length) {
+        elements.capabilityTable.innerHTML = '<tr><td colspan="5">No matching capabilities. Clear or change the filters.</td></tr>';
+    }
+    updatePager("capability", view, matches.length, uiState.capabilities.length, "capabilities");
+}
+
+function updateRecommendationView() {
+    const matches = filteredRecommendations();
+    const size = Number(control("recommendationPageSize").value);
+    const view = pageWindow(matches, uiState.recommendationPage, size);
+    uiState.recommendationPage = view.page;
+    renderRecommendationRows(uiState.printing ? matches : view.items);
+    if (!matches.length && uiState.recommendations.length) {
+        elements.recommendationList.innerHTML = '<div class="empty-state">No matching recommendations. Clear or change the filters.</div>';
+    }
+    updatePager("recommendation", view, matches.length, uiState.recommendations.length, "recommendations");
+}
+
+function renderCapabilities(capabilities) {
+    uiState.capabilities = capabilities;
+    populateOptions("capabilityPriority", capabilities.map(item => normal(item.priority)), value => value.toUpperCase());
+    populateOptions("capabilityStatus", capabilities.map(item => normalStatus(getCapabilityStatus(item))));
+    updateCapabilityView();
+}
+
+function renderRecommendations(recommendations) {
+    uiState.recommendations = recommendations;
+    populateOptions("recommendationPriority", recommendations.map(item => normal(item.priority)), value => value.toUpperCase());
+    control("recommendationTotal").textContent = `${recommendations.length} open`;
+    updateRecommendationView();
+}
+
+function installControls() {
+    ["capabilitySearch", "capabilityPriority", "capabilityStatus", "capabilityPageSize"].forEach(id => {
+        control(id).addEventListener(id.endsWith("Search") ? "input" : "change", () => {
+            uiState.capabilityPage = 1;
+            updateCapabilityView();
+        });
+    });
+    ["recommendationSearch", "recommendationPriority", "recommendationPageSize"].forEach(id => {
+        control(id).addEventListener(id.endsWith("Search") ? "input" : "change", () => {
+            uiState.recommendationPage = 1;
+            updateRecommendationView();
+        });
+    });
+    [["capability", updateCapabilityView], ["recommendation", updateRecommendationView]].forEach(([prefix, render]) => {
+        control(prefix + "Previous").addEventListener("click", () => { uiState[prefix + "Page"] -= 1; render(); });
+        control(prefix + "Next").addEventListener("click", () => { uiState[prefix + "Page"] += 1; render(); });
+    });
+    control("clearCapabilityFilters").addEventListener("click", () => {
+        ["capabilitySearch", "capabilityPriority", "capabilityStatus"].forEach(id => { control(id).value = ""; });
+        uiState.capabilityPage = 1;
+        updateCapabilityView();
+        control("capabilitySearch").focus();
+    });
+    control("clearRecommendationFilters").addEventListener("click", () => {
+        ["recommendationSearch", "recommendationPriority"].forEach(id => { control(id).value = ""; });
+        uiState.recommendationPage = 1;
+        updateRecommendationView();
+        control("recommendationSearch").focus();
+    });
+}
+
+// Print all matching rows, not just one page; restore the on-screen view afterward.
+let printDisclosureState = null;
+window.addEventListener("beforeprint", () => {
+    if (printDisclosureState !== null || !uiState.loaded) return;
+    printDisclosureState = [...document.querySelectorAll("details")].map(item => [item, item.open]);
+    printDisclosureState.forEach(([item]) => { item.open = true; });
+    uiState.printing = true;
+    updateCapabilityView();
+    updateRecommendationView();
+});
+window.addEventListener("afterprint", () => {
+    if (printDisclosureState === null) return;
+    printDisclosureState.forEach(([item, open]) => { item.open = open; });
+    printDisclosureState = null;
+    uiState.printing = false;
+    updateCapabilityView();
+    updateRecommendationView();
+});
+installControls();
 
 elements.refreshButton.addEventListener(
     "click",

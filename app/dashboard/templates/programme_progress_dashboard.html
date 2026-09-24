@@ -836,6 +836,81 @@
                 grid-template-columns: 1fr;
             }
         }
+
+/* Compact disclosure layout; evidence values and registry records are not rewritten. */
+html { scroll-behavior: auto; scroll-padding-top: 90px; }
+[hidden] { display: none !important; }
+.page { padding-top: 18px; }
+.hero { padding: 22px; gap: 18px; align-items: center; }
+.hero > *, .badges, .card, .section, .list-card, .three-column > *, .commit > * { min-width: 0; }
+h1 { font-size: clamp(1.7rem, 3vw, 2.4rem); }
+.hero-copy { font-size: .92rem; }
+.badges { max-width: 440px; }
+.badge, .status { overflow-wrap: anywhere; }
+.nav { position: sticky; top: 8px; z-index: 10; padding: 8px; margin: 14px 0; backdrop-filter: blur(12px); }
+.nav a { padding: 8px 10px; }
+:where(a, button, summary):focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.nav a:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
+.summary-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.metric-value { font-size: clamp(1.35rem, 2vw, 1.85rem); }
+.metric-detail, .detail, .description, .footer, code { overflow-wrap: anywhere; }
+.ui-overview .card { padding: 17px; }
+.ui-verdict { display: flex; align-items: flex-start; gap: 20px; border: 1px solid rgba(255,193,92,.4); border-left: 4px solid var(--warning); background: rgba(255,193,92,.05); padding: 16px 18px; border-radius: 12px; }
+.ui-verdict > * { min-width: 0; }
+.ui-verdict strong { display: block; color: var(--warning); white-space: nowrap; }
+.ui-verdict p { margin: 0; color: var(--muted); font-size: .88rem; }
+.ui-next { margin: 16px 0; padding: 16px 18px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); }
+.ui-next h2 { font-size: 1rem; margin-bottom: 10px; }
+.ui-next ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; font-size: .87rem; color: var(--muted); }
+.ui-tools { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin: 18px 0 10px; color: var(--muted); font-size: .83rem; }
+.ui-tools p { margin: 0; }
+details.ui-panel { padding: 0; scroll-margin-top: 90px; }
+.ui-panel > summary { display: list-item; cursor: pointer; padding: 17px 20px; font-weight: 800; font-size: 1rem; }
+.ui-panel > summary::marker, .hash-disclosure > summary::marker { color: var(--accent); }
+.ui-panel > summary .panel-caption { display: inline; margin-left: 12px; color: var(--muted); font-weight: 400; font-size: .82rem; }
+.ui-panel[open] > summary { border-bottom: 1px solid var(--border); }
+.ui-panel > .panel-body { padding: 20px; }
+.ui-panel .summary-grid { margin-top: 0; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.ui-panel .summary-grid > .card:last-child { grid-column: 1 / -1; }
+.ui-history-note { border-left: 3px solid var(--accent); padding: 10px 13px; margin-bottom: 16px; background: rgba(98,173,255,.06); color: var(--muted); font-size: .84rem; }
+.ui-history-note p { margin: 0; }
+.ui-history-note code { font-size: .8rem; }
+.ui-snapshot-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin: 0 0 18px; }
+.ui-snapshot-grid article { min-width: 0; }
+.ui-snapshot-grid h3 { font-size: 1rem; margin-bottom: 8px; }
+.ui-snapshot-grid p { margin: 6px 0; color: var(--muted); font-size: .84rem; }
+.hash-disclosure { display: inline-block; max-width: 100%; vertical-align: baseline; }
+.hash-disclosure > summary { cursor: pointer; color: var(--accent); font-family: Consolas, monospace; font-size: .82rem; }
+.hash-disclosure code { display: block; padding: 7px 0; font-size: .76rem; overflow-wrap: anywhere; }
+.ui-historical { display: inline-flex; font-size: .7rem; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 10px; }
+#buyer-opportunity, #overview, #executive-value, #strategic-position { scroll-margin-top: 90px; }
+.footer { font-size: .76rem; }
+@media (max-width: 1000px) { .ui-panel .summary-grid { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+@media (max-width: 750px) {
+    .summary-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    .ui-snapshot-grid { grid-template-columns: 1fr; }
+    .ui-verdict { flex-direction: column; gap: 8px; }
+    .hero { align-items: flex-start; }
+    .ui-panel > summary .panel-caption { display: block; margin: 6px 0 0; }
+    .ui-panel > .panel-body { padding: 15px; }
+}
+@media (max-width: 450px) {
+    .ui-overview .card { padding: 13px; }
+    .ui-panel .summary-grid { grid-template-columns: 1fr; }
+    .ui-panel > summary { padding: 16px; }
+    .metric-label { font-size: .7rem; }
+    .metric-detail { font-size: .78rem; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+@media print {
+    .nav, .ui-tools, .badges { display: none !important; }
+    .page { width: 100%; padding: 0; }
+    .hero, .card, .section, .list-card { box-shadow: none; }
+    .ui-panel > summary { break-after: avoid; }
+    details::details-content { content-visibility: visible !important; }
+    .list-card, .card, .sprint { break-inside: avoid; }
+}
+
     </style>
 </head>
 
@@ -891,15 +966,25 @@
             <a href="#governance">Governance</a>
         </nav>
 
-        <section
-            class="summary-grid"
-            id="overview"
-            aria-label="Programme summary"
-        >
+
+        <section class="summary-grid ui-overview" id="overview" aria-label="Current readiness overview">
+            {% for metric in dashboard.summary if metric.label == "Current milestone" %}
+            <article class="card"><div class="metric-label">Current milestone</div><div class="metric-value">{{ metric.value }}</div><div class="metric-detail">{{ metric.detail }}</div></article>
+            {% endfor %}
+            <article class="card"><div class="metric-label">Overall CGMS completion</div><div class="metric-value">{{ dashboard.executive_value.completion.overall_percent }}%</div><div class="metric-detail">Weighted build-to-scale completion.</div></article>
+            <article class="card"><div class="metric-label">Product Readiness</div><div class="metric-value">{{ dashboard.executive_value.completion.product_readiness_percent }}%</div><div class="metric-detail">Full capability assessment.</div></article>
+            <article class="card"><div class="metric-label">Pilot-scope readiness</div><div class="metric-value">{{ dashboard.executive_value.completion.pilot_readiness_percent }}%</div><div class="metric-detail">Scope score, not authorization to pilot.</div></article>
+        </section>
+        {% for metric in dashboard.summary if metric.label == "Pilot readiness" %}
+        <aside class="ui-verdict" aria-label="Pilot authorization verdict"><div><span class="metric-label">Pilot verdict</span><strong>{{ metric.value }}</strong></div><p>{{ metric.detail }}</p></aside>
+        {% endfor %}
+        <section class="ui-next" aria-labelledby="ui-next-heading"><h2 id="ui-next-heading">Next priorities</h2><ul>{% for item in dashboard.upcoming %}<li>{{ item }}</li>{% endfor %}</ul></section>
+        <div class="ui-tools"><p>Open a section heading for details, or use a section shortcut. All historical evidence is retained. Printing includes all sections.</p></div>
+        <details class="section ui-panel" id="panel-engineering-evidence"><summary id="heading-engineering-evidence">Engineering validation snapshot<span class="panel-caption">Run #46 and retained technical checks</span></summary><div class="panel-body" id="engineering-evidence"><div class="summary-grid">
             {% for metric in dashboard.summary %}
             <article class="card">
                 <div class="metric-label">
-                    {{ metric.label }}
+                    {{ {"Current milestone": "Recorded engineering milestone", "Current regression suite": "Engineering regression — run #46", "Latest published checkpoint": "Engineering publication", "GitHub Actions": "Engineering CI snapshot", "Runtime contracts": "Recorded runtime contracts", "Step 264R technical validation": "Historical — Step 264R validation", "Pilot readiness": "Pilot authorization verdict"}.get(metric.label, metric.label) }}
                 </div>
 
                 <div class="metric-value">
@@ -907,26 +992,16 @@
                 </div>
 
                 <div class="metric-detail">
-                    {{ metric.detail }}
+                    {% if metric.label == "Latest published checkpoint" %}
+                        Published CAP-005 backup and recovery engineering.
+                        <details class="hash-disclosure"><summary>Full engineering commit</summary><code>9c683d277f46eb2c6012759c3ff45e0221e84763</code></details>
+                        {% else %}{{ metric.detail }}{% endif %}
                 </div>
             </article>
             {% endfor %}
-        </section>
+        </div></div></details>
 
-        <section
-            class="section"
-            id="executive-value"
-        >
-            <div class="section-heading">
-                <div>
-                    <h2>Executive Product &amp; Value</h2>
-                    <p>
-                        Governed view of overall completion, product readiness,
-                        economic value and the value unlocked across the
-                        build-to-scale journey.
-                    </p>
-                </div>
-            </div>
+        <details class="section ui-panel" id="panel-executive-value"><summary id="heading-executive-value">Executive Product &amp; Value<span class="panel-caption">Completion, value scenarios and risk assumptions</span></summary><div class="panel-body" id="executive-value">
 
             <div class="executive-summary-grid">
                 <article class="card">
@@ -1065,7 +1140,7 @@
                     <h3>Value Drivers</h3>
                     <ul class="plain-list">
                         {% for item in dashboard.executive_value.value_drivers %}
-                        <li>{{ item }}</li>
+                        <li>{% if item == "651-test validated regression surface" %}Historical CI recovery baseline — {{ item }}{% else %}{{ item }}{% endif %}</li>
                         {% endfor %}
                     </ul>
                 </article>
@@ -1091,21 +1166,9 @@
                     </ul>
                 </article>
             </div>
-        </section>
+        </div></details>
 
-        <section
-            class="section"
-            id="value-story"
-        >
-            <div class="section-heading">
-                <div>
-                    <h2>CGMS Value Story</h2>
-                    <p>
-                        How CGMS capabilities respond to industry needs and
-                        translate into customer and economic value.
-                    </p>
-                </div>
-            </div>
+        <details class="section ui-panel" id="panel-value-story"><summary id="heading-value-story">CGMS Value Story &amp; Buyer Opportunity<span class="panel-caption">Use cases, dated market hypotheses and disclaimers</span></summary><div class="panel-body" id="value-story">
 
             <div class="dashboard-grid">
                 {% for item in dashboard.executive_value.value_story %}
@@ -1480,18 +1543,9 @@
                     {{ dashboard.executive_value.model.classification }}
                 </div>
             </article>
-        </section>
+        </div></details>
 
-        <section class="section">
-            <div class="section-heading">
-                <div>
-                    <h2>Strategic Position</h2>
-                    <p>
-                        Platform foundation, productization focus
-                        and approved future direction.
-                    </p>
-                </div>
-            </div>
+        <details class="section ui-panel" id="panel-strategic-position"><summary id="heading-strategic-position">Strategic Position<span class="panel-caption">Foundations and governed priorities</span></summary><div class="panel-body" id="strategic-position">
 
             <div class="three-column">
                 <article class="list-card">
@@ -1527,22 +1581,9 @@
                     </ul>
                 </article>
             </div>
-        </section>
+        </div></details>
 
-        <section
-            class="section"
-            id="roadmap"
-        >
-            <div class="section-heading">
-                <div>
-                    <h2>Programme Roadmap</h2>
-                    <p>
-                        Governed delivery history through Sprint 22,
-                        including Step 187C closure and the approved
-                        Step 187D roadmap position.
-                    </p>
-                </div>
-            </div>
+        <details class="section ui-panel" id="panel-roadmap"><summary id="heading-roadmap">Programme Roadmap<span class="panel-caption">Delivery history and milestone records</span></summary><div class="panel-body" id="roadmap">
 
             <div class="sprints">
                 {% for sprint in dashboard.sprints %}
@@ -1585,21 +1626,9 @@
                 </article>
                 {% endfor %}
             </div>
-        </section>
+        </div></details>
 
-        <section
-            class="section"
-            id="dashboards"
-        >
-            <div class="section-heading">
-                <div>
-                    <h2>Dashboard and Access Register</h2>
-                    <p>
-                        All current CGMS HTML interfaces and their
-                        local HTTPS addresses.
-                    </p>
-                </div>
-            </div>
+        <details class="section ui-panel" id="panel-dashboards"><summary id="heading-dashboards">Dashboard and Access Register<span class="panel-caption">Links to the existing CGMS interfaces</span></summary><div class="panel-body" id="dashboards">
 
             <div class="dashboard-grid">
                 {% for item in dashboard.navigation %}
@@ -1647,21 +1676,11 @@
                 </p>
             </article>
             {% endfor %}
-        </section>
+        </div></details>
 
-        <section
-            class="section"
-            id="startup"
-        >
-            <div class="section-heading">
-                <div>
-                    <h2>Startup Command Register</h2>
-                    <p>
-                        Canonical commands for the current Windows
-                        development environment.
-                    </p>
-                </div>
-            </div>
+        <details class="section ui-panel" id="panel-startup"><summary id="heading-startup">Startup Command Register<span class="panel-caption">Local prerequisites and reference commands</span></summary><div class="panel-body" id="startup">
+                <aside class="ui-history-note"><p><strong>Before local startup:</strong> use the approved development database and HTTPS certificates. The effective <code>CGMS_JWT_SECRET</code> must contain at least 32 characters before opening the login page. Do not print it, commit it, or overwrite a valid existing signing key. An inherited environment variable can override <code>.env</code>; check the effective configuration without revealing values. A temporary process-only development key expires with the server and requires a fresh sign-in after it changes. The commands below are reference commands, not an automated preflight; normal application startup can initialize the local database schema. Use <code>docker compose start db</code> when only starting an existing container; the recorded <code>up</code> command can create or recreate resources.</p></aside>
+
 
             <div class="startup-list">
                 {% for item in dashboard.startup %}
@@ -1676,34 +1695,36 @@
                 </article>
                 {% endfor %}
             </div>
-        </section>
+        </div></details>
 
-        <section
-            class="section"
-            id="validation"
-        >
-            <div class="section-heading">
-                <div>
-                    <h2>Validation and Publication Evidence</h2>
-                    <p>
-                        Current authoritative operational and
-                        regression evidence.
-                    </p>
+        <details class="section ui-panel" id="panel-validation"><summary id="heading-validation">Validation and Publication Evidence<span class="panel-caption">Engineering, governance and historical snapshots</span></summary><div class="panel-body" id="validation">
+                <div class="ui-history-note">Publication snapshots below are tied to specific commits. They are not a live GitHub poll and do not certify a later deployment or UI change.</div>
+                <div class="ui-snapshot-grid">
+                    <article class="list-card">
+                        <span class="ui-historical">Engineering publication snapshot</span>
+                        <h3>CAP-005 backup and recovery</h3>
+                        <details class="hash-disclosure"><summary aria-label="Show full engineering commit hash">9c683d2</summary><code>9c683d277f46eb2c6012759c3ff45e0221e84763</code></details>
+                        <p>Run #46 — Success · 739 passed</p>
+                        <p>Retained engineering validation; 55 focused recovery/preflight tests.</p>
+                    </article>
+                    <article class="list-card">
+                        <span class="ui-historical">Governance publication snapshot · 23 September 2026</span>
+                        <h3>CAP-005 readiness reconciliation</h3>
+                        <details class="hash-disclosure"><summary aria-label="Show full governance commit hash">31a6265</summary><code>31a6265ae3d8d3d36c9425b482d62d2f466ab625</code></details>
+                        <p><a href="https://github.com/Amiemi1/cgms/actions/runs/35867296138" rel="noreferrer">Run #47 — Success</a> · 740 passed</p>
+                        <p>55 focused recovery/preflight tests. CI applies to the named governance commit, not this subsequent UI update.</p>
+                    </article>
                 </div>
-            </div>
+
 
             <div class="validation-grid">
                 {% for item in dashboard.validation %}
                 <article class="list-card">
-                    <h3>{{ item.title }}</h3>
-
-                    <div class="result">
-                        {{ item.result }}
-                    </div>
-
-                    <p class="detail">
-                        {{ item.detail }}
-                    </p>
+                    <span class="ui-historical">{% if item.title.startswith("CAP-005") %}Engineering evidence snapshot{% else %}Historical evidence snapshot{% endif %}</span>
+                    <h3>{% if item.title == "Current full regression suite" %}PRG-001 historical full regression suite{% elif item.title == "PWI-001 Step 187F integrated technical closure" %}PWI-001 Step 187F — pre-publication validation snapshot{% else %}{{ item.title }}{% endif %}</h3>
+                    <div class="result">{{ item.result }}</div>
+                    {% if item.title == "PWI-001 Step 187F integrated technical closure" %}<p class="ui-note">Publication pending was the state at this validation checkpoint. The roadmap records the subsequent published closure.</p>{% endif %}
+                    <p class="detail">{{ item.detail }}</p>
                 </article>
                 {% endfor %}
             </div>
@@ -1723,21 +1744,9 @@
                 </div>
                 {% endfor %}
             </div>
-        </section>
+        </div></details>
 
-        <section
-            class="section"
-            id="debt"
-        >
-            <div class="section-heading">
-                <div>
-                    <h2>Deferred Technical Debt</h2>
-                    <p>
-                        Known items preserved outside the approved
-                        PRG-001 implementation boundary.
-                    </p>
-                </div>
-            </div>
+        <details class="section ui-panel" id="panel-debt"><summary id="heading-debt">Deferred Technical Debt<span class="panel-caption">Recorded items; not a fresh technical reassessment</span></summary><div class="panel-body" id="debt">
 
             <div class="debt-grid">
                 {% for item in dashboard.technical_debt %}
@@ -1750,12 +1759,9 @@
                 </article>
                 {% endfor %}
             </div>
-        </section>
+        </div></details>
 
-        <section
-            class="section governance"
-            id="governance"
-        >
+        <details class="section ui-panel" id="panel-governance"><summary id="heading-governance">Engineering Governance<span class="panel-caption">Scope, boundaries and the Canonical record</span></summary><div class="panel-body" id="governance">
             <div class="section-heading">
                 <div>
                     <h2>Engineering Governance</h2>
@@ -1794,7 +1800,7 @@
                     </p>
                 </article>
             </div>
-        </section>
+        </div></details>
 
         <footer class="footer">
             Branch: {{ dashboard.page.branch }} &middot;
