@@ -239,3 +239,46 @@ def test_cap005_remediation_delta_closes_final_crg001_p0_blocker() -> None:
         "**Current pilot-readiness verdict: NOT READY.**"
         in source
     )
+
+def test_cap001_cap002_product_readiness_currency_reconciliation() -> None:
+    source = report_source()
+
+    assert (
+        "## 19. Post-Assessment Product Readiness Currency Update "
+        "— CAP-001 and CAP-002"
+        in source
+    )
+
+    assert (
+        "CAP-001 — Secure Authentication | Partial / IN_PROGRESS | "
+        "Implemented / PILOT_READY"
+        in source
+    )
+
+    assert (
+        "CAP-002 — Role-Based Access Control | Partial / IN_PROGRESS | "
+        "Implemented / PILOT_READY"
+        in source
+    )
+
+    assert "Product Readiness: **30% to 34%**" in source
+    assert "pilot-scope readiness: **39% to 46%**" in source
+    assert "catalogue-level P0 gaps: **2 to 0**" in source
+    assert "pilot-scope gaps: **22 to 20**" in source
+    assert "open recommendations: **26 to 24**" in source
+    assert "pilot-ready capabilities: **3 to 5**" in source
+
+    assert (
+        "unresolved CRG-001 P0 commercial blockers: **0**"
+        in source
+    )
+
+    assert (
+        "total unresolved commercial blockers: **6**"
+        in source
+    )
+
+    assert (
+        "**Current pilot-readiness verdict: NOT READY.**"
+        in source
+    )

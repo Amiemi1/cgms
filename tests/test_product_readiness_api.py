@@ -74,7 +74,8 @@ def test_capabilities_include_calculated_scores() -> None:
             for capability in response.json()
         }
 
-        assert capabilities["CAP-001"]["score"] == 20
+        assert capabilities["CAP-001"]["score"] == 100
+        assert capabilities["CAP-002"]["score"] == 100
         assert capabilities["CAP-005"]["score"] == 100
         assert capabilities["CAP-006"]["score"] == 55
 

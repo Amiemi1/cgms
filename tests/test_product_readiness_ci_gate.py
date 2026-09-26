@@ -25,12 +25,12 @@ def test_standard_gate_passes_at_approved_baseline() -> None:
     assert report.mode == GateMode.STANDARD
 
     assert report.assessment.total_capabilities == 38
-    assert report.assessment.overall_score == 30
+    assert report.assessment.overall_score == 34
 
-    assert report.recommendation_count == 26
-    assert report.pilot_scope_score == 39
+    assert report.recommendation_count == 24
+    assert report.pilot_scope_score == 46
 
-    assert len(report.p0_blockers) == 2
+    assert len(report.p0_blockers) == 0
     assert "CAP-003" not in {
         gap.capability_id
         for gap in report.p0_blockers
@@ -43,7 +43,7 @@ def test_standard_gate_passes_at_approved_baseline() -> None:
         gap.capability_id
         for gap in report.p0_blockers
     }
-    assert len(report.pilot_scope_gaps) == 22
+    assert len(report.pilot_scope_gaps) == 20
 
     assert all(
         check.passed
@@ -73,19 +73,19 @@ def test_strict_gate_reports_release_blockers() -> None:
         for check in report.checks
     }
 
-    assert checks["p0-release-blockers"].passed is False
+    assert checks["p0-release-blockers"].passed is True
     assert checks["pilot-scope-readiness"].passed is False
     assert checks["pilot-scope-score"].passed is False
 
-    assert len(report.p0_blockers) == 2
-    assert len(report.pilot_scope_gaps) == 22
+    assert len(report.p0_blockers) == 0
+    assert len(report.pilot_scope_gaps) == 20
     assert report.pilot_scope_score < 95
 
 
 def test_standard_gate_detects_readiness_regression() -> None:
     report = run_product_readiness_gate(
         mode=GateMode.STANDARD,
-        minimum_overall_score=31,
+        minimum_overall_score=35,
     )
 
     assert report.passed is False
@@ -100,8 +100,8 @@ def test_standard_gate_detects_readiness_regression() -> None:
     )
 
     assert baseline_check.passed is False
-    assert baseline_check.expected == ">= 31%"
-    assert baseline_check.actual == "30%"
+    assert baseline_check.expected == ">= 35%"
+    assert baseline_check.actual == "34%"
 
 
 def test_gate_detects_catalogue_count_mismatch() -> None:

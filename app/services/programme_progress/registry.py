@@ -15,17 +15,18 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
             "Authoritative delivery, validation, governance, "
             "dashboard-access and startup register."
         ),
-        "as_of": "23 September 2026",
+        "as_of": "25 September 2026",
         "current_sprint": "Sprint 22",
         "current_work": (
-            "CAP-005 Published / Post-Publication Governance Currency"
+            "CAP-001/CAP-002 Product Readiness Currency Promotion"
         ),
         "status": (
-            "CAP-005 engineering published at "
-            "9c683d277f46eb2c6012759c3ff45e0221e84763; "
-            "Backup and Restore is Implemented / PILOT_READY, "
-            "its CRG-001 P0 commercial blocker is closed, and "
-            "the commercial pilot verdict remains NOT READY"
+            "Read-only CAP-001/CAP-002 readiness reassessment and "
+            "promotion-impact projection passed on published authority "
+            "f3a11c0e90488529f12ef7d19ceb9ecc75f90523; the controlled "
+            "currency candidate records both capabilities as Implemented / "
+            "PILOT_READY, reduces catalogue-level P0 gaps to zero, and "
+            "retains the commercial pilot verdict as NOT READY"
         ),
         "branch": "cgms-v2-roadmap",
         "canonical_record": (
@@ -35,20 +36,21 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
     "summary": [
         {
             "label": "Current milestone",
-            "value": "CAP-005 Published",
+            "value": "CAP-001/CAP-002 Promotion Candidate",
             "detail": (
-                "CAP-005 is published as Implemented / PILOT_READY; "
-                "P0 priority is retained and its CRG-001 commercial "
-                "blocker is closed"
+                "Bounded Product Readiness currency update authorised; "
+                "P0 priority is retained for both capabilities and no "
+                "authentication or RBAC application engineering is changed"
             ),
         },
         {
             "label": "Current regression suite",
-            "value": "739 passed",
+            "value": "758 passed",
             "detail": (
-                "Product Readiness CI run #46 passed with 739 tests "
-                "and 38 known non-blocking warnings; CAP-005 focused "
-                "recovery/preflight validation recorded 55 passed"
+                "Local full regression for the dashboard candidate recorded "
+                "758 passed with 37 warnings; Product Readiness CI run #48 "
+                "then succeeded on published authority "
+                "f3a11c0e90488529f12ef7d19ceb9ecc75f90523"
             ),
         },
         {
@@ -63,18 +65,18 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
         },
         {
             "label": "Latest published checkpoint",
-            "value": "9c683d2",
+            "value": "f3a11c0",
             "detail": (
-                "Published CAP-005 backup and recovery engineering "
-                "at 9c683d277f46eb2c6012759c3ff45e0221e84763"
+                "Published dashboard usability and evidence-labelling update "
+                "at f3a11c0e90488529f12ef7d19ceb9ecc75f90523"
             ),
         },
         {
             "label": "GitHub Actions",
-            "value": "Run #46 — Success",
+            "value": "Run #48 — Success",
             "detail": (
-                "Product Readiness CI run #46 passed for the "
-                "published CAP-005 engineering authority"
+                "Product Readiness CI run #48 passed for published commit "
+                "f3a11c0e90488529f12ef7d19ceb9ecc75f90523"
             ),
         },
         {
@@ -90,10 +92,10 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
             "label": "Pilot readiness",
             "value": "NOT READY",
             "detail": (
-                "CAP-005 closes the final unresolved CRG-001 P0 "
-                "commercial blocker. The pilot verdict remains NOT READY "
-                "because other Product Readiness, pilot-scope and P1 "
-                "commercial gaps remain open"
+                "The controlled currency candidate removes the two stale "
+                "catalogue-level P0 gaps, but 20 pilot-scope gaps and six "
+                "CRG-001 commercial blockers remain; the pilot verdict "
+                "stays NOT READY"
             ),
         },
     ],
@@ -201,16 +203,16 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
         },
     ],
     "current_focus": [
-        "CAP-005 engineering published; Product Readiness CI run #46 passed",
-        "CAP-005 remains P0 and is now Implemented / PILOT_READY",
-        "Real PostgreSQL 16 / pgvector backup-and-restore validation passed",
-        "CRG-001 unresolved P0 commercial blockers reduced to zero",
-        "Product Readiness 30% / pilot-scope readiness 39% / overall completion 48%",
+        "CAP-001/CAP-002 bounded reassessment and promotion projection passed",
+        "Controlled currency candidate promotes both capabilities to Implemented / PILOT_READY",
+        "Catalogue-level P0 Product Readiness gaps reduce from two to zero",
+        "Product Readiness 34% / pilot-scope readiness 46% / overall completion 51%",
+        "Commercial pilot verdict remains NOT READY",
     ],
     "upcoming": [
-        "Remaining P1 commercial blockers remain separately governed",
-        "Two catalogue-level P0 Product Readiness gaps remain open",
-        "Commercial pilot verdict remains NOT READY pending remaining gates",
+        "Validate the bounded CAP-001/CAP-002 currency candidate",
+        "Twenty pilot-scope gaps and six CRG-001 commercial blockers remain governed",
+        "Commercial pilot authorization remains withheld pending remaining gates",
     ],
     "sprints": [
         {
@@ -570,6 +572,22 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
     ],
     "validation": [
         {
+            "title": (
+                "CAP-001/CAP-002 readiness reassessment "
+                "and impact projection"
+            ),
+            "result": "PASS — PROMOTION ELIGIBLE",
+            "detail": (
+                "25 September 2026 read-only evidence inventory confirmed "
+                "CAP-001 6/6 targeted controls, CAP-002 4/4 targeted "
+                "controls and 6/6 selected focused security test groups; "
+                "projection moves Product Readiness 30% to 34%, pilot-scope "
+                "readiness 39% to 46%, catalogue P0 gaps 2 to 0, pilot-scope "
+                "gaps 22 to 20, recommendations 26 to 24 and pilot-ready "
+                "capabilities 3 to 5 while retaining NOT READY"
+            ),
+        },
+        {
             "title": "CAP-005 publication and readiness closure",
             "result": "PASS — PILOT_READY",
             "detail": (
@@ -848,6 +866,22 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
     ],
     "commits": [
         {
+            "hash": "f3a11c0",
+            "title": (
+                "feat(dashboard): improve readiness usability "
+                "and evidence labels"
+            ),
+            "status": "Published",
+        },
+        {
+            "hash": "31a6265",
+            "title": (
+                "docs(governance): reconcile CAP-005 "
+                "readiness currency"
+            ),
+            "status": "Published",
+        },
+        {
             "hash": "9c683d2",
             "title": (
                 "feat(operations): add governed database "
@@ -1088,27 +1122,31 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
     "governance": {
         "rule": "Engineering Governance Rule EG-001",
         "classification": (
-            "CAP-005 Post-Publication Governance-Currency Reconciliation"
+            "CAP-001/CAP-002 Product Readiness Currency Reconciliation"
         ),
-        "approval_date": "23 September 2026",
+        "approval_date": "25 September 2026",
         "published_authority": (
-            "9c683d277f46eb2c6012759c3ff45e0221e84763"
+            "f3a11c0e90488529f12ef7d19ceb9ecc75f90523"
         ),
         "canonical_record": (
             "docs/CGMS_MASTER_CONTINUATION_PROMPT_v2.0.md"
         ),
         "scope": (
-            "Controlled post-publication reconciliation recording "
-            "published CAP-005 recovery, PILOT_READY/P0 status and "
-            "current Product Readiness metrics."
+            "Controlled readiness-currency reconciliation promoting "
+            "CAP-001 and CAP-002 from stale Partial / IN_PROGRESS "
+            "catalogue currency to Implemented / PILOT_READY based on "
+            "validated evidence, without changing authentication or RBAC "
+            "application engineering."
         ),
         "boundaries": (
-            "CAP-005 P0 priority retained and commercial blocker closed; "
-            "zero unresolved CRG-001 P0 commercial blockers remain; "
-            "pilot verdict remains NOT READY because separate Product "
-            "Readiness and P1 gaps remain; no production database mutation "
-            "or unrelated engineering work is authorised; live Git state "
-            "controls publication identity."
+            "P0 priority is retained for CAP-001 and CAP-002; zero "
+            "catalogue-level P0 Product Readiness gaps and zero unresolved "
+            "CRG-001 P0 commercial blockers remain; six total unresolved "
+            "commercial blockers and 20 pilot-scope gaps remain; pilot "
+            "verdict remains NOT READY; no authentication/RBAC application "
+            "implementation, migration, production-database or unrelated "
+            "engineering mutation is authorised; live Git state controls "
+            "publication identity."
         ),
     },
 }

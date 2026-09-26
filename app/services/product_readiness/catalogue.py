@@ -95,11 +95,24 @@ PRODUCT_CAPABILITIES: tuple[Capability, ...] = (
         CapabilityPriority.P0,
         "Yes",
         "Yes",
-        "Partial",
+        "Implemented",
         "Critical",
         "High",
         "Critical",
         "Pre-Pilot",
+        status_override=CapabilityStatus.PILOT_READY,
+        security_reviewed=True,
+        tests_passing=True,
+        documented=True,
+        evidence_note=(
+            "CRG-001 validated authentication, secure browser sessions, "
+            "CSRF protection, login throttling, credential verification, "
+            "logout behaviour and session registration with no material "
+            "CAP-001 capability gap. The 25 September 2026 bounded "
+            "reassessment confirmed 6/6 targeted authentication controls; "
+            "Product Readiness CI run #48 passed on the current published "
+            "authority."
+        ),
     ),
     _capability(
         "CAP-002",
@@ -108,11 +121,23 @@ PRODUCT_CAPABILITIES: tuple[Capability, ...] = (
         CapabilityPriority.P0,
         "Yes",
         "Yes",
-        "Partial",
+        "Implemented",
         "Critical",
         "High",
         "Critical",
         "Pre-Pilot",
+        status_override=CapabilityStatus.PILOT_READY,
+        security_reviewed=True,
+        tests_passing=True,
+        documented=True,
+        evidence_note=(
+            "AAE-001 applied the existing role and permission model across "
+            "all 106 registered APIRoutes with zero unguarded APIRoutes; "
+            "live HTTPS validation and the 570-test closure regression "
+            "passed. The 25 September 2026 bounded reassessment confirmed "
+            "4/4 targeted RBAC controls; Product Readiness CI run #48 "
+            "passed on the current published authority."
+        ),
     ),
     _capability(
         "CAP-003",

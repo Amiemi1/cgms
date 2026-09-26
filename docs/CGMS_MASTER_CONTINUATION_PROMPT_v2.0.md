@@ -23,7 +23,7 @@ docs/CGMS_MASTER_CONTINUATION_PROMPT_v2.0.md
 **Comprehensive handoff date**
 
 ```text
-23 September 2026
+25 September 2026
 ```
 
 **Current programme**
@@ -41,19 +41,19 @@ Sprint 22
 **Current intervention**
 
 ```text
-CAP-005 — Governed Backup and Restore Closure
+CAP-001 / CAP-002 — Product Readiness Currency Reconciliation
 ```
 
 **Current sub-stage**
 
 ```text
-CAP-005 engineering published at `9c683d277f46eb2c6012759c3ff45e0221e84763`; Product Readiness CI run #46 passed; post-publication governance currency records CAP-005 as Implemented / PILOT_READY with its CRG-001 P0 commercial blocker closed
+Read-only CAP-001/CAP-002 readiness inventory and promotion-impact projection passed on published authority `f3a11c0e90488529f12ef7d19ceb9ecc75f90523`; controlled promotion update authorised to reconcile both capabilities from stale Partial / IN_PROGRESS catalogue currency to Implemented / PILOT_READY; validation and publication remain pending
 ```
 
 **Exact next authorised action**
 
 ```text
-Resolve live repository state and proceed only under the next separately approved governed intervention; this canonical record grants no standing staging, commit or push authority
+Apply and validate only the bounded 13-path CAP-001/CAP-002 readiness-currency candidate; staging, commit and push require separate explicit approval
 ```
 
 ---
@@ -5578,5 +5578,84 @@ CRG-001 unresolved P0 commercial blockers are reduced from **1 to 0** and total 
 The commercial pilot verdict remains **NOT READY** because separate Product Readiness, pilot-scope and P1 gaps remain open.
 
 Historical programme evidence remains historical. This record grants no standing staging, commit, push, deployment or production-database authority.
+
+# 55. CAP-001 / CAP-002 PRODUCT READINESS CURRENCY RECONCILIATION
+
+The controlled CAP-001/CAP-002 readiness-currency intervention was authorised on 25 September 2026 after successful read-only evidence inventory and impact projection.
+
+## 55.1 Governing published baseline
+
+- branch: `cgms-v2-roadmap`;
+- current published authority: `f3a11c0e90488529f12ef7d19ceb9ecc75f90523`;
+- parent CAP-005 governance publication: `31a6265ae3d8d3d36c9425b482d62d2f466ab625`;
+- Product Readiness CI run #48: **PASS**;
+- local full regression preceding dashboard publication: **758 passed, 37 known warnings**;
+- remote dashboard publication and local/upstream synchronization: **PASS**.
+
+## 55.2 Read-only promotion reassessment
+
+The bounded 25 September 2026 inventory completed with a clean repository and no database, Docker, staging, commit or push action.
+
+Evidence inventory:
+
+- authentication-source files identified: **14**;
+- RBAC/authorisation files identified: **14**;
+- selected security-test files: **14**;
+- selected security-test functions: **196**;
+- CAP-001 targeted controls: **6/6 present**;
+- CAP-002 targeted controls: **4/4 present**;
+- focused security test groups: **6/6 present**;
+- CAP-001 preliminary result: **PROMOTION_REVIEW_ELIGIBLE**;
+- CAP-002 preliminary result: **PROMOTION_REVIEW_ELIGIBLE**.
+
+CRG-001 already records CAP-001 as Validated with no material capability gap. AAE-001 already records CAP-002 as Validated and its commercial blocker as Resolved.
+
+## 55.3 Promotion-impact projection
+
+The read-only Product Readiness engine projection established:
+
+| Measure | Current | Promotion Candidate |
+|---|---:|---:|
+| Product Readiness | 30% | 34% |
+| Pilot-scope readiness | 39% | 46% |
+| Catalogue P0 gaps | 2 | 0 |
+| Pilot-scope gaps | 22 | 20 |
+| Open recommendations | 26 | 24 |
+| Pilot-ready capabilities | 3 | 5 |
+| In-progress capabilities | 17 | 15 |
+| Overall completion | 48% | 51% |
+
+CAP-001 and CAP-002 each retain **P0** priority. The promotion changes readiness currency, not architectural importance.
+
+## 55.4 Controlled currency action
+
+The authorised candidate reconciles:
+
+- CAP-001 Secure Authentication: **Partial / IN_PROGRESS → Implemented / PILOT_READY**;
+- CAP-002 Role-Based Access Control: **Partial / IN_PROGRESS → Implemented / PILOT_READY**.
+
+The candidate records regression evidence, security-review evidence and documentation evidence. It does not claim `PRODUCTION_READY`, does not require a new authentication/RBAC architecture and does not alter the existing workspace, audit or recovery boundaries.
+
+The CRG-001 commercial-blocker register remains:
+
+- unresolved P0 commercial blockers: **0**;
+- total unresolved commercial blockers: **6**.
+
+The commercial pilot verdict remains **NOT READY** because **20** pilot-scope gaps and additional P1/commercial conditions remain open.
+
+## 55.5 Governance boundary
+
+This intervention is a Product Readiness and governance-currency reconciliation. It does not authorise:
+
+- authentication or RBAC implementation changes;
+- database or migration changes;
+- production-database access;
+- dependency or CI workflow changes;
+- commercial pilot execution;
+- unrelated feature development;
+- modification of `manual_test_db.py`;
+- staging, commit or push without separate explicit approval.
+
+Historical readiness snapshots remain historical evidence. Live Git state controls publication identity.
 
 # END OF CGMS MASTER CONTINUATION PROMPT v2.0

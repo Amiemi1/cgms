@@ -94,8 +94,8 @@ Part of the long-term platform vision.
 
 | ID | Capability | Product Pillar | Priority | MLP | Pilot | Technical Readiness | Security Dependency | Customer Value | Commercial Importance | Target |
 |---|---|---|---|---:|---:|---|---|---|---|---|
-| CAP-001 | Secure Authentication | Governance | P0 | Yes | Yes | Partial | Critical | High | Critical | Pre-Pilot |
-| CAP-002 | Role-Based Access Control | Governance | P0 | Yes | Yes | Partial | Critical | High | Critical | Pre-Pilot |
+| CAP-001 | Secure Authentication | Governance | P0 | Yes | Yes | Implemented | Critical | High | Critical | Pre-Pilot |
+| CAP-002 | Role-Based Access Control | Governance | P0 | Yes | Yes | Implemented | Critical | High | Critical | Pre-Pilot |
 | CAP-003 | Workspace Isolation | Governance / Memory | P0 | Yes | Yes | Implemented | Critical | High | Critical | Pre-Pilot |
 | CAP-004 | Persistent Audit Store | Governance | P0 | Yes | Yes | Implemented | Critical | High | Critical | Pre-Pilot |
 | CAP-005 | Backup and Restore | Operations | P0 | Yes | Yes | Implemented | High | High | Critical | Pre-Pilot |
@@ -546,3 +546,64 @@ Current metrics are **30% Product Readiness**, **39% pilot-scope readiness**, **
 CRG-001 now has **zero unresolved P0 commercial blockers** and **six total unresolved commercial blockers**.
 
 The commercial pilot verdict remains **NOT READY**.
+
+---
+
+# 24. CAP-001 / CAP-002 Readiness Currency Update
+
+**Update date:** 25 September 2026
+
+**Decision:** bounded read-only readiness reassessment and promotion-impact projection — PASS
+
+**Currency action:** controlled Product Readiness reconciliation authorised
+
+CAP-001 Secure Authentication and CAP-002 Role-Based Access Control retain **P0** priority and advance from stale **Partial / IN_PROGRESS** catalogue currency to **Implemented / PILOT_READY**.
+
+The promotion does not introduce new authentication or RBAC engineering. It reconciles the Product Readiness catalogue with evidence already established by CRG-001, AAE-001 and the current bounded reassessment.
+
+### 24.1 CAP-001 evidence
+
+CAP-001 was already assessed as **Validated** by CRG-001. Authentication, secure browser sessions, CSRF protection, login throttling, credential verification, logout behaviour and session registration were validated, with no material CAP-001 capability gap established.
+
+The 25 September 2026 bounded inventory additionally confirmed:
+
+- **6/6** targeted authentication controls present;
+- the governed authentication source surface present;
+- all **6/6** selected focused security test groups present;
+- Product Readiness CI run **#48** successful on the current published authority.
+
+### 24.2 CAP-002 evidence
+
+AAE-001 closed the application-wide authorisation gap and validated CAP-002 within the existing CGMS role and permission model.
+
+The established evidence includes:
+
+- **106** registered APIRoutes guarded;
+- **0** unguarded APIRoutes;
+- **102** protected method/path registrations;
+- browser, Bearer and dual-transport enforcement;
+- authenticated CSRF handling for unsafe browser requests;
+- controlled live HTTPS validation;
+- a **570 passed** closure regression.
+
+The 25 September 2026 bounded inventory additionally confirmed **4/4** targeted RBAC controls and all **6/6** selected focused security test groups.
+
+### 24.3 Recalculated Product Readiness position
+
+The controlled promotion changes current Product Readiness currency to:
+
+- overall Product Readiness: **34%**;
+- pilot-scope readiness: **46%**;
+- catalogue-level P0 gaps: **0**;
+- pilot-scope gaps: **20**;
+- open Product Readiness recommendations: **24**;
+- pilot-ready capabilities: **5**;
+- in-progress capabilities: **15**.
+
+Overall CGMS completion under the existing governed completion-weight model becomes **51%**.
+
+The CRG-001 commercial-blocker register is unchanged by this currency reconciliation: unresolved P0 commercial blockers remain **0**, while total unresolved commercial blockers remain **6**.
+
+The commercial pilot verdict remains **NOT READY**. Twenty pilot-required capabilities remain below pilot-ready status, other P1/commercial gaps remain open, and no production-ready capability is claimed.
+
+This currency update does not authorise a commercial pilot, deployment, production-database action or unrelated feature expansion.

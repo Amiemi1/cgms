@@ -83,7 +83,7 @@ def test_registry_contains_governed_progress() -> None:
 
     assert any(
         item["label"] == "Current regression suite"
-        and item["value"] == "739 passed"
+        and item["value"] == "758 passed"
         for item in dashboard["summary"]
     )
 
@@ -95,7 +95,7 @@ def test_registry_contains_governed_progress() -> None:
 
     assert any(
         item["label"] == "Latest published checkpoint"
-        and item["value"] == "9c683d2"
+        and item["value"] == "f3a11c0"
         for item in dashboard["summary"]
     )
 
@@ -117,23 +117,24 @@ def test_registry_contains_governed_progress() -> None:
     )
 
     assert [item["hash"] for item in dashboard["commits"][:5]] == [
+        "f3a11c0",
+        "31a6265",
         "9c683d2",
         "6b8a00d",
         "4a43f40",
-        "0140d4a",
-        "cc366ed",
     ]
 
     assert dashboard["page"]["status"] == (
-        "CAP-005 engineering published at "
-        "9c683d277f46eb2c6012759c3ff45e0221e84763; "
-        "Backup and Restore is Implemented / PILOT_READY, "
-        "its CRG-001 P0 commercial blocker is closed, and "
-        "the commercial pilot verdict remains NOT READY"
+        "Read-only CAP-001/CAP-002 readiness reassessment and "
+        "promotion-impact projection passed on published authority "
+        "f3a11c0e90488529f12ef7d19ceb9ecc75f90523; the controlled "
+        "currency candidate records both capabilities as Implemented / "
+        "PILOT_READY, reduces catalogue-level P0 gaps to zero, and "
+        "retains the commercial pilot verdict as NOT READY"
     )
     assert dashboard["page"]["branch"] == "cgms-v2-roadmap"
     assert dashboard["governance"]["classification"] == (
-        "CAP-005 Post-Publication Governance-Currency Reconciliation"
+        "CAP-001/CAP-002 Product Readiness Currency Reconciliation"
     )
 
 
@@ -206,14 +207,17 @@ def test_authorized_viewer_can_open_progress() -> None:
     body = response.text
 
     assert "CGMS Programme Progress Dashboard" in body
-    assert "739 passed" in body
+    assert "758 passed" in body
     assert "PWI-001-187D" in body
     assert "PWI-001-187E" in body
+    assert "f3a11c0" in body
     assert "9c683d2" in body
     assert "0140d4a" in body
+    assert "Run #48" in body
     assert "Run #46" in body
-    assert "CAP-005 engineering published" in body
-    assert "Backup and Restore is Implemented / PILOT_READY" in body
+    assert "CAP-001/CAP-002" in body
+    assert "Promotion Candidate" in body
+    assert "CAP-005 real PostgreSQL recovery validation" in body
     assert "/patent-readiness/dashboard" in body
     assert "docker compose up -d db" in body
 
@@ -347,18 +351,18 @@ def test_registry_contains_pwi001_current_state() -> None:
         .build_view()
     )
 
-    assert dashboard["page"]["as_of"] == "23 September 2026"
+    assert dashboard["page"]["as_of"] == "25 September 2026"
     assert dashboard["page"]["current_sprint"] == "Sprint 22"
     assert dashboard["page"]["current_work"] == (
-        "CAP-005 Published / Post-Publication Governance Currency"
+        "CAP-001/CAP-002 Product Readiness Currency Promotion"
     )
     assert dashboard["current_focus"][0] == (
-        "CAP-005 engineering published; Product Readiness CI run #46 passed"
+        "CAP-001/CAP-002 bounded reassessment and promotion projection passed"
     )
     assert dashboard["upcoming"] == [
-        "Remaining P1 commercial blockers remain separately governed",
-        "Two catalogue-level P0 Product Readiness gaps remain open",
-        "Commercial pilot verdict remains NOT READY pending remaining gates",
+        "Validate the bounded CAP-001/CAP-002 currency candidate",
+        "Twenty pilot-scope gaps and six CRG-001 commercial blockers remain governed",
+        "Commercial pilot authorization remains withheld pending remaining gates",
     ]
     assert "live Git state controls publication identity" in (
         dashboard["governance"]["boundaries"]
@@ -441,9 +445,9 @@ def test_registry_contains_approved_executive_value_model() -> None:
     dashboard = ProgrammeProgressRegistry().build_view()
     value = dashboard["executive_value"]
 
-    assert value["completion"]["overall_percent"] == 48
-    assert value["completion"]["product_readiness_percent"] == 30
-    assert value["completion"]["pilot_readiness_percent"] == 39
+    assert value["completion"]["overall_percent"] == 51
+    assert value["completion"]["product_readiness_percent"] == 34
+    assert value["completion"]["pilot_readiness_percent"] == 46
 
     assert value["headline"]["as_is_base_usd_m"] == 1.5
     assert value["headline"]["as_is_base_ngn_bn"] == 2.04
@@ -470,7 +474,7 @@ def test_progress_renders_executive_value_and_value_story() -> None:
 
     assert "Executive Product &amp; Value" in body
     assert "Overall CGMS Completion" in body
-    assert "48%" in body
+    assert "51%" in body
     assert "As-Is Base Value" in body
     assert "$1.5m" in body
     assert "CGMS Value Story" in body
@@ -593,20 +597,20 @@ def test_progress_renders_auditable_buyer_scores_and_evidence_basis() -> None:
         in body
     )
 
-def test_cap005_publication_currency_records_current_state() -> None:
+def test_cap001_cap002_promotion_currency_records_current_state() -> None:
     dashboard = ProgrammeProgressRegistry().build_view()
 
     assert dashboard["page"]["current_work"] == (
-        "CAP-005 Published / Post-Publication Governance Currency"
+        "CAP-001/CAP-002 Product Readiness Currency Promotion"
     )
 
-    assert "CAP-005 engineering published" in dashboard["page"]["status"]
+    assert "CAP-001/CAP-002" in dashboard["page"]["status"]
     assert "PILOT_READY" in dashboard["page"]["status"]
 
     assert any(
         item["label"] == "Pilot readiness"
         and item["value"] == "NOT READY"
-        and "final unresolved CRG-001 P0"
+        and "catalogue-level P0 gaps"
         in item["detail"]
         for item in dashboard["summary"]
     )
@@ -627,7 +631,7 @@ def test_cap005_publication_currency_records_current_state() -> None:
     )
 
     assert dashboard["governance"]["classification"] == (
-        "CAP-005 Post-Publication Governance-Currency Reconciliation"
+        "CAP-001/CAP-002 Product Readiness Currency Reconciliation"
     )
 
     assert "zero unresolved CRG-001 P0 commercial blockers" in (
@@ -636,6 +640,6 @@ def test_cap005_publication_currency_records_current_state() -> None:
 
     value = dashboard["executive_value"]
 
-    assert value["completion"]["overall_percent"] == 48
-    assert value["completion"]["product_readiness_percent"] == 30
-    assert value["completion"]["pilot_readiness_percent"] == 39
+    assert value["completion"]["overall_percent"] == 51
+    assert value["completion"]["product_readiness_percent"] == 34
+    assert value["completion"]["pilot_readiness_percent"] == 46

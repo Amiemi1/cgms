@@ -33,24 +33,24 @@ _EXECUTIVE_VALUE_MODEL: Final[dict[str, Any]] = {
         },
     },
     "completion": {
-        "overall_percent": 48,
+        "overall_percent": 51,
         "method": (
             "Weighted capability-completion index using the governed "
             "38-capability Product Readiness estate"
         ),
         "inputs": {
             "implemented": 9,
-            "in_progress": 17,
+            "in_progress": 15,
             "not_started": 9,
-            "pilot_ready": 3,
+            "pilot_ready": 5,
             "production_ready": 0,
             "total_capabilities": 38,
         },
         "weights": deepcopy(
             _OVERALL_COMPLETION_STATUS_WEIGHTS
         ),
-        "product_readiness_percent": 30,
-        "pilot_readiness_percent": 39,
+        "product_readiness_percent": 34,
+        "pilot_readiness_percent": 46,
         "interpretation": (
             "Overall Completion measures progress through the build-to-scale "
             "journey. Product Readiness and Pilot Readiness remain separate "
@@ -469,8 +469,9 @@ _EXECUTIVE_VALUE_MODEL: Final[dict[str, Any]] = {
         {
             "dimension": "Permission-aware governance",
             "cgms": (
-                "In progress; authentication, RBAC, workspace isolation "
-                "and audit remain Product Readiness priorities"
+                "Authentication, RBAC, workspace isolation and persistent "
+                "audit are PILOT_READY in governed Product Readiness currency; "
+                "broader pilot-scope and product gaps remain"
             ),
             "glean": (
                 "Source permissions are fetched and enforced in search"
@@ -1139,8 +1140,11 @@ _EXECUTIVE_VALUE_MODEL: Final[dict[str, Any]] = {
         "Patent and IP evidence programme",
     ],
     "value_risks": [
-        "Two unresolved P0 Product Readiness blockers",
-        "Three pilot-ready capabilities",
+        (
+            "Zero catalogue-level P0 Product Readiness gaps; "
+            "20 pilot-scope gaps remain"
+        ),
+        "Five pilot-ready capabilities",
         "Zero production-ready capabilities",
         "Product Experience category score of 7%",
         "Integrations category score of 13%",

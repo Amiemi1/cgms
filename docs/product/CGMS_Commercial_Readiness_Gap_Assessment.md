@@ -889,3 +889,52 @@ There are now **zero unresolved CRG-001 P0 commercial blockers**.
 Other Product Readiness, pilot-scope and P1 gaps remain open.
 
 **Current pilot-readiness verdict: NOT READY.**
+
+---
+
+## 19. Post-Assessment Product Readiness Currency Update — CAP-001 and CAP-002
+
+**Update date:** 25 September 2026
+
+**Classification:** controlled Product Readiness governance-currency reconciliation
+
+### 19.1 Historical-assessment boundary
+
+Sections 1–14 remain the immutable CRG-001 assessment snapshot. Sections 15–18 retain the subsequent AAE-001, CAP-003, CAP-004 and CAP-005 remediation deltas.
+
+This section does not rewrite the original assessment. It reconciles the separate Product Readiness catalogue with evidence already established in the CRG-001 remediation record and the 25 September 2026 bounded reassessment.
+
+### 19.2 CAP-001 and CAP-002 evidence result
+
+| Capability | Previous Product Readiness Position | Current Currency Position | CRG-001 Commercial-Blocker Effect |
+|---|---|---|---|
+| CAP-001 — Secure Authentication | Partial / IN_PROGRESS | Implemented / PILOT_READY | No change — CRG-001 established no material CAP-001 capability gap |
+| CAP-002 — Role-Based Access Control | Partial / IN_PROGRESS | Implemented / PILOT_READY | No change — AAE-001 already resolved the CAP-002 commercial blocker |
+
+The bounded reassessment confirmed **6/6** targeted CAP-001 controls, **4/4** targeted CAP-002 controls, **6/6** selected focused security test groups, **14** authentication-source files, **14** RBAC/authorisation files and **196** security-test functions in the selected inventory.
+
+CAP-001 remains P0 because secure authentication remains mandatory for pilot and production operation. CAP-002 remains P0 because role and permission enforcement remains mandatory for governed enterprise access.
+
+### 19.3 Current Product Readiness position
+
+The impact projection and controlled catalogue reconciliation establish:
+
+- Product Readiness: **30% to 34%**;
+- pilot-scope readiness: **39% to 46%**;
+- catalogue-level P0 gaps: **2 to 0**;
+- pilot-scope gaps: **22 to 20**;
+- open recommendations: **26 to 24**;
+- pilot-ready capabilities: **3 to 5**;
+- in-progress capabilities: **17 to 15**;
+- overall completion: **48% to 51%**.
+
+### 19.4 Current commercial position
+
+This Product Readiness reconciliation does not alter the already-current CRG-001 commercial-blocker totals:
+
+- unresolved CRG-001 P0 commercial blockers: **0**;
+- total unresolved commercial blockers: **6**.
+
+The commercial pilot remains withheld because **20** pilot-scope gaps and additional P1/commercial conditions remain unresolved.
+
+**Current pilot-readiness verdict: NOT READY.**
