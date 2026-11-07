@@ -90,7 +90,17 @@ def _validate_migration_inventory(
     return resolved
 
 
-def _default_migrations() -> tuple[DatabaseMigration, ...]:
+def _default_migrations(
+    *,
+    dialect_name: str | None = None,
+) -> tuple[DatabaseMigration, ...]:
+    """
+    Resolve the governed migration sequence for one database dialect.
+
+    With no dialect supplied, return the complete production inventory.
+    CAP-016 uses PostgreSQL ALTER TABLE semantics and is therefore
+    deferred from SQLite legacy-schema migration fixtures.
+    """
     from app.db.migrations.pwi_001_workspace_foundation import (
         PWI_001_WORKSPACE_FOUNDATION,
     )
@@ -104,11 +114,26 @@ def _default_migrations() -> tuple[DatabaseMigration, ...]:
         CAP_004_UNIFIED_AUDIT,
     )
 
-    return (
+    foundation_migrations = (
         PWI_001_WORKSPACE_FOUNDATION,
         PWI_001_TENANT_PERSISTENCE,
         CAP_003_WORKSPACE_CONTROL,
         CAP_004_UNIFIED_AUDIT,
+    )
+
+    if (
+        dialect_name is not None
+        and dialect_name != "postgresql"
+    ):
+        return foundation_migrations
+
+    from app.db.migrations.cap_016_product_scope import (
+        CAP_016_PRODUCT_SCOPE,
+    )
+
+    return (
+        *foundation_migrations,
+        CAP_016_PRODUCT_SCOPE,
     )
 
 
@@ -121,7 +146,9 @@ def run_database_migrations(
         (
             migrations
             if migrations is not None
-            else _default_migrations()
+            else _default_migrations(
+                dialect_name=engine.dialect.name,
+            )
         )
     )
 

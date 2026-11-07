@@ -6,25 +6,31 @@ from app.db.session import SessionLocal
 from app.db.models.memory import Memory
 from app.db.models.insight import Insight
 from app.db.models.memory_relationship import MemoryRelationship
-from app.services.workspace.tenant_scope import normalize_workspace_id
+from app.services.memory.scope import (
+    MemoryIdentityScope,
+    legacy_chat_scope,
+    orm_identity_predicate,
+)
 
 
-def generate_insights(
-    chat_id: int,
-    workspace_id: str,
+def generate_insights_for_scope(
+    scope: MemoryIdentityScope,
 ):
 
     session = SessionLocal()
 
     scored_insights = []
-    resolved_workspace_id = normalize_workspace_id(workspace_id)
 
     try:
 
         memories = session.exec(
             select(Memory).where(
-                Memory.workspace_id == resolved_workspace_id,
-                Memory.chat_id == chat_id,
+                Memory.workspace_id
+                == scope.workspace_id,
+                orm_identity_predicate(
+                    Memory,
+                    scope,
+                ),
             )
         ).all()
 
@@ -34,7 +40,7 @@ def generate_insights(
             session.exec(
                 select(MemoryRelationship).where(
                     MemoryRelationship.workspace_id
-                    == resolved_workspace_id,
+                    == scope.workspace_id,
                     MemoryRelationship.source_memory_id.in_(
                         memory_ids
                     ),
@@ -195,10 +201,13 @@ def generate_insights(
         for msg in final_insights:
 
             insight = Insight(
-                workspace_id=resolved_workspace_id,
-                chat_id=chat_id,
+                workspace_id=scope.workspace_id,
+                chat_id=scope.chat_id,
+                account_user_id=(
+                    scope.account_user_id
+                ),
                 message=msg,
-                insight_type="predictive"
+                insight_type="predictive",
             )
 
             session.add(insight)
@@ -209,3 +218,18 @@ def generate_insights(
 
     finally:
         session.close()
+
+
+def generate_insights(
+    chat_id: int,
+    workspace_id: str,
+):
+    """
+    Preserve the established legacy chat-scoped Insight API.
+    """
+    return generate_insights_for_scope(
+        legacy_chat_scope(
+            workspace_id,
+            chat_id,
+        )
+    )

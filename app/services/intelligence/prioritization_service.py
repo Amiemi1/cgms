@@ -4,10 +4,13 @@ from datetime import datetime
 
 from app.db.models.memory import Memory
 from app.db.models.goal import Goal
-from app.services.workspace.tenant_scope import (
-    load_scoped_record,
-    normalize_workspace_id,
+from app.services.memory.scope import (
+    MemoryIdentityScope,
+    identity_scope_from_record,
+    legacy_chat_scope,
+    orm_identity_predicate,
 )
+from app.services.workspace.tenant_scope import load_scoped_record
 
 
 # ------------------------------------------------
@@ -27,6 +30,12 @@ def goal_score(session: Session, memory: Memory) -> int:
         )
 
         if goal and goal.status == "active":
+            if (
+                identity_scope_from_record(goal)
+                != identity_scope_from_record(memory)
+            ):
+                return 0
+
             return 25
 
         return 0
@@ -254,22 +263,21 @@ def compute_score(session: Session, memory: Memory, all_tasks) -> Tuple[int, Lis
 # ------------------------------------------------
 # GET PRIORITIZED TASKS
 # ------------------------------------------------
-def get_prioritized_tasks(
+def get_prioritized_tasks_for_scope(
     session: Session,
-    chat_id: int,
-    workspace_id: str,
-    limit: int = 10
+    scope: MemoryIdentityScope,
+    limit: int = 10,
 ) -> List[Dict]:
 
     try:
-        resolved_workspace_id = normalize_workspace_id(
-            workspace_id
-        )
-
         memories = session.exec(
             select(Memory).where(
-                Memory.workspace_id == resolved_workspace_id,
-                Memory.chat_id == chat_id,
+                Memory.workspace_id
+                == scope.workspace_id,
+                orm_identity_predicate(
+                    Memory,
+                    scope,
+                ),
             )
         ).all()
 
@@ -334,6 +342,25 @@ def get_prioritized_tasks(
     except Exception as e:
         print("PRIORITIES ERROR:", e)
         return []
+
+
+def get_prioritized_tasks(
+    session: Session,
+    chat_id: int,
+    workspace_id: str,
+    limit: int = 10,
+) -> List[Dict]:
+    """
+    Preserve the established legacy chat-scoped prioritization API.
+    """
+    return get_prioritized_tasks_for_scope(
+        session=session,
+        scope=legacy_chat_scope(
+            workspace_id,
+            chat_id,
+        ),
+        limit=limit,
+    )
 
 
 # ------------------------------------------------
@@ -435,19 +462,17 @@ def is_blocked(task, all_tasks):
 # ------------------------------------------------
 # GET NEXT ACTION
 # ------------------------------------------------
-def get_next_action(
+def get_next_action_for_scope(
     session,
-    chat_id: int,
-    workspace_id: str,
+    scope: MemoryIdentityScope,
 ):
 
     try:
         print("---- NEXT ACTION START ----")
 
-        tasks = get_prioritized_tasks(
+        tasks = get_prioritized_tasks_for_scope(
             session,
-            chat_id,
-            workspace_id,
+            scope,
             limit=50,
         )
 
@@ -543,3 +568,20 @@ def get_next_action(
             "score": 0,
             "reasons": ["error"]
         }
+
+
+def get_next_action(
+    session,
+    chat_id: int,
+    workspace_id: str,
+):
+    """
+    Preserve the established legacy chat-scoped next-action API.
+    """
+    return get_next_action_for_scope(
+        session=session,
+        scope=legacy_chat_scope(
+            workspace_id,
+            chat_id,
+        ),
+    )

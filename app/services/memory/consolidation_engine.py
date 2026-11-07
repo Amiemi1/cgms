@@ -1,6 +1,10 @@
 from sqlmodel import select
+
 from app.db.models.memory import Memory
-from app.services.workspace.tenant_scope import inherit_workspace_id
+from app.services.memory.scope import (
+    identity_scope_from_record,
+    orm_identity_predicate,
+)
 
 
 def consolidate_memory(session, new_memory):
@@ -10,14 +14,22 @@ def consolidate_memory(session, new_memory):
     instead of deleting records during flush cycle.
     """
 
-    workspace_id = inherit_workspace_id(new_memory)
+    scope = identity_scope_from_record(
+        new_memory
+    )
 
     existing = session.exec(
         select(Memory).where(
-            Memory.workspace_id == workspace_id,
-            Memory.chat_id == new_memory.chat_id,
-            Memory.summary == new_memory.summary,
-            Memory.id != new_memory.id
+            Memory.workspace_id
+            == scope.workspace_id,
+            orm_identity_predicate(
+                Memory,
+                scope,
+            ),
+            Memory.summary
+            == new_memory.summary,
+            Memory.id
+            != new_memory.id,
         )
     ).first()
 

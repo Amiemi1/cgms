@@ -2,13 +2,21 @@ from sqlmodel import select
 
 from app.db.models.memory import Memory
 from app.db.models.memory_relationship import MemoryRelationship
-from app.services.retrieval.vector_search import vector_search
-from app.services.workspace.tenant_scope import inherit_workspace_id
+from app.services.memory.scope import (
+    identity_scope_from_record,
+    orm_identity_predicate,
+)
+from app.services.retrieval.vector_search import (
+    vector_search_for_scope,
+)
 
 
 def link_memories(session, new_memory):
 
-    workspace_id = inherit_workspace_id(new_memory)
+    scope = identity_scope_from_record(
+        new_memory
+    )
+    workspace_id = scope.workspace_id
 
     # ------------------------------------------------
     # RULE RELATIONSHIPS
@@ -17,8 +25,12 @@ def link_memories(session, new_memory):
     recent_memories = session.exec(
         select(Memory)
         .where(
-            Memory.workspace_id == workspace_id,
-            Memory.chat_id == new_memory.chat_id,
+            Memory.workspace_id
+            == workspace_id,
+            orm_identity_predicate(
+                Memory,
+                scope,
+            ),
         )
         .order_by(Memory.created_at.desc())
         .limit(10)
@@ -70,12 +82,11 @@ def link_memories(session, new_memory):
     if new_memory.embedding is None:
         return
 
-    results = vector_search(
+    results = vector_search_for_scope(
         session=session,
         embedding=new_memory.embedding,
-        chat_id=new_memory.chat_id,
-        workspace_id=workspace_id,
-        limit=5
+        scope=scope,
+        limit=5,
     )
 
     for row in results:

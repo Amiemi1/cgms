@@ -1,78 +1,87 @@
-# =====================================================
-# VECTOR MEMORY SEARCH SERVICE
-# =====================================================
-
-from sqlmodel import Session
 from sqlalchemy import text
+from sqlmodel import Session
 
-from app.services.workspace.tenant_scope import normalize_workspace_id
+from app.services.memory.scope import (
+    MemoryIdentityScope,
+    legacy_chat_scope,
+    raw_identity_predicate,
+)
 
 
-def search_memories(
-    session,
-    chat_id,
-    embedding,
-    workspace_id: str,
-    limit=5,
+def search_memories_for_scope(
+    session: Session,
+    embedding: list,
+    scope: MemoryIdentityScope,
+    limit: int = 10,
 ):
     """
-    Perform semantic search on memories using pgvector.
+    Perform semantic memory search in one explicit identity scope.
     """
+    emb_str = (
+        "["
+        + ",".join(
+            str(value)
+            for value in embedding
+        )
+        + "]"
+    )
 
-    resolved_workspace_id = normalize_workspace_id(workspace_id)
+    (
+        identity_predicate,
+        identity_params,
+    ) = raw_identity_predicate(
+        scope
+    )
 
-    # -------------------------------------------------
-    # DEBUG
-    # -------------------------------------------------
-
-    print(f"[DEBUG] Embedding length passed to search: {len(embedding)}")
-
-    # -------------------------------------------------
-    # VECTOR SEARCH QUERY
-    # -------------------------------------------------
-
-    query = text("""
+    query = text(
+        """
         SELECT
             id,
             summary,
             memory_type,
-            (embedding <-> CAST(:embedding AS vector)) AS distance
+            1 - (
+                embedding
+                <=> CAST(:embedding AS vector)
+            ) AS score
         FROM memory
         WHERE workspace_id = :workspace_id
-          AND chat_id = :chat_id
+          AND """
+        + identity_predicate
+        + """
           AND embedding IS NOT NULL
-        ORDER BY embedding <-> CAST(:embedding AS vector)
+        ORDER BY
+            embedding
+            <=> CAST(:embedding AS vector)
         LIMIT :limit
-    """)
-
-    # -------------------------------------------------
-    # EXECUTE
-    # -------------------------------------------------
-
-    result = session.execute(
-        query,
-        {
-            "embedding": embedding,
-            "workspace_id": resolved_workspace_id,
-            "chat_id": chat_id,
-            "limit": limit
-        }
+        """
     )
 
-    rows = result.fetchall()
+    params = {
+        "embedding":
+            emb_str,
+        "workspace_id":
+            scope.workspace_id,
+        "limit":
+            limit,
+        **identity_params,
+    }
 
-    # -------------------------------------------------
-    # DEBUG RESULT
-    # -------------------------------------------------
+    rows = session.execute(
+        query,
+        params,
+    ).fetchall()
 
-    print(f"[DEBUG] Vector search rows returned: {len(rows)}")
-
-    return rows
-
-
-# =====================================================
-# SEMANTIC SEARCH SERVICE
-# =====================================================
+    return [
+        {
+            "id": row[0],
+            "summary": row[1],
+            "type": row[2],
+            "score": float(
+                row[3]
+            ),
+        }
+        for row in rows
+    ]
 
 
 def search_memories(
@@ -82,35 +91,15 @@ def search_memories(
     workspace_id: str,
     limit: int = 10,
 ):
-    resolved_workspace_id = normalize_workspace_id(workspace_id)
-
-    # Convert embedding list → pgvector string
-    emb_str = "[" + ",".join([str(x) for x in embedding]) + "]"
-
-    query = text("""
-        SELECT id, summary, memory_type,
-               1 - (embedding <=> CAST(:embedding AS vector)) AS score
-        FROM memory
-        WHERE workspace_id = :workspace_id
-          AND chat_id = :chat_id
-          AND embedding IS NOT NULL
-        ORDER BY embedding <=> CAST(:embedding AS vector)
-        LIMIT :limit
-    """)
-
-    rows = session.execute(query, {
-        "embedding": emb_str,
-        "workspace_id": resolved_workspace_id,
-        "chat_id": chat_id,
-        "limit": limit
-    }).fetchall()
-
-    return [
-        {
-            "id": r[0],
-            "summary": r[1],
-            "type": r[2],
-            "score": float(r[3])
-        }
-        for r in rows
-    ]
+    """
+    Preserve the established legacy chat-scoped semantic-search API.
+    """
+    return search_memories_for_scope(
+        session=session,
+        embedding=embedding,
+        scope=legacy_chat_scope(
+            workspace_id,
+            chat_id,
+        ),
+        limit=limit,
+    )

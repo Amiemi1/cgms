@@ -59,6 +59,7 @@ import app.services.orchestration.handlers  # noqa: F401
 
 # Core dashboard routers
 from app.dashboard.routes.memory_panels import router as memory_panels_router
+from app.dashboard.routes.knowledge_workspace import router as knowledge_workspace_router
 from app.dashboard.routes.memory_graph import router as memory_graph_router
 from app.dashboard.routes.memory_actions import router as memory_actions_router
 from app.dashboard.routes.insights import router as insights_router
@@ -322,6 +323,7 @@ def mark_task_complete(
 
 
 # Dashboard routers
+app.include_router(knowledge_workspace_router)
 app.include_router(memory_panels_router, prefix="/dashboard")
 app.include_router(memory_graph_router, prefix="/dashboard")
 app.include_router(memory_actions_router, prefix="/dashboard")

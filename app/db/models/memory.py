@@ -5,14 +5,35 @@
 from sqlmodel import SQLModel, Field
 from typing import Optional, List
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, DateTime, Boolean, BigInteger
+from sqlalchemy import (
+    BigInteger,
+    Boolean,
+    CheckConstraint,
+    Column,
+    DateTime,
+    ForeignKey,
+    Integer,
+    JSON,
+    String,
+)
 from pgvector.sqlalchemy import Vector
-from sqlalchemy import Column, JSON
 
 
 class Memory(SQLModel, table=True):
 
-    __tablename__ = "memory"   # ✅ FIXED (must be tablename)
+    __tablename__ = "memory"
+
+    __table_args__ = (
+        CheckConstraint(
+            (
+                "(chat_id IS NOT NULL AND "
+                "account_user_id IS NULL) OR "
+                "(chat_id IS NULL AND "
+                "account_user_id IS NOT NULL)"
+            ),
+            name="ck_memory_identity_scope_exactly_one",
+        ),
+    )
 
     id: Optional[int] = Field(default=None, primary_key=True)
 
@@ -20,9 +41,25 @@ class Memory(SQLModel, table=True):
         sa_column=Column(String(64), index=True, nullable=False)
     )
 
-    # Telegram chat IDs can exceed 32-bit integers
-    chat_id: int = Field(
-        sa_column=Column(BigInteger, index=True, nullable=False)
+    # Legacy Telegram/chat ingress identity.
+    chat_id: Optional[int] = Field(
+        default=None,
+        sa_column=Column(
+            BigInteger,
+            index=True,
+            nullable=True,
+        ),
+    )
+
+    # Authenticated browser/product account identity.
+    account_user_id: Optional[int] = Field(
+        default=None,
+        sa_column=Column(
+            BigInteger,
+            ForeignKey("user.id"),
+            index=True,
+            nullable=True,
+        ),
     )
 
     depends_on: Optional[List[int]] = Field(

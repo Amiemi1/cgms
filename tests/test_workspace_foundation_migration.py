@@ -22,6 +22,9 @@ from app.db.migrations.cap_003_workspace_control import (
 from app.db.migrations.cap_004_unified_audit import (
     MIGRATION_ID as CAP_004_AUDIT_MIGRATION_ID,
 )
+from app.db.migrations.cap_016_product_scope import (
+    MIGRATION_ID as CAP_016_PRODUCT_SCOPE_MIGRATION_ID,
+)
 from app.db.migrations.runner import (
     _default_migrations,
 )
@@ -148,6 +151,37 @@ def test_default_migration_inventory_is_ordered():
         TENANT_PERSISTENCE_MIGRATION_ID,
         CAP_003_CONTROL_MIGRATION_ID,
         CAP_004_AUDIT_MIGRATION_ID,
+        CAP_016_PRODUCT_SCOPE_MIGRATION_ID,
+    )
+
+
+def test_default_migration_inventory_is_dialect_aware():
+    sqlite_ids = tuple(
+        migration.migration_id
+        for migration in _default_migrations(
+            dialect_name="sqlite",
+        )
+    )
+
+    postgres_ids = tuple(
+        migration.migration_id
+        for migration in _default_migrations(
+            dialect_name="postgresql",
+        )
+    )
+
+    expected_foundation = (
+        WORKSPACE_FOUNDATION_MIGRATION_ID,
+        TENANT_PERSISTENCE_MIGRATION_ID,
+        CAP_003_CONTROL_MIGRATION_ID,
+        CAP_004_AUDIT_MIGRATION_ID,
+    )
+
+    assert sqlite_ids == expected_foundation
+
+    assert postgres_ids == (
+        *expected_foundation,
+        CAP_016_PRODUCT_SCOPE_MIGRATION_ID,
     )
 
 
