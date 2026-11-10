@@ -1,7 +1,7 @@
 CGMS Platform Architecture Map
 Master Blueprint for the Enterprise Cognitive Operating System
 Baseline: CGMS v1.75
-Current Platform State: Enterprise Event Bus Foundation
+Current Platform State: Productisation baseline through CAP-016 account-scoped Knowledge Workspace backend
 Purpose: Define the canonical map of CGMS subsystems, bounded contexts, dependencies, event flows, documentation artifacts, and future platform evolution.
 
 1. Platform Vision
@@ -310,3 +310,47 @@ Which tests prove it works?
 Which research contribution does it support?
 
 This keeps CGMS aligned with its long-term goal: becoming an enterprise-grade cognitive operating system.
+
+13. Current Productisation Architecture Currency — 8 November 2026
+
+The v1.75 event-bus blueprint above remains historical architectural context. The live platform has since advanced materially through governed productisation milestones.
+
+Current implemented foundations include:
+
+- application-wide authentication and authorization enforcement;
+- persistent workspace isolation and authenticated browser workspace switching;
+- persistent enterprise audit with append-only enforcement;
+- governed encrypted PostgreSQL backup and explicit-target restore;
+- Product Readiness governance and CI;
+- account-scoped product memory in addition to legacy chat scope;
+- dual chat/account identity support across memory, goals, insights, search and prioritization;
+- nine identity-free Knowledge Workspace backend routes whose identity is derived from the authenticated principal and active workspace.
+
+Current CAP-016 flow:
+
+Authenticated Browser Principal
+      |
+      v
+Workspace + Account Identity Resolution
+      |
+      v
+MemoryIdentityScope
+      |
+      +--------------------+
+      |                    |
+      v                    v
+Legacy Chat Scope      Product/Account Scope
+      |                    |
+      +---------+----------+
+                |
+                v
+Memory / Goals / Insights / Search / Prioritization
+                |
+                v
+Identity-Free Knowledge Workspace API
+
+The remaining CAP-016 product-experience gap is above this backend boundary: the existing Knowledge Worker dashboard JavaScript still carries a hard-coded `userId` and invokes legacy identity-bearing URLs.
+
+That client migration is governed by R14-A/R14-B and is not part of this architecture-current-state synchronization.
+
+CAP-017 Product Navigation Shell is the adjacent product-experience capability but remains separately governed.

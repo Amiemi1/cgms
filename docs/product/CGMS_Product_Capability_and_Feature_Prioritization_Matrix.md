@@ -607,3 +607,40 @@ The CRG-001 commercial-blocker register is unchanged by this currency reconcilia
 The commercial pilot verdict remains **NOT READY**. Twenty pilot-required capabilities remain below pilot-ready status, other P1/commercial gaps remain open, and no production-ready capability is claimed.
 
 This currency update does not authorise a commercial pilot, deployment, production-database action or unrelated feature expansion.
+
+---
+
+# 25. CAP-016 Post-Publication Current-State Update
+
+**Update date:** 8 November 2026
+
+**Decision:** retain CAP-016 as Partial / IN_PROGRESS pending Knowledge Worker client migration
+
+CAP-016 retains its approved prioritization:
+
+- capability: **Knowledge Worker Interface**;
+- priority: **P1**;
+- MLP: **Yes**;
+- pilot: **Yes**;
+- technical readiness: **Partial**;
+- customer value: **Critical**;
+- commercial importance: **Critical**;
+- target: **MLP**.
+
+Published CAP-016 evidence now includes:
+
+- account/product identity persistence and normalization;
+- workspace-bound account scope derived from the authenticated principal;
+- account-scoped memory, search, insight and prioritization behaviour;
+- nine identity-free Knowledge Workspace backend routes;
+- focused CAP-016/authorization validation with **35 passed** tests;
+- Product Readiness CI run **#51 — PASS**;
+- authorization inventory of **4 public**, **110 protected** and **114 total APIRoutes**.
+
+This evidence materially advances CAP-016 but does not yet justify a readiness promotion.
+
+The remaining blocker is the Knowledge Worker browser client, which still contains a hard-coded `userId` and consumes legacy identity-bearing routes instead of the account-bound backend contract.
+
+No CAP-016 Product Readiness promotion occurs in this update.
+
+The next governed action is R14-A read-only residual-gap and implementation-boundary reconciliation. CAP-017 remains separately governed.

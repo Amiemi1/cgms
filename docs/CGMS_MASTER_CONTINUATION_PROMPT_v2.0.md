@@ -23,7 +23,7 @@ docs/CGMS_MASTER_CONTINUATION_PROMPT_v2.0.md
 **Comprehensive handoff date**
 
 ```text
-25 September 2026
+8 November 2026
 ```
 
 **Current programme**
@@ -41,19 +41,19 @@ Sprint 22
 **Current intervention**
 
 ```text
-CAP-001 / CAP-002 — Product Readiness Currency Reconciliation
+CAP-016 — Post-Publication Current-State Synchronization and Client-Migration Reconciliation
 ```
 
 **Current sub-stage**
 
 ```text
-Read-only CAP-001/CAP-002 readiness inventory and promotion-impact projection passed on published authority `f3a11c0e90488529f12ef7d19ceb9ecc75f90523`; controlled promotion update authorised to reconcile both capabilities from stale Partial / IN_PROGRESS catalogue currency to Implemented / PILOT_READY; validation and publication remain pending
+R13 CAP-016 account-scoped product-memory engineering and authorization-baseline remediation are published at `90d5c27c9b47b803c083534b3329f1c526fd5ef8`; GitHub Product Readiness CI run #51 passed; R14-0 is the separately approved current-state synchronization candidate and does not promote CAP-016 beyond Partial / IN_PROGRESS
 ```
 
 **Exact next authorised action**
 
 ```text
-Apply and validate only the bounded 13-path CAP-001/CAP-002 readiness-currency candidate; staging, commit and push require separate explicit approval
+Apply and validate only the bounded 10-path R14-0 authoritative current-state synchronization; publication requires separate staging, commit and push approval; R14-A remains separately governed
 ```
 
 ---
@@ -5657,5 +5657,105 @@ This intervention is a Product Readiness and governance-currency reconciliation.
 - staging, commit or push without separate explicit approval.
 
 Historical readiness snapshots remain historical evidence. Live Git state controls publication identity.
+
+# 56. R14-0 — POST-R13 CAP-016 CURRENT-STATE SYNCHRONIZATION
+
+R14-0 was separately approved on 8 November 2026 to reconcile authoritative programme, readiness, architecture and repository-inventory surfaces with the live post-R13 repository state.
+
+This section is the controlling current-state authority. Older sections remain historical evidence and must not be rewritten to appear current.
+
+## 56.1 Live repository authority
+
+- branch: `cgms-v2-roadmap`;
+- published local/upstream/remote authority: `90d5c27c9b47b803c083534b3329f1c526fd5ef8`;
+- CAP-016 engineering commit: `b8e2ff1ea03346b855dbee3d08ca97429aeb2dce`;
+- R13 authorization-baseline repair commit: `90d5c27c9b47b803c083534b3329f1c526fd5ef8`;
+- GitHub Product Readiness CI run: **#51**, run ID `42420480329`, **PASS**;
+- CI-aligned focused CAP-016/authorization validation: **35 passed, 0 failed, 0 errors**;
+- public permission registrations: **4**;
+- protected permission registrations: **110**;
+- registered APIRoutes: **114**;
+- missing global authorization guard registrations: **0**.
+
+## 56.2 CAP-016 technical position
+
+The published CAP-016 backend now provides:
+
+- persistent product/account identity scope in addition to legacy chat scope;
+- account-normalized memory identity derived from the authenticated principal;
+- workspace-bound account scope;
+- account-scoped memory, search, insight and prioritization behaviour;
+- additive CAP-016 persistence migration and model support;
+- nine identity-free Knowledge Workspace backend routes;
+- protected mutation routes governed by existing application authorization;
+- focused and remote regression evidence.
+
+The published engineering does not alter the protected historical PWI-001 migration files or `manual_test_db.py`.
+
+## 56.3 CAP-016 readiness position
+
+CAP-016 — Knowledge Worker Interface remains **Partial / IN_PROGRESS**, P1, MLP-required and pilot-required.
+
+No Product Readiness promotion is authorised by R14-0.
+
+The governed Product Readiness currency therefore remains:
+
+- Product Readiness: **34%**;
+- pilot-scope readiness: **46%**;
+- catalogue-level P0 gaps: **0**;
+- pilot-scope gaps: **20**;
+- open recommendations: **24**;
+- pilot-ready capabilities: **5**;
+- in-progress capabilities: **15**;
+- overall CGMS completion: **51%**;
+- unresolved CRG-001 P0 commercial blockers: **0**;
+- total unresolved CRG-001 commercial blockers: **6**;
+- commercial pilot verdict: **NOT READY**.
+
+## 56.4 Residual Knowledge Worker client gap
+
+The server-side identity and workspace boundary is materially improved, but the browser client has not yet completed the migration.
+
+`app/dashboard/templates/dashboard.html` still contains a hard-coded browser `userId` and legacy identity-bearing calls for tasks, search, deduplication, insights, priorities and goals.
+
+The account-bound backend routes created by CAP-016 therefore do not yet constitute complete Knowledge Worker Interface closure.
+
+R14-0 intentionally does not modify that browser template.
+
+## 56.5 Roadmap position and next governed action
+
+The dependency-driven remediation programme has completed the principal P0 authorization, workspace-isolation, persistent-audit and backup/recovery foundations.
+
+The active roadmap family is now:
+
+**Identity-Bound Product Shell and Workspace Experience — CAP-014, CAP-016 and CAP-017.**
+
+CAP-016 is the immediate continuation because its published backend engineering precedes completion of the browser client migration.
+
+The next governed technical stage is:
+
+**R14-A — CAP-016 Post-Publication Residual-Gap and Implementation-Boundary Reconciliation.**
+
+R14-A must remain read-only and must determine the exact client-migration implementation boundary before R14-B implementation is authorised.
+
+CAP-017 Product Navigation Shell implementation remains separately governed and is not authorised by R14-0.
+
+## 56.6 R14-0 governance boundary
+
+R14-0 changes current-state/governance currency and repository inventory only.
+
+It does not authorise or perform:
+
+- CAP-016 browser-client implementation;
+- CAP-016 readiness promotion;
+- CAP-017 implementation;
+- database access or migration execution;
+- deployment;
+- staging;
+- commit;
+- push;
+- workflow rerun.
+
+The R14-0 synchronization requires separate publication approval after local validation.
 
 # END OF CGMS MASTER CONTINUATION PROMPT v2.0

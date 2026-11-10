@@ -83,7 +83,7 @@ def test_registry_contains_governed_progress() -> None:
 
     assert any(
         item["label"] == "Current regression suite"
-        and item["value"] == "758 passed"
+        and item["value"] == "CI #51 — PASS"
         for item in dashboard["summary"]
     )
 
@@ -95,7 +95,7 @@ def test_registry_contains_governed_progress() -> None:
 
     assert any(
         item["label"] == "Latest published checkpoint"
-        and item["value"] == "f3a11c0"
+        and item["value"] == "90d5c27"
         for item in dashboard["summary"]
     )
 
@@ -117,24 +117,25 @@ def test_registry_contains_governed_progress() -> None:
     )
 
     assert [item["hash"] for item in dashboard["commits"][:5]] == [
+        "90d5c27",
+        "b8e2ff1",
+        "107d1a4",
         "f3a11c0",
         "31a6265",
-        "9c683d2",
-        "6b8a00d",
-        "4a43f40",
     ]
 
     assert dashboard["page"]["status"] == (
-        "Read-only CAP-001/CAP-002 readiness reassessment and "
-        "promotion-impact projection passed on published authority "
-        "f3a11c0e90488529f12ef7d19ceb9ecc75f90523; the controlled "
-        "currency candidate records both capabilities as Implemented / "
-        "PILOT_READY, reduces catalogue-level P0 gaps to zero, and "
-        "retains the commercial pilot verdict as NOT READY"
+        "CAP-016 account-scoped product-memory engineering is published "
+        "at b8e2ff1ea03346b855dbee3d08ca97429aeb2dce; R13 authorization-"
+        "baseline repair is published at "
+        "90d5c27c9b47b803c083534b3329f1c526fd5ef8; Product Readiness CI "
+        "run #51 passed. CAP-016 remains Partial because the Knowledge "
+        "Worker browser client still carries a hard-coded user identity "
+        "and legacy identity-bearing route calls."
     )
     assert dashboard["page"]["branch"] == "cgms-v2-roadmap"
     assert dashboard["governance"]["classification"] == (
-        "CAP-001/CAP-002 Product Readiness Currency Reconciliation"
+        "CAP-016 Post-Publication Current-State Synchronization"
     )
 
 
@@ -207,16 +208,15 @@ def test_authorized_viewer_can_open_progress() -> None:
     body = response.text
 
     assert "CGMS Programme Progress Dashboard" in body
-    assert "758 passed" in body
+    assert "CI #51 — PASS" in body
     assert "PWI-001-187D" in body
     assert "PWI-001-187E" in body
-    assert "f3a11c0" in body
+    assert "90d5c27" in body
     assert "9c683d2" in body
     assert "0140d4a" in body
-    assert "Run #48" in body
+    assert "Run #51" in body
     assert "Run #46" in body
-    assert "CAP-001/CAP-002" in body
-    assert "Promotion Candidate" in body
+    assert "CAP-016" in body
     assert "CAP-005 real PostgreSQL recovery validation" in body
     assert "/patent-readiness/dashboard" in body
     assert "docker compose up -d db" in body
@@ -345,23 +345,25 @@ def test_registry_preserves_crg001_readiness_assessment() -> None:
     )
 
 
-def test_registry_contains_pwi001_current_state() -> None:
+def test_registry_contains_current_cap016_state() -> None:
     dashboard = (
         ProgrammeProgressRegistry()
         .build_view()
     )
 
-    assert dashboard["page"]["as_of"] == "25 September 2026"
+    assert dashboard["page"]["as_of"] == "8 November 2026"
     assert dashboard["page"]["current_sprint"] == "Sprint 22"
     assert dashboard["page"]["current_work"] == (
-        "CAP-001/CAP-002 Product Readiness Currency Promotion"
+        "CAP-016 Post-Publication Residual-Gap and "
+        "Client-Migration Reconciliation"
     )
     assert dashboard["current_focus"][0] == (
-        "CAP-001/CAP-002 bounded reassessment and promotion projection passed"
+        "CAP-016 account-scoped backend engineering published at b8e2ff1"
     )
     assert dashboard["upcoming"] == [
-        "Validate the bounded CAP-001/CAP-002 currency candidate",
-        "Twenty pilot-scope gaps and six CRG-001 commercial blockers remain governed",
+        "Complete R14-A read-only CAP-016 residual-gap and implementation-boundary reconciliation",
+        "Migrate the Knowledge Worker browser client only after exact R14-B scope approval",
+        "Keep CAP-017 Product Navigation Shell separately governed",
         "Commercial pilot authorization remains withheld pending remaining gates",
     ]
     assert "live Git state controls publication identity" in (
@@ -597,41 +599,42 @@ def test_progress_renders_auditable_buyer_scores_and_evidence_basis() -> None:
         in body
     )
 
-def test_cap001_cap002_promotion_currency_records_current_state() -> None:
+def test_cap016_post_publication_currency_records_current_state() -> None:
     dashboard = ProgrammeProgressRegistry().build_view()
 
     assert dashboard["page"]["current_work"] == (
-        "CAP-001/CAP-002 Product Readiness Currency Promotion"
+        "CAP-016 Post-Publication Residual-Gap and "
+        "Client-Migration Reconciliation"
     )
 
-    assert "CAP-001/CAP-002" in dashboard["page"]["status"]
-    assert "PILOT_READY" in dashboard["page"]["status"]
+    assert "CAP-016" in dashboard["page"]["status"]
+    assert "remains Partial" in dashboard["page"]["status"]
+    assert "hard-coded user identity" in dashboard["page"]["status"]
 
     assert any(
         item["label"] == "Pilot readiness"
         and item["value"] == "NOT READY"
-        and "catalogue-level P0 gaps"
+        and "zero catalogue-level P0 gaps"
         in item["detail"]
         for item in dashboard["summary"]
     )
 
     assert any(
-        item["title"] == "CAP-005 publication and readiness closure"
-        and item["result"] == "PASS — PILOT_READY"
-        and "30%" in item["detail"]
-        and "39%" in item["detail"]
+        item["title"] == "CAP-016 account-scoped Knowledge Workspace publication"
+        and item["result"] == "PASS — published"
+        and "b8e2ff1" in item["detail"]
         for item in dashboard["validation"]
     )
 
     assert any(
-        item["title"] == "CAP-005 real PostgreSQL recovery validation"
-        and item["result"] == "PASS — real backup/restore"
-        and "manifest-v2" in item["detail"]
+        item["title"] == "R13 CAP-016 authorization and CI closure"
+        and item["result"] == "PASS — GitHub CI #51"
+        and "35 focused tests passed" in item["detail"]
         for item in dashboard["validation"]
     )
 
     assert dashboard["governance"]["classification"] == (
-        "CAP-001/CAP-002 Product Readiness Currency Reconciliation"
+        "CAP-016 Post-Publication Current-State Synchronization"
     )
 
     assert "zero unresolved CRG-001 P0 commercial blockers" in (

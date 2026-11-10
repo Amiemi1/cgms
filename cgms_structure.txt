@@ -1,167 +1,546 @@
-Folder PATH listing for volume OS
-Volume serial number is FECE-ACB9
-C:\USERS\MURPHYPERSONAL\ONEDRIVE\DESKTOP\CONTEXTUAL_GROUP_MEMORY_SYSTEM\05_PROTOTYPE_AND_TESTING\CGMS\CGMS
-|   .env
-|   .env.example
-|   .gitattributes
-|   .gitignore
-|   all_files.txt
-|   cgms_structure.txt
-|   docker-compose.yml
-|   poetry.lock
-|   pyproject.toml
-|   README.md
-|   
-+---app
-|   |   main.py
-|   |   
-|   +---api
-|   |   +---dependencies
-|   |   \---routers
-|   +---bot
-|   |   |   main.py
-|   |   |   __init__.py
-|   |   |   
-|   |   +---handlers
-|   |   +---keyboards
-|   |   |   |   candidate_actions.py
-|   |   |   |   
-|   |   |   \---__pycache__
-|   |   |           candidate_actions.cpython-311.pyc
-|   |   |           
-|   |   +---middleware
-|   |   \---__pycache__
-|   |           main.cpython-311.pyc
-|   |           __init__.cpython-311.pyc
-|   |           
-|   +---core
-|   |   |   config.py
-|   |   |   logging.py
-|   |   |   __init__.py
-|   |   |   
-|   |   \---__pycache__
-|   |           config.cpython-311.pyc
-|   |           __init__.cpython-311.pyc
-|   |           
-|   +---db
-|   |   |   base.py
-|   |   |   session.py
-|   |   |   __init__.py
-|   |   |   
-|   |   +---models
-|   |   |   |   candidate_memory.py
-|   |   |   |   memory.py
-|   |   |   |   message.py
-|   |   |   |   __init__.py
-|   |   |   |   
-|   |   |   \---__pycache__
-|   |   |           candidate_memory.cpython-311.pyc
-|   |   |           memory.cpython-311.pyc
-|   |   |           message.cpython-311.pyc
-|   |   |           __init__.cpython-311.pyc
-|   |   |           
-|   |   +---repositories
-|   |   \---__pycache__
-|   |           base.cpython-311.pyc
-|   |           session.cpython-311.pyc
-|   |           __init__.cpython-311.pyc
-|   |           
-|   +---schemas
-|   +---services
-|   |   |   __init__.py
-|   |   |   
-|   |   +---detection
-|   |   |   |   decision_detector.py
-|   |   |   |   event_detector.py
-|   |   |   |   orchestrator.py
-|   |   |   |   task_detector.py
-|   |   |   |   __init__.py
-|   |   |   |   
-|   |   |   \---__pycache__
-|   |   |           decision_detector.cpython-311.pyc
-|   |   |           event_detector.cpython-311.pyc
-|   |   |           task_detector.cpython-311.pyc
-|   |   |           
-|   |   +---governance
-|   |   +---memory
-|   |   |   |   deduplicator.py
-|   |   |   |   priority.py
-|   |   |   |   save_candidate.py
-|   |   |   |   save_message.py
-|   |   |   |   __init__.py
-|   |   |   |   
-|   |   |   \---__pycache__
-|   |   |           deduplicator.cpython-311.pyc
-|   |   |           priority.cpython-311.pyc
-|   |   |           save_candidate.cpython-311.pyc
-|   |   |           save_message.cpython-311.pyc
-|   |   |           __init__.cpython-311.pyc
-|   |   |           
-|   |   +---retrieval
-|   |   |   |   get_memories.py
-|   |   |   |   query_engine.py
-|   |   |   |   search_memory.py
-|   |   |   |   
-|   |   |   \---__pycache__
-|   |   |           get_memories.cpython-311.pyc
-|   |   |           query_engine.cpython-311.pyc
-|   |   |           search_memory.cpython-311.pyc
-|   |   |           
-|   |   +---scheduler
-|   |   |   |   reminder_scheduler.py
-|   |   |   |   smart_scheduler.py
-|   |   |   |   __init__.py
-|   |   |   |   
-|   |   |   \---__pycache__
-|   |   |           reminder_scheduler.cpython-311.pyc
-|   |   |           smart_scheduler.cpython-311.pyc
-|   |   |           __init__.cpython-311.pyc
-|   |   |           
-|   |   +---time
-|   |   |   |   parse_time.py
-|   |   |   |   __init__.py
-|   |   |   |   
-|   |   |   \---__pycache__
-|   |   |           parse_time.cpython-311.pyc
-|   |   |           __init__.cpython-311.pyc
-|   |   |           
-|   |   +---time_parser
-|   |   |   |   absolute.py
-|   |   |   |   defaults.py
-|   |   |   |   natural_language.py
-|   |   |   |   parser.py
-|   |   |   |   relative.py
-|   |   |   |   time_of_day.py
-|   |   |   |   validator.py
-|   |   |   |   weekday.py
-|   |   |   |   __init__.py
-|   |   |   |   
-|   |   |   \---__pycache__
-|   |   |           absolute.cpython-311.pyc
-|   |   |           defaults.cpython-311.pyc
-|   |   |           natural_language.cpython-311.pyc
-|   |   |           parser.cpython-311.pyc
-|   |   |           relative.cpython-311.pyc
-|   |   |           time_of_day.cpython-311.pyc
-|   |   |           validator.cpython-311.pyc
-|   |   |           weekday.cpython-311.pyc
-|   |   |           __init__.cpython-311.pyc
-|   |   |           
-|   |   \---__pycache__
-|   |           __init__.cpython-311.pyc
-|   |           
-|   +---utils
-|   \---__pycache__
-|           main.cpython-311.pyc
-|           __init__.cpython-311.pyc
-|           
-+---docs
-+---scripts
-|   |   create_tables.py
-|   |   __init__.py
-|   |   
-|   \---__pycache__
-|           create_tables.cpython-311.pyc
-|           __init__.cpython-311.pyc
-|           
-\---tests
+# CGMS tracked repository structure
+# Authority: 90d5c27c9b47b803c083534b3329f1c526fd5ef8
+# Generated: 8 November 2026
+# Scope: tracked Git tree plus the authorized R14-0 current-state artifact candidate.
+.
+├── .github
+│   └── workflows
+│       └── product-readiness-ci.yml
+├── app
+│   ├── api
+│   │   ├── routers
+│   │   │   └── ingest.py
+│   │   └── routes
+│   │       └── insights.py
+│   ├── bot
+│   │   ├── keyboards
+│   │   │   └── candidate_actions.py
+│   │   ├── __init__.py
+│   │   ├── main.py
+│   │   └── router.py
+│   ├── channels
+│   │   ├── slack
+│   │   │   └── slack_app.py
+│   │   ├── telegram
+│   │   │   └── bot.py
+│   │   └── whatsapp
+│   │       └── webhook.py
+│   ├── core
+│   │   ├── __init__.py
+│   │   ├── config.py
+│   │   ├── logger.py
+│   │   ├── logging.py
+│   │   └── runtime_policy.py
+│   ├── dashboard
+│   │   ├── routes
+│   │   │   ├── __init__.py
+│   │   │   ├── admin_summary.py
+│   │   │   ├── audit_console.py
+│   │   │   ├── browser_auth.py
+│   │   │   ├── browser_session_administration.py
+│   │   │   ├── commercial.py
+│   │   │   ├── connector_adapters.py
+│   │   │   ├── connector_control.py
+│   │   │   ├── connector_health.py
+│   │   │   ├── connectors.py
+│   │   │   ├── enterprise_readiness.py
+│   │   │   ├── environment_manifest.py
+│   │   │   ├── external_ingestion.py
+│   │   │   ├── ga_release.py
+│   │   │   ├── goal_api.py
+│   │   │   ├── insights.py
+│   │   │   ├── intelligence_api.py
+│   │   │   ├── knowledge_workspace.py
+│   │   │   ├── main.py
+│   │   │   ├── memory_actions.py
+│   │   │   ├── memory_graph.py
+│   │   │   ├── memory_intelligence.py
+│   │   │   ├── memory_panels.py
+│   │   │   ├── operator_console.py
+│   │   │   ├── ops.py
+│   │   │   ├── patent_evidence_export.py
+│   │   │   ├── patent_readiness_dashboard.py
+│   │   │   ├── product_console.py
+│   │   │   ├── product_readiness.py
+│   │   │   ├── product_readiness_dashboard.py
+│   │   │   ├── programme_progress_dashboard.py
+│   │   │   ├── release_status.py
+│   │   │   ├── runtime_commands.py
+│   │   │   ├── runtime_events.py
+│   │   │   ├── runtime_flags.py
+│   │   │   ├── runtime_kill_switch.py
+│   │   │   ├── runtime_metrics.py
+│   │   │   ├── runtime_policy.py
+│   │   │   ├── runtime_quarantine.py
+│   │   │   ├── runtime_timeline.py
+│   │   │   ├── session_replay.py
+│   │   │   ├── system_health.py
+│   │   │   ├── workspace_admin.py
+│   │   │   ├── workspace_context.py
+│   │   │   ├── workspace_metrics.py
+│   │   │   ├── workspace_quotas.py
+│   │   │   └── workspaces.py
+│   │   ├── runtime
+│   │   │   └── incident_assessor.py
+│   │   ├── templates
+│   │   │   ├── browser_login.html
+│   │   │   ├── dashboard.html
+│   │   │   ├── operator_console.html
+│   │   │   ├── patent_readiness_dashboard.html
+│   │   │   ├── product_readiness_dashboard.html
+│   │   │   └── programme_progress_dashboard.html
+│   │   ├── __init__.py
+│   │   ├── auth.py
+│   │   ├── main.py
+│   │   └── schemas.py
+│   ├── db
+│   │   ├── migrations
+│   │   │   ├── __init__.py
+│   │   │   ├── cap_003_workspace_control.py
+│   │   │   ├── cap_004_unified_audit.py
+│   │   │   ├── cap_016_product_scope.py
+│   │   │   ├── pwi_001_tenant_persistence.py
+│   │   │   ├── pwi_001_workspace_foundation.py
+│   │   │   └── runner.py
+│   │   ├── models
+│   │   │   ├── __init__.py
+│   │   │   ├── audit_record.py
+│   │   │   ├── candidate_memory.py
+│   │   │   ├── decision_lineage.py
+│   │   │   ├── goal.py
+│   │   │   ├── insight.py
+│   │   │   ├── learning.py
+│   │   │   ├── learning_log.py
+│   │   │   ├── memory.py
+│   │   │   ├── memory_access.py
+│   │   │   ├── memory_relationship.py
+│   │   │   ├── memory_score.py
+│   │   │   ├── message.py
+│   │   │   ├── security_models.py
+│   │   │   ├── user.py
+│   │   │   ├── workspace.py
+│   │   │   └── workspace_control.py
+│   │   ├── __init__.py
+│   │   ├── base.py
+│   │   ├── init_db.py
+│   │   └── session.py
+│   ├── handlers
+│   │   ├── context_handler.py
+│   │   ├── core_handler.py
+│   │   ├── goal_handler.py
+│   │   ├── governance_handler.py
+│   │   ├── ingestion_handler.py
+│   │   ├── intelligence_handler.py
+│   │   ├── reasoning_handler.py
+│   │   ├── security_handler.py
+│   │   └── system_handler.py
+│   ├── services
+│   │   ├── agent
+│   │   │   ├── action_engine.py
+│   │   │   ├── agent_orchestrator.py
+│   │   │   ├── goal_context_engine.py
+│   │   │   ├── learning_engine.py
+│   │   │   ├── planner.py
+│   │   │   ├── planning_engine.py
+│   │   │   └── risk_engine.py
+│   │   ├── ai
+│   │   │   └── llm_service.py
+│   │   ├── auth
+│   │   │   ├── account_authorization.py
+│   │   │   ├── application_authorization.py
+│   │   │   ├── auth_dependency.py
+│   │   │   ├── browser_authorization.py
+│   │   │   ├── browser_csrf.py
+│   │   │   ├── browser_session.py
+│   │   │   ├── browser_session_dependency.py
+│   │   │   ├── credential_service.py
+│   │   │   ├── jwt_handler.py
+│   │   │   ├── login_throttle.py
+│   │   │   ├── security.py
+│   │   │   └── session_registry.py
+│   │   ├── cognition
+│   │   │   └── runtime_learning.py
+│   │   ├── commercial
+│   │   │   ├── __init__.py
+│   │   │   ├── billing_meter.py
+│   │   │   └── plan_registry.py
+│   │   ├── connectors
+│   │   │   ├── __init__.py
+│   │   │   ├── activation.py
+│   │   │   ├── calendar_adapter.py
+│   │   │   ├── event_ingestion.py
+│   │   │   ├── gmail_adapter.py
+│   │   │   ├── health.py
+│   │   │   ├── registry.py
+│   │   │   ├── slack_adapter.py
+│   │   │   └── teams_adapter.py
+│   │   ├── context
+│   │   │   └── context_service.py
+│   │   ├── control
+│   │   │   ├── brain_engine.py
+│   │   │   ├── cognitive_control.py
+│   │   │   └── intelligence_report.py
+│   │   ├── detection
+│   │   │   ├── __init__.py
+│   │   │   ├── decision_detector.py
+│   │   │   ├── event_detector.py
+│   │   │   ├── orchestrator.py
+│   │   │   └── task_detector.py
+│   │   ├── embedding
+│   │   │   └── embedding_service.py
+│   │   ├── execution
+│   │   │   └── task_dependency_service.py
+│   │   ├── explainability
+│   │   │   ├── __init__.py
+│   │   │   ├── audit_store.py
+│   │   │   └── explainability_engine.py
+│   │   ├── goals
+│   │   │   ├── dependency_service.py
+│   │   │   ├── goal_service.py
+│   │   │   └── progress_service.py
+│   │   ├── governance
+│   │   │   └── policy_enforcer.py
+│   │   ├── graph
+│   │   │   └── vector_graph.py
+│   │   ├── ingestion
+│   │   │   └── message_ingestor.py
+│   │   ├── insights
+│   │   │   ├── insight_engine.py
+│   │   │   └── proactive_engine.py
+│   │   ├── intelligence
+│   │   │   ├── explain_engine.py
+│   │   │   ├── importance_engine.py
+│   │   │   ├── insight_service.py
+│   │   │   ├── intelligence_engine.py
+│   │   │   ├── memory_intelligence_service.py
+│   │   │   ├── prioritization_service.py
+│   │   │   ├── priority_engine.py
+│   │   │   ├── strategy_engine.py
+│   │   │   └── trace_engine.py
+│   │   ├── learning
+│   │   │   └── learning_engine.py
+│   │   ├── llm
+│   │   │   └── llm_service.py
+│   │   ├── memory
+│   │   │   ├── __init__.py
+│   │   │   ├── consolidation_engine.py
+│   │   │   ├── deduplicator.py
+│   │   │   ├── memory_graph.py
+│   │   │   ├── memory_pipeline.py
+│   │   │   ├── memory_quality.py
+│   │   │   ├── memory_retrieval.py
+│   │   │   ├── priority.py
+│   │   │   ├── priority_engine.py
+│   │   │   ├── save_candidate.py
+│   │   │   ├── save_message.py
+│   │   │   └── scope.py
+│   │   ├── memory_intelligence
+│   │   │   ├── __init__.py
+│   │   │   ├── events.py
+│   │   │   ├── hooks.py
+│   │   │   ├── models.py
+│   │   │   ├── score_store.py
+│   │   │   ├── scoring.py
+│   │   │   └── subscribers.py
+│   │   ├── metacognition
+│   │   │   └── reflection_service.py
+│   │   ├── orchestration
+│   │   │   ├── contracts
+│   │   │   │   ├── __init__.py
+│   │   │   │   └── memory_events.py
+│   │   │   ├── subscribers
+│   │   │   │   ├── __init__.py
+│   │   │   │   └── audit_subscriber.py
+│   │   │   ├── __init__.py
+│   │   │   ├── bootstrap.py
+│   │   │   ├── dispatch_result.py
+│   │   │   ├── domain_event.py
+│   │   │   ├── event_bus.py
+│   │   │   ├── event_registry.py
+│   │   │   ├── event_router.py
+│   │   │   ├── handlers.py
+│   │   │   └── session_store.py
+│   │   ├── patent_governance
+│   │   │   ├── __init__.py
+│   │   │   ├── bootstrap.py
+│   │   │   ├── dashboard_service.py
+│   │   │   ├── evidence_bootstrap.py
+│   │   │   ├── evidence_registry.py
+│   │   │   ├── export_service.py
+│   │   │   ├── innovation_bootstrap.py
+│   │   │   ├── innovation_registry.py
+│   │   │   ├── models.py
+│   │   │   └── registry.py
+│   │   ├── persistence
+│   │   │   ├── __init__.py
+│   │   │   ├── audit_store.py
+│   │   │   ├── connector_store.py
+│   │   │   ├── session_store.py
+│   │   │   └── workspace_store.py
+│   │   ├── product
+│   │   │   ├── __init__.py
+│   │   │   ├── product_commands.py
+│   │   │   └── readiness.py
+│   │   ├── product_readiness
+│   │   │   ├── assessment.py
+│   │   │   ├── bootstrap.py
+│   │   │   ├── catalogue.py
+│   │   │   ├── ci_gate.py
+│   │   │   ├── models.py
+│   │   │   ├── recommendations.py
+│   │   │   ├── registry.py
+│   │   │   └── scoring.py
+│   │   ├── programme_progress
+│   │   │   ├── __init__.py
+│   │   │   ├── commercial_value.py
+│   │   │   └── registry.py
+│   │   ├── query
+│   │   │   └── query_engine.py
+│   │   ├── reasoning
+│   │   │   ├── _init__.py
+│   │   │   ├── decision_explain_service.py
+│   │   │   ├── decision_lineage_service.py
+│   │   │   ├── dependency_engine.py
+│   │   │   ├── next_action_engine.py
+│   │   │   └── trace_service.py
+│   │   ├── retrieval
+│   │   │   ├── daily_briefing.py
+│   │   │   ├── decision_engine.py
+│   │   │   ├── dependency_engine.py
+│   │   │   ├── embedding_service.py
+│   │   │   ├── executive_briefing_engine.py
+│   │   │   ├── explanation_engine.py
+│   │   │   ├── get_memories.py
+│   │   │   ├── graph_retrieval.py
+│   │   │   ├── memory_linker.py
+│   │   │   ├── nlu.py
+│   │   │   ├── predictive_engine.py
+│   │   │   ├── proactive_engine.py
+│   │   │   ├── query_engine.py
+│   │   │   ├── reasoning_engine.py
+│   │   │   ├── search_memory.py
+│   │   │   ├── self_adjusting_engine.py
+│   │   │   ├── semantic_matcher.py
+│   │   │   ├── summarizer.py
+│   │   │   ├── timeline_engine.py
+│   │   │   └── vector_search.py
+│   │   ├── scheduler
+│   │   │   ├── __init__.py
+│   │   │   ├── daily_briefing_scheduler.py
+│   │   │   ├── reminder_scheduler.py
+│   │   │   └── smart_scheduler.py
+│   │   ├── search
+│   │   │   └── vector_search_service.py
+│   │   ├── security
+│   │   │   ├── ___init__.py
+│   │   │   ├── access_control.py
+│   │   │   ├── admin_guard.py
+│   │   │   ├── admin_manager.py
+│   │   │   ├── admin_service.py
+│   │   │   ├── audit_reader.py
+│   │   │   ├── audit_service.py
+│   │   │   ├── canonical_roles.py
+│   │   │   ├── cors_policy.py
+│   │   │   ├── decision_integrity.py
+│   │   │   ├── decision_verifier.py
+│   │   │   ├── memory_access_control.py
+│   │   │   ├── rbac_dependency.py
+│   │   │   ├── rbac_policy.py
+│   │   │   ├── role_service.py
+│   │   │   ├── security_guard.py
+│   │   │   ├── security_logger.py
+│   │   │   └── session_administration.py
+│   │   ├── strategy
+│   │   │   └── strategy_engine.py
+│   │   ├── time
+│   │   │   ├── __init__.py
+│   │   │   └── parse_time.py
+│   │   ├── time_parser
+│   │   │   ├── __init__.py
+│   │   │   ├── absolute.py
+│   │   │   ├── defaults.py
+│   │   │   ├── natural_language.py
+│   │   │   ├── parser.py
+│   │   │   ├── relative.py
+│   │   │   ├── time_of_day.py
+│   │   │   ├── validator.py
+│   │   │   └── weekday.py
+│   │   ├── timeline
+│   │   │   └── timeline_engine.py
+│   │   ├── workspace
+│   │   │   ├── __init__.py
+│   │   │   ├── access_control.py
+│   │   │   ├── admin.py
+│   │   │   ├── context.py
+│   │   │   ├── control_repository.py
+│   │   │   ├── metrics.py
+│   │   │   ├── quotas.py
+│   │   │   ├── registry.py
+│   │   │   ├── repository.py
+│   │   │   ├── resolution.py
+│   │   │   └── tenant_scope.py
+│   │   └── __init__.py
+│   ├── web
+│   │   ├── routers
+│   │   │   ├── __init__.py
+│   │   │   ├── intelligence_api.py
+│   │   │   ├── memory_api.py
+│   │   │   └── search_api.py
+│   │   ├── templates
+│   │   │   └── dashboard.html
+│   │   ├── __init__.py
+│   │   └── main.py
+│   └── main.py
+├── artifacts
+│   ├── CGMS_CURRENT_STATE_2026-11-08.txt
+│   └── test-report-v1.60.txt
+├── data
+│   ├── connectors.json
+│   └── workspaces.json
+├── docs
+│   ├── architecture
+│   │   ├── CGMS_Platform_Architecture_Map.md
+│   │   └── CGMS_v2_Domain_Model_and_Enterprise_Architecture.md
+│   ├── operations
+│   │   └── database_backup_restore_runbook.md
+│   ├── product
+│   │   ├── CGMS_Commercial_Readiness_Gap_Assessment.md
+│   │   ├── CGMS_Minimum_Lovable_Product_Definition.md
+│   │   ├── CGMS_Product_Architecture_Blueprint.md
+│   │   ├── CGMS_Product_Capability_and_Feature_Prioritization_Matrix.md
+│   │   ├── CGMS_Product_Navigation_and_Page_Architecture.md
+│   │   └── CGMS_User_Experience_Architecture.md
+│   ├── admin_guide.md
+│   ├── api_reference.md
+│   ├── architecture_claims.md
+│   ├── CGMS_MASTER_CONTINUATION_PROMPT_v2.0.md
+│   ├── deployment_checklist.md
+│   ├── patent_expansion_notes.md
+│   ├── production_deployment_runbook.md
+│   ├── ROADMAP_LOCK_v1.md
+│   └── runtime_governance_claims.md
+├── scripts
+│   ├── ci
+│   │   └── product_readiness_gate.py
+│   ├── documentation
+│   │   ├── create_cgms_capability_prioritization.py
+│   │   └── create_cgms_navigation_architecture.py
+│   ├── operations
+│   │   ├── database_recovery.py
+│   │   └── production_preflight.py
+│   ├── __init__.py
+│   ├── create_tables - Copy.py
+│   └── scaffold_future_sprints.py
+├── tests
+│   ├── conftest.py
+│   ├── test_account_authorization.py
+│   ├── test_admin_summary.py
+│   ├── test_app_startup.py
+│   ├── test_application_authorization.py
+│   ├── test_audit_subscriber.py
+│   ├── test_authenticated_browser_csrf.py
+│   ├── test_browser_auth.py
+│   ├── test_browser_auth_session_registry.py
+│   ├── test_browser_authorization.py
+│   ├── test_browser_csrf.py
+│   ├── test_browser_session.py
+│   ├── test_browser_session_administration_route.py
+│   ├── test_browser_session_dependency.py
+│   ├── test_canonical_roles.py
+│   ├── test_cap_003_workspace_control_plane.py
+│   ├── test_cap_004_unified_audit.py
+│   ├── test_cap_016_dual_scope_insight_engine.py
+│   ├── test_cap_016_dual_scope_memory_graph.py
+│   ├── test_cap_016_dual_scope_prioritization.py
+│   ├── test_cap_016_dual_scope_raw_search.py
+│   ├── test_cap_016_identity_scope.py
+│   ├── test_cap_016_insight_scope_model.py
+│   ├── test_cap_016_knowledge_workspace_routes.py
+│   ├── test_cap_016_product_scope_migration.py
+│   ├── test_cap_016_product_scope_models.py
+│   ├── test_commercial_layer.py
+│   ├── test_commercial_readiness_gap_assessment.py
+│   ├── test_connector_adapters.py
+│   ├── test_connectors.py
+│   ├── test_cors_policy.py
+│   ├── test_credential_service.py
+│   ├── test_dashboard_runtime_hardening.py
+│   ├── test_dashboard_usability.py
+│   ├── test_dashboard_workspace_selector.py
+│   ├── test_database_recovery.py
+│   ├── test_dispatch_result.py
+│   ├── test_domain_event.py
+│   ├── test_enterprise_readiness.py
+│   ├── test_environment_manifest.py
+│   ├── test_event_bus.py
+│   ├── test_event_bus_bootstrap.py
+│   ├── test_event_registry.py
+│   ├── test_external_ingestion.py
+│   ├── test_frontend_csrf_integration.py
+│   ├── test_login_throttle.py
+│   ├── test_memory_actions_event_publish.py
+│   ├── test_memory_event_contracts.py
+│   ├── test_memory_intelligence.py
+│   ├── test_memory_intelligence_subscriber.py
+│   ├── test_ops_observability.py
+│   ├── test_patent_evidence_export.py
+│   ├── test_patent_evidence_registry.py
+│   ├── test_patent_governance_models.py
+│   ├── test_patent_governance_registry.py
+│   ├── test_patent_innovation_registry.py
+│   ├── test_patent_readiness_dashboard.py
+│   ├── test_persistence_layer.py
+│   ├── test_product_capability_registry.py
+│   ├── test_product_readiness_api.py
+│   ├── test_product_readiness_assessment.py
+│   ├── test_product_readiness_bootstrap.py
+│   ├── test_product_readiness_ci_gate.py
+│   ├── test_product_readiness_dashboard.py
+│   ├── test_product_readiness_recommendations.py
+│   ├── test_product_readiness_scoring.py
+│   ├── test_production_preflight.py
+│   ├── test_programme_progress_commercial_value.py
+│   ├── test_programme_progress_dashboard.py
+│   ├── test_pwi_001_cross_workspace_integrated_closure.py
+│   ├── test_pwi_001_tenant_persistence_migration.py
+│   ├── test_release_readiness.py
+│   ├── test_runtime_metrics.py
+│   ├── test_runtime_policy.py
+│   ├── test_session_administration.py
+│   ├── test_session_registry.py
+│   ├── test_system_health.py
+│   ├── test_tenant_model_workspace_binding.py
+│   ├── test_tenant_query_isolation.py
+│   ├── test_tenant_raw_sql_isolation.py
+│   ├── test_tenant_record_denial.py
+│   ├── test_workspace_admin.py
+│   ├── test_workspace_bound_authentication.py
+│   ├── test_workspace_context_switch.py
+│   ├── test_workspace_foundation_migration.py
+│   ├── test_workspace_quota.py
+│   ├── test_workspace_repository.py
+│   ├── test_workspace_resolution.py
+│   ├── test_workspace_runtime.py
+│   └── test_workspace_tenant_scope.py
+├── .env.example
+├── .gitattributes
+├── .gitignore
+├── all_files.txt
+├── cgms_structure.txt
+├── cleanup.py
+├── cleanup_dependencies.py
+├── cleanup_orphans.py
+├── debug_hierarchy.py
+├── docker-compose.yml
+├── fix_dependencies.py
+├── fix_status.py
+├── h
+├── manual_test_db.py
+├── memory_route_candidates_clean.txt
+├── memory_route_decorators.txt
+├── poetry.lock
+├── pyproject.toml
+├── README.md
+├── requirements.txt
+├── router_registration_scan.txt
+└── runtime.txt

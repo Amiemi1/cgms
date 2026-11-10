@@ -15,18 +15,20 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
             "Authoritative delivery, validation, governance, "
             "dashboard-access and startup register."
         ),
-        "as_of": "25 September 2026",
+        "as_of": "8 November 2026",
         "current_sprint": "Sprint 22",
         "current_work": (
-            "CAP-001/CAP-002 Product Readiness Currency Promotion"
+            "CAP-016 Post-Publication Residual-Gap and "
+            "Client-Migration Reconciliation"
         ),
         "status": (
-            "Read-only CAP-001/CAP-002 readiness reassessment and "
-            "promotion-impact projection passed on published authority "
-            "f3a11c0e90488529f12ef7d19ceb9ecc75f90523; the controlled "
-            "currency candidate records both capabilities as Implemented / "
-            "PILOT_READY, reduces catalogue-level P0 gaps to zero, and "
-            "retains the commercial pilot verdict as NOT READY"
+            "CAP-016 account-scoped product-memory engineering is published "
+            "at b8e2ff1ea03346b855dbee3d08ca97429aeb2dce; R13 authorization-"
+            "baseline repair is published at "
+            "90d5c27c9b47b803c083534b3329f1c526fd5ef8; Product Readiness CI "
+            "run #51 passed. CAP-016 remains Partial because the Knowledge "
+            "Worker browser client still carries a hard-coded user identity "
+            "and legacy identity-bearing route calls."
         ),
         "branch": "cgms-v2-roadmap",
         "canonical_record": (
@@ -36,21 +38,21 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
     "summary": [
         {
             "label": "Current milestone",
-            "value": "CAP-001/CAP-002 Promotion Candidate",
+            "value": "CAP-016 Post-Publication Reconciliation",
             "detail": (
-                "Bounded Product Readiness currency update authorised; "
-                "P0 priority is retained for both capabilities and no "
-                "authentication or RBAC application engineering is changed"
+                "Published account-scoped backend engineering and R13 CI "
+                "closure are complete; CAP-016 remains Partial pending the "
+                "Knowledge Worker browser client migration"
             ),
         },
         {
             "label": "Current regression suite",
-            "value": "758 passed",
+            "value": "CI #51 — PASS",
             "detail": (
-                "Local full regression for the dashboard candidate recorded "
-                "758 passed with 37 warnings; Product Readiness CI run #48 "
-                "then succeeded on published authority "
-                "f3a11c0e90488529f12ef7d19ceb9ecc75f90523"
+                "GitHub Product Readiness CI run #51 completed successfully "
+                "for 90d5c27c9b47b803c083534b3329f1c526fd5ef8; the full "
+                "regression step passed and the CI-aligned focused "
+                "CAP-016/authorization validation recorded 35 passed"
             ),
         },
         {
@@ -65,37 +67,37 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
         },
         {
             "label": "Latest published checkpoint",
-            "value": "f3a11c0",
+            "value": "90d5c27",
             "detail": (
-                "Published dashboard usability and evidence-labelling update "
-                "at f3a11c0e90488529f12ef7d19ceb9ecc75f90523"
+                "Published CAP-016 authorization-baseline repair and "
+                "post-engineering convergence at "
+                "90d5c27c9b47b803c083534b3329f1c526fd5ef8"
             ),
         },
         {
             "label": "GitHub Actions",
-            "value": "Run #48 — Success",
+            "value": "Run #51 — Success",
             "detail": (
-                "Product Readiness CI run #48 passed for published commit "
-                "f3a11c0e90488529f12ef7d19ceb9ecc75f90523"
+                "Product Readiness CI run #51 passed for published commit "
+                "90d5c27c9b47b803c083534b3329f1c526fd5ef8"
             ),
         },
         {
             "label": "Runtime contracts",
             "value": "PASS",
             "detail": (
-                "Effective /dashboard/next-action/{chat_id} GET route "
-                "is unique and authorization inventory is aligned to "
-                "the corrected production route surface"
+                "Authorization inventory records 4 public permission "
+                "registrations, 110 protected permission registrations, "
+                "114 APIRoutes and zero missing global guards"
             ),
         },
         {
             "label": "Pilot readiness",
             "value": "NOT READY",
             "detail": (
-                "The controlled currency candidate removes the two stale "
-                "catalogue-level P0 gaps, but 20 pilot-scope gaps and six "
-                "CRG-001 commercial blockers remain; the pilot verdict "
-                "stays NOT READY"
+                "CAP-016 remains Partial; zero catalogue-level P0 gaps, "
+                "20 pilot-scope gaps and six CRG-001 commercial blockers "
+                "remain; the commercial pilot verdict stays NOT READY"
             ),
         },
     ],
@@ -203,15 +205,17 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
         },
     ],
     "current_focus": [
-        "CAP-001/CAP-002 bounded reassessment and promotion projection passed",
-        "Controlled currency candidate promotes both capabilities to Implemented / PILOT_READY",
-        "Catalogue-level P0 Product Readiness gaps reduce from two to zero",
+        "CAP-016 account-scoped backend engineering published at b8e2ff1",
+        "R13 authorization-baseline repair and GitHub CI run #51 passed",
+        "Knowledge Worker browser client migration remains incomplete",
+        "CAP-016 remains Partial / IN_PROGRESS with no readiness promotion",
         "Product Readiness 34% / pilot-scope readiness 46% / overall completion 51%",
         "Commercial pilot verdict remains NOT READY",
     ],
     "upcoming": [
-        "Validate the bounded CAP-001/CAP-002 currency candidate",
-        "Twenty pilot-scope gaps and six CRG-001 commercial blockers remain governed",
+        "Complete R14-A read-only CAP-016 residual-gap and implementation-boundary reconciliation",
+        "Migrate the Knowledge Worker browser client only after exact R14-B scope approval",
+        "Keep CAP-017 Product Navigation Shell separately governed",
         "Commercial pilot authorization remains withheld pending remaining gates",
     ],
     "sprints": [
@@ -572,6 +576,28 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
     ],
     "validation": [
         {
+            "title": "CAP-016 account-scoped Knowledge Workspace publication",
+            "result": "PASS — published",
+            "detail": (
+                "Engineering commit "
+                "b8e2ff1ea03346b855dbee3d08ca97429aeb2dce adds product/account "
+                "scope persistence, account-scoped memory/search/insight/"
+                "prioritization behaviour and nine identity-free Knowledge "
+                "Workspace backend routes"
+            ),
+        },
+        {
+            "title": "R13 CAP-016 authorization and CI closure",
+            "result": "PASS — GitHub CI #51",
+            "detail": (
+                "Authorization-baseline repair "
+                "90d5c27c9b47b803c083534b3329f1c526fd5ef8; 4 public permission "
+                "registrations, 110 protected registrations, 114 APIRoutes, "
+                "zero missing global guards, 35 focused tests passed and "
+                "GitHub Product Readiness CI run #51 succeeded"
+            ),
+        },
+        {
             "title": (
                 "CAP-001/CAP-002 readiness reassessment "
                 "and impact projection"
@@ -866,6 +892,30 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
     ],
     "commits": [
         {
+            "hash": "90d5c27",
+            "title": (
+                "test(auth): update authorization "
+                "route-count baselines"
+            ),
+            "status": "Published",
+        },
+        {
+            "hash": "b8e2ff1",
+            "title": (
+                "feat(cap-016): add account-scoped "
+                "product memory workspace"
+            ),
+            "status": "Published",
+        },
+        {
+            "hash": "107d1a4",
+            "title": (
+                "docs(readiness): promote CAP-001 "
+                "and CAP-002 to pilot ready"
+            ),
+            "status": "Published",
+        },
+        {
             "hash": "f3a11c0",
             "title": (
                 "feat(dashboard): improve readiness usability "
@@ -1122,33 +1172,32 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
     "governance": {
         "rule": "Engineering Governance Rule EG-001",
         "classification": (
-            "CAP-001/CAP-002 Product Readiness Currency Reconciliation"
+            "CAP-016 Post-Publication Current-State Synchronization"
         ),
-        "approval_date": "25 September 2026",
+        "approval_date": "8 November 2026",
         "published_authority": (
-            "f3a11c0e90488529f12ef7d19ceb9ecc75f90523"
+            "90d5c27c9b47b803c083534b3329f1c526fd5ef8"
         ),
         "canonical_record": (
             "docs/CGMS_MASTER_CONTINUATION_PROMPT_v2.0.md"
         ),
         "scope": (
-            "Controlled readiness-currency reconciliation promoting "
-            "CAP-001 and CAP-002 from stale Partial / IN_PROGRESS "
-            "catalogue currency to Implemented / PILOT_READY based on "
-            "validated evidence, without changing authentication or RBAC "
-            "application engineering."
+            "Controlled R14-0 synchronization of authoritative programme, "
+            "readiness, architecture and repository-inventory currency after "
+            "published CAP-016 account-scope engineering and R13 CI closure. "
+            "CAP-016 remains Partial / IN_PROGRESS and the browser client "
+            "migration remains separately governed."
         ),
         "boundaries": (
-            "P0 priority is retained for CAP-001 and CAP-002; zero "
-            "catalogue-level P0 Product Readiness gaps and zero unresolved "
-            "CRG-001 P0 commercial blockers remain; six total unresolved "
+            "Zero catalogue-level P0 Product Readiness gaps and zero "
+            "unresolved CRG-001 P0 commercial blockers remain; six total "
             "commercial blockers and 20 pilot-scope gaps remain; pilot "
-            "verdict remains NOT READY; no authentication/RBAC application "
-            "implementation, migration, production-database or unrelated "
-            "engineering mutation is authorised; live Git state controls "
+            "verdict remains NOT READY. R14-0 does not change Product "
+            "Readiness scoring, CAP-016 status, production engineering, "
+            "database state or CAP-017 scope; live Git state controls "
             "publication identity."
         ),
-    },
+    }
 }
 
 

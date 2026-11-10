@@ -282,3 +282,33 @@ def test_cap001_cap002_product_readiness_currency_reconciliation() -> None:
         "**Current pilot-readiness verdict: NOT READY.**"
         in source
     )
+
+def test_cap016_post_publication_current_state_is_recorded() -> None:
+    source = report_source()
+
+    assert (
+        "## 20. Post-Publication Current-State Update — CAP-016"
+        in source
+    )
+    assert (
+        "b8e2ff1ea03346b855dbee3d08ca97429aeb2dce"
+        in source
+    )
+    assert (
+        "90d5c27c9b47b803c083534b3329f1c526fd5ef8"
+        in source
+    )
+    assert "GitHub Product Readiness CI run **#51**" in source
+    assert "**35 passed, 0 failed, 0 errors**" in source
+    assert "**110** protected permission registrations" in source
+    assert "**114** registered APIRoutes" in source
+    assert "hard-coded browser `userId`" in source
+    assert "CAP-016 remains **Partial / IN_PROGRESS**" in source
+    assert "Product Readiness: **34%**" in source
+    assert "pilot-scope readiness: **46%**" in source
+    assert "**Current pilot-readiness verdict: NOT READY.**" in source
+    assert (
+        "CAP-017 Product Navigation Shell remains outside "
+        "R14-A implementation scope."
+        in source
+    )

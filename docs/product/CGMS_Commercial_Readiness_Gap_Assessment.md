@@ -938,3 +938,91 @@ This Product Readiness reconciliation does not alter the already-current CRG-001
 The commercial pilot remains withheld because **20** pilot-scope gaps and additional P1/commercial conditions remain unresolved.
 
 **Current pilot-readiness verdict: NOT READY.**
+
+---
+
+## 20. Post-Publication Current-State Update — CAP-016
+
+**Update date:** 8 November 2026
+
+**Classification:** controlled post-publication current-state reconciliation
+
+### 20.1 Historical-assessment boundary
+
+Sections 1–14 remain the immutable CRG-001 assessment snapshot. Sections 15–19 retain the subsequent AAE-001, CAP-003, CAP-004, CAP-005 and Product Readiness currency deltas.
+
+This section does not rewrite the original CAP-016 assessment. It records the materially changed November 2026 implementation state while preserving the remaining client gap.
+
+### 20.2 Published CAP-016 evidence
+
+CAP-016 backend engineering was published at `b8e2ff1ea03346b855dbee3d08ca97429aeb2dce`.
+
+R13 authorization-baseline remediation was published at `90d5c27c9b47b803c083534b3329f1c526fd5ef8`.
+
+GitHub Product Readiness CI run **#51** (run ID `42420480329`) completed successfully.
+
+CI-aligned focused validation recorded **35 passed, 0 failed, 0 errors**.
+
+The current authorization surface records:
+
+- **4** public permission registrations;
+- **110** protected permission registrations;
+- **114** registered APIRoutes;
+- **0** missing global authorization guards.
+
+### 20.3 CAP-016 gaps closed since the original assessment
+
+The original CRG-001 CAP-016 findings are no longer fully current.
+
+The following gaps are now materially closed on the server side:
+
+- anonymous access to the governed dashboard boundary is denied by application authorization;
+- authenticated browser principals carry workspace identity;
+- persistent workspace context and active workspace switching exist;
+- product/account identity is normalized from the authenticated principal;
+- memory, goals, insights, search and prioritization support account scope;
+- nine identity-free Knowledge Workspace backend routes exist;
+- the CAP-016 persistence/model/service boundary has focused regression coverage.
+
+### 20.4 Residual CAP-016 gap
+
+The Knowledge Worker browser client has not yet completed the migration to the account-bound backend surface.
+
+`app/dashboard/templates/dashboard.html` still contains a hard-coded browser `userId` and still calls legacy identity-bearing routes for tasks, search, memory deduplication, insights, priorities and goals.
+
+The browser therefore continues to supply identity where the new CAP-016 backend can derive it from the authenticated principal.
+
+This remaining client dependency prevents CAP-016 closure.
+
+### 20.5 Current CAP-016 readiness position
+
+CAP-016 remains **Partial / IN_PROGRESS**.
+
+CAP-016 remains:
+
+- priority: **P1**;
+- MLP-required: **Yes**;
+- pilot-required: **Yes**;
+- commercial blocker: **open pending client migration and final product-experience validation**.
+
+R14-0 does not promote CAP-016 and does not alter the Product Readiness catalogue.
+
+Current governed readiness therefore remains:
+
+- Product Readiness: **34%**;
+- pilot-scope readiness: **46%**;
+- catalogue-level P0 gaps: **0**;
+- pilot-scope gaps: **20**;
+- open recommendations: **24**;
+- pilot-ready capabilities: **5**;
+- total unresolved CRG-001 commercial blockers: **6**.
+
+**Current pilot-readiness verdict: NOT READY.**
+
+### 20.6 Next governed action
+
+The next governed CAP-016 action is **R14-A — Post-Publication Residual-Gap and Implementation-Boundary Reconciliation**.
+
+R14-A is read-only and must establish the exact Knowledge Worker browser-client migration path set before implementation is separately authorised.
+
+CAP-017 Product Navigation Shell remains outside R14-A implementation scope.
