@@ -2091,8 +2091,6 @@ console.log("CGMS DASHBOARD - STABLE BUILD");
 // GLOBAL STATE
 // ========================================
 
-const userId = -5057144508;
-
 let nextActionId = null;
 let manualFocus = null;
 
@@ -13747,7 +13745,7 @@ async function loadMemory(){
 
         const r =
             await fetch(
-                `/dashboard/tasks/${userId}`
+                `/dashboard/tasks`
             );
 
         let data =
@@ -14212,7 +14210,7 @@ async function search(){
         }
 
         const r = await fetch(
-            `/dashboard/search/${userId}?q=${encodeURIComponent(q)}`
+            `/dashboard/search?q=${encodeURIComponent(q)}`
         );
 
         const data = await r.json();
@@ -14305,7 +14303,7 @@ async function deduplicate(){
     try {
 
         const r = await cgmsAuthenticatedFetch(
-            `/dashboard/memory/deduplicate/${userId}`,
+            `/dashboard/memory/deduplicate`,
             { method: "DELETE" }
         );
 
@@ -14341,7 +14339,7 @@ async function loadInsights(){
             };
         }
 
-        const r = await fetch(`/dashboard/insights/${userId}`);
+        const r = await fetch(`/dashboard/insights`);
         const data = await r.json();
 
         const insightOrder = {
@@ -15097,7 +15095,7 @@ async function loadNextAction(){
 
     try {
 
-        const r = await fetch(`/insights/${userId}`);
+        const r = await fetch(`/dashboard/product-insights`);
 
         const text = await r.text();
 
@@ -15502,7 +15500,7 @@ async function loadPriorities(){
     try {
 
         const r = await fetch(
-            `/dashboard/priorities/${userId}`
+            `/dashboard/priorities`
         );
 
         const text = await r.text();
@@ -15669,7 +15667,7 @@ async function loadGoals(){
     try {
 
         const r = await fetch(
-            `/dashboard/goals/${userId}`
+            `/dashboard/goals`
         );
 
         goals = await r.json();
@@ -16543,9 +16541,9 @@ async function init(){
                     );
 
                     const r = await cgmsAuthenticatedFetch(
-                        `/dashboard/tasks/${id}/complete`,
+                        `/dashboard/memory/${id}/complete`,
                         {
-                            method: "POST"
+                            method: "PATCH"
                         }
                     );
 
@@ -16657,7 +16655,7 @@ async function init(){
                     );
 
                     const r = await cgmsAuthenticatedFetch(
-                        `/dashboard/tasks/${userId}`,
+                        `/dashboard/tasks/create`,
                         {
                             method: "POST",
 

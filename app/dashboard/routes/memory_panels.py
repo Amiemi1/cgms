@@ -11,8 +11,19 @@ from app.services.embedding.embedding_service import generate_embedding
 from app.services.intelligence.prioritization_service import get_prioritized_tasks
 from app.services.intelligence.insight_service import generate_insights
 
+from app.services.auth.account_authorization import (
+    normalize_account_identifier,
+)
 from app.services.auth.application_authorization import (
     enforce_application_authorization,
+)
+from app.services.auth.auth_dependency import (
+    AuthenticatedPrincipal,
+)
+from app.services.memory.scope import (
+    MemoryIdentityScope,
+    identity_scope_from_record,
+    orm_identity_predicate,
 )
 from app.services.workspace.tenant_scope import (
     get_current_workspace_id,
@@ -36,6 +47,73 @@ def _get_workspace_id(
     ),
 ) -> str:
     return get_current_workspace_id(principal)
+
+
+def _load_mutable_memory_for_principal(
+    session,
+    memory_id: int,
+    workspace_id: str,
+    principal: AuthenticatedPrincipal,
+) -> Memory | None:
+    memory = load_scoped_record(
+        session,
+        Memory,
+        memory_id,
+        workspace_id,
+    )
+
+    if memory is None:
+        return None
+
+    record_scope = identity_scope_from_record(
+        memory
+    )
+
+    if (
+        record_scope.account_user_id
+        is not None
+        and record_scope.account_user_id
+        != normalize_account_identifier(
+            principal.user_id
+        )
+    ):
+        return None
+
+    return memory
+
+
+def _identity_scoped_memories(
+    session,
+    scope: MemoryIdentityScope,
+) -> list[Memory]:
+    return session.exec(
+        select(Memory).where(
+            Memory.workspace_id
+            == scope.workspace_id,
+            orm_identity_predicate(
+                Memory,
+                scope,
+            ),
+        )
+    ).all()
+
+
+def _load_identity_scoped_memory(
+    session,
+    memory_id: int,
+    scope: MemoryIdentityScope,
+) -> Memory | None:
+    return session.exec(
+        select(Memory).where(
+            Memory.workspace_id
+            == scope.workspace_id,
+            orm_identity_predicate(
+                Memory,
+                scope,
+            ),
+            Memory.id == memory_id,
+        )
+    ).first()
 
 
 
@@ -290,23 +368,27 @@ def restore_memory(
     workspace_id: str = Depends(
         _get_workspace_id
     ),
+    principal: AuthenticatedPrincipal = Depends(
+        enforce_application_authorization
+    ),
 ):
-
     session = SessionLocal()
 
     try:
-        m = load_scoped_record(
-            session,
-            Memory,
-            memory_id,
-            workspace_id,
+        memory = (
+            _load_mutable_memory_for_principal(
+                session,
+                memory_id,
+                workspace_id,
+                principal,
+            )
         )
 
-        if not m:
+        if memory is None:
             return {"error": "not found"}
 
-        m.status = "active"
-        session.add(m)
+        memory.status = "active"
+        session.add(memory)
         session.commit()
 
         return {"status": "restored"}
@@ -325,23 +407,27 @@ def reopen_memory(
     workspace_id: str = Depends(
         _get_workspace_id
     ),
+    principal: AuthenticatedPrincipal = Depends(
+        enforce_application_authorization
+    ),
 ):
-
     session = SessionLocal()
 
     try:
-        m = load_scoped_record(
-            session,
-            Memory,
-            memory_id,
-            workspace_id,
+        memory = (
+            _load_mutable_memory_for_principal(
+                session,
+                memory_id,
+                workspace_id,
+                principal,
+            )
         )
 
-        if not m:
+        if memory is None:
             return {"error": "not found"}
 
-        m.status = "active"
-        session.add(m)
+        memory.status = "active"
+        session.add(memory)
         session.commit()
 
         return {"status": "reopened"}
@@ -397,64 +483,101 @@ def complete_memory(
     workspace_id: str = Depends(
         _get_workspace_id
     ),
+    principal: AuthenticatedPrincipal = Depends(
+        enforce_application_authorization
+    ),
 ):
-
     session = SessionLocal()
 
     try:
-
-        memory = load_scoped_record(
-            session,
-            Memory,
-            memory_id,
-            workspace_id,
+        memory = (
+            _load_mutable_memory_for_principal(
+                session,
+                memory_id,
+                workspace_id,
+                principal,
+            )
         )
 
-        if not memory:
-            return {"error": "Memory not found"}
+        if memory is None:
+            return {
+                "error":
+                    "Memory not found"
+            }
+
+        scope = identity_scope_from_record(
+            memory
+        )
 
         memory.status = "completed"
         session.add(memory)
 
-        # 🔁 AUTO-COMPLETE PARENT
-        def complete_parent_chain(child):
-            parent_ids = child.depends_on or []
+        def complete_parent_chain(
+            child: Memory,
+        ) -> None:
+            parent_ids = (
+                child.depends_on
+                or []
+            )
 
             for parent_id in parent_ids:
-
-                siblings = session.exec(
-                    select(Memory).where(
-                        Memory.workspace_id == workspace_id,
-                        Memory.chat_id == child.chat_id
-                    )
-                ).all()
-
                 siblings = [
-                    s for s in siblings
-                    if s.depends_on and parent_id in s.depends_on
+                    sibling
+                    for sibling
+                    in _identity_scoped_memories(
+                        session,
+                        scope,
+                    )
+                    if (
+                        sibling.depends_on
+                        and parent_id
+                        in sibling.depends_on
+                    )
                 ]
 
-                if siblings and all(s.status == "completed" for s in siblings):
-
-                    parent = load_scoped_record(
-                        session,
-                        Memory,
-                        parent_id,
-                        workspace_id,
+                if (
+                    siblings
+                    and all(
+                        sibling.status
+                        == "completed"
+                        for sibling
+                        in siblings
+                    )
+                ):
+                    parent = (
+                        _load_identity_scoped_memory(
+                            session,
+                            parent_id,
+                            scope,
+                        )
                     )
 
-                    if parent and parent.status != "completed":
-                        parent.status = "completed"
-                        session.add(parent)
+                    if (
+                        parent is not None
+                        and parent.status
+                        != "completed"
+                    ):
+                        parent.status = (
+                            "completed"
+                        )
+                        session.add(
+                            parent
+                        )
 
-                        # 🔁 RECURSE UPWARDS
-                        complete_parent_chain(parent)
+                        complete_parent_chain(
+                            parent
+                        )
 
-        # ✅ CALL IT HERE
-        complete_parent_chain(memory)
+        complete_parent_chain(
+            memory
+        )
 
         session.commit()
-        return {"status": "completed"}
+
+        return {
+            "status":
+                "completed"
+        }
 
     finally:
         session.close()
@@ -470,23 +593,27 @@ def delete_memory(
     workspace_id: str = Depends(
         _get_workspace_id
     ),
+    principal: AuthenticatedPrincipal = Depends(
+        enforce_application_authorization
+    ),
 ):
-
     session = SessionLocal()
 
     try:
-        m = load_scoped_record(
-            session,
-            Memory,
-            memory_id,
-            workspace_id,
+        memory = (
+            _load_mutable_memory_for_principal(
+                session,
+                memory_id,
+                workspace_id,
+                principal,
+            )
         )
 
-        if not m:
+        if memory is None:
             return {"error": "not found"}
 
-        m.status = "deleted"   # ✅ SOFT DELETE
-        session.add(m)
+        memory.status = "deleted"
+        session.add(memory)
         session.commit()
 
         return {"status": "deleted"}
@@ -721,8 +848,10 @@ async def breakdown_task(
     workspace_id: str = Depends(
         _get_workspace_id
     ),
+    principal: AuthenticatedPrincipal = Depends(
+        enforce_application_authorization
+    ),
 ):
-
     session = SessionLocal()
 
     try:
@@ -745,94 +874,135 @@ async def breakdown_task(
         elif isinstance(payload, int):
             task_id = payload
 
-        elif isinstance(payload, str) and payload.isdigit():
+        elif (
+            isinstance(payload, str)
+            and payload.isdigit()
+        ):
             task_id = int(payload)
 
         if not task_id:
-            task_id = request.query_params.get("id") or request.query_params.get("task_id")
+            task_id = (
+                request.query_params.get("id")
+                or request.query_params.get(
+                    "task_id"
+                )
+            )
 
         if not task_id:
             raise HTTPException(
                 status_code=400,
                 detail={
-                    "message": "No task id provided",
-                    "received_payload": payload
-                }
+                    "message":
+                        "No task id provided",
+                    "received_payload":
+                        payload,
+                },
             )
 
-        task = load_scoped_record(
-            session,
-            Memory,
-            int(task_id),
-            workspace_id,
+        task = (
+            _load_mutable_memory_for_principal(
+                session,
+                int(task_id),
+                workspace_id,
+                principal,
+            )
         )
 
-        if not task:
+        if task is None:
             raise HTTPException(
                 status_code=404,
-                detail="Task not found"
+                detail="Task not found",
             )
 
-        summary = (task.summary or "").lower()
+        task_scope = (
+            identity_scope_from_record(
+                task
+            )
+        )
+
+        summary = (
+            task.summary
+            or ""
+        ).lower()
 
         if "prepare" in summary:
             subtasks = [
                 "Draft key points",
                 "Align data and evidence",
-                "Review and refine messaging"
+                "Review and refine messaging",
             ]
 
         elif "review" in summary:
             subtasks = [
                 "Gather latest performance data",
                 "Identify key trends",
-                "Summarize insights"
+                "Summarize insights",
             ]
 
         elif "meeting" in summary:
             subtasks = [
                 "Confirm agenda",
                 "Prepare materials",
-                "Align stakeholders"
+                "Align stakeholders",
             ]
 
         else:
             subtasks = [
                 "Clarify objective",
                 "Break into steps",
-                "Execute first step"
+                "Execute first step",
             ]
 
         created = []
 
-        for s in subtasks:
+        for subtask in subtasks:
             new_task = Memory(
-                workspace_id=workspace_id,
-                chat_id=task.chat_id,
+                workspace_id=(
+                    task_scope.workspace_id
+                ),
+                chat_id=(
+                    task_scope.chat_id
+                ),
+                account_user_id=(
+                    task_scope.account_user_id
+                ),
                 source_message_id=0,
-                summary=s,
+                summary=subtask,
                 status="active",
                 memory_type="task",
                 created_at=datetime.utcnow(),
-                depends_on=[task.id]
+                depends_on=[
+                    task.id
+                ],
             )
 
-            session.add(new_task)
+            session.add(
+                new_task
+            )
             session.flush()
 
-            created.append({
-                "id": new_task.id,
-                "summary": new_task.summary,
-                "status": new_task.status,
-                "depends_on": new_task.depends_on
-            })
+            created.append(
+                {
+                    "id":
+                        new_task.id,
+                    "summary":
+                        new_task.summary,
+                    "status":
+                        new_task.status,
+                    "depends_on":
+                        new_task.depends_on,
+                }
+            )
 
         session.commit()
 
         return {
-            "status": "success",
-            "parent_task_id": task.id,
-            "created": created
+            "status":
+                "success",
+            "parent_task_id":
+                task.id,
+            "created":
+                created,
         }
 
     finally:

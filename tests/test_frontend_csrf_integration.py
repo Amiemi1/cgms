@@ -34,7 +34,7 @@ EXPECTED_DASHBOARD_UNSAFE = Counter(
         (
             "PATCH",
             "/dashboard/memory/${id}/complete",
-        ): 2,
+        ): 3,
         (
             "DELETE",
             "/dashboard/memory/${id}",
@@ -49,10 +49,7 @@ EXPECTED_DASHBOARD_UNSAFE = Counter(
         ): 1,
         (
             "DELETE",
-            (
-                "/dashboard/memory/"
-                "deduplicate/${userId}"
-            ),
+            "/dashboard/memory/deduplicate",
         ): 1,
         (
             "POST",
@@ -74,11 +71,7 @@ EXPECTED_DASHBOARD_UNSAFE = Counter(
         ): 1,
         (
             "POST",
-            "/dashboard/tasks/${id}/complete",
-        ): 1,
-        (
-            "POST",
-            "/dashboard/tasks/${userId}",
+            "/dashboard/tasks/create",
         ): 1,
     }
 )
