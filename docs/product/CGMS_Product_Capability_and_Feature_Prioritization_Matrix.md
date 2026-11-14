@@ -644,3 +644,53 @@ The remaining blocker is the Knowledge Worker browser client, which still contai
 No CAP-016 Product Readiness promotion occurs in this update.
 
 The next governed action is R14-A read-only residual-gap and implementation-boundary reconciliation. CAP-017 remains separately governed.
+
+---
+
+# 26. CAP-016 Post-R14-B Tested-State Update
+
+**Update date:** 13 November 2026
+
+**Decision:** advance CAP-016 from IN_PROGRESS to TESTED; retain all remaining pilot-readiness controls
+
+Sections through 25 remain historical evidence. Section 25 records the valid pre-R14-B state.
+
+CAP-016 retains its approved prioritization:
+
+- capability: **Knowledge Worker Interface**;
+- priority: **P1**;
+- MLP: **Yes**;
+- pilot: **Yes**;
+- customer value: **Critical**;
+- commercial importance: **Critical**;
+- target: **MLP**.
+
+Current evidence now includes:
+
+- published Knowledge Worker browser-client migration at `7aee8977296d157f65395208de9ab67ec28a72a2`;
+- removal of hard-coded browser identity;
+- account-bound identity-free client routes;
+- workspace/account mutation isolation;
+- authenticated CSRF coverage;
+- legacy chat compatibility;
+- **844/844** corrected local regression;
+- GitHub Product Readiness CI run **#53 — PASS** with **844 tests**;
+- R14-C readiness reconciliation.
+
+The evidence supports:
+
+- status: **TESTED**;
+- `tests_passing=True`.
+
+The evidence does not yet support:
+
+- `security_reviewed=True`;
+- `ux_complete=True`;
+- `documented=True`;
+- `PILOT_READY`.
+
+R14-D therefore does not close the CAP-016 commercial blocker.
+
+The next governed CAP-016 gates are dedicated security-review closure followed by final product-experience and UX validation.
+
+CAP-017 remains separately governed.

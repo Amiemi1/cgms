@@ -23,7 +23,7 @@ docs/CGMS_MASTER_CONTINUATION_PROMPT_v2.0.md
 **Comprehensive handoff date**
 
 ```text
-8 November 2026
+13 November 2026
 ```
 
 **Current programme**
@@ -41,19 +41,19 @@ Sprint 22
 **Current intervention**
 
 ```text
-CAP-016 — Post-Publication Current-State Synchronization and Client-Migration Reconciliation
+CAP-016 — Tested-State and Governance Currency Synchronization
 ```
 
 **Current sub-stage**
 
 ```text
-R13 CAP-016 account-scoped product-memory engineering and authorization-baseline remediation are published at `90d5c27c9b47b803c083534b3329f1c526fd5ef8`; GitHub Product Readiness CI run #51 passed; R14-0 is the separately approved current-state synchronization candidate and does not promote CAP-016 beyond Partial / IN_PROGRESS
+R14-B Knowledge Worker browser-client migration is published at `7aee8977296d157f65395208de9ab67ec28a72a2`; GitHub Product Readiness CI run #53 passed 844/844 tests; R14-C read-only reconciliation supports CAP-016 TESTED with tests_passing=True while dedicated security-review and final UX gates remain open
 ```
 
 **Exact next authorised action**
 
 ```text
-Apply and validate only the bounded 10-path R14-0 authoritative current-state synchronization; publication requires separate staging, commit and push approval; R14-A remains separately governed
+Apply and validate only the bounded R14-D CAP-016 TESTED-state and governance-currency synchronization; publication requires separate staging, commit and push approval; CAP-016 security review, final UX validation and CAP-017 remain separately governed
 ```
 
 ---
@@ -5759,3 +5759,93 @@ It does not authorise or perform:
 The R14-0 synchronization requires separate publication approval after local validation.
 
 # END OF CGMS MASTER CONTINUATION PROMPT v2.0
+
+---
+
+# 57. R14-D — POST-R14-B CAP-016 TESTED-STATE AND GOVERNANCE CURRENCY SYNCHRONIZATION
+
+R14-D supersedes Section 56 as the controlling current-state authority. Section 56 remains historical evidence of the valid pre-R14-B position.
+
+## 57.1 Published authority
+
+- branch: `cgms-v2-roadmap`;
+- published local/upstream/remote authority: `7aee8977296d157f65395208de9ab67ec28a72a2`;
+- R14-B Knowledge Worker client migration: `7aee8977296d157f65395208de9ab67ec28a72a2`;
+- GitHub Product Readiness CI run: **#53**, run ID `43228595151`, **SUCCESS**;
+- corrected complete local regression: **844 passed, 0 failed, 0 errors**;
+- GitHub complete regression: **844 passed**;
+- Product Readiness standard gate: **PASSED**.
+
+## 57.2 R14-B closure
+
+R14-B closed the previously recorded Knowledge Worker browser-client migration gap.
+
+The published client:
+
+- contains no hard-coded browser `userId` in the account-bound Knowledge Workspace flow;
+- uses identity-free account-bound task, search, insight, priority, goal, deduplication and task-creation routes;
+- preserves authenticated CSRF handling for unsafe mutations;
+- enforces account/workspace mutation isolation;
+- preserves legacy chat compatibility.
+
+## 57.3 R14-C readiness decision
+
+R14-C read-only reconciliation supports:
+
+- CAP-016 Product Readiness status: **TESTED**;
+- `tests_passing=True`.
+
+R14-C does not support:
+
+- `security_reviewed=True`;
+- `ux_complete=True`;
+- `documented=True`;
+- `PILOT_READY`.
+
+## 57.4 R14-D readiness currency
+
+The evidence-supported Product Readiness currency is:
+
+- Product Readiness: **36%**;
+- pilot-scope readiness: **48%**;
+- catalogue-level P0 gaps: **0**;
+- pilot-scope gaps: **20**;
+- open recommendations: **24**;
+- pilot-ready capabilities: **5**;
+- in-progress capabilities: **14**;
+- implemented/tested/hardened capabilities: **10**;
+- overall CGMS completion: **51%**;
+- unresolved CRG-001 P0 commercial blockers: **0**;
+- total unresolved CRG-001 commercial blockers: **6**;
+- commercial pilot verdict: **NOT READY**.
+
+CAP-016 remains a commercial blocker because the security-review and final product-experience gates are not complete.
+
+## 57.5 Next governed CAP-016 gates
+
+The next CAP-016 gate is dedicated security-review closure.
+
+Final product-experience / UX validation follows as a separately governed gate.
+
+CAP-016 PILOT_READY eligibility may be reassessed only after both gates pass.
+
+CAP-017 Product Navigation Shell remains separately governed.
+
+## 57.6 R14-D boundary
+
+R14-D changes only the evidence-supported CAP-016 Product Readiness status and current-state/governance currency.
+
+It does not authorize:
+
+- `security_reviewed=True`;
+- `ux_complete=True`;
+- `documented=True`;
+- CAP-016 PILOT_READY;
+- CAP-017 implementation;
+- database mutation;
+- deployment;
+- staging;
+- commit;
+- push.
+
+The dated `artifacts/CGMS_CURRENT_STATE_2026-11-08.txt` remains immutable historical evidence.

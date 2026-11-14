@@ -69,6 +69,7 @@ def test_bootstrap_preserves_priority_and_scope_metadata() -> None:
     workspace_isolation = get("CAP-003")
     backup_restore = get("CAP-005")
     organizational_memory = get("CAP-006")
+    knowledge_worker_interface = get("CAP-016")
     connector_marketplace = get("CAP-038")
 
     assert secure_authentication is not None
@@ -106,6 +107,16 @@ def test_bootstrap_preserves_priority_and_scope_metadata() -> None:
     assert organizational_memory is not None
     assert organizational_memory.status.value == "implemented"
     assert organizational_memory.tests_passing is True
+
+    assert knowledge_worker_interface is not None
+    assert knowledge_worker_interface.priority.value == "P1"
+    assert knowledge_worker_interface.required_for_mlp is True
+    assert knowledge_worker_interface.required_for_pilot is True
+    assert knowledge_worker_interface.status.value == "tested"
+    assert knowledge_worker_interface.tests_passing is True
+    assert knowledge_worker_interface.security_reviewed is False
+    assert knowledge_worker_interface.ux_complete is False
+    assert knowledge_worker_interface.documented is False
 
     assert connector_marketplace is not None
     assert connector_marketplace.priority.value == "P4"

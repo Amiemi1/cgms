@@ -1,7 +1,7 @@
 CGMS Platform Architecture Map
 Master Blueprint for the Enterprise Cognitive Operating System
 Baseline: CGMS v1.75
-Current Platform State: Productisation baseline through CAP-016 account-scoped Knowledge Workspace backend
+Current Platform State: Productisation baseline through CAP-016 account-bound Knowledge Worker client at TESTED readiness
 Purpose: Define the canonical map of CGMS subsystems, bounded contexts, dependencies, event flows, documentation artifacts, and future platform evolution.
 
 1. Platform Vision
@@ -349,8 +349,8 @@ Memory / Goals / Insights / Search / Prioritization
                 v
 Identity-Free Knowledge Workspace API
 
-The remaining CAP-016 product-experience gap is above this backend boundary: the existing Knowledge Worker dashboard JavaScript still carries a hard-coded `userId` and invokes legacy identity-bearing URLs.
+R14-B extends this backend boundary into the Knowledge Worker browser client. The client no longer carries a hard-coded `userId` for the account-bound Knowledge Workspace flow and now consumes the identity-free account routes derived from the authenticated principal and active workspace. Unsafe client mutations retain the authenticated CSRF helper, while account/workspace mutation isolation and legacy chat compatibility remain covered by regression tests.
 
-That client migration is governed by R14-A/R14-B and is not part of this architecture-current-state synchronization.
+R14-C supports CAP-016 at TESTED readiness with `tests_passing=True`. Dedicated security-review closure and final product-experience / UX validation remain open; CAP-016 is not pilot-ready.
 
 CAP-017 Product Navigation Shell is the adjacent product-experience capability but remains separately governed.

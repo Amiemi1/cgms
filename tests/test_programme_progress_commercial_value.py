@@ -10,12 +10,12 @@ def test_executive_value_model_contains_approved_completion_metrics() -> None:
 
     assert model["model"]["version"] == "1.0"
     assert model["completion"]["overall_percent"] == 51
-    assert model["completion"]["product_readiness_percent"] == 34
-    assert model["completion"]["pilot_readiness_percent"] == 46
+    assert model["completion"]["product_readiness_percent"] == 36
+    assert model["completion"]["pilot_readiness_percent"] == 48
 
     assert model["completion"]["inputs"] == {
-        "implemented": 9,
-        "in_progress": 15,
+        "implemented": 10,
+        "in_progress": 14,
         "not_started": 9,
         "pilot_ready": 5,
         "production_ready": 0,

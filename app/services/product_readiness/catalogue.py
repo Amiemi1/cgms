@@ -355,6 +355,16 @@ PRODUCT_CAPABILITIES: tuple[Capability, ...] = (
         "Critical",
         "Critical",
         "MLP",
+        status_override=CapabilityStatus.TESTED,
+        tests_passing=True,
+        evidence_note=(
+            "Knowledge Worker browser-client migration published at "
+            "7aee8977296d157f65395208de9ab67ec28a72a2; "
+            "GitHub Product Readiness CI run #53 passed with "
+            "844 regression tests. R14-C supports TESTED with "
+            "tests_passing=True; CAP-016 security review and final "
+            "product-experience validation remain separately governed."
+        ),
     ),
     _capability(
         "CAP-017",

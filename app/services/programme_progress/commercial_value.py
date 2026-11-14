@@ -39,8 +39,8 @@ _EXECUTIVE_VALUE_MODEL: Final[dict[str, Any]] = {
             "38-capability Product Readiness estate"
         ),
         "inputs": {
-            "implemented": 9,
-            "in_progress": 15,
+            "implemented": 10,
+            "in_progress": 14,
             "not_started": 9,
             "pilot_ready": 5,
             "production_ready": 0,
@@ -49,8 +49,8 @@ _EXECUTIVE_VALUE_MODEL: Final[dict[str, Any]] = {
         "weights": deepcopy(
             _OVERALL_COMPLETION_STATUS_WEIGHTS
         ),
-        "product_readiness_percent": 34,
-        "pilot_readiness_percent": 46,
+        "product_readiness_percent": 36,
+        "pilot_readiness_percent": 48,
         "interpretation": (
             "Overall Completion measures progress through the build-to-scale "
             "journey. Product Readiness and Pilot Readiness remain separate "

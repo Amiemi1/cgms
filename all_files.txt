@@ -1,7 +1,7 @@
 # CGMS tracked repository inventory
-# Authority: 90d5c27c9b47b803c083534b3329f1c526fd5ef8
-# Generated: 8 November 2026
-# Scope: tracked Git tree plus the authorized R14-0 current-state artifact candidate.
+# Authority: 7aee8977296d157f65395208de9ab67ec28a72a2
+# Generated: 13 November 2026
+# Scope: tracked Git tree at the published R14-B authority plus the authorized R14-D current-state candidate.
 # Paths are repository-relative; machine-local, secret and cache material is excluded.
 
 .env.example
@@ -400,6 +400,7 @@ tests/test_cap_016_dual_scope_prioritization.py
 tests/test_cap_016_dual_scope_raw_search.py
 tests/test_cap_016_identity_scope.py
 tests/test_cap_016_insight_scope_model.py
+tests/test_cap_016_knowledge_workspace_client.py
 tests/test_cap_016_knowledge_workspace_routes.py
 tests/test_cap_016_product_scope_migration.py
 tests/test_cap_016_product_scope_models.py

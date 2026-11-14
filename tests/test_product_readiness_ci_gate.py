@@ -25,10 +25,10 @@ def test_standard_gate_passes_at_approved_baseline() -> None:
     assert report.mode == GateMode.STANDARD
 
     assert report.assessment.total_capabilities == 38
-    assert report.assessment.overall_score == 34
+    assert report.assessment.overall_score == 36
 
     assert report.recommendation_count == 24
-    assert report.pilot_scope_score == 46
+    assert report.pilot_scope_score == 48
 
     assert len(report.p0_blockers) == 0
     assert "CAP-003" not in {
@@ -85,7 +85,7 @@ def test_strict_gate_reports_release_blockers() -> None:
 def test_standard_gate_detects_readiness_regression() -> None:
     report = run_product_readiness_gate(
         mode=GateMode.STANDARD,
-        minimum_overall_score=35,
+        minimum_overall_score=37,
     )
 
     assert report.passed is False
@@ -100,8 +100,8 @@ def test_standard_gate_detects_readiness_regression() -> None:
     )
 
     assert baseline_check.passed is False
-    assert baseline_check.expected == ">= 35%"
-    assert baseline_check.actual == "34%"
+    assert baseline_check.expected == ">= 37%"
+    assert baseline_check.actual == "36%"
 
 
 def test_gate_detects_catalogue_count_mismatch() -> None:

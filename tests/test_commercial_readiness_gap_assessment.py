@@ -312,3 +312,33 @@ def test_cap016_post_publication_current_state_is_recorded() -> None:
         "R14-A implementation scope."
         in source
     )
+
+    assert (
+        "## 21. Post-R14-B CAP-016 Tested-State Update"
+        in source
+    )
+    assert (
+        "7aee8977296d157f65395208de9ab67ec28a72a2"
+        in source
+    )
+    assert "GitHub Product Readiness CI run **#53**" in source
+    assert "**844 passed, 0 failed, 0 errors**" in source
+    assert "status: **TESTED**" in source
+    assert "tests passing: **Yes**" in source
+    assert "security review complete: **No**" in source
+    assert "UX complete: **No**" in source
+    assert "documented: **No**" in source
+    assert "pilot-ready: **No**" in source
+    assert "Product Readiness: **36%**" in source
+    assert "pilot-scope readiness: **48%**" in source
+    assert "pilot-scope gaps: **20**" in source
+    assert "open recommendations: **24**" in source
+    assert (
+        "dedicated CAP-016 security-review closure"
+        in source
+    )
+    assert (
+        "CAP-017 Product Navigation Shell remains "
+        "separately governed"
+        in source
+    )

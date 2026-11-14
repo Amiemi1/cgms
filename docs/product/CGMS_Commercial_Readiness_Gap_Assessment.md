@@ -1026,3 +1026,98 @@ The next governed CAP-016 action is **R14-A — Post-Publication Residual-Gap an
 R14-A is read-only and must establish the exact Knowledge Worker browser-client migration path set before implementation is separately authorised.
 
 CAP-017 Product Navigation Shell remains outside R14-A implementation scope.
+
+---
+
+## 21. Post-R14-B CAP-016 Tested-State Update
+
+**Update date:** 13 November 2026
+
+**Classification:** controlled R14-D tested-state and governance currency synchronization
+
+### 21.1 Historical-assessment boundary
+
+Sections 1–20 remain historical evidence and are not rewritten to appear current. Section 20 records the valid pre-R14-B position in which the Knowledge Worker browser-client migration was still outstanding.
+
+This section records the evidence-supported state after R14-B publication, GitHub CI run #53 and R14-C read-only readiness reconciliation.
+
+### 21.2 Published R14-B evidence
+
+The Knowledge Worker browser-client migration was published at `7aee8977296d157f65395208de9ab67ec28a72a2`.
+
+R14-B removed the hard-coded browser `userId`, migrated Knowledge Worker reads to the account-bound identity-free dashboard contract, preserved authenticated CSRF handling for unsafe requests, enforced account/workspace mutation isolation and retained legacy chat compatibility.
+
+The R14-B validation chain recorded:
+
+- focused client and authorization validation: **82 passed, 0 failed, 0 errors**;
+- corrected complete local regression: **844 passed, 0 failed, 0 errors**;
+- GitHub Product Readiness CI run **#53** (run ID `43228595151`): **SUCCESS**;
+- GitHub full regression: **844 passed**;
+- Product Readiness standard gate: **PASSED**.
+
+The former browser-client migration blocker is therefore closed.
+
+### 21.3 R14-C readiness determination
+
+R14-C determined that CAP-016 has sufficient evidence for:
+
+- Product Readiness status: **TESTED**;
+- `tests_passing=True`.
+
+R14-C did not establish completion of:
+
+- `security_reviewed`;
+- `ux_complete`;
+- `documented`;
+- `PILOT_READY`.
+
+Those claims remain false or separately governed.
+
+### 21.4 Current CAP-016 readiness position
+
+CAP-016 remains:
+
+- capability: **Knowledge Worker Interface**;
+- priority: **P1**;
+- MLP-required: **Yes**;
+- pilot-required: **Yes**;
+- status: **TESTED**;
+- tests passing: **Yes**;
+- security review complete: **No**;
+- UX complete: **No**;
+- documented: **No**;
+- pilot-ready: **No**;
+- commercial blocker: **open pending security-review and final product-experience validation**.
+
+The R14-D tested-state projection is:
+
+- Product Readiness: **36%**;
+- pilot-scope readiness: **48%**;
+- catalogue-level P0 gaps: **0**;
+- pilot-scope gaps: **20**;
+- open recommendations: **24**;
+- pilot-ready capabilities: **5**;
+- in-progress capabilities: **14**;
+- implemented/tested/hardened capabilities: **10**;
+- overall CGMS completion: **51%**;
+- unresolved CRG-001 P0 commercial blockers: **0**;
+- total unresolved CRG-001 commercial blockers: **6**.
+
+**Current pilot-readiness verdict: NOT READY.**
+
+### 21.5 Residual CAP-016 gates
+
+CAP-016 requires two separately governed closures before PILOT_READY can be reassessed:
+
+1. dedicated CAP-016 security-review closure;
+2. final CAP-016 product-experience and UX validation.
+
+Passing either gate individually does not authorize PILOT_READY.
+
+### 21.6 Next governed action
+
+The next CAP-016 action is the dedicated security-review closure.
+
+Final product-experience and UX validation follows separately.
+
+CAP-017 Product Navigation Shell remains separately governed and is not authorized by R14-D.
