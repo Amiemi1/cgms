@@ -357,13 +357,18 @@ PRODUCT_CAPABILITIES: tuple[Capability, ...] = (
         "MLP",
         status_override=CapabilityStatus.TESTED,
         tests_passing=True,
+        security_reviewed=True,
         evidence_note=(
-            "Knowledge Worker browser-client migration published at "
-            "7aee8977296d157f65395208de9ab67ec28a72a2; "
-            "GitHub Product Readiness CI run #53 passed with "
-            "844 regression tests. R14-C supports TESTED with "
-            "tests_passing=True; CAP-016 security review and final "
-            "product-experience validation remain separately governed."
+            "R14-D tested-state governance synchronization published at "
+            "69d1358ac0f30631680c12bc86aa7757b4d9fc61; "
+            "GitHub Product Readiness CI run #54 passed with 844 "
+            "regression tests. R15-A bounded CAP-016 security-review "
+            "assessment passed 202/202 targeted security tests and direct "
+            "account, authorization, CSRF and isolation contracts with "
+            "zero blocking findings. This bounded review is not an "
+            "exhaustive external penetration test. CAP-016 remains TESTED; "
+            "final product-experience/UX and documented-state validation "
+            "remain separately governed."
         ),
     ),
     _capability(

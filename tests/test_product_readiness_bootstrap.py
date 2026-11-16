@@ -114,7 +114,7 @@ def test_bootstrap_preserves_priority_and_scope_metadata() -> None:
     assert knowledge_worker_interface.required_for_pilot is True
     assert knowledge_worker_interface.status.value == "tested"
     assert knowledge_worker_interface.tests_passing is True
-    assert knowledge_worker_interface.security_reviewed is False
+    assert knowledge_worker_interface.security_reviewed is True
     assert knowledge_worker_interface.ux_complete is False
     assert knowledge_worker_interface.documented is False
 

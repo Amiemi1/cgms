@@ -15,19 +15,21 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
             "Authoritative delivery, validation, governance, "
             "dashboard-access and startup register."
         ),
-        "as_of": "13 November 2026",
+        "as_of": "15 November 2026",
         "current_sprint": "Sprint 22",
         "current_work": (
-            "CAP-016 Tested-State and Governance "
+            "CAP-016 Security-Review Closure and Governance "
             "Currency Synchronization"
         ),
         "status": (
-            "CAP-016 Knowledge Worker browser-client migration is published "
-            "at 7aee8977296d157f65395208de9ab67ec28a72a2; GitHub Product "
-            "Readiness CI run #53 passed 844/844 tests. R14-C supports "
-            "CAP-016 TESTED with tests_passing=True; dedicated security-"
-            "review closure and final product-experience validation remain "
-            "open, so CAP-016 is not pilot-ready."
+            "R14-D tested-state governance synchronization is published at "
+            "69d1358ac0f30631680c12bc86aa7757b4d9fc61; GitHub Product "
+            "Readiness CI run #54 passed 844/844 tests. R15-A bounded "
+            "security-review evidence passed 202/202 targeted tests with "
+            "zero blocking findings. CAP-016 remains TESTED with "
+            "tests_passing=True and security_reviewed=True; final product-"
+            "experience/UX and documented-state gates remain open, so "
+            "CAP-016 is not pilot-ready."
         ),
         "branch": "cgms-v2-roadmap",
         "canonical_record": (
@@ -37,20 +39,20 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
     "summary": [
         {
             "label": "Current milestone",
-            "value": "CAP-016 Tested-State Synchronization",
+            "value": "CAP-016 Security-Review Closure",
             "detail": (
-                "R14-B client migration and GitHub CI #53 are complete; "
-                "R14-C supports TESTED / tests_passing=True while CAP-016 "
-                "security review and final UX validation remain separately "
-                "governed"
+                "R14-D publication and GitHub CI #54 are complete; R15-A "
+                "supports security_reviewed=True while final product-"
+                "experience/UX and documented-state validation remain "
+                "separately governed"
             ),
         },
         {
             "label": "Current regression suite",
-            "value": "CI #53 — PASS",
+            "value": "CI #54 — PASS",
             "detail": (
-                "GitHub Product Readiness CI run #53 completed successfully "
-                "for 7aee8977296d157f65395208de9ab67ec28a72a2; the complete "
+                "GitHub Product Readiness CI run #54 completed successfully "
+                "for 69d1358ac0f30631680c12bc86aa7757b4d9fc61; the complete "
                 "regression suite passed 844 tests and the standard Product "
                 "Readiness gate passed"
             ),
@@ -67,19 +69,18 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
         },
         {
             "label": "Latest published checkpoint",
-            "value": "7aee897",
+            "value": "69d1358",
             "detail": (
-                "Published CAP-016 account-bound Knowledge Worker "
-                "browser-client migration at "
-                "7aee8977296d157f65395208de9ab67ec28a72a2"
+                "Published CAP-016 tested-state governance synchronization "
+                "at 69d1358ac0f30631680c12bc86aa7757b4d9fc61"
             ),
         },
         {
             "label": "GitHub Actions",
-            "value": "Run #53 — Success",
+            "value": "Run #54 — Success",
             "detail": (
-                "Product Readiness CI run #53 passed for published commit "
-                "7aee8977296d157f65395208de9ab67ec28a72a2 with 844 tests"
+                "Product Readiness CI run #54 passed for published commit "
+                "69d1358ac0f30631680c12bc86aa7757b4d9fc61 with 844 tests"
             ),
         },
         {
@@ -95,10 +96,10 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
             "label": "Pilot readiness",
             "value": "NOT READY",
             "detail": (
-                "CAP-016 is TESTED but not pilot-ready; Product Readiness "
-                "is 36%, pilot-scope readiness is 48%, zero catalogue-level "
-                "P0 gaps, 20 pilot-scope gaps and six CRG-001 commercial "
-                "blockers remain"
+                "CAP-016 is TESTED and security-reviewed but not pilot-ready; "
+                "Product Readiness is 36%, pilot-scope readiness is 48%, "
+                "zero catalogue-level P0 gaps, 20 pilot-scope gaps, 23 open "
+                "recommendations and six CRG-001 commercial blockers remain"
             ),
         },
     ],
@@ -206,17 +207,18 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
         },
     ],
     "current_focus": [
-        "CAP-016 browser-client migration published at 7aee897",
-        "GitHub Product Readiness CI run #53 passed 844/844 tests",
-        "R14-C supports CAP-016 TESTED with tests_passing=True",
-        "CAP-016 security review and final UX validation remain open",
-        "Product Readiness 36% / pilot-scope readiness 48% / overall completion 51%",
+        "R14-D tested-state governance published at 69d1358",
+        "GitHub Product Readiness CI run #54 passed 844/844 tests",
+        "R15-A security-review evidence passed 202/202 targeted tests",
+        "CAP-016 remains TESTED with tests_passing=True and security_reviewed=True",
+        "Final CAP-016 product-experience/UX and documented-state gates remain open",
+        "Product Readiness 36% / pilot-scope readiness 48% / recommendations 23 / overall completion 51%",
         "Commercial pilot verdict remains NOT READY",
     ],
     "upcoming": [
-        "Complete the dedicated CAP-016 security-review closure",
         "Complete CAP-016 final product-experience and UX validation",
-        "Reassess CAP-016 PILOT_READY only after both residual gates pass",
+        "Reassess CAP-016 documented-state evidence as part of governed closure",
+        "Reassess CAP-016 PILOT_READY only after remaining gates pass",
         "Keep CAP-017 Product Navigation Shell separately governed",
         "Commercial pilot authorization remains withheld pending remaining gates",
     ],
@@ -578,6 +580,28 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
     ],
     "validation": [
         {
+            "title": "R15-A CAP-016 bounded security-review evidence assessment",
+            "result": "PASS — SECURITY REVIEW ELIGIBLE",
+            "detail": (
+                "Published authority 69d1358ac0f30631680c12bc86aa7757b4d9fc61 "
+                "was assessed without repository mutation; direct security "
+                "contracts passed, 202/202 targeted security tests passed and "
+                "zero blocking findings were observed. The bounded review is "
+                "not an exhaustive external penetration test"
+            ),
+        },
+        {
+            "title": "R14-D CAP-016 tested-state publication and CI closure",
+            "result": "PASS — GitHub CI #54",
+            "detail": (
+                "Commit 69d1358ac0f30631680c12bc86aa7757b4d9fc61 "
+                "published the TESTED-state governance synchronization; "
+                "844/844 local regression tests and GitHub Product Readiness "
+                "CI run #54 passed, with the standard gate at 36% overall "
+                "and 48% pilot-scope readiness"
+            ),
+        },
+        {
             "title": "R14-B Knowledge Worker client migration and CI closure",
             "result": "PASS — GitHub CI #53",
             "detail": (
@@ -914,6 +938,14 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
     ],
     "commits": [
         {
+            "hash": "69d1358",
+            "title": (
+                "chore(cap-016): synchronize tested-state "
+                "governance"
+            ),
+            "status": "Published",
+        },
+        {
             "hash": "7aee897",
             "title": (
                 "feat(cap-016): bind knowledge workspace "
@@ -1202,29 +1234,30 @@ _PROGRAMME_PROGRESS: Final[dict[str, Any]] = {
     "governance": {
         "rule": "Engineering Governance Rule EG-001",
         "classification": (
-            "CAP-016 Tested-State and Governance Currency Synchronization"
+            "CAP-016 Security-Review Closure and Governance "
+            "Currency Synchronization"
         ),
-        "approval_date": "13 November 2026",
+        "approval_date": "15 November 2026",
         "published_authority": (
-            "7aee8977296d157f65395208de9ab67ec28a72a2"
+            "69d1358ac0f30631680c12bc86aa7757b4d9fc61"
         ),
         "canonical_record": (
             "docs/CGMS_MASTER_CONTINUATION_PROMPT_v2.0.md"
         ),
         "scope": (
-            "Controlled R14-D synchronization after published R14-B "
-            "Knowledge Worker client migration, GitHub CI #53 and R14-C "
-            "readiness reconciliation. CAP-016 is promoted only to TESTED "
-            "with tests_passing=True."
+            "Controlled R15-B synchronization after R14-D publication, "
+            "GitHub CI #54 and R15-A bounded security-review assessment. "
+            "CAP-016 remains TESTED with tests_passing=True and "
+            "security_reviewed=True."
         ),
         "boundaries": (
             "Product Readiness is 36% and pilot-scope readiness is 48%; "
-            "zero catalogue-level P0 gaps, 20 pilot-scope gaps and six "
-            "CRG-001 commercial blockers remain. security_reviewed, "
-            "ux_complete and documented remain false for CAP-016; CAP-016 "
-            "is not pilot-ready, CAP-017 remains separately governed, and "
-            "the commercial pilot verdict remains NOT READY. Live Git state "
-            "controls publication identity."
+            "zero catalogue-level P0 gaps, 20 pilot-scope gaps, 23 open "
+            "recommendations and six CRG-001 commercial blockers remain. "
+            "security_reviewed is true for CAP-016; ux_complete and "
+            "documented remain false. CAP-016 is not pilot-ready, CAP-017 "
+            "remains separately governed, and the commercial pilot verdict "
+            "remains NOT READY. Live Git state controls publication identity."
         ),
     }
 }

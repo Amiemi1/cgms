@@ -27,7 +27,7 @@ def test_standard_gate_passes_at_approved_baseline() -> None:
     assert report.assessment.total_capabilities == 38
     assert report.assessment.overall_score == 36
 
-    assert report.recommendation_count == 24
+    assert report.recommendation_count == 23
     assert report.pilot_scope_score == 48
 
     assert len(report.p0_blockers) == 0

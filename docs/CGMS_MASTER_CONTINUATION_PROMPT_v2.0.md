@@ -41,19 +41,19 @@ Sprint 22
 **Current intervention**
 
 ```text
-CAP-016 — Tested-State and Governance Currency Synchronization
+CAP-016 — Security-Review Closure and Governance Currency Synchronization
 ```
 
 **Current sub-stage**
 
 ```text
-R14-B Knowledge Worker browser-client migration is published at `7aee8977296d157f65395208de9ab67ec28a72a2`; GitHub Product Readiness CI run #53 passed 844/844 tests; R14-C read-only reconciliation supports CAP-016 TESTED with tests_passing=True while dedicated security-review and final UX gates remain open
+R14-D is published at `69d1358ac0f30631680c12bc86aa7757b4d9fc61`; GitHub Product Readiness CI run #54 passed 844/844 tests; R15-A bounded security-review assessment passed 202/202 targeted tests with zero blocking findings and supports security_reviewed=True while final UX/product-experience, documented-state and PILOT_READY gates remain separately governed
 ```
 
 **Exact next authorised action**
 
 ```text
-Apply and validate only the bounded R14-D CAP-016 TESTED-state and governance-currency synchronization; publication requires separate staging, commit and push approval; CAP-016 security review, final UX validation and CAP-017 remain separately governed
+Apply and validate only the bounded R15-B CAP-016 security_reviewed promotion and governance-currency synchronization; publication requires separate full-regression, staging, commit and push approval; ux_complete, documented, PILOT_READY and CAP-017 remain separately governed
 ```
 
 ---
@@ -5849,3 +5849,71 @@ It does not authorize:
 - push.
 
 The dated `artifacts/CGMS_CURRENT_STATE_2026-11-08.txt` remains immutable historical evidence.
+
+---
+
+# 58. R15-A / R15-B — CAP-016 SECURITY-REVIEW CLOSURE
+
+**Update date:** 15 November 2026
+
+## 58.1 Published authority
+
+R14-D is published at `69d1358ac0f30631680c12bc86aa7757b4d9fc61`.
+
+GitHub Product Readiness CI run **#54** passed with **844 regression tests** and the standard Product Readiness gate passed.
+
+## 58.2 R15-A security-review evidence
+
+R15-A completed the bounded CAP-016 security-review assessment without repository mutation.
+
+Evidence recorded:
+
+- account-scoped product routes: **9**;
+- identity-free route contract: **PASS**;
+- authenticated-principal binding: **PASS**;
+- application authorization: **PASS**;
+- mutation permission mapping: **PASS**;
+- targeted security validation: **202 passed, 0 failed, 0 errors**;
+- blocking security findings observed: **0**.
+
+The review covered account binding, authorization, browser/session controls, CSRF, workspace/account isolation and cross-tenant denial. It is not represented as an exhaustive external penetration test.
+
+## 58.3 R15-B current readiness currency
+
+CAP-016 remains **TESTED**.
+
+Current evidence supports:
+
+- `tests_passing=True`;
+- `security_reviewed=True`;
+- capability score: **80**.
+
+Current evidence does not yet support:
+
+- `ux_complete=True`;
+- `documented=True`;
+- `PILOT_READY`.
+
+Current Product Readiness currency is:
+
+- Product Readiness: **36%**;
+- pilot-scope readiness: **48%**;
+- catalogue-level P0 gaps: **0**;
+- pilot-scope gaps: **20**;
+- open recommendations: **23**;
+- overall CGMS completion: **51%**;
+- commercial pilot verdict: **NOT READY**.
+
+## 58.4 Remaining governed CAP-016 gates
+
+The security-review gate is closed.
+
+The remaining sequence is:
+
+1. final product-experience / UX validation;
+2. documented-state evidence reconciliation;
+3. CAP-016 PILOT_READY reassessment only after the remaining evidence gates pass.
+
+CAP-017 remains separately governed.
+
+R15-B does not authorize staging, commit, push, deployment, production-database mutation or CAP-017 implementation.

@@ -342,3 +342,48 @@ def test_cap016_post_publication_current_state_is_recorded() -> None:
         "separately governed"
         in source
     )
+
+    assert (
+        "## 22. R15-A / R15-B CAP-016 Security-Review Closure"
+        in source
+    )
+    assert (
+        "69d1358ac0f30631680c12bc86aa7757b4d9fc61"
+        in source
+    )
+    assert (
+        "GitHub Product Readiness CI run **#54**"
+        in source
+    )
+    assert (
+        "targeted security validation: **202 passed, 0 failed, 0 errors**"
+        in source
+    )
+    assert (
+        "security review complete: **Yes**"
+        in source
+    )
+    assert (
+        "capability score: **80**"
+        in source
+    )
+    assert (
+        "UX complete: **No**"
+        in source
+    )
+    assert (
+        "documented: **No**"
+        in source
+    )
+    assert (
+        "pilot-ready: **No**"
+        in source
+    )
+    assert (
+        "open recommendations: **23**"
+        in source
+    )
+    assert (
+        "final CAP-016 product-experience and UX validation"
+        in source
+    )

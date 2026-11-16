@@ -1121,3 +1121,81 @@ The next CAP-016 action is the dedicated security-review closure.
 Final product-experience and UX validation follows separately.
 
 CAP-017 Product Navigation Shell remains separately governed and is not authorized by R14-D.
+
+---
+
+## 22. R15-A / R15-B CAP-016 Security-Review Closure
+
+**Update date:** 15 November 2026
+
+**Classification:** bounded security-review closure and controlled Product Readiness currency synchronization
+
+### 22.1 Historical-assessment boundary
+
+Sections 1–21 remain historical evidence. Section 21 records the valid R14-D position in which CAP-016 was TESTED but the dedicated security-review gate had not yet closed.
+
+### 22.2 Published R14-D authority
+
+R14-D was published at `69d1358ac0f30631680c12bc86aa7757b4d9fc61`.
+
+GitHub Product Readiness CI run **#54** completed successfully with **844 passed, 0 failed, 0 errors**, and the Product Readiness standard gate passed.
+
+### 22.3 R15-A security-review evidence
+
+The bounded CAP-016 security-review assessment recorded:
+
+- nine account-scoped identity-free product routes;
+- authenticated-principal account binding;
+- application-authorization enforcement;
+- governed mutation-permission mapping;
+- authenticated CSRF coverage;
+- workspace/account and cross-tenant isolation coverage;
+- targeted security validation: **202 passed, 0 failed, 0 errors**;
+- blocking security findings observed: **0**.
+
+The bounded assessment is not an exhaustive external penetration test.
+
+### 22.4 Current CAP-016 readiness position
+
+CAP-016 now records:
+
+- capability: **Knowledge Worker Interface**;
+- priority: **P1**;
+- MLP-required: **Yes**;
+- pilot-required: **Yes**;
+- status: **TESTED**;
+- tests passing: **Yes**;
+- security review complete: **Yes**;
+- capability score: **80**;
+- UX complete: **No**;
+- documented: **No**;
+- pilot-ready: **No**;
+- commercial blocker: **open pending final product-experience / UX validation and documented-state evidence**.
+
+The R15-B security-review currency is:
+
+- Product Readiness: **36%**;
+- pilot-scope readiness: **48%**;
+- catalogue-level P0 gaps: **0**;
+- pilot-scope gaps: **20**;
+- open recommendations: **23**;
+- pilot-ready capabilities: **5**;
+- in-progress capabilities: **14**;
+- implemented/tested/hardened capabilities: **10**;
+- overall CGMS completion: **51%**;
+- unresolved CRG-001 P0 commercial blockers: **0**;
+- total unresolved CRG-001 commercial blockers: **6**.
+
+**Current pilot-readiness verdict: NOT READY.**
+
+### 22.5 Residual CAP-016 gates
+
+The dedicated CAP-016 security-review gate is closed.
+
+The remaining governed sequence is:
+
+1. final CAP-016 product-experience and UX validation;
+2. documented-state evidence reconciliation;
+3. CAP-016 PILOT_READY reassessment only after the remaining evidence gates pass.
+
+CAP-017 Product Navigation Shell remains separately governed and is not authorized by R15-B.

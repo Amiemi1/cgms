@@ -694,3 +694,63 @@ R14-D therefore does not close the CAP-016 commercial blocker.
 The next governed CAP-016 gates are dedicated security-review closure followed by final product-experience and UX validation.
 
 CAP-017 remains separately governed.
+
+---
+
+# 27. CAP-016 Security-Review Currency Update
+
+**Update date:** 15 November 2026
+
+**Decision:** close the bounded CAP-016 security-review gate while retaining TESTED status
+
+Sections through 26 remain historical evidence.
+
+Published authority before this currency action is `69d1358ac0f30631680c12bc86aa7757b4d9fc61`.
+
+GitHub Product Readiness CI run **#54 — PASS** recorded **844 regression tests**.
+
+R15-A established:
+
+- nine account-scoped identity-free Knowledge Workspace routes;
+- authenticated-principal account binding;
+- application authorization and mutation-permission controls;
+- authenticated CSRF coverage;
+- workspace/account and cross-tenant isolation evidence;
+- **202/202** targeted security tests passing;
+- **0** blocking security findings.
+
+The bounded security review is not represented as an exhaustive external penetration test.
+
+The evidence now supports:
+
+- status: **TESTED**;
+- `tests_passing=True`;
+- `security_reviewed=True`;
+- capability score: **80**.
+
+The evidence does not yet support:
+
+- `ux_complete=True`;
+- `documented=True`;
+- `PILOT_READY`.
+
+The resulting readiness currency is:
+
+- Product Readiness: **36%**;
+- pilot-scope readiness: **48%**;
+- catalogue-level P0 gaps: **0**;
+- pilot-scope gaps: **20**;
+- open recommendations: **23**;
+- pilot-ready capabilities: **5**;
+- overall CGMS completion: **51%**;
+- commercial pilot verdict: **NOT READY**.
+
+The dedicated CAP-016 security-review gate is closed.
+
+The next governed CAP-016 sequence is:
+
+1. final product-experience and UX validation;
+2. documented-state evidence reconciliation;
+3. CAP-016 PILOT_READY reassessment only after the remaining evidence gates pass.
+
+CAP-017 Product Navigation Shell remains separately governed.

@@ -83,7 +83,7 @@ def test_registry_contains_governed_progress() -> None:
 
     assert any(
         item["label"] == "Current regression suite"
-        and item["value"] == "CI #53 — PASS"
+        and item["value"] == "CI #54 — PASS"
         for item in dashboard["summary"]
     )
 
@@ -95,7 +95,7 @@ def test_registry_contains_governed_progress() -> None:
 
     assert any(
         item["label"] == "Latest published checkpoint"
-        and item["value"] == "7aee897"
+        and item["value"] == "69d1358"
         for item in dashboard["summary"]
     )
 
@@ -117,24 +117,26 @@ def test_registry_contains_governed_progress() -> None:
     )
 
     assert [item["hash"] for item in dashboard["commits"][:5]] == [
+        "69d1358",
         "7aee897",
         "90d5c27",
         "b8e2ff1",
         "107d1a4",
-        "f3a11c0",
     ]
 
     assert dashboard["page"]["status"] == (
-        "CAP-016 Knowledge Worker browser-client migration is published "
-        "at 7aee8977296d157f65395208de9ab67ec28a72a2; GitHub Product "
-        "Readiness CI run #53 passed 844/844 tests. R14-C supports "
-        "CAP-016 TESTED with tests_passing=True; dedicated security-"
-        "review closure and final product-experience validation remain "
-        "open, so CAP-016 is not pilot-ready."
+        "R14-D tested-state governance synchronization is published at "
+        "69d1358ac0f30631680c12bc86aa7757b4d9fc61; GitHub Product "
+        "Readiness CI run #54 passed 844/844 tests. R15-A bounded "
+        "security-review evidence passed 202/202 targeted tests with "
+        "zero blocking findings. CAP-016 remains TESTED with "
+        "tests_passing=True and security_reviewed=True; final product-"
+        "experience/UX and documented-state gates remain open, so "
+        "CAP-016 is not pilot-ready."
     )
     assert dashboard["page"]["branch"] == "cgms-v2-roadmap"
     assert dashboard["governance"]["classification"] == (
-        "CAP-016 Tested-State and Governance Currency Synchronization"
+        "CAP-016 Security-Review Closure and Governance Currency Synchronization"
     )
 
 
@@ -207,13 +209,13 @@ def test_authorized_viewer_can_open_progress() -> None:
     body = response.text
 
     assert "CGMS Programme Progress Dashboard" in body
-    assert "CI #53 — PASS" in body
+    assert "CI #54 — PASS" in body
     assert "PWI-001-187D" in body
     assert "PWI-001-187E" in body
     assert "90d5c27" in body
     assert "9c683d2" in body
     assert "0140d4a" in body
-    assert "Run #53" in body
+    assert "Run #54" in body
     assert "Run #46" in body
     assert "CAP-016" in body
     assert "CAP-005 real PostgreSQL recovery validation" in body
@@ -350,19 +352,19 @@ def test_registry_contains_current_cap016_state() -> None:
         .build_view()
     )
 
-    assert dashboard["page"]["as_of"] == "13 November 2026"
+    assert dashboard["page"]["as_of"] == "15 November 2026"
     assert dashboard["page"]["current_sprint"] == "Sprint 22"
     assert dashboard["page"]["current_work"] == (
-        "CAP-016 Tested-State and Governance "
+        "CAP-016 Security-Review Closure and Governance "
         "Currency Synchronization"
     )
     assert dashboard["current_focus"][0] == (
-        "CAP-016 browser-client migration published at 7aee897"
+        "R14-D tested-state governance published at 69d1358"
     )
     assert dashboard["upcoming"] == [
-        "Complete the dedicated CAP-016 security-review closure",
         "Complete CAP-016 final product-experience and UX validation",
-        "Reassess CAP-016 PILOT_READY only after both residual gates pass",
+        "Reassess CAP-016 documented-state evidence as part of governed closure",
+        "Reassess CAP-016 PILOT_READY only after remaining gates pass",
         "Keep CAP-017 Product Navigation Shell separately governed",
         "Commercial pilot authorization remains withheld pending remaining gates",
     ]
@@ -603,12 +605,13 @@ def test_cap016_post_publication_currency_records_current_state() -> None:
     dashboard = ProgrammeProgressRegistry().build_view()
 
     assert dashboard["page"]["current_work"] == (
-        "CAP-016 Tested-State and Governance "
+        "CAP-016 Security-Review Closure and Governance "
         "Currency Synchronization"
     )
 
     assert "CAP-016" in dashboard["page"]["status"]
     assert "TESTED" in dashboard["page"]["status"]
+    assert "security_reviewed=True" in dashboard["page"]["status"]
     assert "not pilot-ready" in dashboard["page"]["status"]
     assert "hard-coded user identity" not in dashboard["page"]["status"]
 
@@ -641,11 +644,28 @@ def test_cap016_post_publication_currency_records_current_state() -> None:
         for item in dashboard["validation"]
     )
 
+    assert any(
+        item["title"] == "R14-D CAP-016 tested-state publication and CI closure"
+        and item["result"] == "PASS — GitHub CI #54"
+        and "844/844" in item["detail"]
+        for item in dashboard["validation"]
+    )
+
+    assert any(
+        item["title"] == "R15-A CAP-016 bounded security-review evidence assessment"
+        and item["result"] == "PASS — SECURITY REVIEW ELIGIBLE"
+        and "202/202 targeted security tests" in item["detail"]
+        for item in dashboard["validation"]
+    )
+
     assert dashboard["governance"]["classification"] == (
-        "CAP-016 Tested-State and Governance Currency Synchronization"
+        "CAP-016 Security-Review Closure and Governance Currency Synchronization"
     )
 
     assert "zero catalogue-level P0 gaps" in (
+        dashboard["governance"]["boundaries"]
+    )
+    assert "23 open recommendations" in (
         dashboard["governance"]["boundaries"]
     )
     assert "six CRG-001 commercial blockers" in (
